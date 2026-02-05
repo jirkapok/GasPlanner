@@ -13,7 +13,7 @@ export class SettingsNormalizationService {
         private units: UnitConversion,
         private appSettings: ApplicationSettingsService,
         private schedules: DiveSchedules
-    ) { }
+    ) {}
 
     private get ranges(): RangeConstants {
         return this.units.ranges;
@@ -37,7 +37,10 @@ export class SettingsNormalizationService {
         settings.maxGasDensity = this.fitUnit(
             v => this.units.fromGramPerLiter(v),
             v => this.units.toGramPerLiter(v),
-            settings.maxGasDensity, this.units.ranges.maxDensity, densityRounding);
+            settings.maxGasDensity,
+            this.units.ranges.maxDensity,
+            densityRounding
+        );
 
         settings.primaryTankReserve = this.fitPressureToRange(settings.primaryTankReserve, this.ranges.tankPressure);
         settings.stageTankReserve = this.fitPressureToRange(settings.stageTankReserve, this.ranges.tankPressure);
@@ -46,10 +49,20 @@ export class SettingsNormalizationService {
     private applyToOptions(options: OptionsService): void {
         const oDiver = options.diverOptions;
         const rmvRounding = this.units.ranges.rmvRounding;
-        options.diverOptions.rmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
-            oDiver.rmv, this.units.ranges.diverRmv, rmvRounding);
-        options.diverOptions.stressRmv = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
-            oDiver.stressRmv, this.units.ranges.diverRmv, rmvRounding);
+        options.diverOptions.rmv = this.fitUnit(
+            v => this.units.fromLiter(v),
+            v => this.units.toLiter(v),
+            oDiver.rmv,
+            this.units.ranges.diverRmv,
+            rmvRounding
+        );
+        options.diverOptions.stressRmv = this.fitUnit(
+            v => this.units.fromLiter(v),
+            v => this.units.toLiter(v),
+            oDiver.stressRmv,
+            this.units.ranges.diverRmv,
+            rmvRounding
+        );
         this.applyOptionsCalculationValues(options);
         this.normalizeOptions(options);
     }
@@ -65,14 +78,54 @@ export class SettingsNormalizationService {
     private normalizeOptions(options: OptionsService): void {
         const altitudeRange = this.ranges.altitude;
         const speedRange = this.ranges.speed;
-        options.altitude = this.fitUnit(u => u, v => v, options.altitude, altitudeRange);
-        options.ascentSpeed50perc = this.fitUnit(u => u, v => v, options.ascentSpeed50perc, speedRange);
-        options.ascentSpeed50percTo6m = this.fitUnit(u => u, v => v, options.ascentSpeed50percTo6m, speedRange);
-        options.ascentSpeed6m = this.fitUnit(u => u, v => v, options.ascentSpeed6m, speedRange);
-        options.descentSpeed = this.fitUnit(u => u, v => v, options.descentSpeed, speedRange);
-        options.maxEND = this.fitUnit(u => u, v => v, options.maxEND, this.ranges.narcoticDepth);
-        options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
-        options.decoStopDistance = this.fitUnit(u => u, v => v, options.decoStopDistance, this.ranges.decoStopDistance);
+        options.altitude = this.fitUnit(
+            u => u,
+            v => v,
+            options.altitude,
+            altitudeRange
+        );
+        options.ascentSpeed50perc = this.fitUnit(
+            u => u,
+            v => v,
+            options.ascentSpeed50perc,
+            speedRange
+        );
+        options.ascentSpeed50percTo6m = this.fitUnit(
+            u => u,
+            v => v,
+            options.ascentSpeed50percTo6m,
+            speedRange
+        );
+        options.ascentSpeed6m = this.fitUnit(
+            u => u,
+            v => v,
+            options.ascentSpeed6m,
+            speedRange
+        );
+        options.descentSpeed = this.fitUnit(
+            u => u,
+            v => v,
+            options.descentSpeed,
+            speedRange
+        );
+        options.maxEND = this.fitUnit(
+            u => u,
+            v => v,
+            options.maxEND,
+            this.ranges.narcoticDepth
+        );
+        options.lastStopDepth = this.fitUnit(
+            u => u,
+            v => v,
+            options.lastStopDepth,
+            this.ranges.lastStopDepth
+        );
+        options.decoStopDistance = this.fitUnit(
+            u => u,
+            v => v,
+            options.decoStopDistance,
+            this.ranges.decoStopDistance
+        );
     }
 
     private normalizeTanks(tanksService: TanksService): void {
@@ -82,11 +135,11 @@ export class SettingsNormalizationService {
         tanks.forEach(t => {
             const tank = t.tank;
             // otherwise loosing precision in metric, where the volume of compressed gas is even not relevant
-            if(this.units.imperialUnits) {
+            if (this.units.imperialUnits) {
                 // not changing the size since units are already switched e.g. t.size === 0
 
                 // reset only in case switching to imperial
-                if(t.workingPressureBars === 0) {
+                if (t.workingPressureBars === 0) {
                     const newWorkingPressure = defaultTanks.primary.workingPressure;
                     t.workingPressureBars = this.units.toBar(newWorkingPressure);
                 }
@@ -116,22 +169,41 @@ export class SettingsNormalizationService {
     }
 
     private fitLengthToRange(meters: number, uiRange: [number, number]): number {
-        return this.fitUnit(v => this.units.fromMeters(v), v => this.units.toMeters(v), meters, uiRange);
+        return this.fitUnit(
+            v => this.units.fromMeters(v),
+            v => this.units.toMeters(v),
+            meters,
+            uiRange
+        );
     }
 
     private fitPressureToRange(bars: number, uiRange: [number, number]): number {
-        return this.fitUnit(v => this.units.fromBar(v), v => this.units.toBar(v), bars, uiRange);
+        return this.fitUnit(
+            v => this.units.fromBar(v),
+            v => this.units.toBar(v),
+            bars,
+            uiRange
+        );
     }
 
     private fitTankSizeToRange(litersSize: number, workingPressureBars: number, uiRange: [number, number]): number {
-        return this.fitUnit(v => this.units.fromTankLiters(v, workingPressureBars),
+        return this.fitUnit(
+            v => this.units.fromTankLiters(v, workingPressureBars),
             v => this.units.toTankLiters(v, workingPressureBars),
-            litersSize, uiRange, 1);
+            litersSize,
+            uiRange,
+            1
+        );
     }
 
     /** Ranges are in UI units, we are rounding for the UI */
-    private fitUnit(fromMetric: (v: number) => number, toMetric: (v: number) => number,
-        metricValue: number, uiRange: [number, number], precision: number = 0): number {
+    private fitUnit(
+        fromMetric: (v: number) => number,
+        toMetric: (v: number) => number,
+        metricValue: number,
+        uiRange: [number, number],
+        precision: number = 0
+    ): number {
         let newValue = fromMetric(metricValue);
         newValue = Precision.round(newValue, precision);
         newValue = this.fitToRange(newValue, uiRange[0], uiRange[1]);

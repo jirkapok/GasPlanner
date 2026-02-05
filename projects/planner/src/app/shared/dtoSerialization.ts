@@ -1,14 +1,32 @@
 import _ from 'lodash';
 import {
-    CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks,
-    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics
+    CalculatedProfile,
+    Diver,
+    Events,
+    Event,
+    Gas,
+    HighestDensity,
+    Options,
+    Segment,
+    Tank,
+    Tanks,
+    AirBreakOptions,
+    LoadedTissues,
+    CalculatedProfileStatistics
 } from 'scuba-physics';
 import {
     AirBreaksDto,
-    CalculatedProfileDto, ConsumedDto, DensityDto,
-    DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
-    OptionsDto, SegmentDto, TankDto
+    CalculatedProfileDto,
+    ConsumedDto,
+    DensityDto,
+    DiverDto,
+    EventDto,
+    GasDto,
+    ITankBound,
+    LoadedTissueDto,
+    OptionsDto,
+    SegmentDto,
+    TankDto
 } from './serialization.model';
 
 /** Serialization used to store preferences and for communication with background workers */
@@ -99,7 +117,7 @@ export class DtoSerialization {
     public static toProfile(profile: CalculatedProfileDto, tanks: Tank[]): CalculatedProfile {
         const segments = DtoSerialization.toSegments(profile.segments, tanks);
 
-        if(profile.errors.length > 0) {
+        if (profile.errors.length > 0) {
             const errors = DtoSerialization.toEvents(profile.errors);
             return CalculatedProfileStatistics.fromStatisticsErrors(segments, errors.items);
         }
@@ -119,27 +137,33 @@ export class DtoSerialization {
     }
 
     public static toTissues(tissues: LoadedTissueDto[]): LoadedTissues {
-        return _(tissues).map(t => ({
-            pN2: t.pN2,
-            pHe: t.pHe
-        })).value() as LoadedTissues;
+        return _(tissues)
+            .map(t => ({
+                pN2: t.pN2,
+                pHe: t.pHe
+            }))
+            .value() as LoadedTissues;
     }
 
     /* Not used yet */
     public static toTissuesHistory(tissuesHistory: LoadedTissueDto[][]): LoadedTissues[] {
-        return _(tissuesHistory).map(t => DtoSerialization.toTissues(t))
+        return _(tissuesHistory)
+            .map(t => DtoSerialization.toTissues(t))
             .value();
     }
 
     public static fromTissues(tissues: LoadedTissues): LoadedTissueDto[] {
-        return _(tissues).map(t => ({
-            pN2: t.pN2,
-            pHe: t.pHe
-        })).value();
+        return _(tissues)
+            .map(t => ({
+                pN2: t.pN2,
+                pHe: t.pHe
+            }))
+            .value();
     }
 
     public static fromTissuesHistory(tissuesHistory: LoadedTissues[]): LoadedTissueDto[][] {
-        return _(tissuesHistory).map(t => DtoSerialization.fromTissues(t))
+        return _(tissuesHistory)
+            .map(t => DtoSerialization.fromTissues(t))
             .value();
     }
 
@@ -165,7 +189,7 @@ export class DtoSerialization {
                 timeStamp: e.timeStamp,
                 depth: e.depth,
                 type: e.type,
-                message: e.message,
+                message: e.message
             };
 
             if (e.gas) {

@@ -1,8 +1,4 @@
-import {
-    Gases, Gas, GasesValidator,
-    GasOptions, BestGasOptions,
-    OCGasSource
-} from './Gases';
+import { Gases, Gas, GasesValidator, GasOptions, BestGasOptions, OCGasSource } from './Gases';
 import { DepthConverter } from '../physics/depth-converter';
 import { SafetyStop } from '../algorithm/Options';
 import { Precision } from '../common/precision';
@@ -126,7 +122,7 @@ describe('Gases', () => {
             });
         });
 
-        describe('Content O2 + He can\'t exceed 100 %', () => {
+        describe("Content O2 + He can't exceed 100 %", () => {
             it('Throws exception, when crating new instance', () => {
                 expect(() => new Gas(0.8, 0.5)).toThrowError();
             });
@@ -267,7 +263,7 @@ describe('Gases', () => {
                     bestGasOptions.currentDepth = 30;
                     const gases2 = new Gases();
                     const gasSource2 = new OCGasSource(gases2, levelOptions);
-                    const ean32 = new Gas(.32, 0);
+                    const ean32 = new Gas(0.32, 0);
                     gases2.add(ean32);
                     gases2.add(StandardGases.air);
                     const found = gasSource2.bestGas(bestGasOptions);
@@ -292,7 +288,7 @@ describe('Gases', () => {
 
         it('At 3 bar 0.79 volume fraction converts to ', () => {
             const result = GasMixtures.partialPressure(6.667, 0.21);
-            expect(result).toBeCloseTo(1.40, 3);
+            expect(result).toBeCloseTo(1.4, 3);
         });
 
         it('At 0 bars any fraction results in 0 partial pressure', () => {
@@ -313,7 +309,7 @@ describe('Gases', () => {
         });
 
         it('Equals to different helium content returns false', () => {
-            const other = new Gas(GasMixtures.o2InAir, .2);
+            const other = new Gas(GasMixtures.o2InAir, 0.2);
             expect(StandardGases.air.compositionEquals(other)).toBeFalsy();
         });
 

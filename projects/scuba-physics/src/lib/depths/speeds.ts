@@ -23,7 +23,7 @@ export class AscentSpeeds {
     // in meters
     public averageDepth = 0;
 
-    constructor(private options: SpeedOptions) { }
+    constructor(private options: SpeedOptions) {}
 
     public markAverageDepth(profile: Segments): void {
         const deepestPart = profile.deepestPart();

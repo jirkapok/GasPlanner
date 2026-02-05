@@ -1,17 +1,16 @@
 import { Gas } from './Gases';
 import { StandardGases } from './StandardGases';
-import { GasNames } from "./GasNames";
-
+import { GasNames } from './GasNames';
 
 describe('Standard gases', () => {
     describe('Find name by fractions', () => {
         it('Air', () => {
-            const found = GasNames.nameFor(.21);
+            const found = GasNames.nameFor(0.21);
             expect(found).toBe('Air');
         });
 
         it('EAN32', () => {
-            const found = GasNames.nameFor(.32);
+            const found = GasNames.nameFor(0.32);
             expect(found).toBe('EAN32');
         });
 
@@ -58,7 +57,7 @@ describe('Standard gases', () => {
         });
 
         it('Non standard Ean28', () => {
-            const control = new Gas(.28, 0);
+            const control = new Gas(0.28, 0);
             const found = StandardGases.byName('EAN28');
             expect(found).toEqual(control);
         });

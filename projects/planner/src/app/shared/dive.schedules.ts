@@ -5,9 +5,7 @@ import { Injectable } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
-import {
-    GasToxicity, LoadedTissues, Precision, ProfileTissues, Time
-} from 'scuba-physics';
+import { GasToxicity, LoadedTissues, Precision, ProfileTissues, Time } from 'scuba-physics';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
 
@@ -19,7 +17,11 @@ export class DiveSchedule {
     private readonly _tanks: TanksService;
     private readonly _depths: DepthsService;
 
-    constructor(private _index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+    constructor(
+        private _index: number,
+        private units: UnitConversion,
+        private dispatcher: ReloadDispatcher
+    ) {
         this.assignIndex(_index);
         this._tanks = new TanksService(units, dispatcher);
         this._optionsService = new OptionsService(this.units, this.dispatcher);
@@ -47,7 +49,7 @@ export class DiveSchedule {
     }
 
     public get surfaceIntervalText(): string | null {
-        if(!this.isRepetitive) {
+        if (!this.isRepetitive) {
             return null;
         }
 
@@ -90,7 +92,7 @@ export class DiveSchedule {
      * For first dive it is always POSITIVE_INFINITY.
      */
     public set surfaceInterval(newValue: number) {
-        if(this.isFirst || newValue < 0) {
+        if (this.isFirst || newValue < 0) {
             return;
         }
 
@@ -136,7 +138,10 @@ export class DiveSchedules {
     private _dives: DiveSchedule[] = [];
     private _selected: DiveSchedule;
 
-    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+    constructor(
+        private units: UnitConversion,
+        private dispatcher: ReloadDispatcher
+    ) {
         this.add();
         this._selected = this._dives[0];
     }
@@ -186,7 +191,7 @@ export class DiveSchedules {
 
     // consider unify usage by id or by diveId
     public setSelectedIndex(newIndex: number): void {
-        if(newIndex >= 0 && newIndex < this._dives.length) {
+        if (newIndex >= 0 && newIndex < this._dives.length) {
             this.selected = this._dives[newIndex];
         }
     }
@@ -216,7 +221,7 @@ export class DiveSchedules {
      * Since the View switch is global, we need to switch all dives.
      */
     public setSimple(): void {
-        this._dives.forEach((dive) => {
+        this._dives.forEach(dive => {
             dive.setSimple();
         });
 
@@ -239,11 +244,11 @@ export class DiveSchedules {
         const previousDive = this.byId(diveId - 1);
         const dive = this.byId(diveId);
 
-        if(previousDive && dive && dive.isRepetitive) {
+        if (previousDive && dive && dive.isRepetitive) {
             return previousDive.diveResult.finalTissues;
         }
 
-        if(dive) {
+        if (dive) {
             const currentDiveAltitude = dive.optionsService.altitude || 0;
             ProfileTissues.createAtSurface(currentDiveAltitude);
         }
@@ -254,13 +259,13 @@ export class DiveSchedules {
 
     /** Marks all following repetitive dives as started. */
     public markStart(diveId: number): void {
-        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
+        this.processOnFollowingRepetitiveDives(diveId, dive => dive.diveResult.start());
     }
 
     private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {
         const dive = this.byId(diveId);
 
-        if(!dive) {
+        if (!dive) {
             return;
         }
 
@@ -268,7 +273,7 @@ export class DiveSchedules {
 
         for (let index = dive.index + 1; index < this._dives.length; index++) {
             const currentDive = this._dives[index];
-            if(!currentDive.isRepetitive) {
+            if (!currentDive.isRepetitive) {
                 return;
             }
 

@@ -22,7 +22,6 @@ class TankConstants {
     public static readonly metricStageSize = 11.1;
 }
 
-
 export interface TankTemplate {
     /** Common label of the cylinder */
     name: string;
@@ -46,27 +45,27 @@ export class ImperialTanks implements StandardTanks {
             {
                 name: '2xLP85',
                 size: 165,
-                workingPressure: 2640,
+                workingPressure: 2640
             },
             {
                 name: 'S40',
                 size: 41.3,
-                workingPressure: 3000,
+                workingPressure: 3000
             },
             {
                 name: 'LP85',
                 size: 82.5,
-                workingPressure: 2640,
+                workingPressure: 2640
             },
             {
                 name: 'HP80',
                 size: 84.4,
-                workingPressure: 3442,
+                workingPressure: 3442
             },
             {
                 name: 'HP100',
                 size: 106.7,
-                workingPressure: 3442,
+                workingPressure: 3442
             }
         ];
     }
@@ -75,7 +74,7 @@ export class ImperialTanks implements StandardTanks {
         return {
             name: 'HP117',
             size: TankConstants.imperialTankSize,
-            workingPressure: TankConstants.imperialTankWorkPressure,
+            workingPressure: TankConstants.imperialTankWorkPressure
         };
     }
 
@@ -83,7 +82,7 @@ export class ImperialTanks implements StandardTanks {
         return {
             name: 'S80',
             size: TankConstants.imperialStageSize,
-            workingPressure: TankConstants.imperialStageWorkPressure,
+            workingPressure: TankConstants.imperialStageWorkPressure
         };
     }
 }
@@ -96,22 +95,22 @@ export class MetricTanks implements StandardTanks {
             {
                 name: '2x12 L',
                 size: 24,
-                workingPressure: 0,
+                workingPressure: 0
             },
             {
                 name: 'S40',
                 size: 5.7,
-                workingPressure: 0,
+                workingPressure: 0
             },
             {
                 name: '10L',
                 size: 10,
-                workingPressure: 0,
+                workingPressure: 0
             },
             {
                 name: '12 L',
                 size: 12,
-                workingPressure: 0,
+                workingPressure: 0
             }
         ];
     }
@@ -120,7 +119,7 @@ export class MetricTanks implements StandardTanks {
         return {
             name: '15 L',
             size: TankConstants.mertricTankSize,
-            workingPressure: 0,
+            workingPressure: 0
         };
     }
 
@@ -128,7 +127,7 @@ export class MetricTanks implements StandardTanks {
         return {
             name: 'S80',
             size: TankConstants.metricStageSize,
-            workingPressure: 0,
+            workingPressure: 0
         };
     }
 }

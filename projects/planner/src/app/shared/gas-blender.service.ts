@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    GasBlender, MixRequest, MixResult, Tank
-} from 'scuba-physics';
+import { GasBlender, MixRequest, MixResult, Tank } from 'scuba-physics';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
 

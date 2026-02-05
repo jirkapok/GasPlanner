@@ -7,12 +7,10 @@ import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
 import { Options } from './Options';
 import { StandardGases } from '../gases/StandardGases';
-import { FeatureFlags } from "../common/featureFlags";
-import { LoadedTissues } from "./Tissues.api";
-import {
-    AlgorithmParams, RestingParameters, SurfaceIntervalParameters
-} from './BuhlmannAlgorithmParameters';
-import { AltitudePressure } from "../physics/pressure-converter";
+import { FeatureFlags } from '../common/featureFlags';
+import { LoadedTissues } from './Tissues.api';
+import { AlgorithmParams, RestingParameters, SurfaceIntervalParameters } from './BuhlmannAlgorithmParameters';
+import { AltitudePressure } from '../physics/pressure-converter';
 
 describe('Buhlmann Algorithm - Repetitive dives', () => {
     const sut = new BuhlmannAlgorithm();
@@ -32,22 +30,23 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
         return sut.decompression(parameters);
     };
 
-    const depths: number[] =  Array.from(
-        { length: 11 },
-        (v, index) => 12 + index * 3
-    );
+    const depths: number[] = Array.from({ length: 11 }, (v, index) => 12 + index * 3);
 
-    const noDecoLimits = (rest?: RestingParameters): number[] => _(depths).map(depth => {
-        const parameters = createDiveParameters(depth, rest);
-        return sut.noDecoLimit(parameters);
-    }).value();
+    const noDecoLimits = (rest?: RestingParameters): number[] =>
+        _(depths)
+            .map(depth => {
+                const parameters = createDiveParameters(depth, rest);
+                return sut.noDecoLimit(parameters);
+            })
+            .value();
 
-    const toTissueResult = (loaded: LoadedTissues, precision = 8) => _(loaded)
-        .map(t => ({
-            pN2: Precision.round(t.pN2, precision),
-            pHe: Precision.round(t.pHe, precision)
-        }))
-        .value();
+    const toTissueResult = (loaded: LoadedTissues, precision = 8) =>
+        _(loaded)
+            .map(t => ({
+                pN2: Precision.round(t.pN2, precision),
+                pHe: Precision.round(t.pHe, precision)
+            }))
+            .value();
 
     const applySurfaceInterval = (loaded: LoadedTissues, altitude: number, duration: number): LoadedTissues => {
         const parameters = new SurfaceIntervalParameters(loaded, altitude, duration);
@@ -66,7 +65,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
     });
 
     describe('Surface interval', () => {
-        it('Isn\'t applied for 0 seconds surface interval duration', () => {
+        it("Isn't applied for 0 seconds surface interval duration", () => {
             const diveResult = diveOnTrimix();
             const restedTissues = applySurfaceInterval(diveResult.finalTissues, 0, 0);
             const r1 = toTissueResult(diveResult.finalTissues);
@@ -82,7 +81,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             expect(r1).toEqual(r2);
         });
 
-        it('Doesn\'t change not loaded tissues', () => {
+        it("Doesn't change not loaded tissues", () => {
             const r1 = toTissueResult(stableTissues);
             const restedTissues = applySurfaceInterval(stableTissues, 0, Time.oneMinute * 10);
             const r2 = toTissueResult(restedTissues);
@@ -93,9 +92,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const r1 = toTissueResult(stableTissues);
             const restedTissues = applySurfaceInterval(stableTissues, 1000, Time.oneMinute * 10);
             const r2 = toTissueResult(restedTissues);
-            expect(_(r1).every((item, index) =>
-                item.pN2 > r2[index].pN2 && r2[index].pN2 !== 0 && r2[index].pHe === 0
-            )).toBeTruthy();
+            expect(_(r1).every((item, index) => item.pN2 > r2[index].pN2 && r2[index].pN2 !== 0 && r2[index].pHe === 0)).toBeTruthy();
         });
 
         it('Adapts to lower altitude', () => {
@@ -103,9 +100,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const r1 = toTissueResult(source);
             const result2 = applySurfaceInterval(stableTissues, 500, Time.oneMinute * 10);
             const r2 = toTissueResult(result2);
-            expect(_(r1).every((item, index) =>
-                item.pN2 < r2[index].pN2 && r2[index].pN2 !== 0 && r2[index].pHe === 0
-            )).toBeTruthy();
+            expect(_(r1).every((item, index) => item.pN2 < r2[index].pN2 && r2[index].pN2 !== 0 && r2[index].pHe === 0)).toBeTruthy();
         });
 
         it('Adapts helium loading', () => {
@@ -113,9 +108,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const r1 = toTissueResult(diveResult.finalTissues);
             const result2 = applySurfaceInterval(diveResult.finalTissues, 0, Time.oneMinute * 10);
             const r2 = toTissueResult(result2);
-            expect(_(r1).every((item, index) =>
-                item.pHe > r2[index].pHe && item.pHe !== 0 && r2[index].pHe !== 0
-            )).toBeTruthy();
+            expect(_(r1).every((item, index) => item.pHe > r2[index].pHe && item.pHe !== 0 && r2[index].pHe !== 0)).toBeTruthy();
         });
 
         it('Tissue come back to original state after 1.5 days surface interval', () => {
@@ -161,8 +154,7 @@ describe('Buhlmann Algorithm - Repetitive dives', () => {
             const firstDiveNdl = noDecoLimits();
             const restingParameters = new RestingParameters(firstDive.finalTissues, Time.oneMinute * 10);
             const secondDiveNdl = noDecoLimits(restingParameters);
-            expect(_(firstDiveNdl).every((item, index) => item > secondDiveNdl[index] ))
-                .toBeTruthy();
+            expect(_(firstDiveNdl).every((item, index) => item > secondDiveNdl[index])).toBeTruthy();
         });
     });
 });

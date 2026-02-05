@@ -15,8 +15,10 @@ import { GasConsumedDifferenceTankComponent } from './tank-chart/diff-gas-consum
 export class GasConsumedDifferenceComponent {
     public icon = faSlidersH;
 
-    constructor(public profileDif: ProfileComparatorService, public gasesDiff: GasesComparisonService) {
-    }
+    constructor(
+        public profileDif: ProfileComparatorService,
+        public gasesDiff: GasesComparisonService
+    ) {}
 
     public get gasesDifference(): ConsumedGasDifference[] {
         return this.gasesDiff.gasesDifference;

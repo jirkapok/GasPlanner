@@ -1,132 +1,165 @@
 <form [formGroup]="rootForm">
-  <div class="mt-5">
-    <div class="row">
-      <div>
-        @if (startup.showDisclaimer) {
-          <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
-            <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
-            <span><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else
-            connected with this project can be responsible
-            for your use of the information provided by this application or linked from these web pages. Use
-          the results at your own risk.</span>
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-          (click)="startup.stopDisclaimer()"></button>
-        </div>
-      }
+    <div class="mt-5">
+        <div class="row">
+            <div>
+                @if (startup.showDisclaimer) {
+                    <div class="alert alert-warning alert-dismissible fade show mt-4" role="alert">
+                        <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
+                        <span
+                            ><strong>Disclaimer:</strong> None of the authors, contributors, administrators, or anyone else connected with
+                            this project can be responsible for your use of the information provided by this application or linked from
+                            these web pages. Use the results at your own risk.</span
+                        >
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                            (click)="startup.stopDisclaimer()"
+                        ></button>
+                    </div>
+                }
 
-      @if (startup.showInstallButton) {
-        <div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
-          <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
-          <span>To be able to use the application in offline mode, you need to add it (install) to your Home screen.</span>
-          @if (startup.showAppleInstall) {
-            <span>Tap "Share" button and than "Add to home screen".</span>
-          }
-          @if (!startup.showAppleInstall) {
-            <button (click)="startup.addToHomeScreen()"
-            class="btn btn-success btn-small mr-auto ms-3">Add to Home screen</button>
-          }
-          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
-          (click)="startup.stopShowInstallButton()"></button>
+                @if (startup.showInstallButton) {
+                    <div class="alert alert-info alert-dismissible fade show mt-4" role="alert">
+                        <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
+                        <span>To be able to use the application in offline mode, you need to add it (install) to your Home screen.</span>
+                        @if (startup.showAppleInstall) {
+                            <span>Tap "Share" button and than "Add to home screen".</span>
+                        }
+                        @if (!startup.showAppleInstall) {
+                            <button (click)="startup.addToHomeScreen()" class="btn btn-success btn-small mr-auto ms-3">
+                                Add to Home screen
+                            </button>
+                        }
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="alert"
+                            aria-label="Close"
+                            (click)="startup.stopShowInstallButton()"
+                        ></button>
+                    </div>
+                }
+            </div>
+
+            <app-plan-tabs></app-plan-tabs>
+
+            @if (imperialUnits) {
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
+                        'col-12': isComplex
+                    }"
+                >
+                    @if (!isComplex) {
+                        <app-tanks-simple [rootForm]="rootForm"></app-tanks-simple>
+                    }
+                    @if (isComplex) {
+                        <app-tanks-complex [rootForm]="rootForm"></app-tanks-complex>
+                    }
+                </div>
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
+                        'col-12 col-lg-7': isComplex
+                    }"
+                >
+                    @if (!isComplex) {
+                        <app-depths-simple [rootForm]="rootForm"></app-depths-simple>
+                    }
+                    @if (isComplex) {
+                        <app-depths-complex [rootForm]="rootForm"></app-depths-complex>
+                    }
+                </div>
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,
+                        'col-12 col-lg-5': isComplex
+                    }"
+                >
+                    <app-diveoptions [rootForm]="rootForm"></app-diveoptions>
+                </div>
+                <div class="col-12 col-lg-12 col-xl-5 col-xxl-6 mb-4">
+                    <app-profilechart></app-profilechart>
+                </div>
+                <div class="col-md-6 col-xl-3 mt-4">
+                    <app-waypoints></app-waypoints>
+                </div>
+                <div class="col-md-6 col-xl-4 col-xxl-3 mb-4">
+                    <app-diveinfo></app-diveinfo>
+                </div>
+            }
+            @if (!imperialUnits) {
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
+                        'col-12 col-xxl-5': isComplex
+                    }"
+                >
+                    @if (!isComplex) {
+                        <app-tanks-simple [rootForm]="rootForm"></app-tanks-simple>
+                    }
+                    @if (isComplex) {
+                        <app-tanks-complex [rootForm]="rootForm"></app-tanks-complex>
+                    }
+                </div>
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
+                        'col-12 col-lg-7 col-xxl-4': isComplex
+                    }"
+                >
+                    @if (!isComplex) {
+                        <app-depths-simple [rootForm]="rootForm"></app-depths-simple>
+                    }
+                    @if (isComplex) {
+                        <app-depths-complex [rootForm]="rootForm"></app-depths-complex>
+                    }
+                </div>
+                <div
+                    class="mb-4"
+                    [ngClass]="{
+                        'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,
+                        'col-12 col-lg-5 col-xxl-3': isComplex
+                    }"
+                >
+                    <app-diveoptions [rootForm]="rootForm"></app-diveoptions>
+                </div>
+                <div class="col-12 col-lg-12 col-xl-5 col-xxl-6 mb-4">
+                    <app-profilechart></app-profilechart>
+                </div>
+                <div class="col-md-6 col-xl-3 mb-4">
+                    <app-waypoints></app-waypoints>
+                </div>
+                <div class="col-md-6 col-xl-4 col-xxl-3 mb-4">
+                    <app-diveinfo></app-diveinfo>
+                </div>
+            }
         </div>
-      }
     </div>
 
-    <app-plan-tabs></app-plan-tabs>
-
-    @if (imperialUnits) {
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
-                'col-12': isComplex
-                }">
-        @if (!isComplex) {
-          <app-tanks-simple [rootForm]="rootForm"></app-tanks-simple>
+    <div class="position-fixed top-0 end-0 px-3 py-2 m-16 mt-5 success">
+        @if (toastVisible) {
+            <div
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+                class="toast fade text-light mt-2 bg-success success"
+                data-autohide="true"
+            >
+                <div class="toast-header bg-success success text-light">
+                    <fa-icon [icon]="iconShare" class="me-2"></fa-icon>
+                    <strong class="me-auto">Share plan</strong>
+                    <button type="button" class="btn-close" aria-label="Close" (click)="hideToast()"></button>
+                </div>
+                <div class="toast-body alert-success">URL address of this dive plan was copied to the clipboard.</div>
+            </div>
         }
-        @if (isComplex) {
-          <app-tanks-complex [rootForm]="rootForm"></app-tanks-complex>
-        }
-      </div>
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
-                'col-12 col-lg-7': isComplex
-                }">
-        @if (!isComplex) {
-          <app-depths-simple [rootForm]="rootForm"></app-depths-simple>
-        }
-        @if (isComplex) {
-          <app-depths-complex [rootForm]="rootForm"></app-depths-complex>
-        }
-      </div>
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,
-                'col-12 col-lg-5': isComplex
-                } ">
-        <app-diveoptions [rootForm]="rootForm"></app-diveoptions>
-      </div>
-      <div class="col-12 col-lg-12 col-xl-5 col-xxl-6 mb-4">
-        <app-profilechart></app-profilechart>
-      </div>
-      <div class="col-md-6 col-xl-3 mt-4">
-        <app-waypoints></app-waypoints>
-      </div>
-      <div class="col-md-6 col-xl-4 col-xxl-3 mb-4">
-        <app-diveinfo></app-diveinfo>
-      </div>
-    }
-    @if (!imperialUnits) {
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
-                'col-12 col-xxl-5': isComplex
-                }">
-        @if (!isComplex) {
-          <app-tanks-simple [rootForm]="rootForm"></app-tanks-simple>
-        }
-        @if (isComplex) {
-          <app-tanks-complex [rootForm]="rootForm"></app-tanks-complex>
-        }
-      </div>
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-6 col-lg-4 col-xl-4': !isComplex,
-                'col-12 col-lg-7 col-xxl-4': isComplex
-                }">
-        @if (!isComplex) {
-          <app-depths-simple [rootForm]="rootForm"></app-depths-simple>
-        }
-        @if (isComplex) {
-          <app-depths-complex [rootForm]="rootForm"></app-depths-complex>
-        }
-      </div>
-            <div class="mb-4" [ngClass]="{
-                'col-12 col-sm-12 col-md-12 col-lg-4 col-xl-4': !isComplex,
-                'col-12 col-lg-5 col-xxl-3': isComplex
-                } ">
-        <app-diveoptions [rootForm]="rootForm"></app-diveoptions>
-      </div>
-      <div class="col-12 col-lg-12 col-xl-5 col-xxl-6 mb-4">
-        <app-profilechart></app-profilechart>
-      </div>
-      <div class="col-md-6 col-xl-3 mb-4">
-        <app-waypoints></app-waypoints>
-      </div>
-      <div class="col-md-6 col-xl-4 col-xxl-3 mb-4">
-        <app-diveinfo></app-diveinfo>
-      </div>
-    }
-  </div>
-</div>
-
-<div class="position-fixed top-0 end-0 px-3 py-2 m-16 mt-5 success">
-  @if (toastVisible) {
-    <div role="alert" aria-live="assertive" aria-atomic="true"
-      class="toast fade text-light mt-2 bg-success success" data-autohide="true">
-      <div class="toast-header bg-success success text-light">
-        <fa-icon [icon]="iconShare" class="me-2"></fa-icon>
-        <strong class="me-auto">Share plan</strong>
-        <button type="button" class="btn-close" aria-label="Close" (click)="hideToast()"></button>
-      </div>
-      <div class="toast-body alert-success">
-        URL address of this dive plan was copied to the clipboard.
-      </div>
     </div>
-  }
-</div>
 </form>

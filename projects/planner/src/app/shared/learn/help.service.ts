@@ -10,8 +10,7 @@ export class HelpService {
 
     // TODO add support for scrolling to open/close the help using gestures side panel
     //  https://hammerjs.github.io/tips/
-    constructor(private modalService: MdbModalService) {
-    }
+    constructor(private modalService: MdbModalService) {}
 
     public openQuizHelp(): void {
         this.openHelp('quiz-help');

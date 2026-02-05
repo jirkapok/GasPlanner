@@ -1,9 +1,9 @@
-import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
-import { Segments } from "../depths/Segments";
-import { Gas, Gases } from "../gases/Gases";
-import { Options } from "./Options";
-import { Tissues, TissuesValidator } from "./Tissues";
-import { Time } from "../physics/Time";
+import { LoadedTissues, TissueOverPressures } from './Tissues.api';
+import { Segments } from '../depths/Segments';
+import { Gas, Gases } from '../gases/Gases';
+import { Options } from './Options';
+import { Tissues, TissuesValidator } from './Tissues';
+import { Time } from '../physics/Time';
 
 // Speed in meters / min.
 export const durationFor = (depthDifference: number, speed: number): number => {
@@ -31,8 +31,10 @@ export class RestingParameters {
      * If no tissues are provided, default (first dive) are created and surfaceInterval has no effect.
      * @param surfaceInterval Duration of diver rest between two dives in seconds, Infinity for first dive.
      */
-    constructor(public current: LoadedTissues, public surfaceInterval: number) {
-    }
+    constructor(
+        public current: LoadedTissues,
+        public surfaceInterval: number
+    ) {}
 }
 
 /** Parameters to request application of surface interval */
@@ -45,8 +47,11 @@ export class SurfaceIntervalParameters {
      * Usually altitude of the following dive.
      * @param surfaceInterval Duration of diver rest between two dives in seconds.
      */
-    constructor(public previousTissues: LoadedTissues, public altitude: number, public surfaceInterval: number) {
-    }
+    constructor(
+        public previousTissues: LoadedTissues,
+        public altitude: number,
+        public surfaceInterval: number
+    ) {}
 }
 
 export class AlgorithmParams {
@@ -111,7 +116,7 @@ export class AlgorithmParams {
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {
         // helps calculator to don't generate tissues for first dive
-        if(provided && TissuesValidator.valid(provided?.current)) {
+        if (provided && TissuesValidator.valid(provided?.current)) {
             return provided;
         }
 

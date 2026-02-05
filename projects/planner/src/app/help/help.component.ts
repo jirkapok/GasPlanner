@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import _ from 'lodash';
-import { NgxMdModule  } from 'ngx-md';
+import { NgxMdModule } from 'ngx-md';
 import { NgClass, Location } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
@@ -90,7 +90,8 @@ export class HelpComponent implements OnInit {
         public urls: Urls,
         private location: Location,
         private viewStates: SubViewStorage,
-        markdown: MarkdownCustomization) {
+        markdown: MarkdownCustomization
+    ) {
         markdown.configure();
     }
 
@@ -117,12 +118,12 @@ export class HelpComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if(this.document === HelpComponent.defaultDocument && !this.anchor) {
+        if (this.document === HelpComponent.defaultDocument && !this.anchor) {
             this.loadState();
         }
     }
 
-    public updatePath(item: { path: string, anchor?: string }): void {
+    public updatePath(item: { path: string; anchor?: string }): void {
         this.document = item.path;
         this.anchor = item.anchor;
         this.scrollToAnchor();
@@ -145,7 +146,7 @@ export class HelpComponent implements OnInit {
         }
     }
 
-    public isActiveDocument(item: {path: string, anchor: string }): boolean {
+    public isActiveDocument(item: { path: string; anchor: string }): boolean {
         return this.document === item.path && (this.anchor || '') === (item.anchor || '');
     }
 
@@ -154,9 +155,7 @@ export class HelpComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: HelpViewState = this.viewStates.loadView(
-            KnownViews.help
-        );
+        let state: HelpViewState = this.viewStates.loadView(KnownViews.help);
 
         if (!state) {
             state = this.createState();
@@ -175,7 +174,7 @@ export class HelpComponent implements OnInit {
 
     private createState(): HelpViewState {
         return {
-            id:  KnownViews.help,
+            id: KnownViews.help,
             document: this.document,
             anchor: this.anchor
         };

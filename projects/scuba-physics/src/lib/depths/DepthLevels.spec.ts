@@ -74,8 +74,6 @@ describe('Depth Levels', () => {
         });
     });
 
-
-
     describe('Add safety stop', () => {
         it('Minimum auto stop depth is applied', () => {
             options.minimumAutoStopDepth = 20;

@@ -19,14 +19,16 @@ import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: DiverOptions = new DiverOptions();
     @Input() public diverForm!: FormGroup;
-    @Output()public changed = new EventEmitter();
+    @Output() public changed = new EventEmitter();
 
     private _rmvStep = 0.1;
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
+        public units: UnitConversion
+    ) {
         super();
     }
 
@@ -72,8 +74,7 @@ export class DiverComponent extends Streamed implements OnInit {
         const stressRmvControl = this.fb.control(this.stressRmv, this.validators.diverRmv);
         this.diverForm.addControl('stressRmv', stressRmvControl);
 
-        this.units.ranges$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((r) => this.rangeChanged(r));
+        this.units.ranges$.pipe(takeUntil(this.unsubscribe$)).subscribe(r => this.rangeChanged(r));
     }
 
     public inputChanged(): void {

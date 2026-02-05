@@ -4,9 +4,7 @@ import { ProfileComparatorService } from './profileComparatorService';
 import { TextConstants } from '../TextConstants';
 import { formatNumber } from '@angular/common';
 import { DiveResults } from '../diveresults';
-import {
-    faArrowDown, faArrowUp, faMinus, IconDefinition
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp, faMinus, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 export class ResultDiff {
     private arrowUp: IconDefinition = faArrowUp;
@@ -21,8 +19,8 @@ export class ResultDiff {
         private profileA: () => DiveResults,
         private profileB: () => DiveResults,
         private betterDirection: number,
-        private valueAccessor: (result: DiveResults) => number,
-    ) { }
+        private valueAccessor: (result: DiveResults) => number
+    ) {}
 
     public get valueA(): number {
         return this.valueAccessor(this.profileA());
@@ -37,7 +35,7 @@ export class ResultDiff {
     }
 
     public get arrow(): IconDefinition {
-        if(this.difference > 0) {
+        if (this.difference > 0) {
             return this.arrowUp;
         }
 
@@ -51,11 +49,11 @@ export class ResultDiff {
     public get bgColor(): string {
         const projectedValue = this.betterDirection * this.difference;
 
-        if (projectedValue > 0){
+        if (projectedValue > 0) {
             return 'table-success';
         }
 
-        if (projectedValue < 0){
+        if (projectedValue < 0) {
             return 'table-danger';
         }
 
@@ -65,30 +63,68 @@ export class ResultDiff {
 
 @Injectable()
 export class ResultsComparison {
-    public totalDuration = new ResultDiff(() => this.profileA, () => this.profileB, 1,
-        d => d.totalDuration);
-    public timeToSurface = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => d.timeToSurface);
-    public averageDepth = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => this.units.fromMeters(d.averageDepth));
-    public emergencyAscentStart = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => d.emergencyAscentStart);
-    public noDeco = new ResultDiff(() => this.profileA, () => this.profileB, 1,
-        d => d.noDecoTime);
-    public maxTime = new ResultDiff(() => this.profileA, () => this.profileB, 1,
-        d => d.maxTime);
-    public highestDensity = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => this.density(d));
-    public otu = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => d.otu);
-    public cns = new ResultDiff(() => this.profileA, () => this.profileB, -1,
-        d => d.cns);
+    public totalDuration = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        1,
+        d => d.totalDuration
+    );
+    public timeToSurface = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => d.timeToSurface
+    );
+    public averageDepth = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => this.units.fromMeters(d.averageDepth)
+    );
+    public emergencyAscentStart = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => d.emergencyAscentStart
+    );
+    public noDeco = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        1,
+        d => d.noDecoTime
+    );
+    public maxTime = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        1,
+        d => d.maxTime
+    );
+    public highestDensity = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => this.density(d)
+    );
+    public otu = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => d.otu
+    );
+    public cns = new ResultDiff(
+        () => this.profileA,
+        () => this.profileB,
+        -1,
+        d => d.cns
+    );
 
     private readonly maxCns = 1000;
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
 
-    public constructor(private units: UnitConversion, private profilesDiff: ProfileComparatorService) {
-    }
+    public constructor(
+        private units: UnitConversion,
+        private profilesDiff: ProfileComparatorService
+    ) {}
 
     public get densityGasA(): string {
         return this.densityFormatted(this.profileA);

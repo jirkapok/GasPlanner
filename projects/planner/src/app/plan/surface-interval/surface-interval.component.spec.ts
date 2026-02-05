@@ -13,11 +13,8 @@ describe('SurfaceIntervalComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ SurfaceIntervalComponent ],
-            providers: [
-                DiveSchedules, UnitConversion, DecimalPipe,
-                ReloadDispatcher, InputControls, ValidatorGroups
-            ]
+            imports: [SurfaceIntervalComponent],
+            providers: [DiveSchedules, UnitConversion, DecimalPipe, ReloadDispatcher, InputControls, ValidatorGroups]
         });
         fixture = TestBed.createComponent(SurfaceIntervalComponent);
         component = fixture.componentInstance;

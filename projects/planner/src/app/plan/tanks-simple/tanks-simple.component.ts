@@ -40,7 +40,8 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private diveSchedules: DiveSchedules,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -80,20 +81,17 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         });
 
         if (this.units.imperialUnits) {
-            const workPressureControl = this.fb.control(
-                Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure);
+            const workPressureControl = this.fb.control(Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure);
             this.tanksForm.addControl('workPressure', workPressureControl);
         }
 
-        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((source: TanksService) => {
-                if(this.diveSchedules.selectedTanks === source) {
-                    this.reload();
-                }
-            });
+        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe((source: TanksService) => {
+            if (this.diveSchedules.selectedTanks === source) {
+                this.reload();
+            }
+        });
 
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reload());
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.reload());
 
         this.rootForm.addControl('tanks', this.tanksForm);
     }
@@ -120,7 +118,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
         }
 
         this.tanksForm.patchValue({
-            workPressure: template.workingPressure,
+            workPressure: template.workingPressure
         });
 
         this.applySimple();

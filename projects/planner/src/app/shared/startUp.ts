@@ -20,7 +20,7 @@ export class DashboardStartUp {
         private viewStore: SubViewStorage,
         private views: ViewStates,
         private help: HelpService
-) {
+    ) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
         this._showInstallButton = this.preferences.installEnabled();
     }
@@ -36,7 +36,7 @@ export class DashboardStartUp {
     public get showAppleInstall(): boolean {
         const userAgent = window.navigator.userAgent.toLowerCase();
         const isIOs = /iphone|ipad|ipod/.test(userAgent);
-        const isInStandaloneMode = ('standalone' in window.navigator) && (window.navigator.standalone);
+        const isInStandaloneMode = 'standalone' in window.navigator && window.navigator.standalone;
         return isIOs && !isInStandaloneMode;
     }
 
@@ -78,7 +78,7 @@ export class DashboardStartUp {
             console.warn('Created url parameters with length longer than acceptable in some browsers');
         }
 
-        if(urlParams.length > 0) {
+        if (urlParams.length > 0) {
             urlParams = '?' + urlParams;
         }
 
@@ -97,10 +97,9 @@ export class DashboardStartUp {
 
         if (this.deferredPrompt) {
             this.deferredPrompt.prompt();
-            this.deferredPrompt.userChoice
-                .then((choiceResult: any) => {
-                    this.deferredPrompt = null;
-                });
+            this.deferredPrompt.userChoice.then((choiceResult: any) => {
+                this.deferredPrompt = null;
+            });
         }
     }
 

@@ -21,21 +21,21 @@ export interface SearchContext {
 
 /**
  * High performance way to find next appropriate lowest higher value in sorted array.
-  * Used to predict no decompression limit or deco stop duration based on ceiling.
+ * Used to predict no decompression limit or deco stop duration based on ceiling.
  * Uses binary (half interval) search algorithm.
  * https://en.wikipedia.org/wiki/Binary_search_algorithm
  */
 export class BinaryIntervalSearch {
     /* in our usage minimal step corresponds to one second. */
     private static readonly minimalStep = 1;
-    constructor() { }
+    constructor() {}
 
     public search(context: SearchContext): number {
-        if(context.maxValue < context.initialValue){
+        if (context.maxValue < context.initialValue) {
             throw Error('Max value cant be smaller than initial value');
         }
 
-        if(context.estimationStep > context.maxValue - context.initialValue){
+        if (context.estimationStep > context.maxValue - context.initialValue) {
             throw Error('Step cant be larger than range');
         }
 

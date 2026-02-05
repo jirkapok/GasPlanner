@@ -1,26 +1,26 @@
 import { topics } from './quiz.questions';
-import { Topic, Category, QuestionTemplate} from './learn.models';
+import { Topic, Category, QuestionTemplate } from './learn.models';
 import { Question } from './quiz.question';
 
 describe('Quiz questions definition', () => {
     it('All topics have at least one category with one question', () => {
         const wrongCategories = topics
-            .flatMap((t: Topic) => t.categories.map(c => ({
+            .flatMap((t: Topic) =>
+                t.categories.map(c => ({
                     topic: t.name,
                     category: c.name,
                     questions: c.questions.length
-                })))
+                }))
+            )
             .filter(s => s.questions <= 0);
 
         expect(wrongCategories.length)
-            .withContext(`There are categories without questions: ${ JSON.stringify(wrongCategories) }`)
+            .withContext(`There are categories without questions: ${JSON.stringify(wrongCategories)}`)
             .toBe(0);
     });
 
     it('Category names should be unique across all topics', () => {
-        const allNames = topics
-            .flatMap((t: Topic) => t.categories)
-            .map((c: Category) => c.name);
+        const allNames = topics.flatMap((t: Topic) => t.categories).map((c: Category) => c.name);
 
         const uniqueNames = new Set(allNames);
 
@@ -57,11 +57,13 @@ describe('Quiz questions definition', () => {
                         const question = new Question(template);
 
                         const variables = calculateSpy.calls.mostRecent().args[0];
-                        variables.forEach(v => expect(Number.isFinite(v))
-                             .withContext(`Generated invalid variables for: '${template.question}' with variables [${ variables }].`)
-                             .toBeTruthy());
+                        variables.forEach(v =>
+                            expect(Number.isFinite(v))
+                                .withContext(`Generated invalid variables for: '${template.question}' with variables [${variables}].`)
+                                .toBeTruthy()
+                        );
                         expect(Number.isFinite(question.correctAnswer))
-                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${ variables }].`)
+                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${variables}].`)
                             .toBeTruthy();
                     }
                 });

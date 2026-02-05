@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { LoadedTissues } from "./Tissues.api";
-import { Tissue, Tissues } from "./Tissues";
+import { LoadedTissues } from './Tissues.api';
+import { Tissue, Tissues } from './Tissues';
 
 export class ProfileTissues {
     /**
@@ -40,16 +40,16 @@ export class ProfileTissues {
 
         // multilevel dives may switch multiple times between on/offgasing
         const lastLoading = tissueHistory.findLastIndex((op, index, items) => {
-            let previous = index > 0 ? items[index - 1] : op;
+            const previous = index > 0 ? items[index - 1] : op;
             return previous < op;
         });
 
-        if(lastLoading < 0) {
+        if (lastLoading < 0) {
             return loadedTissues.length === 0 ? -1 : loadedTissues.length - 1;
         }
 
-        let foundIndex = tissueHistory.findIndex((op, index, items) => {
-            let previous = index > 0 ? items[index - 1] : op;
+        const foundIndex = tissueHistory.findIndex((op, index, items) => {
+            const previous = index > 0 ? items[index - 1] : op;
             return previous > op;
         }, lastLoading);
 

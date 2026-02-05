@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { Segment } from 'scuba-physics';
-import { WayPoint } from "./wayPoint";
+import { WayPoint } from './wayPoint';
 
 @Injectable()
 export class WayPointsService {
-    constructor(private units: UnitConversion){}
+    constructor(private units: UnitConversion) {}
 
     public calculateWayPoints(profile: Segment[], startOffset: number = 0): WayPoint[] {
         const wayPoints = [];
 
-        if(profile.length === 0) {
+        if (profile.length === 0) {
             return [];
         }
 
@@ -20,7 +20,7 @@ export class WayPointsService {
         wayPoints.push(lastWayPoint);
         const exceptDescend = profile.slice(1);
 
-        exceptDescend.forEach((segment) => {
+        exceptDescend.forEach(segment => {
             const waypoint = this.toWayPoint(segment, lastWayPoint, lastSegment);
             lastWayPoint = waypoint;
             lastSegment = segment;
@@ -41,4 +41,3 @@ export class WayPointsService {
         return waypoint;
     }
 }
-

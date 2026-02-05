@@ -16,10 +16,10 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 class GasBlenderPage {
-    constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }
+    constructor(private fixture: ComponentFixture<GasBlenderComponent>) {}
 
     public get pricingToggleBtn(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#pricingToggle')).nativeElement as HTMLInputElement;
@@ -46,19 +46,27 @@ describe('GasBlenderComponent', () => {
     let fixture: ComponentFixture<GasBlenderComponent>;
     let calculateSpy: jasmine.Spy<() => void>;
     let simplePage: GasBlenderPage;
-    beforeEach(async() => {
+    beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, GasBlenderComponent],
-    providers: [
-        UnitConversion,
-        GasBlenderService, BlendPricingService,
-        ValidatorGroups, InputControls, DecimalPipe,
-        SubViewStorage, ViewStates, PreferencesStore,
-        Preferences, ViewSwitchService, DiveSchedules,
-        ReloadDispatcher, ApplicationSettingsService,
-        MdbModalService
-    ]
-}).compileComponents();
+            imports: [ReactiveFormsModule, GasBlenderComponent],
+            providers: [
+                UnitConversion,
+                GasBlenderService,
+                BlendPricingService,
+                ValidatorGroups,
+                InputControls,
+                DecimalPipe,
+                SubViewStorage,
+                ViewStates,
+                PreferencesStore,
+                Preferences,
+                ViewSwitchService,
+                DiveSchedules,
+                ReloadDispatcher,
+                ApplicationSettingsService,
+                MdbModalService
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -71,7 +79,6 @@ describe('GasBlenderComponent', () => {
     });
 
     it('should toggle pricing and display total price', () => {
-
         expect(simplePage.pricingToggleBtn.checked).toBeFalsy();
 
         simplePage.pricingToggleBtn.click();

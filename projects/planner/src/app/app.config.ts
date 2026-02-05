@@ -57,9 +57,7 @@ import { DiffComponent } from './diff/diff.component';
 import { DiffTabsButtonComponent } from './diff/tabs/profile-button/diff-tabs-button.component';
 import { DiffTabsComponent } from './diff/tabs/diff-tabs.component';
 import { GasConsumedDifferenceComponent } from './diff/gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
-import {
-    GasConsumedDifferenceTankComponent
-} from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
+import { GasConsumedDifferenceTankComponent } from './diff/gasconsumed/diff-gas-consumed/tank-chart/diff-gas-consumed-tank-chart.component';
 import { WaypointsDifferenceComponent } from './diff/waypoints/diff-waypoints.component';
 import { DiveResultsDifferenceComponent } from './diff/diveresults/diff-diveresults.component';
 import { ProfileDifferenceChartComponent } from './diff/profilechart/diff-profilechart.component';
@@ -112,11 +110,7 @@ import { AppFooterComponent } from './footer/footer.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 
-const ANGULAR_MODULES = [
-    CommonModule,
-    FontAwesomeModule,
-    ReactiveFormsModule
-];
+const ANGULAR_MODULES = [CommonModule, FontAwesomeModule, ReactiveFormsModule];
 
 const MDB_MODULES = [
     MdbCollapseModule,
@@ -125,7 +119,7 @@ const MDB_MODULES = [
     MdbTabsModule,
     MdbAccordionModule,
     MdbModalModule,
-    MdbModalService,
+    MdbModalService
 ];
 
 const STANDALONE = [
@@ -176,7 +170,7 @@ const STANDALONE = [
     AltitudeComponent,
     GaslabelComponent,
     SalinityComponent,
-    TankSizeComponent,
+    TankSizeComponent
 ];
 
 const SERVICES = [
@@ -237,13 +231,9 @@ export const CONFIG = {
             // Register the ServiceWorker as soon as the application is stable
             // or after 30 seconds (whichever comes first).
             registrationStrategy: 'registerWhenStable:30000'
-        }),
+        })
     ],
     exports: [],
-    providers: [
-        ...SERVICES,
-        provideAnimations(),
-        provideRouter(routes, withComponentInputBinding()),
-    ],
+    providers: [...SERVICES, provideAnimations(), provideRouter(routes, withComponentInputBinding())],
     bootstrap: []
 };

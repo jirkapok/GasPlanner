@@ -11,15 +11,8 @@ import { DecimalPipe } from '@angular/common';
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.scss'],
-    providers: [
-        InputControls, DecimalPipe,
-        ValidatorGroups, UnitConversion
-    ],
-    imports: [
-    ReactiveFormsModule,
-    MdbFormsModule,
-    MdbDropdownModule
-],
+    providers: [InputControls, DecimalPipe, ValidatorGroups, UnitConversion],
+    imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule]
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();
@@ -32,7 +25,8 @@ export class AltitudeComponent implements OnInit {
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) { }
+        public units: UnitConversion
+    ) {}
 
     public get smallHill(): string {
         return this.levelLabel(1);
@@ -52,7 +46,7 @@ export class AltitudeComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if(!this.altitudeForm) {
+        if (!this.altitudeForm) {
             this.altitudeForm = this.fb.group({});
             const altitudeBound = this.units.fromMeters(this.altitude);
             const altitudeControl = this.fb.control(altitudeBound, this.validators.altitude);

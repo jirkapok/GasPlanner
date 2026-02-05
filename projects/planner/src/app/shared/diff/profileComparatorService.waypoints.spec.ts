@@ -26,11 +26,7 @@ describe('WayPoints Difference Service', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [
-                ProfileComparatorService,
-                DiveSchedules, UnitConversion, ReloadDispatcher,
-                WayPointsService
-            ],
+            providers: [ProfileComparatorService, DiveSchedules, UnitConversion, ReloadDispatcher, WayPointsService],
             imports: []
         }).compileComponents();
     });
@@ -85,16 +81,19 @@ describe('WayPoints Difference Service', () => {
     ];
 
     function toAssert(current: ComparedWaypoint[]): AssertedWayPoint[] {
-        return _(current).map<AssertedWayPoint>(e => ({
-            runTime: e.runTime,
-            depthA: e.depthA,
-            durationA: e.durationA,
-            depthB: e.depthB,
-            durationB: e.durationB
-        })).toArray().value();
+        return _(current)
+            .map<AssertedWayPoint>(e => ({
+                runTime: e.runTime,
+                depthA: e.depthA,
+                durationA: e.durationA,
+                depthB: e.depthB,
+                durationB: e.durationB
+            }))
+            .toArray()
+            .value();
     }
 
-    const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: AssertedWayPoint[])=> {
+    const assertDivesWayPointsCompare = (profileA: Segment[], profileB: Segment[], expected: AssertedWayPoint[]) => {
         schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(profileA), irrelevantTissues);
         schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(profileB), irrelevantTissues);
         // simulate calculation behavior to enforce cache of waypoints
@@ -104,7 +103,7 @@ describe('WayPoints Difference Service', () => {
         expect(current).toEqual(expected);
     };
 
-    it('Not calculated profile A', (done) => {
+    it('Not calculated profile A', done => {
         setCalculationRunning(0);
 
         setTimeout(() => {
@@ -113,7 +112,7 @@ describe('WayPoints Difference Service', () => {
         }, 500);
     });
 
-    it('Not calculated profile B', (done) => {
+    it('Not calculated profile B', done => {
         setCalculationRunning(1);
 
         setTimeout(() => {
@@ -138,7 +137,7 @@ describe('WayPoints Difference Service', () => {
         const expected: AssertedWayPoint[] = [
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
-            { runTime: 360, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            { runTime: 360, depthA: 0, durationA: 180, depthB: 0, durationB: 180 }
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, expected);
     });
@@ -148,7 +147,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: undefined, durationB: undefined },
             { runTime: 360, depthA: 0, durationA: 180, depthB: 20, durationB: 300 },
-            { runTime: 540, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
+            { runTime: 540, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 }
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes9, expected);
     });
@@ -158,7 +157,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 60, depthA: 20, durationA: 60, depthB: 20, durationB: 60 },
             { runTime: 180, depthA: undefined, durationA: undefined, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 20, durationA: 300, depthB: 0, durationB: 180 },
-            { runTime: 540, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
+            { runTime: 540, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined }
         ];
         assertDivesWayPointsCompare(segments3_minutes9, segments3_minutes6, expected);
     });
@@ -169,7 +168,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
             { runTime: 480, depthA: undefined, durationA: undefined, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
+            { runTime: 660, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 }
         ];
         assertDivesWayPointsCompare(segments3_minutes6, segments4_minutes11, expected);
     });
@@ -180,7 +179,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
             { runTime: 480, depthA: 10, durationA: 300, depthB: undefined, durationB: undefined },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
+            { runTime: 660, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined }
         ];
         assertDivesWayPointsCompare(segments4_minutes11, segments3_minutes6, expected);
     });
@@ -192,7 +191,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 150, depthA: undefined, durationA: undefined, depthB: 15, durationB: 60 },
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 30 },
             { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 }
         ];
         assertDivesWayPointsCompare(segments4_minutes11, segments6_minutes11, expected);
     });
@@ -204,7 +203,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 150, depthA: 15, durationA: 60, depthB: undefined, durationB: undefined },
             { runTime: 180, depthA: 20, durationA: 30, depthB: 20, durationB: 120 },
             { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
-            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
+            { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 }
         ];
         assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
     });

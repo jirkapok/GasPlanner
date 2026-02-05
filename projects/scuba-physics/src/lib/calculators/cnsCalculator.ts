@@ -11,7 +11,7 @@ import { Segment } from '../depths/Segments';
 export class CnsCalculator {
     private readonly minimumPpO2 = 0.5;
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter) {}
 
     /** Calculates total CNS % for provided profile */
     public calculateForProfile(profile: Segment[]): number {
@@ -38,20 +38,20 @@ export class CnsCalculator {
         const aap = this.depthConverter.toBar(avgDepth);
         const ppO2 = fO2 * aap;
 
-        if(ppO2 <= this.minimumPpO2) {
+        if (ppO2 <= this.minimumPpO2) {
             return 0;
         }
 
         // https://thetheoreticaldiver.org/wordpress/index.php/2019/08/15/calculating-oxygen-cns-toxicity/
         const exponent = this.exponentByPpO2(ppO2);
-        const rate =  Math.exp(exponent);
+        const rate = Math.exp(exponent);
         const cns = duration * rate;
         return cns * 100;
     }
 
     // slope function as mentioned from the paper above
     private exponentByPpO2(ppO2: number): number {
-        if(ppO2 <= 1.5) {
+        if (ppO2 <= 1.5) {
             return -11.7853 + 1.93873 * ppO2;
         }
 

@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
-import {
-    AppOptionsDto, AppPreferences, AppPreferencesDto,
-    AppStates, DiveDto, ITankBound, TankDto
-} from './serialization.model';
+import { AppOptionsDto, AppPreferences, AppPreferencesDto, AppStates, DiveDto, ITankBound, TankDto } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
@@ -23,14 +20,14 @@ export class Preferences {
         private appSettings: ApplicationSettingsService,
         private viewStates: ViewStates,
         private quizService: QuizService
-    ) { }
+    ) {}
 
     private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
         for (let index = 0; index < target.length; index++) {
             const loadedWorkingPressure = source[index].workPressure;
 
             // to prevent load 0 in imperial units, for metrics, 0 is default anyway
-            if(loadedWorkingPressure > 0) {
+            if (loadedWorkingPressure > 0) {
                 target[index].workingPressureBars = loadedWorkingPressure;
             }
         }
@@ -52,7 +49,7 @@ export class Preferences {
         this.viewStates.loadFrom(loaded.states);
         const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
 
-        if(mainView) {
+        if (mainView) {
             this.schedules.setSelectedIndex(mainView.selectedDiveIndex);
         }
     }
@@ -68,7 +65,7 @@ export class Preferences {
         Preferences.loadWorkingPressure(loadedDive.tanks, diveSchedule.tanksService.tanks);
         diveSchedule.depths.loadFrom(setup.segments);
 
-        if(loadedDive.surfaceInterval) {
+        if (loadedDive.surfaceInterval) {
             diveSchedule.surfaceInterval = loadedDive.surfaceInterval;
         }
     }
@@ -91,7 +88,7 @@ export class Preferences {
     }
 
     private applyDives(loaded: DiveDto[]): void {
-        if(loaded.length > 0) {
+        if (loaded.length > 0) {
             // consider better way than rebuild dives from scratch
             this.schedules.clear();
             this.loadDive(this.schedules.dives[0], loaded[0]);

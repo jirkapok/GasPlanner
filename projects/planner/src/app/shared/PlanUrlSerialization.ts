@@ -1,16 +1,9 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
-import {
-    AirBreakOptions, OptionDefaults,
-    Diver, Options, SafetyStop, Salinity, Segment
-} from 'scuba-physics';
+import { AirBreakOptions, OptionDefaults, Diver, Options, SafetyStop, Salinity, Segment } from 'scuba-physics';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
-import {
-    AirBreaksDto,
-    AppOptionsDto, AppPreferencesDto, DiverDto,
-    OptionsDto, SegmentDto, TankDto
-} from './serialization.model';
+import { AirBreaksDto, AppOptionsDto, AppPreferencesDto, DiverDto, OptionsDto, SegmentDto, TankDto } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
@@ -32,13 +25,13 @@ class ParseContext {
     }
 
     public static deserializeBoolean(value: string): boolean {
-        return (value === ParseContext.trueValue);
+        return value === ParseContext.trueValue;
     }
 
     public parseNullableNumber(index: number): number | undefined {
         const toParse = this.paramValues[index];
 
-        if(toParse === '') {
+        if (toParse === '') {
             return undefined;
         }
 
@@ -90,7 +83,7 @@ export class PlanUrlSerialization {
         private schedules: DiveSchedules,
         private appSettings: ApplicationSettingsService,
         private preferences: Preferences
-    ) { }
+    ) {}
 
     private static fromOptionsParam(optionsParam: string): OptionsDto {
         const context = new ParseContext(optionsParam, ',');
@@ -124,7 +117,8 @@ export class PlanUrlSerialization {
         const roundStopsToMinutes = ParseContext.serializeBoolean(o.roundStopsToMinutes);
         const airBreaks = PlanUrlSerialization.toAirBreakParams(o.airBreaks);
 
-        const optionsParam = `${o.altitude},` +
+        const optionsParam =
+            `${o.altitude},` +
             `${o.ascentSpeed50perc},${o.ascentSpeed50percTo6m},${o.ascentSpeed6m},` +
             `${o.decoStopDistance},${o.descentSpeed},${o.gasSwitchDuration},` +
             `${o.gfHigh},${o.gfLow},${o.lastStopDepth},${o.maxDecoPpO2},${o.maxEND},` +
@@ -140,7 +134,7 @@ export class PlanUrlSerialization {
         return airBreaksParam;
     }
     private static fromAirBreakParam(context: ParseContext): AirBreaksDto {
-        if(context.paramValues.length > 21) {
+        if (context.paramValues.length > 21) {
             return {
                 enabled: context.parseBoolean(19),
                 oxygenDuration: context.parseNumber(20),
@@ -162,7 +156,7 @@ export class PlanUrlSerialization {
             stressRmv: context.parseNumber(1)
         };
 
-        if(!result.stressRmv) {
+        if (!result.stressRmv) {
             result.stressRmv = new Diver(result.rmv).stressRmv;
         }
 
@@ -187,13 +181,13 @@ export class PlanUrlSerialization {
                 gas: {
                     fO2: context.parseNumber(4),
                     fHe: context.parseNumber(5)
-                },
+                }
                 // consumption properties are calculated, so ignoring them
             };
             result.push(tank);
         });
 
-        result = _.sortBy(result, [(t) => t.id]);
+        result = _.sortBy(result, [t => t.id]);
         return result;
     }
 
@@ -201,7 +195,7 @@ export class PlanUrlSerialization {
         const result: string[] = [];
 
         // consumption and reserve are calculated values, we don't need to serialize them here
-        tanks.forEach((t) => {
+        tanks.forEach(t => {
             const tank = t.tank;
             const gas = tank.gas;
             const workPressure = t.workingPressureBars;
@@ -325,7 +319,7 @@ export class PlanUrlSerialization {
         const appOptionsIndex = url.indexOf('&ao=');
         let trimmedUrl = url;
 
-        if(appOptionsIndex > 0) {
+        if (appOptionsIndex > 0) {
             trimmedUrl = url.substring(0, appOptionsIndex);
         }
 
@@ -347,7 +341,7 @@ export class PlanUrlSerialization {
         const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
         let result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
 
-        if(dive.isRepetitive) {
+        if (dive.isRepetitive) {
             result += `&si=${dive.surfaceInterval}`;
         }
 
@@ -367,13 +361,15 @@ export class PlanUrlSerialization {
         const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
         const parsed: AppPreferencesDto = {
             options: this.fromAppSettingsParam(appSettingsParam),
-            dives: [{
-                options: PlanUrlSerialization.fromOptionsParam(optionsParam),
-                diver: PlanUrlSerialization.fromDiverParam(diverParam),
-                tanks: tanks,
-                plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
-                surfaceInterval: siContext.parseNullableNumber(0)
-            }]
+            dives: [
+                {
+                    options: PlanUrlSerialization.fromOptionsParam(optionsParam),
+                    diver: PlanUrlSerialization.fromDiverParam(diverParam),
+                    tanks: tanks,
+                    plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),
+                    surfaceInterval: siContext.parseNullableNumber(0)
+                }
+            ]
         };
 
         // for imperial units the string is long because of precise values,

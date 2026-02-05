@@ -18,7 +18,11 @@ export interface GradientFactors {
 export class SubSurfaceGradientFactors {
     public lowestCeiling = 0;
 
-    constructor(private depthConverter: DepthConverter, private options: Options, private tissues: Tissues) {
+    constructor(
+        private depthConverter: DepthConverter,
+        private options: Options,
+        private tissues: Tissues
+    ) {
         // add 1 to compensate gradient low on start of the dive
         this.lowestCeiling = this.depthConverter.surfacePressure + 1;
     }
@@ -51,11 +55,14 @@ export class SubSurfaceGradientFactors {
             const compartment = compartments[index];
             let currentTolerated = tolerated;
 
-            if ((surface / compartment.b + compartment.a - surface) * gfHigh + surface <
-                (lowestCeiling / compartment.b + compartment.a - lowestCeiling) * gfLow + lowestCeiling) {
-                currentTolerated = (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -
-                    (1.0 - compartment.b) * (gfHigh - gfLow) * lowestCeiling * surface +
-                    compartment.b * (lowestCeiling - surface) * compartment.pTotal) /
+            if (
+                (surface / compartment.b + compartment.a - surface) * gfHigh + surface <
+                (lowestCeiling / compartment.b + compartment.a - lowestCeiling) * gfLow + lowestCeiling
+            ) {
+                currentTolerated =
+                    (-compartment.a * compartment.b * (gfHigh * lowestCeiling - gfLow * surface) -
+                        (1.0 - compartment.b) * (gfHigh - gfLow) * lowestCeiling * surface +
+                        compartment.b * (lowestCeiling - surface) * compartment.pTotal) /
                     (-compartment.a * compartment.b * (gfHigh - gfLow) +
                         (1.0 - compartment.b) * (gfLow * lowestCeiling - gfHigh * surface) +
                         compartment.b * (lowestCeiling - surface));

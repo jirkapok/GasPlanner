@@ -8,12 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     selector: 'app-gaslabel',
     templateUrl: './gaslabel.component.html',
     styleUrls: ['./gaslabel.component.scss'],
-    imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    DecimalPipe
-],
-    providers: [ UnitConversion ]
+    imports: [CommonModule, ReactiveFormsModule, DecimalPipe],
+    providers: [UnitConversion]
 })
 export class GaslabelComponent {
     @Input()
@@ -25,7 +21,7 @@ export class GaslabelComponent {
     @Input()
     public toxicity = new GasToxicity();
 
-    constructor(public units: UnitConversion) { }
+    constructor(public units: UnitConversion) {}
 
     public get gasMod(): number {
         const mod = this.toxicity.modForGas(this.tank);

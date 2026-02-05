@@ -14,11 +14,7 @@ describe('DiveResultsDifferenceComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             imports: [DiveResultsDifferenceComponent],
-            providers: [
-                ViewSwitchService, DiveSchedules,
-                UnitConversion, ReloadDispatcher,
-                ProfileComparatorService, ResultsComparison
-            ]
+            providers: [ViewSwitchService, DiveSchedules, UnitConversion, ReloadDispatcher, ProfileComparatorService, ResultsComparison]
         }).compileComponents();
         fixture = TestBed.createComponent(DiveResultsDifferenceComponent);
         component = fixture.componentInstance;

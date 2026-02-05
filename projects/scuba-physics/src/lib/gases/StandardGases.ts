@@ -1,7 +1,7 @@
 import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import _ from 'lodash';
-import { GasNames } from "./GasNames";
+import { GasNames } from './GasNames';
 
 export class StandardGases {
     // theoretical range for ppo2 1.3 test data (even not used all gases with these values)
@@ -68,7 +68,7 @@ export class StandardGases {
         ['Trimix 18/45', StandardGases.trimix1845],
         ['Trimix 15/55', StandardGases.trimix1555],
         ['Trimix 12/60', StandardGases.trimix1260],
-        ['Trimix 10/70', StandardGases.trimix1070],
+        ['Trimix 10/70', StandardGases.trimix1070]
     ]);
 
     /**
@@ -76,8 +76,7 @@ export class StandardGases {
      * This is subset of allNames
      */
     public static nitroxNames(): string[] {
-        return StandardGases.allNames()
-            .slice(0, 6);
+        return StandardGases.allNames().slice(0, 6);
     }
 
     /** Gets names of all predefined gases including both nitrox and trimix gases */
@@ -89,7 +88,7 @@ export class StandardGases {
     public static byName(name: string): Gas | null {
         const keys = [...StandardGases.map.keys()];
         const foundKey = _(keys)
-            .filter((k) => k.toLowerCase() === name.toLowerCase())
+            .filter(k => k.toLowerCase() === name.toLowerCase())
             .first();
 
         if (foundKey) {

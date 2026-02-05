@@ -23,7 +23,10 @@ export interface DepthLevelOptions {
 }
 
 export class DepthLevels {
-    constructor(private depthConverter: DepthConverter, private options: DepthLevelOptions) { }
+    constructor(
+        private depthConverter: DepthConverter,
+        private options: DepthLevelOptions
+    ) {}
 
     /**
      * Converts the pressure to depth in meters and round it to nearest deco stop
@@ -39,7 +42,7 @@ export class DepthLevels {
      * returns 0 m for ascent to surface
      * currentDepth and return value in meters
      * this creates ascent using 3 meter increments
-    */
+     */
     public nextStop(currentDepth: number): number {
         if (currentDepth <= this.options.lastStopDepth) {
             return 0;
@@ -53,7 +56,7 @@ export class DepthLevels {
 
         const result = currentDepth - this.options.decoStopDistance;
 
-        if(result <= this.options.lastStopDepth) {
+        if (result <= this.options.lastStopDepth) {
             return this.options.lastStopDepth;
         }
 
@@ -61,8 +64,10 @@ export class DepthLevels {
     }
 
     public addSafetyStop(currentDepth: number, maxDepth: number): boolean {
-        return (this.options.safetyStop === SafetyStop.always ||
+        return (
+            (this.options.safetyStop === SafetyStop.always ||
                 (this.options.safetyStop === SafetyStop.auto && maxDepth > this.options.minimumAutoStopDepth)) &&
-                 currentDepth === this.options.lastStopDepth;
+            currentDepth === this.options.lastStopDepth
+        );
     }
 }

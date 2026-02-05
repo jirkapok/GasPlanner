@@ -5,7 +5,7 @@ import { Segments } from '../depths/Segments';
 import { OptionExtensions } from './Options.spec';
 import { Salinity } from '../physics/pressure-converter';
 import { StandardGases } from '../gases/StandardGases';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 describe('Buhlmann Algorithm - No decompression times', () => {
     it('Ndl at surface returns Infinity', () => {
@@ -119,7 +119,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 [36, 11],
                 [39, 9],
                 [42, 9],
-                [100, 5], // Where is the limit for no decompression depth?
+                [100, 5] // Where is the limit for no decompression depth?
             ];
 
             calculateNoDecompressionLimit(noDecoLimitTestCases, Salinity.fresh);
@@ -139,11 +139,11 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 [36, 8],
                 [39, 7],
                 [42, 7],
-                [100, 4], // Where is the limit for no decompression depth?
+                [100, 4] // Where is the limit for no decompression depth?
             ];
 
-            options.gfLow = .4;
-            options.gfHigh = .85;
+            options.gfLow = 0.4;
+            options.gfHigh = 0.85;
             calculateNoDecompressionLimit(noDecoLimitTestCases, Salinity.fresh);
             options.gfLow = 1;
             options.gfHigh = 1;
@@ -163,7 +163,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 [36, 10],
                 [39, 9],
                 [42, 8],
-                [100, 5], // Where is the limit for no decompression depth?
+                [100, 5] // Where is the limit for no decompression depth?
             ];
 
             calculateNoDecompressionLimit(noDecoLimitTestCasesSalt, Salinity.salt);

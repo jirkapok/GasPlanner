@@ -88,7 +88,7 @@ export class GasProperties {
     public get ead(): number {
         const eadDepthPressure = GasMixtures.ead(this.gas.fO2, this.depthPressure);
 
-        if(eadDepthPressure <= this.depthConverter.surfacePressure) {
+        if (eadDepthPressure <= this.depthConverter.surfacePressure) {
             return 0;
         }
 
@@ -99,7 +99,7 @@ export class GasProperties {
     public get end(): number {
         let endDepthPressure = this.gas.end(this.depthPressure, this.oxygenNarcotic);
 
-        if(endDepthPressure < this.depthConverter.surfacePressure) {
+        if (endDepthPressure < this.depthConverter.surfacePressure) {
             endDepthPressure = this.depthConverter.surfacePressure;
         }
 

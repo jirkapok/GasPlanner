@@ -9,12 +9,12 @@ describe('Gas Density', () => {
         const sut = new GasDensity();
 
         it('of Air is 1.28817', () => {
-            const density = sut.forContent(.21, 0);
+            const density = sut.forContent(0.21, 0);
             expect(density).toBeCloseTo(1.28817, 5);
         });
 
         it('of Ean32 is 1.30764', () => {
-            const density = sut.forContent(.32, 0);
+            const density = sut.forContent(0.32, 0);
             expect(density).toBeCloseTo(1.30764, 5);
         });
 
@@ -24,7 +24,7 @@ describe('Gas Density', () => {
         });
 
         it('of Trimix 18/45 is 0.80046', () => {
-            const density = sut.forContent(.18, .45);
+            const density = sut.forContent(0.18, 0.45);
             expect(density).toBeCloseTo(0.80046, 5);
         });
     });
@@ -49,7 +49,7 @@ describe('Gas Density', () => {
                 const profile: Segment[] = [
                     new Segment(0, 2, StandardGases.air, Time.oneMinute),
                     new Segment(2, 20, StandardGases.trimix1845, Time.oneMinute),
-                    new Segment(20, 0, StandardGases.ean32, Time.oneMinute),
+                    new Segment(20, 0, StandardGases.ean32, Time.oneMinute)
                 ];
 
                 const density = sut.forProfile(profile);

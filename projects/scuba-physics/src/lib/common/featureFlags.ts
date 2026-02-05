@@ -1,13 +1,10 @@
 /** Placeholder for features conditionally available. */
-export class FeatureFlags
-{
+export class FeatureFlags {
     private static _instance: FeatureFlags;
 
-    private constructor() {
-    }
+    private constructor() {}
 
-    public static get Instance()
-    {
+    public static get Instance() {
         return FeatureFlags._instance || (FeatureFlags._instance = new FeatureFlags());
     }
 }

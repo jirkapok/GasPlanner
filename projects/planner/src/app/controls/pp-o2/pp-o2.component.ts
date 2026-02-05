@@ -19,10 +19,12 @@ export class PpO2Component implements OnInit {
     @Input() public pO2Form!: FormGroup;
     @Output() public ppO2Change = new EventEmitter<number>();
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) { }
+        public units: UnitConversion
+    ) {}
 
     public get ppO2Invalid(): boolean {
         const maxPpO2Field = this.pO2Form.get(this.controlName);

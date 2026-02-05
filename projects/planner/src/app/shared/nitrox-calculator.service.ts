@@ -13,7 +13,7 @@ export class NitroxCalculatorService {
     constructor() {
         const depthConverter = DepthConverter.simple();
         // providing rounded value for o2 in air to be aligned with UI
-        this.nitroxCalculator = new NitroxCalculator(depthConverter, .21);
+        this.nitroxCalculator = new NitroxCalculator(depthConverter, 0.21);
         this.calculate = this.calculateCurrentMod;
     }
 
@@ -107,5 +107,5 @@ export class NitroxCalculatorService {
         this._pO2 = this.nitroxCalculator.partialPressure(this._fO2, this._mod);
     };
 
-    private calculateEadAtDepth = () => { };
+    private calculateEadAtDepth = () => {};
 }

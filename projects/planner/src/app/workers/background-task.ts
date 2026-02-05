@@ -16,7 +16,7 @@ export class BackgroundTask<TRequest, TResponse> implements IBackgroundTask<TReq
     constructor(private worker: Worker) {
         this.calculated$ = this.onCalculated.asObservable();
         this.failed$ = this.onFailed.asObservable();
-        this.worker.addEventListener('message', (m) => this.processMessage(m));
+        this.worker.addEventListener('message', m => this.processMessage(m));
         this.worker.addEventListener('error', () => this.onFailed.next());
     }
 

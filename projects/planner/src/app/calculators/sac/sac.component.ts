@@ -50,7 +50,8 @@ export class SacComponent implements OnInit {
         public calc: SacCalculatorService,
         public units: UnitConversion,
         public location: Location,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage
+    ) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
     }
 
@@ -152,7 +153,7 @@ export class SacComponent implements OnInit {
         }
 
         this.formSac.patchValue({
-            workPressure: template.workingPressure,
+            workPressure: template.workingPressure
         });
 
         this.inputChanged();
@@ -219,7 +220,7 @@ export class SacComponent implements OnInit {
             workPressure: this.calcWorkingPressure,
             used: this.calcUsed,
             duration: this.calcDuration,
-            rmv: this.calcRmv,
+            rmv: this.calcRmv
         });
     }
 

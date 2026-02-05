@@ -1,52 +1,79 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
-  <div class="container-fluid">
-    <a class="navbar-brand ps-3" routerLink="./">Gas planner</a>
-    <button class="navbar-toggler" type="button" aria-expanded="false" aria-label="Toggle navigation"
-      (click)="basicNavbar.toggle()">
-      <fa-icon [icon]="iconMenu" class="me-3"></fa-icon>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent" mdbCollapse #basicNavbar="mdbCollapse">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item dropdown" mdbDropdown >
-          <a class="nav-link dropdown-toggle" id="id01" mdbDropdownToggle>Calculators</a>
-          <ul class="dropdown-menu" aria-labelledby="id01" mdbDropdownMenu>
-            <li><a class="dropdown-item" routerLink="./"><fa-icon [icon]="iconPlanner" class="me-2"></fa-icon>Planner</a></li>
-            <li><a class="dropdown-item" routerLink="/sac"><fa-icon [icon]="iconRmv" class="me-2"></fa-icon>RMV/SAC</a></li>
-            <li><a class="dropdown-item" routerLink="/nitrox"><fa-icon [icon]="iconNitrox" class="me-2"></fa-icon>Nitrox</a></li>
-            <li><a class="dropdown-item" routerLink="/gas"><fa-icon [icon]="iconGasProperties" class="me-2"></fa-icon>Gas properties</a></li>
-            <li><a class="dropdown-item" routerLink="/altitude"><fa-icon [icon]="iconAltitude" class="me-2"></fa-icon>Altitude</a></li>
-            <li><a class="dropdown-item" routerLink="/weight"><fa-icon [icon]="iconWeight" class="me-2"></fa-icon>Weight</a></li>
-            <li><a class="dropdown-item" routerLink="/ndl"><fa-icon [icon]="iconNdl" class="me-2"></fa-icon>NDL table</a></li>
-            <li><a class="dropdown-item" routerLink="/redundancies">Cylinder Balancing</a></li>
-            <li><a class="dropdown-item" routerLink="/blender"><fa-icon [icon]="iconBlender" class="me-2"></fa-icon>Gas blender</a></li>
-          </ul>
-        </li>
-        @if (inPlanner) {
-          <li class="nav-item dropdown" mdbDropdown>
-            <a class="nav-link dropdown-toggle" id="dive" mdbDropdownToggle>Dive</a>
-            <ul class="dropdown-menu" aria-labelledby="dive" mdbDropdownMenu>
-              <li><a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2"></fa-icon>Clone</a></li>
-              <li><a class="dropdown-item" (click)="saveDefaults()">Save as default</a></li>
-              <li><a class="dropdown-item" (click)="loadDefaults()">Load default</a></li>
-              <li><a class="dropdown-item" (click)="shareDive()"><fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share</a></li>
-              <li>@if (canDeleteDive) {
-                <a class="dropdown-item" (click)="deleteDive()">
-                  <fa-icon [icon]="iconDelete" class="me-2"></fa-icon>Delete</a>
+    <div class="container-fluid">
+        <a class="navbar-brand ps-3" routerLink="./">Gas planner</a>
+        <button class="navbar-toggler" type="button" aria-expanded="false" aria-label="Toggle navigation" (click)="basicNavbar.toggle()">
+            <fa-icon [icon]="iconMenu" class="me-3"></fa-icon>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent" mdbCollapse #basicNavbar="mdbCollapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown" mdbDropdown>
+                    <a class="nav-link dropdown-toggle" id="id01" mdbDropdownToggle>Calculators</a>
+                    <ul class="dropdown-menu" aria-labelledby="id01" mdbDropdownMenu>
+                        <li>
+                            <a class="dropdown-item" routerLink="./"><fa-icon [icon]="iconPlanner" class="me-2"></fa-icon>Planner</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/sac"><fa-icon [icon]="iconRmv" class="me-2"></fa-icon>RMV/SAC</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/nitrox"><fa-icon [icon]="iconNitrox" class="me-2"></fa-icon>Nitrox</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/gas"
+                                ><fa-icon [icon]="iconGasProperties" class="me-2"></fa-icon>Gas properties</a
+                            >
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/altitude"
+                                ><fa-icon [icon]="iconAltitude" class="me-2"></fa-icon>Altitude</a
+                            >
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/weight"><fa-icon [icon]="iconWeight" class="me-2"></fa-icon>Weight</a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/ndl"><fa-icon [icon]="iconNdl" class="me-2"></fa-icon>NDL table</a>
+                        </li>
+                        <li><a class="dropdown-item" routerLink="/redundancies">Cylinder Balancing</a></li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/blender"
+                                ><fa-icon [icon]="iconBlender" class="me-2"></fa-icon>Gas blender</a
+                            >
+                        </li>
+                    </ul>
+                </li>
+                @if (inPlanner) {
+                    <li class="nav-item dropdown" mdbDropdown>
+                        <a class="nav-link dropdown-toggle" id="dive" mdbDropdownToggle>Dive</a>
+                        <ul class="dropdown-menu" aria-labelledby="dive" mdbDropdownMenu>
+                            <li>
+                                <a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2"></fa-icon>Clone</a>
+                            </li>
+                            <li><a class="dropdown-item" (click)="saveDefaults()">Save as default</a></li>
+                            <li><a class="dropdown-item" (click)="loadDefaults()">Load default</a></li>
+                            <li>
+                                <a class="dropdown-item" (click)="shareDive()"><fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share</a>
+                            </li>
+                            <li>
+                                @if (canDeleteDive) {
+                                    <a class="dropdown-item" (click)="deleteDive()">
+                                        <fa-icon [icon]="iconDelete" class="me-2"></fa-icon>Delete</a
+                                    >
+                                }
+                            </li>
+                        </ul>
+                    </li>
                 }
-              </li>
+                <li><a class="nav-link" routerLink="/settings">Settings</a></li>
+                <li><a class="nav-link" routerLink="/diff">Compare dives</a></li>
+                <li><a class="nav-link" [routerLink]="['/help', 'standard_gases']">Standard gases</a></li>
+                <li><a class="nav-link" routerLink="/help">Help</a></li>
+                <li><a class="nav-link" routerLink="/learn">Learn</a></li>
+                <li><a class="nav-link" routerLink="/about">About</a></li>
             </ul>
-          </li>
-        }
-        <li><a class="nav-link" routerLink="/settings">Settings</a></li>
-        <li><a class="nav-link" routerLink="/diff">Compare dives</a></li>
-        <li><a class="nav-link" [routerLink]="['/help', 'standard_gases']">Standard gases</a></li>
-        <li><a class="nav-link" routerLink="/help">Help</a></li>
-        <li><a class="nav-link" routerLink="/learn">Learn</a></li>
-        <li><a class="nav-link" routerLink="/about">About</a></li>
-      </ul>
-      <ul class="nav navbar-nav navbar-right">
-        <li></li>
-      </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li></li>
+            </ul>
+        </div>
     </div>
-  </div>
 </nav>

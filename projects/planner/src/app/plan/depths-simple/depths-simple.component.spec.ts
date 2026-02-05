@@ -23,9 +23,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { DepthComponent } from '../depth/depth.component';
 
-
 export class SimpleDepthsPage {
-    constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) { }
+    constructor(private fixture: ComponentFixture<DepthsSimpleComponent>) {}
 
     public get durationInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#duration')).nativeElement as HTMLInputElement;
@@ -58,12 +57,22 @@ describe('Depths Simple Component', () => {
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, SurfaceIntervalComponent, DepthsSimpleComponent, DepthComponent],
             providers: [
-                WorkersFactoryCommon, PlannerService,
-                UnitConversion, InputControls, DiveSchedules,
-                OptionsService, ValidatorGroups,
-                DecimalPipe, ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, PreferencesStore,
-                Preferences, ReloadDispatcher, MdbModalService
+                WorkersFactoryCommon,
+                PlannerService,
+                UnitConversion,
+                InputControls,
+                DiveSchedules,
+                OptionsService,
+                ValidatorGroups,
+                DecimalPipe,
+                ViewSwitchService,
+                WayPointsService,
+                SubViewStorage,
+                ViewStates,
+                PreferencesStore,
+                Preferences,
+                ReloadDispatcher,
+                MdbModalService
             ]
         }).compileComponents();
     });
@@ -78,39 +87,36 @@ describe('Depths Simple Component', () => {
 
     it('Duration change enforces calculation', inject([ReloadDispatcher], (dispatcher: ReloadDispatcher) => {
         let eventFired = false;
-        dispatcher.depthChanged$.subscribe(() => eventFired = true);
+        dispatcher.depthChanged$.subscribe(() => (eventFired = true));
         simplePage.durationInput.value = '20';
         simplePage.durationInput.dispatchEvent(new Event('input'));
         expect(eventFired).toBeTruthy();
     }));
 
     describe('Duration reloaded enforced by', () => {
-        it('Apply max NDL', inject([DiveSchedules, ReloadDispatcher],
-            (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
-                let eventFired = false;
-                dispatcher.depthChanged$.subscribe(() => eventFired = true );
-                schedule.selected.diveResult.updateDiveInfo(21, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
-                const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
-                simplePage.applyNdlButton.click();
-                expect(assignDurationSpy).toHaveBeenCalledWith();
-                expect(schedule.selected.depths.planDuration).toBe(21);
-                expect(eventFired).toBeTruthy();
-            }));
+        it('Apply max NDL', inject([DiveSchedules, ReloadDispatcher], (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
+            let eventFired = false;
+            dispatcher.depthChanged$.subscribe(() => (eventFired = true));
+            schedule.selected.diveResult.updateDiveInfo(21, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
+            simplePage.applyNdlButton.click();
+            expect(assignDurationSpy).toHaveBeenCalledWith();
+            expect(schedule.selected.depths.planDuration).toBe(21);
+            expect(eventFired).toBeTruthy();
+        }));
 
-        it('Apply max duration', inject([DiveSchedules, ReloadDispatcher],
-            (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
-                let eventFired = false;
-                schedule.selected.diveResult.updateConsumption(19, 0, 0, 0, 0, false, false, []);
-                dispatcher.depthChanged$.subscribe(() => eventFired = true );
-                simplePage.applyMaxDurationButton.click();
-                expect(eventFired).toBeTruthy();
-                expect(simplePage.durationInput.value).toBe('19');
-            }));
+        it('Apply max duration', inject([DiveSchedules, ReloadDispatcher], (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
+            let eventFired = false;
+            schedule.selected.diveResult.updateConsumption(19, 0, 0, 0, 0, false, false, []);
+            dispatcher.depthChanged$.subscribe(() => (eventFired = true));
+            simplePage.applyMaxDurationButton.click();
+            expect(eventFired).toBeTruthy();
+            expect(simplePage.durationInput.value).toBe('19');
+        }));
     });
 
-    it('wrong duration doesn\'t call calculate', () => {
-        const durationSpy = spyOnProperty(depths, 'planDuration')
-            .and.callThrough();
+    it("wrong duration doesn't call calculate", () => {
+        const durationSpy = spyOnProperty(depths, 'planDuration').and.callThrough();
 
         simplePage.durationInput.value = 'aaa';
         simplePage.durationInput.dispatchEvent(new Event('input'));
@@ -118,41 +124,37 @@ describe('Depths Simple Component', () => {
     });
 
     describe('Max narcotic depth', () => {
-        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
-                depths.applyMaxDepth();
-                expect(schedules.selected.depths.plannedDepthMeters).toBe(30);
-            }));
+        it('Is calculated 30 m for Air with 30m max. narcotic depth option', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            depths.applyMaxDepth();
+            expect(schedules.selected.depths.plannedDepthMeters).toBe(30);
+        }));
 
-        it('Max narcotic depth is applied', inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
-                const selected = schedules.selected;
-                selected.tanksService.firstTank.o2 = 50;
-                selected.depths.applyMaxDepth();
-                expect(selected.depths.plannedDepthMeters).toBe(18);
-            }));
+        it('Max narcotic depth is applied', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            const selected = schedules.selected;
+            selected.tanksService.firstTank.o2 = 50;
+            selected.depths.applyMaxDepth();
+            expect(selected.depths.plannedDepthMeters).toBe(18);
+        }));
     });
 
     describe('Surface interval validation', () => {
-        it('Does apply valid value', inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
-                schedules.add();
-                fixture.detectChanges();
-                simplePage.surfaceIntervalInput.value = '02:30';
-                simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
-                expect(schedules.selected.surfaceInterval).toBe(Time.oneMinute * 150);
-            }));
+        it('Does apply valid value', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            schedules.add();
+            fixture.detectChanges();
+            simplePage.surfaceIntervalInput.value = '02:30';
+            simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
+            expect(schedules.selected.surfaceInterval).toBe(Time.oneMinute * 150);
+        }));
 
-        it('Does not apply invalid value', inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
-                schedules.add();
-                schedules.selected.surfaceInterval = Time.oneHour; // to switch from readonly
-                fixture.detectChanges();
-                simplePage.surfaceIntervalInput.value = '02:aa';
-                simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
-                expect(schedules.selected.surfaceInterval).toEqual(Time.oneHour);
-                expect(component.simpleForm.invalid).toBeTruthy();
-            }));
+        it('Does not apply invalid value', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            schedules.add();
+            schedules.selected.surfaceInterval = Time.oneHour; // to switch from readonly
+            fixture.detectChanges();
+            simplePage.surfaceIntervalInput.value = '02:aa';
+            simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
+            expect(schedules.selected.surfaceInterval).toEqual(Time.oneHour);
+            expect(component.simpleForm.invalid).toBeTruthy();
+        }));
     });
 
     describe('Depth imperial', () => {

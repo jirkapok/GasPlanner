@@ -1,9 +1,7 @@
 import { WayPointsService } from './waypoints.service';
 import { SwimAction } from './wayPoint';
 import { Plan } from './plan.service';
-import {
-    Tank, Salinity, SafetyStop
-} from 'scuba-physics';
+import { Tank, Salinity, SafetyStop } from 'scuba-physics';
 import { OptionExtensions } from './Options.spec';
 import { UnitConversion } from './UnitConversion';
 

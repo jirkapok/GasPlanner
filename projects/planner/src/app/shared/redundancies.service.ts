@@ -21,8 +21,8 @@ export class RedundanciesService {
     }
 
     public get finalPressure(): number {
-        const tankA= this._firstTank.tank;
-        const tankB= this._secondTank.tank;
+        const tankA = this._firstTank.tank;
+        const tankB = this._secondTank.tank;
         let result = GasBlender.redundancies(tankA, tankB);
         result = this.units.fromBar(result);
         return result;

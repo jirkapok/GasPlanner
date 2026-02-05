@@ -5,7 +5,7 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
 import { ResultDiff, ResultsComparison } from './results-comparison.service';
 import { DiveResults } from '../diveresults';
-import { HighestDensity } from "scuba-physics";
+import { HighestDensity } from 'scuba-physics';
 
 describe('ResultsComparison service current values', () => {
     let sut: ResultsComparison;
@@ -16,11 +16,7 @@ describe('ResultsComparison service current values', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             imports: [],
-            providers: [
-                ProfileComparatorService, UnitConversion,
-                ReloadDispatcher, DiveSchedules,
-                ResultsComparison
-            ]
+            providers: [ProfileComparatorService, UnitConversion, ReloadDispatcher, DiveSchedules, ResultsComparison]
         }).compileComponents();
     });
 
@@ -82,7 +78,7 @@ describe('ResultsComparison service current values', () => {
 
         it('Average depth ft', () => {
             profileB.updateDiveInfo(84, false, 0, 30, 0, 0, 0, 81, 80, HighestDensity.createDefault(), [], [], []);
-            assertResultsDiff(sut.averageDepth,  98.4251969);
+            assertResultsDiff(sut.averageDepth, 98.4251969);
         });
 
         it('Max density lb/cuft', () => {

@@ -13,14 +13,9 @@ describe('DiffTabsButtonComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [BrowserAnimationsModule, DiffTabsButtonComponent],
-    providers: [
-        ProfileComparatorService,
-        DiveSchedules,
-        UnitConversion,
-        ReloadDispatcher
-    ]
-});
+            imports: [BrowserAnimationsModule, DiffTabsButtonComponent],
+            providers: [ProfileComparatorService, DiveSchedules, UnitConversion, ReloadDispatcher]
+        });
         fixture = TestBed.createComponent(DiffTabsButtonComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

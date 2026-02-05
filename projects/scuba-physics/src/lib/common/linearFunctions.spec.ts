@@ -86,17 +86,17 @@ describe('Linear Functions', () => {
 
     describe('X value at Absolute', () => {
         it('Positive Y', () => {
-            const result = LinearFunction.xValueAtAbsolute({start: 5, end: 10}, {start: 10, end: 20}, 40);
+            const result = LinearFunction.xValueAtAbsolute({ start: 5, end: 10 }, { start: 10, end: 20 }, 40);
             expect(result).toBe(20);
         });
 
         it('Zero speed', () => {
-            const result = LinearFunction.xValueAtAbsolute({start: 5, end: 10}, {start: 30, end: 30}, 30);
+            const result = LinearFunction.xValueAtAbsolute({ start: 5, end: 10 }, { start: 30, end: 30 }, 30);
             expect(result).toBe(5);
         });
 
         it('Negative values', () => {
-            const result = LinearFunction.xValueAtAbsolute({start: 5, end: 10}, {start: 15, end: 30}, -9);
+            const result = LinearFunction.xValueAtAbsolute({ start: 5, end: 10 }, { start: 15, end: 30 }, -9);
             expect(result).toBe(-3);
         });
     });

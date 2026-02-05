@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {
-    NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
-} from '@angular/forms';
+import { NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { DecimalPipe, Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
@@ -26,17 +24,17 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     selector: 'app-app-settings',
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss'],
-    imports: [
-    ReactiveFormsModule,
-    CardHeaderComponent,
-    MdbCheckboxModule,
-    MdbFormsModule
-],
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbCheckboxModule, MdbFormsModule],
     providers: [
-        DecimalPipe, InputControls, ValidatorGroups,
-        SettingsNormalizationService, ApplicationSettingsService,
-        SubViewStorage, ViewStates,
-        PreferencesStore, Preferences,
+        DecimalPipe,
+        InputControls,
+        ValidatorGroups,
+        SettingsNormalizationService,
+        ApplicationSettingsService,
+        SubViewStorage,
+        ViewStates,
+        PreferencesStore,
+        Preferences,
         ViewSwitchService
     ]
 })
@@ -66,7 +64,8 @@ export class AppSettingsComponent implements OnInit {
         private cd: ChangeDetectorRef,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public location: Location) {
+        public location: Location
+    ) {
         this.loadState();
         this.saveState();
     }
@@ -162,7 +161,7 @@ export class AppSettingsComponent implements OnInit {
             icdIgnored: false,
             densityIgnored: false,
             noDecoIgnored: false,
-            missingAirBreak: false,
+            missingAirBreak: false
         });
     }
 
@@ -171,7 +170,7 @@ export class AppSettingsComponent implements OnInit {
         this.settingsForm.patchValue({
             maxDensity: this.maxDensity,
             primaryTankReserve: this.primaryTankReserve,
-            stageTankReserve: this.stageTankReserve,
+            stageTankReserve: this.stageTankReserve
         });
     }
 
@@ -182,7 +181,7 @@ export class AppSettingsComponent implements OnInit {
     private saveState(): void {
         this.viewStates.saveView<ViewState>({
             // Not implemented saving of form values, only to be able navigate to the view
-            id:  KnownViews.settings,
+            id: KnownViews.settings
         });
     }
 }

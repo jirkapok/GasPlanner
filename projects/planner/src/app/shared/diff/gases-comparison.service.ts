@@ -26,15 +26,15 @@ export class ConsumedGasDifference {
     constructor(
         public gas: Gas,
         public profileA: IConsumedByProfile,
-        public profileB: IConsumedByProfile) {
-    }
+        public profileB: IConsumedByProfile
+    ) {}
 
     public get remainingProfileA(): number {
-        return  this.profileA.total - this.profileA.consumed;
+        return this.profileA.total - this.profileA.consumed;
     }
 
     public get remainingProfileB(): number {
-        return  this.profileB.total - this.profileB.consumed;
+        return this.profileB.total - this.profileB.consumed;
     }
 
     public get gasRemainingDifference(): number {
@@ -88,8 +88,10 @@ export class ConsumedGasDifference {
 
 @Injectable()
 export class GasesComparisonService {
-    constructor(private units: UnitConversion, private profileDiff: ProfileComparatorService) {
-    }
+    constructor(
+        private units: UnitConversion,
+        private profileDiff: ProfileComparatorService
+    ) {}
 
     public get gasesDifference(): ConsumedGasDifference[] {
         const mixedTanks: ConsumedGasDifference[] = [];
@@ -101,19 +103,18 @@ export class GasesComparisonService {
         };
 
         for (const consumedA of this.profileDiff.profileAConsumed) {
-            const consumedB: IConsumedMix | undefined = this.profileDiff.profileBConsumed
-                .find(t => t.gas.contentCode === consumedA.gas.contentCode);
+            const consumedB: IConsumedMix | undefined = this.profileDiff.profileBConsumed.find(
+                t => t.gas.contentCode === consumedA.gas.contentCode
+            );
 
             const profileB = consumedB ? this.toProfileConsumed(consumedB) : emptyConsumption;
-            const newGas = new ConsumedGasDifference(consumedA.gas,
-                this.toProfileConsumed(consumedA), profileB);
+            const newGas = new ConsumedGasDifference(consumedA.gas, this.toProfileConsumed(consumedA), profileB);
             mixedTanks.push(newGas);
         }
 
         for (const consumedB of this.profileDiff.profileBConsumed) {
             if (!mixedTanks.find(mt => mt.gas.contentCode === consumedB.gas.contentCode)) {
-                const newGas = new ConsumedGasDifference(consumedB.gas, emptyConsumption,
-                    this.toProfileConsumed(consumedB));
+                const newGas = new ConsumedGasDifference(consumedB.gas, emptyConsumption, this.toProfileConsumed(consumedB));
                 mixedTanks.push(newGas);
             }
         }

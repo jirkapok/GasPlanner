@@ -1,6 +1,4 @@
-import {
-    Precision
-} from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 import { QuestionTemplate, RoundType } from './learn.models';
 
 export class Question {

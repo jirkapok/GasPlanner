@@ -26,13 +26,20 @@ describe('DiffComponent', () => {
             imports: [DiffComponent],
             providers: [
                 ProfileComparatorService,
-                DiveSchedules, UnitConversion,
-                ViewStates, SubViewStorage,
-                PreferencesStore, Preferences,
-                ViewSwitchService, ReloadDispatcher,
-                ApplicationSettingsService, ResamplingService,
-                SelectedDiffWaypoint, GasesComparisonService,
-                ResultsComparison, MdbModalService,
+                DiveSchedules,
+                UnitConversion,
+                ViewStates,
+                SubViewStorage,
+                PreferencesStore,
+                Preferences,
+                ViewSwitchService,
+                ReloadDispatcher,
+                ApplicationSettingsService,
+                ResamplingService,
+                SelectedDiffWaypoint,
+                GasesComparisonService,
+                ResultsComparison,
+                MdbModalService,
                 provideNoopAnimations()
             ]
         });

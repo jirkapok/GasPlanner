@@ -1,10 +1,4 @@
-import {
-    ActivatedRouteSnapshot,
-    CanActivateFn,
-    Router,
-    Routes,
-    UrlTree,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivateFn, Router, Routes, UrlTree } from '@angular/router';
 import { Location } from '@angular/common';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { DashboardComponent } from './plan/dashboard/dashboard.component';
@@ -60,5 +54,5 @@ export const routes: Routes = [
         path: '**',
         component: DashboardComponent,
         canActivate: [canActivateDashboard]
-    },
+    }
 ];

@@ -11,7 +11,7 @@ export class HighestDensity {
         public depth: number,
         /** gram/liter */
         public density: number
-    ) { }
+    ) {}
 
     public static createDefault(): HighestDensity {
         return new HighestDensity(StandardGases.air, 0, 0);
@@ -63,7 +63,7 @@ export class GasDensity {
 export class DensityAtDepth {
     private density = new GasDensity();
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter) {}
 
     /**
      * Finds highest density of all profile segments.

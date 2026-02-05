@@ -22,8 +22,8 @@ class TestSut {
         public viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         public urlSerialization: PlanUrlSerialization,
-        public appSettings: ApplicationSettingsService) {
-    }
+        public appSettings: ApplicationSettingsService
+    ) {}
 
     public get options(): OptionsService {
         return this.schedules.selectedOptions;
@@ -41,7 +41,6 @@ class TestSut {
 describe('Url Serialization', () => {
     const irrelevantFactory = new WorkersFactoryCommon();
 
-
     // because we need custom instances to compare
     const createSimpleSut = (imperial = false): TestSut => {
         const units = new UnitConversion();
@@ -53,11 +52,10 @@ describe('Url Serialization', () => {
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);
         const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates(), new QuizService());
         const normalization = new SettingsNormalizationService(units, appSettings, schedules);
-        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization,
-            schedules, appSettings, preferences);
+        const urlSerialization = new PlanUrlSerialization(viewSwitch, units, normalization, schedules, appSettings, preferences);
         const firstDive = schedules.dives[0];
         firstDive.depths.setSimple();
-        return new TestSut(schedules, planner, viewSwitch, units,  urlSerialization, appSettings);
+        return new TestSut(schedules, planner, viewSwitch, units, urlSerialization, appSettings);
     };
 
     const createSimplePlan = () => {
@@ -94,14 +92,14 @@ describe('Url Serialization', () => {
             plan: expected.depths.segments,
             tanks: expected.tanksService.tankData,
             diver: expected.options.getDiver(),
-            options: expected.options.getOptions(),
+            options: expected.options.getOptions()
         };
 
         const toCompare = {
             plan: current.depths.segments,
             tanks: current.tanksService.tankData,
             diver: current.options.getDiver(),
-            options: current.options.getOptions(),
+            options: current.options.getOptions()
         };
 
         expect(toCompare).toEqual(toExpect);
@@ -168,7 +166,8 @@ describe('Url Serialization', () => {
         });
 
         it('Deserialize both missing Rmv and stressRmv', () => {
-            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+            const missingStressUrl =
+                't=1-18-0-200-0.209-0&' +
                 'de=0-30-102-1,30-30-618-1&' +
                 'di=24&' +
                 'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&' +
@@ -184,29 +183,30 @@ describe('Url Serialization', () => {
         });
 
         it('Deserialize missing Air break options', () => {
-            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+            const missingStressUrl =
+                't=1-18-0-200-0.209-0&' +
                 'de=0-30-102-1,30-30-618-1&' +
                 'di=24&' +
                 'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&' +
                 'ao=0,0';
             complexSut.urlSerialization.fromUrl(missingStressUrl);
-            expect(complexSut.schedules.selected.optionsService.airBreaks)
-                .toEqual(new AirBreakOptions(true, 20, 5));
+            expect(complexSut.schedules.selected.optionsService.airBreaks).toEqual(new AirBreakOptions(true, 20, 5));
         });
+
         it('Deserialize Air break options', () => {
-            const missingStressUrl = 't=1-18-0-200-0.209-0&' +
+            const missingStressUrl =
+                't=1-18-0-200-0.209-0&' +
                 'de=0-30-102-1,30-30-618-1&' +
                 'di=24&' +
                 'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,1,17,3&' +
                 'ao=0,0';
             complexSut.urlSerialization.fromUrl(missingStressUrl);
-            expect(complexSut.schedules.selected.optionsService.airBreaks)
-                .toEqual(new AirBreakOptions(true, 17, 3));
+            expect(complexSut.schedules.selected.optionsService.airBreaks).toEqual(new AirBreakOptions(true, 17, 3));
         });
     });
 
     describe('Complex vs. Simple view', () => {
-        it('Load complex plan to simple view',() => {
+        it('Load complex plan to simple view', () => {
             const current = createSimpleSut();
             current.urlSerialization.fromUrl(complexViewUrl);
             current.planner.calculate(2);
@@ -251,9 +251,10 @@ describe('Url Serialization', () => {
             currentComplex.viewSwitch.isComplex = true;
 
             // 15 m/60 minutes - dive created in simple view, descent takes only 54 seconds, which is invalid in complex view
-            const fastDescentUrl = '?t=1-15-0-200-0.209-0,2-11.1-0-200-1-0&' +
-                                          'de=0-15-54-1,15-15-3546-1&' +
-                                          'di=20&o=0,9,9,9,3,18,2,0.85,0.4,5,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
+            const fastDescentUrl =
+                '?t=1-15-0-200-0.209-0,2-11.1-0-200-1-0&' +
+                'de=0-15-54-1,15-15-3546-1&' +
+                'di=20&o=0,9,9,9,3,18,2,0.85,0.4,5,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
             currentComplex.urlSerialization.fromUrl(fastDescentUrl);
 
             // not fixing the value, allowing to restore invalid values
@@ -359,19 +360,22 @@ describe('Url Serialization', () => {
 
         it('Invalid url values', () => {
             // 2 tanks in simple mode, which isn't valid
-            const urlParams = 't=1-15-0-210-0.209-0,2-11-0-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
+            const urlParams =
+                't=1-15-0-210-0.209-0,2-11-0-200-0.5-0&de=0-30-102-1,30-30-618-1&' +
                 'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=0,0';
             assertImported(urlParams);
         });
 
         it('Invalid working pressure in metric', () => {
-            const urlParams = 't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
+            const urlParams =
+                't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
                 'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,0';
             assertImported(urlParams);
         });
 
         it('Invalid working pressure in imperial', () => {
-            const urlParams = 't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
+            const urlParams =
+                't=1-15-220-210-0.209-0,2-11.1-0-200-0.209-0&de=0-30-102-1,30-30-618-1,30-30-600-1&' +
                 'di=20&o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1&ao=1,1';
             const current = createComplexSut();
             current.urlSerialization.fromUrl(urlParams);

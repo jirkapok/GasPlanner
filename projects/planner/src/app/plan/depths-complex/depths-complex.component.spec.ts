@@ -19,10 +19,10 @@ import { DiveResults } from '../../shared/diveresults';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 export class ComplexDepthsPage {
-    constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
+    constructor(private fixture: ComponentFixture<DepthsComplexComponent>) {}
 
     public get addLevelButton(): HTMLButtonElement {
         return this.fixture.debugElement.query(By.css('#addLevel')).nativeElement as HTMLButtonElement;
@@ -65,18 +65,25 @@ describe('Depths Complex Component', () => {
         await TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, DepthsComplexComponent],
             providers: [
-                WorkersFactoryCommon, PlannerService,
-                UnitConversion, InputControls,
-                ValidatorGroups, DecimalPipe,
-                ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, DiveSchedules,
-                PreferencesStore, Preferences,
-                DiveResults, ReloadDispatcher,
+                WorkersFactoryCommon,
+                PlannerService,
+                UnitConversion,
+                InputControls,
+                ValidatorGroups,
+                DecimalPipe,
+                ViewSwitchService,
+                WayPointsService,
+                SubViewStorage,
+                ViewStates,
+                DiveSchedules,
+                PreferencesStore,
+                Preferences,
+                DiveResults,
+                ReloadDispatcher,
                 ApplicationSettingsService,
                 MdbModalService
             ]
-        })
-            .compileComponents();
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -96,15 +103,17 @@ describe('Depths Complex Component', () => {
         expect(depths.planDuration).toBe(21.7);
     });
 
-    it('Change depth calculates profile correctly', inject([DiveResults, ReloadDispatcher],
+    it('Change depth calculates profile correctly', inject(
+        [DiveResults, ReloadDispatcher],
         (dive: DiveResults, dispatcher: ReloadDispatcher) => {
             let eventFired = false;
-            dispatcher.depthChanged$.subscribe(() => eventFired = true );
+            dispatcher.depthChanged$.subscribe(() => (eventFired = true));
             complexPage.durationInput(1).value = '5';
             complexPage.durationInput(1).dispatchEvent(new Event('input'));
             // in case of wrong binding, the algorithm ads segment with 0 duration
             expect(eventFired).toBeTruthy();
-        }));
+        }
+    ));
 
     describe('Levels enforce calculation', () => {
         it('Adds level to end of profile segments', () => {
@@ -125,8 +134,7 @@ describe('Depths Complex Component', () => {
 
     describe('Invalid form prevents calculation after', () => {
         it('wrong level enddepth', () => {
-            const durationSpy = spyOn(depths, 'levelChanged')
-                .and.callThrough();
+            const durationSpy = spyOn(depths, 'levelChanged').and.callThrough();
 
             complexPage.durationInput(1).value = 'aaa';
             complexPage.durationInput(1).dispatchEvent(new Event('input'));
@@ -134,8 +142,7 @@ describe('Depths Complex Component', () => {
         });
 
         it('wrong level duration', () => {
-            const durationSpy = spyOn(depths, 'levelChanged')
-                .and.callThrough();
+            const durationSpy = spyOn(depths, 'levelChanged').and.callThrough();
 
             complexPage.depthInput(1).value = 'aaa';
             complexPage.depthInput(1).dispatchEvent(new Event('input'));

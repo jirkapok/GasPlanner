@@ -27,7 +27,17 @@ import { DiverComponent } from '../diver/diver.component';
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
-    imports: [ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
+    imports: [
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        SalinityComponent,
+        AltitudeComponent,
+        GradientsComponent,
+        MdbTabsModule,
+        MdbFormsModule,
+        MdbDropdownModule,
+        DiverComponent
+    ]
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input() public formValid = true;
@@ -58,14 +68,16 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         decoStopDistance: FormControl<number>;
     }>;
 
-    constructor(public units: UnitConversion,
+    constructor(
+        public units: UnitConversion,
         private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
         private schedules: DiveSchedules,
         private preferences: PreferencesStore,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -124,7 +136,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public get backGasDurationInvalid(): boolean {
-        const backGasDuration= this.optionsForm.controls.backGasDuration;
+        const backGasDuration = this.optionsForm.controls.backGasDuration;
         return this.inputs.controlInValid(backGasDuration);
     }
 
@@ -144,8 +156,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public get decoStopDistanceInvalid(): boolean {
-    const control = this.optionsForm.controls.decoStopDistance;
-    return this.inputs.controlInValid(control);
+        const control = this.optionsForm.controls.decoStopDistance;
+        return this.inputs.controlInValid(control);
     }
 
     public set isComplex(newValue: boolean) {
@@ -156,7 +168,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         // we don't need to propagate the calculation, because it is triggered by depths
         this.viewSwitch.isComplex = newValue;
 
-        if(newValue) {
+        if (newValue) {
             // no data changed, we don't need to trigger calculation
             this.preferences.save();
         }
@@ -181,18 +193,15 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             maxOxygenDuration: [Precision.round(this.airBreaks.oxygenDuration, 0), this.validators.duration100],
             backGasDuration: [Precision.round(this.airBreaks.bottomGasDuration, 0), this.validators.duration100],
             decoStopDistance: [Precision.round(this.options.decoStopDistance, 0), this.validators.decoStopDistance]
-
         });
 
-        this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((source: OptionsService) => {
-                if(this.options === source) {
-                    this.reload();
-                }
-            });
+        this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe((source: OptionsService) => {
+            if (this.options === source) {
+                this.reload();
+            }
+        });
 
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reload());
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.reload());
 
         this.rootForm.addControl('diveOptions', this.optionsForm);
     }
@@ -237,7 +246,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     // }
 
     public useRecreational(): void {
-        if(this.rootForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 
@@ -247,7 +256,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public useRecommended(): void {
-        if(this.rootForm.invalid) {
+        if (this.rootForm.invalid) {
             return;
         }
 
@@ -348,7 +357,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             maxOxygenDuration: Precision.round(this.airBreaks.oxygenDuration),
             backGasDuration: Precision.round(this.airBreaks.bottomGasDuration),
             decoStopDistance: Precision.round(this.options.decoStopDistance, 0)
-
         });
     }
 }

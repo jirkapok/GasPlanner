@@ -1,6 +1,4 @@
-import {
-    ValidationErrors, ValidatorFn
-} from '@angular/forms';
+import { ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class NitroxValidators {
     public static lowMod(failingMod: () => boolean): ValidatorFn {

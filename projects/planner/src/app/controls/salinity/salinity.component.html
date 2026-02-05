@@ -1,11 +1,23 @@
 <label for="salinity" class="form-label" mdbLabel>Water salinity:</label>
 <div class="input-group dropdown form-outline" mdbDropdown>
-    <input id="salinity" [value]="salinityOption" class="form-control" type="text" readonly/>
-    <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="salinityMenu"
-        type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
+    <input id="salinity" [value]="salinityOption" class="form-control" type="text" readonly />
+    <button
+        class="btn btn-default dropdown-toggle dropdown-toggle-split"
+        aria-expanded="false"
+        id="salinityMenu"
+        type="button"
+        data-mdb-toggle="dropdown"
+        mdbDropdownToggle
+    ></button>
     <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-        <li (click)="useFresh()"><a class="dropdown-item">{{freshName}}</a></li>
-        <li (click)="useBrackish()"><a class="dropdown-item">{{brackishName}}</a></li>
-        <li (click)="useSalt()"><a class="dropdown-item">{{saltName}}</a></li>
+        <li (click)="useFresh()">
+            <a class="dropdown-item">{{ freshName }}</a>
+        </li>
+        <li (click)="useBrackish()">
+            <a class="dropdown-item">{{ brackishName }}</a>
+        </li>
+        <li (click)="useSalt()">
+            <a class="dropdown-item">{{ saltName }}</a>
+        </li>
     </ul>
 </div>

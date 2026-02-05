@@ -3,7 +3,7 @@ import { Gas } from '../gases/Gases';
 import _ from 'lodash';
 import { AltitudePressure, PressureConverter } from '../physics/pressure-converter';
 import { GasMixtures } from '../gases/GasMixtures';
-import { LoadedTissue, LoadedTissues, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissue, LoadedTissues, TissueOverPressures } from './Tissues.api';
 
 /**
  * Represents transition between depths during dive
@@ -23,7 +23,7 @@ export class LoadSegment {
         /**
          * Direction of the swim in bars/second
          */
-        public speed: number,
+        public speed: number
     ) {}
 }
 
@@ -36,8 +36,7 @@ export class Tissue extends Compartment implements LoadedTissue {
     private _b = 0;
 
     constructor(compartment: Compartment, surfacePressure: number) {
-        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B,
-            compartment.heHalfTime, compartment.heA, compartment.heB);
+        super(compartment.n2HalfTime, compartment.n2A, compartment.n2B, compartment.heHalfTime, compartment.heA, compartment.heB);
 
         this._pN2 = Tissue.inspiredN2Pressure(surfacePressure);
         this._pHe = 0;
@@ -160,7 +159,7 @@ export class Tissue extends Compartment implements LoadedTissue {
      */
     public ceiling(gradient: number): number {
         // tolerated = (pTotal - a) * b  // Buhlmann
-        const bars = (this.pTotal - (this.a * gradient)) / ((gradient / this.b) + 1.0 - gradient);
+        const bars = (this.pTotal - this.a * gradient) / (gradient / this.b + 1.0 - gradient);
         return bars;
     }
 
@@ -177,8 +176,13 @@ export class Tissue extends Compartment implements LoadedTissue {
         const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
         const gasPressureBreathingInBars = Tissue.pressureInLungs(segment.startPressure) * fGas;
-        const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
-            segment.duration, halfTime, gasRateInBarsPerSecond);
+        const newGasPressure = this.schreinerEquation(
+            pBegin,
+            gasPressureBreathingInBars,
+            segment.duration,
+            halfTime,
+            gasRateInBarsPerSecond
+        );
         return newGasPressure;
     }
 
@@ -193,21 +197,21 @@ export class Tissue extends Compartment implements LoadedTissue {
      * @returns The end compartment inert gas pressure in bar.
      */
     private schreinerEquation(pBegin: number, pGas: number, time: number, halfTime: number, gasRate: number): number {
-        const LOG2_60 = 1.155245301e-02; // Math.log(2) / 60
+        const LOG2_60 = 1.155245301e-2; // Math.log(2) / 60
         const timeConstant = LOG2_60 / halfTime;
         const exp = Math.exp(-timeConstant * time);
-        return (pGas + (gasRate * (time - (1.0 / timeConstant))) - ((pGas - pBegin - (gasRate / timeConstant)) * exp));
+        return pGas + gasRate * (time - 1.0 / timeConstant) - (pGas - pBegin - gasRate / timeConstant) * exp;
     }
 
     private updateCoefficients() {
         this._pTotal = Tissue.totalPressure(this);
-        this._a = ((this.n2A * this.pN2) + (this.heA * this.pHe)) / (this.pTotal);
-        this._b = ((this.n2B * this.pN2) + (this.heB * this.pHe)) / (this.pTotal);
+        this._a = (this.n2A * this.pN2 + this.heA * this.pHe) / this.pTotal;
+        this._b = (this.n2B * this.pN2 + this.heB * this.pHe) / this.pTotal;
     }
 }
 
 export class Tissues {
-    private constructor(private _compartments: Tissue[]){}
+    private constructor(private _compartments: Tissue[]) {}
 
     public get compartments(): Tissue[] {
         return this._compartments;
@@ -220,14 +224,16 @@ export class Tissues {
      * Can be obtained from algorithm calculated dive profile.
      */
     public static createLoaded(current: LoadedTissues): Tissues {
-        if(current.length !== Compartments.buhlmannZHL16C.length) {
+        if (current.length !== Compartments.buhlmannZHL16C.length) {
             throw new Error('Provided incompatible count of tissues');
         }
 
-        const tissues = _(current).map((t, index) => {
-            const compartment = Compartments.buhlmannZHL16C[index];
-            return Tissue.fromCurrent(t, compartment);
-        }).value();
+        const tissues = _(current)
+            .map((t, index) => {
+                const compartment = Compartments.buhlmannZHL16C[index];
+                return Tissue.fromCurrent(t, compartment);
+            })
+            .value();
         return new Tissues(tissues);
     }
 
@@ -261,7 +267,7 @@ export class Tissues {
 
     public static copy(source: Tissue[]): Tissue[] {
         const backup: Tissue[] = [];
-        for(let index = 0; index < source.length; index++) {
+        for (let index = 0; index < source.length; index++) {
             const compartmentCopy = source[index].copy();
             backup.push(compartmentCopy);
         }
@@ -277,12 +283,12 @@ export class Tissues {
      * Returns current state/snapshot of the tissues.
      */
     public finalState(): LoadedTissues {
-        return _(this._compartments).map(t => {
-            return {
+        return _(this._compartments)
+            .map(t => ({
                 pN2: t.pN2,
                 pHe: t.pHe
-            };
-        }).value() as LoadedTissues;
+            }))
+            .value() as LoadedTissues;
     }
 
     /**
@@ -293,17 +299,18 @@ export class Tissues {
      * @param ambientPressure The current ambient pressure in bars.
      */
     public saturationRatio(ambientPressure: number): TissueOverPressures {
-        return _(this._compartments).map(t => t.saturationRatio(ambientPressure))
+        return _(this._compartments)
+            .map(t => t.saturationRatio(ambientPressure))
             .value() as TissueOverPressures;
     }
 
     /**
-    * Returns pressure in bars of the depth representing maximum ceiling of all tissues
-    * reduced by the provided gradient.
-    *
-    * @param gradient Gradient factor constant in range 0-1
-    * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
-    */
+     * Returns pressure in bars of the depth representing maximum ceiling of all tissues
+     * reduced by the provided gradient.
+     *
+     * @param gradient Gradient factor constant in range 0-1
+     * @returns Zero in case there is no ceiling, otherwise ceiling pressure in bars
+     */
     public ceiling(gradient: number): number {
         let ceiling = 0; // this prevents negative values
 
@@ -339,17 +346,17 @@ export class Tissues {
      * @param ambientPressure in bars (e.g. surface or ambient).
      */
     public gradientFactor(ambientPressure: number): number {
-        const maxGradient = _(this._compartments)
-            .map(t => t.gradientFactor(ambientPressure))
-            .max() || 0;
+        const maxGradient =
+            _(this._compartments)
+                .map(t => t.gradientFactor(ambientPressure))
+                .max() || 0;
         return maxGradient;
     }
 }
 
 export class TissuesValidator {
     public static validTissue(item: LoadedTissue): boolean {
-        return item.pN2 > 0 &&
-               item.pHe >= 0;
+        return item.pN2 > 0 && item.pHe >= 0;
     }
 
     public static validCount(current?: LoadedTissues): boolean {
@@ -357,7 +364,7 @@ export class TissuesValidator {
     }
 
     public static valid(current: LoadedTissues) {
-        if(!TissuesValidator.validCount(current)) {
+        if (!TissuesValidator.validCount(current)) {
             return false;
         }
 

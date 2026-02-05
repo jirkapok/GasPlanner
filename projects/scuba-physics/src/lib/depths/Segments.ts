@@ -47,12 +47,13 @@ export class Segment {
          **/
         source: Gas | Tank,
         /** in seconds */
-        duration: number) {
+        duration: number
+    ) {
         this._startDepth = startDepth;
         this._endDepth = endDepth;
         this._duration = duration;
 
-        if(source instanceof Tank) {
+        if (source instanceof Tank) {
             this._tank = source;
             this._gas = source.gas;
         } else {
@@ -118,7 +119,7 @@ export class Segment {
      * If defined, user prefers to use this tank for consumption.
      * Assigning the tank overrides the gas also by gas from the tank.
      * This property should be used only for user defined segments.
-    */
+     */
     public set tank(newValue: Tank | undefined) {
         this._tank = newValue;
 
@@ -160,8 +161,7 @@ export class Segment {
     }
 
     public contentEquals(toCompare: Segment): boolean {
-        return this.speed === toCompare.speed &&
-            this._gas.compositionEquals(toCompare._gas);
+        return this.speed === toCompare.speed && this._gas.compositionEquals(toCompare._gas);
     }
 
     /**
@@ -396,10 +396,10 @@ export class Segments {
     }
 
     /**
-    * Returns all segments up to the last including the deepest point.
-    * In case of multiple depths the average on the last occurrence will be smaller.
-    * But it is Ok, since the last segment is the one, where decompression ascent is calculated.
-    */
+     * Returns all segments up to the last including the deepest point.
+     * In case of multiple depths the average on the last occurrence will be smaller.
+     * But it is Ok, since the last segment is the one, where decompression ascent is calculated.
+     */
     public deepestPart(): Segment[] {
         for (let index = this.segments.length - 1; index >= 0; index--) {
             if (this.segments[index].endDepth === this.maxDepth) {
@@ -416,5 +416,3 @@ export class Segments {
         }
     }
 }
-
-

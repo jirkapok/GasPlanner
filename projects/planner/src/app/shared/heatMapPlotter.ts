@@ -1,5 +1,5 @@
 import * as Plotly from 'plotly.js-dist';
-import * as _ from "lodash";
+import * as _ from 'lodash';
 
 export class HeatMapPlotter {
     private readonly colorScale = [
@@ -45,11 +45,10 @@ export class HeatMapPlotter {
             b: 0,
             t: 10,
             pad: 0
-        },
+        }
     };
 
-    public constructor(private elementName: string) {
-    }
+    public constructor(private elementName: string) {}
 
     /**
      * Every data array represents a tissue saturation speed changes in time.
@@ -68,7 +67,7 @@ export class HeatMapPlotter {
                 type: <Plotly.PlotType>'heatmap',
                 colorscale: this.colorScale as Plotly.ColorScale,
                 showscale: false,
-                hoverinfo: 'none',
+                hoverinfo: 'none'
             }
         ];
 

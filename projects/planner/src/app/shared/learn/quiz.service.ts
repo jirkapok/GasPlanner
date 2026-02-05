@@ -6,17 +6,17 @@ import { QuizSessionDto } from '../serialization.model';
 import { Question } from './quiz.question';
 
 export interface TopicStatus {
-   finished: number;
-   total: number;
-   hasTrophy: boolean
+    finished: number;
+    total: number;
+    hasTrophy: boolean;
 }
 
 export interface CategoryStatus {
-   score: number;
-   showScore: boolean;
-   finished: boolean;
-   attempts:number;
-   required: number;
+    score: number;
+    showScore: boolean;
+    finished: boolean;
+    attempts: number;
+    required: number;
 }
 
 @Injectable({
@@ -99,14 +99,14 @@ export class QuizService {
     public categoryStatus(category: Category): CategoryStatus {
         const session = this.sessionsByCategory.get(category.name);
         if (!session) {
-            return { score: 0, showScore: false, finished: false, attempts:0,  required: QuizSession.requiredAnsweredCount };
+            return { score: 0, showScore: false, finished: false, attempts: 0, required: QuizSession.requiredAnsweredCount };
         }
         return {
             score: session.correctPercentage,
             showScore: session.totalAnswered > QuizSession.requiredAnsweredCount,
             finished: session.trophyGained,
             attempts: session.totalAnswered,
-            required: QuizSession.requiredAnsweredCount,
+            required: QuizSession.requiredAnsweredCount
         };
     }
 
@@ -149,9 +149,7 @@ export class QuizService {
         }
 
         for (const entry of entries) {
-            const category = this.topics
-                .flatMap(topic => topic.categories)
-                .find(c => c.name === entry.category);
+            const category = this.topics.flatMap(topic => topic.categories).find(c => c.name === entry.category);
 
             if (!category) {
                 continue;

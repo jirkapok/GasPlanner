@@ -7,16 +7,8 @@ describe('Quiz Service', () => {
 
     const topics: Topic[] = [
         new Topic('First topic', [
-            new Category('Category 1', '', [
-                new QuestionTemplate('Ask me', 1, RoundType.floor,
-                    [],
-                    () => expectedAnswer),
-            ]),
-            new Category('Category 2', '', [
-                new QuestionTemplate('Ask me', 1, RoundType.floor,
-                    [],
-                    () => expectedAnswer),
-            ])
+            new Category('Category 1', '', [new QuestionTemplate('Ask me', 1, RoundType.floor, [], () => expectedAnswer)]),
+            new Category('Category 2', '', [new QuestionTemplate('Ask me', 1, RoundType.floor, [], () => expectedAnswer)])
         ])
     ];
 

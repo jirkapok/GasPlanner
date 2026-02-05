@@ -11,7 +11,7 @@ import { Tank } from '../consumption/Tanks';
 import { GasDensity } from '../gases/GasDensity';
 import { Precision } from '../common/precision';
 import { StandardGases } from '../gases/StandardGases';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 interface EventAssert {
     depth: number;
@@ -21,9 +21,12 @@ interface EventAssert {
 }
 
 describe('Profile Events', () => {
-
-    const createEventOption = (startAscentIndex: number,
-        profile: Segment[], ceilings: Ceiling[], profileOptions: Options): EventOptions => ({
+    const createEventOption = (
+        startAscentIndex: number,
+        profile: Segment[],
+        ceilings: Ceiling[],
+        profileOptions: Options
+    ): EventOptions => ({
         maxDensity: 50, // prevent event generation
         startAscentIndex: startAscentIndex,
         profile: profile,
@@ -99,7 +102,7 @@ describe('Profile Events', () => {
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 8, timeStamp: 267, gas: undefined },
                 { type: EventType.gasSwitch, depth: 30, timeStamp: 120, gas: StandardGases.trimix1070 },
-                { type: EventType.lowPpO2, depth: 8, timeStamp: 432, gas: undefined },
+                { type: EventType.lowPpO2, depth: 8, timeStamp: 432, gas: undefined }
             ]);
         });
 
@@ -117,7 +120,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 3, timeStamp: 120, gas: undefined },
-                { type: EventType.gasSwitch, depth: 3, timeStamp: 120, gas: StandardGases.trimix1070 },
+                { type: EventType.gasSwitch, depth: 3, timeStamp: 120, gas: StandardGases.trimix1070 }
             ]);
         });
 
@@ -132,7 +135,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 0, timeStamp: 0, gas: undefined },
-                { type: EventType.gasSwitch, depth: 4, timeStamp: 120, gas: StandardGases.oxygen },
+                { type: EventType.gasSwitch, depth: 4, timeStamp: 120, gas: StandardGases.oxygen }
             ]);
         });
 
@@ -147,7 +150,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 3, timeStamp: 180, gas: undefined },
-                { type: EventType.gasSwitch, depth: 3, timeStamp: 180, gas: StandardGases.trimix1070 },
+                { type: EventType.gasSwitch, depth: 3, timeStamp: 180, gas: StandardGases.trimix1070 }
             ]);
         });
 
@@ -162,7 +165,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.lowPpO2, depth: 8, timeStamp: 77, gas: undefined },
-                { type: EventType.gasSwitch, depth: 10, timeStamp: 60, gas: StandardGases.trimix1070 },
+                { type: EventType.gasSwitch, depth: 10, timeStamp: 60, gas: StandardGases.trimix1070 }
             ]);
         });
     });
@@ -191,9 +194,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            assertEvents(events.items, [
-                { type: EventType.highPpO2, depth: 56.99, timeStamp: 171, gas: undefined },
-            ]);
+            assertEvents(events.items, [{ type: EventType.highPpO2, depth: 56.99, timeStamp: 171, gas: undefined }]);
         });
 
         it('NO high PpO2 event is added, when deco ppO2 limit is used during automatically created ascent', () => {
@@ -213,9 +214,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            assertEvents(events.items, [
-                { type: EventType.gasSwitch, depth: 21, timeStamp: 300, gas: StandardGases.ean50 },
-            ]);
+            assertEvents(events.items, [{ type: EventType.gasSwitch, depth: 21, timeStamp: 300, gas: StandardGases.ean50 }]);
         });
 
         it('User defined gas switch to high ppO2 at depth', () => {
@@ -232,7 +231,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.highPpO2, depth: 20, timeStamp: 120, gas: undefined },
-                { type: EventType.gasSwitch, depth: 20, timeStamp: 120, gas: StandardGases.ean50 },
+                { type: EventType.gasSwitch, depth: 20, timeStamp: 120, gas: StandardGases.ean50 }
             ]);
         });
 
@@ -251,7 +250,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.highPpO2, depth: 18, timeStamp: 54, gas: undefined },
-                { type: EventType.highPpO2, depth: 18, timeStamp: 216, gas: undefined },
+                { type: EventType.highPpO2, depth: 18, timeStamp: 216, gas: undefined }
             ]);
         });
 
@@ -266,7 +265,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.highPpO2, depth: 10, timeStamp: 180, gas: undefined },
-                { type: EventType.gasSwitch, depth: 10, timeStamp: 180, gas: StandardGases.oxygen },
+                { type: EventType.gasSwitch, depth: 10, timeStamp: 180, gas: StandardGases.oxygen }
             ]);
         });
 
@@ -279,9 +278,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            assertEvents(events.items, [
-                { type: EventType.highPpO2, timeStamp: 120, depth: 4, gas: undefined }
-            ]);
+            assertEvents(events.items, [{ type: EventType.highPpO2, timeStamp: 120, depth: 4, gas: undefined }]);
         });
     });
 
@@ -297,9 +294,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.gasSwitch, 480, 21, StandardGases.ean50)
-            );
+            expect(events.items[0]).toEqual(Event.create(EventType.gasSwitch, 480, 21, StandardGases.ean50));
         });
 
         it('Adds event user defined switch at bottom', () => {
@@ -313,9 +308,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.gasSwitch, 300, 15, StandardGases.ean50)
-            );
+            expect(events.items[0]).toEqual(Event.create(EventType.gasSwitch, 300, 15, StandardGases.ean50));
         });
 
         it('User defined switch to another tank with the same gas', () => {
@@ -332,9 +325,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(3, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.gasSwitch, 300, 15, StandardGases.air)
-            );
+            expect(events.items[0]).toEqual(Event.create(EventType.gasSwitch, 300, 15, StandardGases.air));
         });
     });
 
@@ -347,15 +338,13 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.highAscentSpeed, 120, 20)
-            );
+            expect(events.items[0]).toEqual(Event.create(EventType.highAscentSpeed, 120, 20));
         });
 
         it('High ascent speed rounds precision', () => {
             const segments = new Segments();
             // using this formula javascript creates precise number 166.66666666666666 periodical
-            const duration = (30 - 5) / 9 * Time.oneMinute;
+            const duration = ((30 - 5) / 9) * Time.oneMinute;
             segments.add(30, StandardGases.air, duration);
             segments.add(5, StandardGases.air, duration);
 
@@ -375,9 +364,7 @@ describe('Profile Events', () => {
             const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items[0]).toEqual(
-                Event.create(EventType.highDescentSpeed, 60, 10)
-            );
+            expect(events.items[0]).toEqual(Event.create(EventType.highDescentSpeed, 60, 10));
         });
     });
 
@@ -401,7 +388,7 @@ describe('Profile Events', () => {
             ]);
         });
 
-        it('Long shallow dive doesn\'t break ceiling', () => {
+        it("Long shallow dive doesn't break ceiling", () => {
             const gases = new Gases();
             gases.add(StandardGases.air);
 
@@ -411,9 +398,7 @@ describe('Profile Events', () => {
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
-            assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 3746, depth: 16, gas: undefined }
-            ]);
+            assertEvents(events.items, [{ type: EventType.noDecoEnd, timeStamp: 3746, depth: 16, gas: undefined }]);
         });
 
         it('Broken ceiling is added multiple times', () => {
@@ -459,7 +444,7 @@ describe('Profile Events', () => {
             ]);
         });
 
-        it('21/35 to 35/25 doesn\'t add the event', () => {
+        it("21/35 to 35/25 doesn't add the event", () => {
             const segments = new Segments();
             segments.add(15, StandardGases.trimix2135, Time.oneMinute * 4);
             segments.addFlat(StandardGases.trimix2135, Time.oneMinute);
@@ -472,7 +457,7 @@ describe('Profile Events', () => {
             expect(events.items[0].type).not.toEqual(EventType.isobaricCounterDiffusion);
         });
 
-        it('doesn\'t add the event in case no helium in mixtures', () => {
+        it("doesn't add the event in case no helium in mixtures", () => {
             const segments = new Segments();
             segments.add(15, StandardGases.ean50, Time.oneMinute * 4);
             segments.addFlat(StandardGases.ean50, Time.oneMinute);
@@ -502,7 +487,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.gasSwitch, timeStamp: 240, depth: 45, gas: StandardGases.trimix3525 },
-                { type: EventType.maxEndExceeded, timeStamp: 240, depth: 45, gas: StandardGases.trimix3525 },
+                { type: EventType.maxEndExceeded, timeStamp: 240, depth: 45, gas: StandardGases.trimix3525 }
             ]);
         });
 
@@ -517,7 +502,7 @@ describe('Profile Events', () => {
 
             assertEvents(events.items, [
                 { type: EventType.gasSwitch, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 },
-                { type: EventType.maxEndExceeded, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 },
+                { type: EventType.maxEndExceeded, timeStamp: 300, depth: 45, gas: StandardGases.trimix3525 }
             ]);
         });
 
@@ -531,9 +516,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             // only one event for multiple segments
-            assertEvents(events.items, [
-                { type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }
-            ]);
+            assertEvents(events.items, [{ type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }]);
         });
 
         it('Swim deeper multiple segments than gas narcotic depth', () => {
@@ -547,9 +530,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             // only one event for multiple segments
-            assertEvents(events.items, [
-                { type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }
-            ]);
+            assertEvents(events.items, [{ type: EventType.maxEndExceeded, timeStamp: 180, depth: 30, gas: StandardGases.air }]);
         });
     });
 
@@ -579,9 +560,7 @@ describe('Profile Events', () => {
         it('Event is generated only once for max. density', () => {
             const events = findProfileEvents(40);
 
-            assertEvents(events.items, [
-                { type: EventType.highGasDensity, timeStamp: 208.8, depth: 34.8, gas: StandardGases.air }
-            ]);
+            assertEvents(events.items, [{ type: EventType.highGasDensity, timeStamp: 208.8, depth: 34.8, gas: StandardGases.air }]);
         });
 
         it('Gas switch to high density generates event', () => {
@@ -595,9 +574,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(3); // gas switch, idc, high density
-            expect(events.items[2]).toEqual(
-                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
-            );
+            expect(events.items[2]).toEqual(Event.create(EventType.highGasDensity, 240, 40, StandardGases.air));
         });
 
         it('Gas switch to high density ascent', () => {
@@ -610,9 +587,7 @@ describe('Profile Events', () => {
             const events = ProfileEvents.fromProfile(eventOptions);
 
             expect(events.items.length).toEqual(3); // gas switch, idc, high density
-            expect(events.items[2]).toEqual(
-                Event.create(EventType.highGasDensity, 240, 40, StandardGases.air)
-            );
+            expect(events.items[2]).toEqual(Event.create(EventType.highGasDensity, 240, 40, StandardGases.air));
         });
     });
 
@@ -633,9 +608,7 @@ describe('Profile Events', () => {
             options.safetyStop = SafetyStop.always;
             const events = ProfileEvents.fromProfile(eventOptions);
 
-            expect(events.items).toEqual([
-                Event.create(EventType.safetyStop, 900, 3),
-            ]);
+            expect(events.items).toEqual([Event.create(EventType.safetyStop, 900, 3)]);
         });
 
         it('Safety stop not present event not created', () => {
@@ -664,9 +637,7 @@ describe('Profile Events', () => {
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
-            expect(events.items).toEqual([
-                Event.create(EventType.noDecoEnd, 868, 30),
-            ]);
+            expect(events.items).toEqual([Event.create(EventType.noDecoEnd, 868, 30)]);
         });
 
         it('Adds end of NDL during ascent with correct depth', () => {
@@ -680,9 +651,7 @@ describe('Profile Events', () => {
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
-            assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 870, depth: 20.25, gas: undefined },
-            ]);
+            assertEvents(events.items, [{ type: EventType.noDecoEnd, timeStamp: 870, depth: 20.25, gas: undefined }]);
         });
     });
 
@@ -698,9 +667,7 @@ describe('Profile Events', () => {
 
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
-            expect(events.items).toEqual([
-                Event.create(EventType.minDepth, 0, 5),
-            ]);
+            expect(events.items).toEqual([Event.create(EventType.minDepth, 0, 5)]);
         });
 
         it('Maximum depth higher than 120 meters aren`t tested', () => {
@@ -716,14 +683,12 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             // simplify the test by ignoring all other events
-            expect(events.items[6]).toEqual(
-                Event.create(EventType.maxDepth, 0, 130)
-            );
+            expect(events.items[6]).toEqual(Event.create(EventType.maxDepth, 0, 130));
         });
     });
 
     describe('Air breaks', () => {
-        const generateProfileEvents = (airBreaksEnabled: boolean) =>{
+        const generateProfileEvents = (airBreaksEnabled: boolean) => {
             const gases = new Gases();
             gases.add(StandardGases.trimix1070);
             gases.add(StandardGases.oxygen);
@@ -767,4 +732,3 @@ describe('Profile Events', () => {
         });
     });
 });
-

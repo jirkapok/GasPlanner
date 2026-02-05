@@ -75,10 +75,10 @@ export class AltitudePressure {
     // https://en.wikipedia.org/wiki/International_Standard_Atmosphere
     private static readonly gasConstant = 8.31432; // J/(mol·K) for air
     private static readonly temperature = 288.15; // kelvin = 15°C
-    private static readonly lapsRate = -0.0065;  // kelvin/meter
+    private static readonly lapsRate = -0.0065; // kelvin/meter
     private static readonly molarMass = 0.0289644; // kg/mol
-    private static readonly exponent = (Gravity.standard * AltitudePressure.molarMass) /
-        (AltitudePressure.gasConstant * AltitudePressure.lapsRate);
+    private static readonly exponent =
+        (Gravity.standard * AltitudePressure.molarMass) / (AltitudePressure.gasConstant * AltitudePressure.lapsRate);
     private static readonly invertedExponent = 1 / AltitudePressure.exponent;
 
     /**
@@ -97,7 +97,7 @@ export class AltitudePressure {
      * @param pressure in pascals
      */
     public static altitude(pressure: number): number {
-        if(pressure >= AltitudePressure.standardPascals) {
+        if (pressure >= AltitudePressure.standardPascals) {
             return 0;
         }
 

@@ -1,7 +1,7 @@
 import { Gas } from '../gases/Gases';
 import { Segment } from '../depths/Segments';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
-import { ProfileTissues } from "./ProfileTissues";
+import { ProfileTissues } from './ProfileTissues';
 
 export enum EventType {
     noAction = 0,
@@ -37,7 +37,7 @@ export enum EventType {
     /* Algorithm si used in depths higher than 120 meters, where the algorithm wasn't tested enough */
     maxDepth = 14,
     /* Unable ot switch to bottom gas, in case of generating air breaks */
-    missingAirBreak = 15,
+    missingAirBreak = 15
 }
 
 export class Event {
@@ -52,7 +52,7 @@ export class Event {
         public message?: string,
         /** Optional data associated with the event, e.g. Gas for gas switch */
         public gas?: Gas
-    ) { }
+    ) {}
 
     public static create(type: EventType, timeStamp: number, depth: number, gas?: Gas): Event {
         return new Event(timeStamp, depth, type, '', gas);
@@ -149,7 +149,7 @@ export class Ceiling {
          * Gets or sets the maximum safe depth to ascent to in meters.
          */
         public depth: number
-    ) { }
+    ) {}
 
     public get notAtSurface(): boolean {
         return this.depth > 0;
@@ -179,7 +179,7 @@ export class CalculatedProfile {
         private seg: Segment[],
         private _finalTissues: LoadedTissues,
         private err: Event[]
-    ) { }
+    ) {}
 
     /**
      * Not null collection of segments filled whole calculated dive profile.
@@ -239,16 +239,26 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
         return this._tissues;
     }
 
-    public static fromStatisticsProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-                              finalTissues: LoadedTissues, tissues: LoadedTissues[])
-        : CalculatedProfileStatistics {
+    public static fromStatisticsProfile(
+        segments: Segment[],
+        ceilings: Ceiling[],
+        tissueOverPressures: TissueOverPressures[],
+        finalTissues: LoadedTissues,
+        tissues: LoadedTissues[]
+    ): CalculatedProfileStatistics {
         return new CalculatedProfileStatistics(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }
 
     public static fromStatisticsErrors(segments: Segment[], errors: Event[]): CalculatedProfileStatistics {
         // we are lying here, since dont know the altitude for tissues
-        return new CalculatedProfileStatistics(segments, [], ProfileTissues.createAtSurface(), [],
-            CalculatedProfile.emptyTissueOverPressures, errors);
+        return new CalculatedProfileStatistics(
+            segments,
+            [],
+            ProfileTissues.createAtSurface(),
+            [],
+            CalculatedProfile.emptyTissueOverPressures,
+            errors
+        );
     }
 
     /** One tissues sample per second */

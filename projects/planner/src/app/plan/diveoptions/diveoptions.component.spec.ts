@@ -27,19 +27,27 @@ describe('Dive options component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, DiveOptionsComponent],
-    providers: [
-        WorkersFactoryCommon, DecimalPipe,
-        InputControls, DiveSchedules,
-        ValidatorGroups, PlannerService,
-        UnitConversion, ReloadDispatcher,
-        ViewSwitchService, WayPointsService,
-        ViewStates, SubViewStorage,
-        Preferences, PreferencesStore,
-        ApplicationSettingsService,
-        MdbModalService, OptionsService
-    ]
-}).compileComponents();
+            imports: [ReactiveFormsModule, DiveOptionsComponent],
+            providers: [
+                WorkersFactoryCommon,
+                DecimalPipe,
+                InputControls,
+                DiveSchedules,
+                ValidatorGroups,
+                PlannerService,
+                UnitConversion,
+                ReloadDispatcher,
+                ViewSwitchService,
+                WayPointsService,
+                ViewStates,
+                SubViewStorage,
+                Preferences,
+                PreferencesStore,
+                ApplicationSettingsService,
+                MdbModalService,
+                OptionsService
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -53,17 +61,15 @@ describe('Dive options component', () => {
     });
 
     it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
-        const spy = spyOnProperty(viewSwitch, 'isComplex', 'set')
-            .and.callThrough();
+        const spy = spyOnProperty(viewSwitch, 'isComplex', 'set').and.callThrough();
         fixture.detectChanges();
         component.isComplex = false;
         expect(spy).toHaveBeenCalledWith(false);
-    }
-    ));
+    }));
 
     it('should call switchAirBreaks on selectedOptions', () => {
         const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
-        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged');
+        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
 
         component.switchAirBreaks();
 
@@ -102,4 +108,3 @@ describe('Dive options component', () => {
         expect(dispatcherSpy).toHaveBeenCalledWith();
     });
 });
-

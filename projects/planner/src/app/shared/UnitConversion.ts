@@ -1,9 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-    DefaultValues, ImperialDefaults, ImperialUnits,
-    MetricDefaults, MetricUnits, Units
-} from 'scuba-physics';
+import { DefaultValues, ImperialDefaults, ImperialUnits, MetricDefaults, MetricUnits, Units } from 'scuba-physics';
 
 @Injectable()
 export class UnitConversion {
@@ -147,7 +144,6 @@ export class UnitConversion {
     }
 }
 
-
 /** All numeric values are in current units of the provider, e.g. not normalized to metrics only. */
 export interface RangeConstants {
     units: Units;
@@ -190,7 +186,6 @@ export interface RangeConstants {
     moneyLabel: string;
     decoStopDistance: [number, number];
     decoStopDistanceLabel: string;
-
 }
 
 const perMinute = '/min';
@@ -236,7 +231,7 @@ class MetricRanges implements RangeConstants {
     public readonly money: [number, number] = [0, 1000000]; // allow zero - may be for free
     public readonly moneyLabel: string = toLabel(this.money, '');
 
-    constructor() { }
+    constructor() {}
 }
 
 class ImperialRanges implements RangeConstants {
@@ -279,5 +274,5 @@ class ImperialRanges implements RangeConstants {
     public readonly money: [number, number] = [0, 1000000];
     public readonly moneyLabel: string = toLabel(this.money, '');
 
-    constructor() { }
+    constructor() {}
 }

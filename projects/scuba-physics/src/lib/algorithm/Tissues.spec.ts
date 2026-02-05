@@ -3,7 +3,7 @@ import { LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
-import { LoadedTissues } from "./Tissues.api";
+import { LoadedTissues } from './Tissues.api';
 
 describe('Tissues', () => {
     const createTissue = () => new Tissue(Compartments.buhlmannZHL16C[0], 1);
@@ -60,7 +60,6 @@ describe('Tissues', () => {
         });
     });
 
-
     describe('Ceiling', () => {
         it('Not loaded tissue ceiling above surface', () => {
             const tissue = createTissue();
@@ -81,8 +80,7 @@ describe('Tissues', () => {
         const segment = new LoadSegment(6, Time.oneMinute * 60, 0);
 
         // saturation values are not precise, because of M-values evaluate to decimal places.
-        const createLoadedTissue = (pN2: number) =>
-            Tissue.fromCurrent({ pN2: pN2, pHe: 0}, Compartments.buhlmannZHL16C[0]);
+        const createLoadedTissue = (pN2: number) => Tissue.fromCurrent({ pN2: pN2, pHe: 0 }, Compartments.buhlmannZHL16C[0]);
 
         it('Is 0 at equilibrium (surface)', () => {
             const tissue = createLoadedTissue(1);
@@ -105,7 +103,7 @@ describe('Tissues', () => {
         it('Is more than 0 when offgasing', () => {
             const tissue = createLoadedTissue(2);
             const saturationRatio = tissue.saturationRatio(1);
-            expect(saturationRatio).toBeCloseTo(0.50959120, 8);
+            expect(saturationRatio).toBeCloseTo(0.5095912, 8);
         });
 
         it('Is -1 when descending when start ongassing', () => {

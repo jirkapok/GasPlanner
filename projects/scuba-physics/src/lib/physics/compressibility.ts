@@ -1,5 +1,5 @@
 import { Gas } from '../gases/Gases';
-import { TankFill } from "../consumption/Tanks";
+import { TankFill } from '../consumption/Tanks';
 
 /**
  * Real gas compression calculator. Does not use Gas ideal law, instead uses Z-factor.
@@ -10,15 +10,13 @@ import { TankFill } from "../consumption/Tanks";
  */
 export class Compressibility {
     // doesn't need to be altitude pressure, since its effect is negligible.
-    private normalPressure: number = 1;
+    private normalPressure = 1;
     private readonly o2Coefficients = [-7.18092073703e-4, 2.81852572808e-6, -1.50290620492e-9];
     private readonly n2Coefficients = [-2.19260353292e-4, 2.92844845532e-6, -2.07613482075e-9];
     private readonly heCoefficients = [4.87320026468e-4, -8.83632921053e-8, 5.33304543646e-11];
 
     private virial(pressure: number, coefficients: number[]): number {
-        return coefficients[0] * pressure +
-            coefficients[1] * pressure * pressure +
-            coefficients[2] * pressure * pressure * pressure;
+        return coefficients[0] * pressure + coefficients[1] * pressure * pressure + coefficients[2] * pressure * pressure * pressure;
     }
 
     /**
@@ -48,7 +46,7 @@ export class Compressibility {
         const absolutePressure = tank.startPressure + this.normalPressure;
         const unitVolume = this.normalVolume(absolutePressure, gas);
         // Subtracting the size of the tank, because 0 b pressure gauge means the remaining gas is still approximately at 1 atm.
-        return (unitVolume * tank.size) - tank.size;
+        return unitVolume * tank.size - tank.size;
     }
 
     /**
@@ -79,7 +77,7 @@ export class Compressibility {
      * @param volume Absolute gas volume in liters
      */
     public pressure(gas: Gas, volume: number): number {
-        if(volume > 750) {
+        if (volume > 750) {
             throw new Error('Volume cannot be larger than 750 L');
         }
 

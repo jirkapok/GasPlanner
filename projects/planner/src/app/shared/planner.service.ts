@@ -2,14 +2,18 @@ import { Injectable } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
+import { CalculatedProfile, Precision, LoadedTissue } from 'scuba-physics';
 import {
-    CalculatedProfile, Precision,
-    LoadedTissue
-} from 'scuba-physics';
-import {
-    ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound,
-    DiveInfoRequestDto, CalculatedProfileDto, PlanRequestDto
+    ConsumptionResultDto,
+    ConsumptionRequestDto,
+    EventOptionsDto,
+    ProfileRequestDto,
+    ProfileResultDto,
+    DiveInfoResultDto,
+    ITankBound,
+    DiveInfoRequestDto,
+    CalculatedProfileDto,
+    PlanRequestDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
 import { IBackgroundTask } from '../workers/background-task';
@@ -22,8 +26,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
-import { BoundEvent } from "./models";
-
+import { BoundEvent } from './models';
 
 @Injectable()
 export class PlannerService extends Streamed {
@@ -39,47 +42,42 @@ export class PlannerService extends Streamed {
         private viewSwitch: ViewSwitchService,
         private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
-        private units: UnitConversion) {
+        private units: UnitConversion
+    ) {
         super();
 
         this.waypoints = new WayPointsService(units);
         this.ignoredIssues = new IgnoredIssuesService(this.appSettings);
         this.profileTask = workerFactory.createProfileWorker();
-        this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((data) => this.continueCalculation(data));
-        this.profileTask.failed$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.profileFailed());
+        this.profileTask.calculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(data => this.continueCalculation(data));
+        this.profileTask.failed$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.profileFailed());
 
         this.diveInfoTask = workerFactory.createDiveInfoWorker();
-        this.diveInfoTask.calculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((calculated) => this.finishDiveInfo(calculated));
-        this.diveInfoTask.failed$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.profileFailed());
+        this.diveInfoTask.calculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(calculated => this.finishDiveInfo(calculated));
+        this.diveInfoTask.failed$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.profileFailed());
 
         this.consumptionTask = workerFactory.createConsumptionWorker();
-        this.consumptionTask.calculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((data) => this.finishConsumption(data));
-        this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.profileFailed());
+        this.consumptionTask.calculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(data => this.finishConsumption(data));
+        this.consumptionTask.failed$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.profileFailed());
     }
 
     /** Not called by default, needs to be called manually */
     public calculate(diveId: number): void {
-        if(!this.schedules.validId(diveId)) {
+        if (!this.schedules.validId(diveId)) {
             return;
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
         this.schedules.markStart(diveId);
         const dive = this.schedules.byId(diveId)!;
-        const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
+        const profileRequest = this.createPlanRequest(dive);
         this.profileTask.calculate(profileRequest);
     }
 
     private continueCalculation(result: ProfileResultDto): void {
         // still we may assign result to wrong dive after a dive is removed and Ids are rearranged
         // but there should be following schedule to fix it
-        if(!this.schedules.validId(result.diveId)) {
+        if (!this.schedules.validId(result.diveId)) {
             return;
         }
 
@@ -141,7 +139,7 @@ export class PlannerService extends Streamed {
     }
 
     private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {
-        if(calculatedProfile.errors.length > 0) {
+        if (calculatedProfile.errors.length > 0) {
             return [];
         }
 
@@ -155,15 +153,14 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfoResult: DiveInfoResultDto): void {
-        if(!this.schedules.validId(diveInfoResult.diveId)) {
+        if (!this.schedules.validId(diveInfoResult.diveId)) {
             return;
         }
 
         const dive = this.schedules.byId(diveInfoResult.diveId)!;
         const diveResult = dive.diveResult;
         const events = DtoSerialization.toEvents(diveInfoResult.events);
-        const filteredEvents = this.ignoredIssues.filterIgnored(events.items)
-            .map(e => new BoundEvent(this.units, e));
+        const filteredEvents = this.ignoredIssues.filterIgnored(events.items).map(e => new BoundEvent(this.units, e));
         const density = DtoSerialization.toDensity(diveInfoResult.density);
         diveResult.updateDiveInfo(
             diveInfoResult.noDeco,
@@ -185,7 +182,7 @@ export class PlannerService extends Streamed {
     }
 
     private finishConsumption(result: ConsumptionResultDto): void {
-        if(!this.schedules.validId(result.diveId)) {
+        if (!this.schedules.validId(result.diveId)) {
             return;
         }
 
@@ -209,7 +206,7 @@ export class PlannerService extends Streamed {
             turnTime,
             needsReturn,
             !tanks.enoughGas,
-            emergencyAscent,
+            emergencyAscent
         );
 
         this.fireFinishedEvents(dive);
@@ -222,7 +219,7 @@ export class PlannerService extends Streamed {
     }
 
     private fireFinishedEvents(dive: DiveSchedule) {
-        if(!dive.diveResult.running) {
+        if (!dive.diveResult.running) {
             this.dispatcher.sendInfoCalculated(dive.id);
         }
     }

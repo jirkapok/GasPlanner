@@ -4,8 +4,7 @@ import { ApplicationSettingsService } from './ApplicationSettings';
 
 @Injectable()
 export class IgnoredIssuesService {
-    public constructor(private appSettings: ApplicationSettingsService) {
-    }
+    public constructor(private appSettings: ApplicationSettingsService) {}
 
     private get ignoredIssues(): EventType[] {
         const ignored: EventType[] = [];

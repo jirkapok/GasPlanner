@@ -101,9 +101,12 @@ export class NitroxComponent implements OnInit {
         this.pO2Control = this.fb.control(Precision.round(this.calc.pO2, 2), this.validators.ppO2);
         this.modControl = this.fb.control(Precision.round(this.calcMod, 1), this.validators.depth);
         this.depthControl = this.fb.control(Precision.round(this.calcDepth, 1), this.validators.depth);
-        this.nitroxForm = this.fb.group({}, {
-            validators: NitroxValidators.lowMod(() => this.failingMod),
-        });
+        this.nitroxForm = this.fb.group(
+            {},
+            {
+                validators: NitroxValidators.lowMod(() => this.failingMod)
+            }
+        );
         this.toMod();
     }
 
@@ -177,9 +180,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NitroxViewState = this.viewStates.loadView(
-            KnownViews.nitrox
-        );
+        let state: NitroxViewState = this.viewStates.loadView(KnownViews.nitrox);
 
         if (!state) {
             state = this.createState();
@@ -206,7 +207,7 @@ export class NitroxComponent implements OnInit {
         const values = this.nitroxForm.value;
         this.calc.fO2 = Number(values.fO2);
 
-        if(this.calc.inEad) {
+        if (this.calc.inEad) {
             const newDepth = Number(values.depth);
             this.calc.depth = this.units.toMeters(newDepth);
         } else {

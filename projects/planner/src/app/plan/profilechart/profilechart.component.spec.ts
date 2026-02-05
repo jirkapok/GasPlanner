@@ -17,10 +17,14 @@ describe('ProfileChartComponent', () => {
         TestBed.configureTestingModule({
             imports: [ProfileChartComponent],
             providers: [
-                WorkersFactoryCommon, ReloadDispatcher,
-                WayPointsService, SelectedWaypoint,
-                UnitConversion, DiveSchedules,
-                ResamplingService, MdbModalService
+                WorkersFactoryCommon,
+                ReloadDispatcher,
+                WayPointsService,
+                SelectedWaypoint,
+                UnitConversion,
+                DiveSchedules,
+                ResamplingService,
+                MdbModalService
             ]
         });
 

@@ -20,8 +20,8 @@ export class DiveResultsTableDifferenceComponent {
         public viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         public profilesDiff: ProfileComparatorService,
-        public resultsDiff: ResultsComparison) {
-    }
+        public resultsDiff: ResultsComparison
+    ) {}
 
     public get profileA(): DiveResults {
         return this.profilesDiff.profileAResults;

@@ -4,7 +4,7 @@ import { Compressibility } from '../physics/compressibility';
 import { StandardGases } from '../gases/StandardGases';
 import { Gas } from '../gases/Gases';
 import { GasMixtures } from '../gases/GasMixtures';
-import { GasMix } from "./realGasBlender";
+import { GasMix } from './realGasBlender';
 
 /**
  * Blending result showing amount of each component used
@@ -69,7 +69,7 @@ export class GasBlender {
         }
 
         // prevents rounding issues
-        if(tankA.size === tankB.size && tankA.startPressure === tankB.startPressure) {
+        if (tankA.size === tankB.size && tankA.startPressure === tankB.startPressure) {
             return tankA.startPressure;
         }
 
@@ -83,9 +83,9 @@ export class GasBlender {
         const zFactorA = compressibility.zFactor(tankA.startPressure, gas);
         const zFactorB = compressibility.zFactor(tankB.startPressure, gas);
         const weigthedZfactor = (tankVolumeA * zFactorA + tankVolumeB * zFactorB) / totalVolume;
-        const idealPressure =  totalVolume / combinedSize * weigthedZfactor;
+        const idealPressure = (totalVolume / combinedSize) * weigthedZfactor;
         const zFactor = compressibility.zFactor(idealPressure, gas);
-        const final = idealPressure * zFactor / weigthedZfactor;
+        const final = (idealPressure * zFactor) / weigthedZfactor;
         return final;
     }
 
@@ -108,7 +108,7 @@ export class GasBlender {
         const finalGas = new Gas(finalO2Volume / totalVolume, finalHeVolume / totalVolume);
         const finalPressure = compressibility.pressure(finalGas, totalVolume);
 
-        if(finalPressure === 0) {
+        if (finalPressure === 0) {
             return {
                 o2: 0,
                 he: 0,
@@ -140,7 +140,7 @@ export class GasBlender {
         const sourceVolume = compressibility.normalVolume(request.source.pressure, initialGas);
 
         const finalfN2 = GasBlender.fN2(request.target);
-        const finalN2Bars  = finalfN2 * request.target.pressure;
+        const finalN2Bars = finalfN2 * request.target.pressure;
         const finalN2Volume = finalfN2 * targetVolume;
 
         const currentfN2 = GasBlender.fN2(request.source);
@@ -154,7 +154,7 @@ export class GasBlender {
 
         // Even the top mix contains more nitrogen than target, we are still able to mix
         // by adding less top mix and more He and O2
-        if(addN2Bars < 0) {
+        if (addN2Bars < 0) {
             const removeSourceBars = -(addN2Bars / currentfN2);
             const removeSourceVolume = -(addN2Volume / currentfN2);
             return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
@@ -174,7 +174,7 @@ export class GasBlender {
         addHeBars = Precision.round(addHeBars, 8);
         addHeVolume = Precision.round(addHeVolume, 8);
 
-        if(addHeBars < 0) {
+        if (addHeBars < 0) {
             const removeSourceBars = -(addHeBars / request.source.he);
             const removeSourceVolume = -(addHeVolume / request.source.he);
             return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
@@ -185,7 +185,7 @@ export class GasBlender {
         addO2Bars = Precision.round(addO2Bars, 8);
         addO2Volume = Precision.round(addO2Volume, 8);
 
-        if(addO2Bars < 0) {
+        if (addO2Bars < 0) {
             const removeSourceBars = -(addO2Bars / request.source.o2);
             const removeSourceVolume = -(addO2Volume / request.source.o2);
             return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
@@ -221,12 +221,12 @@ export class GasBlender {
         const newRequest = GasBlender.copyRequest(request);
         // const expectedRemove = Precision.floor(removeSource, 8);
 
-        if(removeSourceBars > request.source.pressure) {
+        if (removeSourceBars > request.source.pressure) {
             throw new Error('Unable to mix required gas because target contains less he or oxygen than top mix.');
         }
 
         newRequest.source.pressure -= removeSourceBars;
-        const result =  GasBlender.mix(newRequest);
+        const result = GasBlender.mix(newRequest);
         // aggregate the removed pressure from all the recursive calls
         result.removeFromSource += removeSourceBars;
         return result;

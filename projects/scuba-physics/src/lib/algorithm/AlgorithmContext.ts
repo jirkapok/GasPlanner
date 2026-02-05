@@ -10,7 +10,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
 import { FeatureFlags } from '../common/featureFlags';
-import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
+import { LoadedTissues, TissueOverPressures } from './Tissues.api';
 
 export interface ContextMemento {
     lastTissues: LoadedTissues;
@@ -46,7 +46,8 @@ export class AlgorithmContext {
         public segments: Segments,
         public options: Options,
         public depthConverter: DepthConverter,
-        currentTissues: LoadedTissues) {
+        currentTissues: LoadedTissues
+    ) {
         this.tissues = Tissues.createLoaded(currentTissues);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
         const last = segments.last();
@@ -70,7 +71,8 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
-        currentTissues: LoadedTissues): AlgorithmContext {
+        currentTissues: LoadedTissues
+    ): AlgorithmContext {
         return new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
     }
 
@@ -79,7 +81,8 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
-        currentTissues: LoadedTissues): AlgorithmContext {
+        currentTissues: LoadedTissues
+    ): AlgorithmContext {
         const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
         context.collectStatistics = context.addCeilingStatistics;
         return context;
@@ -90,7 +93,8 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
-        currentTissues: LoadedTissues): AlgorithmContext {
+        currentTissues: LoadedTissues
+    ): AlgorithmContext {
         const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
         context.collectStatistics = context.addFullStatistics;
         return context;
@@ -160,7 +164,7 @@ export class AlgorithmContext {
         this.speeds.markAverageDepth(this.segments);
     }
 
-    public withoutStatistics() : AlgorithmContext {
+    public withoutStatistics(): AlgorithmContext {
         this.collectStatistics = this.noStatistics;
         return this;
     }
@@ -266,7 +270,10 @@ export class AirBreakContext {
     private readonly maxBottomGasTime: number;
     private _initialStopDuration: number;
 
-    constructor(private readonly context: AlgorithmContext, private remainingStopTime: number) {
+    constructor(
+        private readonly context: AlgorithmContext,
+        private remainingStopTime: number
+    ) {
         this.maxOxygenTime = this.context.options.airBreaks.oxygenDuration * Time.oneMinute;
         this.maxBottomGasTime = this.context.options.airBreaks.bottomGasDuration * Time.oneMinute;
 

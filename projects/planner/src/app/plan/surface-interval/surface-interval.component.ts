@@ -1,8 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import {
-    AbstractControl, FormControl, FormGroup,
-    NonNullableFormBuilder, ReactiveFormsModule
-} from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { maskitoTimeOptionsGenerator } from '@maskito/kit';
 import { MaskitoDirective } from '@maskito/angular';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
@@ -16,17 +13,11 @@ import { DateFormats } from '../../shared/formaters';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
-
 @Component({
     selector: 'app-surface-interval',
     templateUrl: './surface-interval.component.html',
     styleUrls: ['./surface-interval.component.scss'],
-    imports: [
-    MaskitoDirective,
-    ReactiveFormsModule,
-    MdbDropdownModule,
-    MdbFormsModule
-]
+    imports: [MaskitoDirective, ReactiveFormsModule, MdbDropdownModule, MdbFormsModule]
 })
 export class SurfaceIntervalComponent extends Streamed implements OnInit {
     @Input() public form!: FormGroup;
@@ -42,7 +33,8 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
         private fb: NonNullableFormBuilder,
         private dispatcher: ReloadDispatcher,
         private inputs: InputControls,
-        private validators: ValidatorGroups) {
+        private validators: ValidatorGroups
+    ) {
         super();
     }
 
@@ -64,18 +56,15 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     public ngOnInit(): void {
-        if(!this.form) {
+        if (!this.form) {
             this.form = this.fb.group([]);
-            const control = this.fb.control(this.surfaceInterval, [
-                this.validators.surfaceInterval()
-            ]);
+            const control = this.fb.control(this.surfaceInterval, [this.validators.surfaceInterval()]);
             this.form.addControl(this.controlName, control);
         }
 
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.reload();
-            });
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.reload();
+        });
     }
 
     public applyPrimary(): void {
@@ -110,7 +99,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     private setSurfaceInterval(newValue?: string | null) {
         const parsed = DateFormats.parseToShortTime(newValue);
 
-        if(parsed) {
+        if (parsed) {
             this.schedules.selected.surfaceInterval = parsed;
         }
     }

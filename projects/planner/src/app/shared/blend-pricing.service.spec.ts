@@ -37,4 +37,3 @@ describe('BlendPricingService', () => {
         expect(sut.totalPrice).toBeCloseTo(10792.514013437543, 8);
     });
 });
-

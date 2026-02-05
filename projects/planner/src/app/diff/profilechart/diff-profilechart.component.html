@@ -5,30 +5,44 @@
             <span>Profile chart</span>
         </div>
         <div class="float-end me-1">
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
-                    data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
+            <button
+                class="btn btn-sm btn-secondary"
+                [ngClass]="{ active: showHeatMap }"
+                type="button"
+                data-toggle="button"
+                [attr.aria-pressed]="showHeatMap"
+                autocomplete="off"
+                (click)="switchHeatMap()"
+            >
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>
     </div>
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
-        <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated
-          }">
-        </div>
-        <div id="heatmapPlotA" class="diff-heatmap-plot"
-             [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated || !showHeatMap
-          }">
-        </div>
-        <div id="heatmapPlotB" class="diff-heatmap-plot"
-                 [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated || !showHeatMap
-          }">
-        </div>
+        <div
+            id="diveplotdiff"
+            class="diff-dive-plot"
+            [ngClass]="{
+                'plot-display': profilesCalculated,
+                'plot-hidden': !profilesCalculated
+            }"
+        ></div>
+        <div
+            id="heatmapPlotA"
+            class="diff-heatmap-plot"
+            [ngClass]="{
+                'plot-display': profilesCalculated,
+                'plot-hidden': !profilesCalculated || !showHeatMap
+            }"
+        ></div>
+        <div
+            id="heatmapPlotB"
+            class="diff-heatmap-plot"
+            [ngClass]="{
+                'plot-display': profilesCalculated,
+                'plot-hidden': !profilesCalculated || !showHeatMap
+            }"
+        ></div>
     </div>
 </div>

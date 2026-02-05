@@ -12,7 +12,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -41,11 +41,17 @@ describe('SubView', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                ViewStates, PreferencesStore, SubViewStorage,
-                PlannerService, WorkersFactoryCommon,
-                UnitConversion, WayPointsService,
-                Preferences, ViewSwitchService,
-                ReloadDispatcher, DiveSchedules,
+                ViewStates,
+                PreferencesStore,
+                SubViewStorage,
+                PlannerService,
+                WorkersFactoryCommon,
+                UnitConversion,
+                WayPointsService,
+                Preferences,
+                ViewSwitchService,
+                ReloadDispatcher,
+                DiveSchedules,
                 ApplicationSettingsService,
                 MdbModalService
             ],
@@ -53,10 +59,10 @@ describe('SubView', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
-    });
+    beforeEach(() => {});
 
-    it('Saves view state', inject([SubViewStorage, ViewStates, PreferencesStore],
+    it('Saves view state', inject(
+        [SubViewStorage, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage, viewStates: ViewStates, preferences: PreferencesStore) => {
             spyOn(viewStates, 'set');
             spyOn(preferences, 'save');
@@ -65,49 +71,51 @@ describe('SubView', () => {
 
             expect(viewStates.set).toHaveBeenCalledOnceWith(changedSate);
             expect(preferences.save).toHaveBeenCalledWith();
-        }));
+        }
+    ));
 
-    it('Loads view state', inject([SubViewStorage, ViewStates, PreferencesStore],
-        (viewStorage: SubViewStorage, viewStates: ViewStates) => {
-            loadViews(viewStates);
+    it('Loads view state', inject([SubViewStorage, ViewStates, PreferencesStore], (viewStorage: SubViewStorage, viewStates: ViewStates) => {
+        loadViews(viewStates);
 
-            const subView = viewStorage.loadView(viewId);
+        const subView = viewStorage.loadView(viewId);
 
-            expect(subView).toEqual(originalSate);
-        }));
+        expect(subView).toEqual(originalSate);
+    }));
 
-    it('No initial loadView returns undefined', inject([SubViewStorage, ViewStates],
+    it('No initial loadView returns undefined', inject(
+        [SubViewStorage, ViewStates],
         (viewStorage: SubViewStorage, viewStates: ViewStates) => {
             viewStates.reset();
 
             const subView = viewStorage.loadView(viewId);
 
             expect(subView).toBeUndefined();
-        }));
+        }
+    ));
 
-    it('Set view replaces lastView', inject([SubViewStorage, ViewStates],
-        (viewStorage: SubViewStorage, viewStates: ViewStates) => {
-            loadViews(viewStates);
+    it('Set view replaces lastView', inject([SubViewStorage, ViewStates], (viewStorage: SubViewStorage, viewStates: ViewStates) => {
+        loadViews(viewStates);
 
-            viewStorage.saveView(changedSate);
+        viewStorage.saveView(changedSate);
 
-            expect(viewStates.lastView).toEqual(viewId);
-        }));
+        expect(viewStates.lastView).toEqual(viewId);
+    }));
 
     describe('Start up', () => {
-        it('Initial navigates to last sub view', inject([ViewStates],
-            (viewStates: ViewStates) => {
-                loadViews(viewStates);
+        it('Initial navigates to last sub view', inject([ViewStates], (viewStates: ViewStates) => {
+            loadViews(viewStates);
 
-                expect(viewStates.redirectToView).toBeTruthy();
-            }));
+            expect(viewStates.redirectToView).toBeTruthy();
+        }));
 
-        it('Repeated Navigates to last sub view', inject([SubViewStorage, ViewStates],
+        it('Repeated Navigates to last sub view', inject(
+            [SubViewStorage, ViewStates],
             (viewStorage: SubViewStorage, viewStates: ViewStates) => {
                 loadViews(viewStates);
                 viewStorage.saveView(changedSate);
 
                 expect(viewStates.redirectToView).toBeFalse();
-            }));
+            }
+        ));
     });
 });

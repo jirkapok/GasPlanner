@@ -28,12 +28,18 @@ describe('PreferencesStore', () => {
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 WorkersFactoryCommon,
-                PreferencesStore, PlannerService,
-                UnitConversion, ViewSwitchService,
-                Preferences, ViewStates, SubViewStorage,
+                PreferencesStore,
+                PlannerService,
+                UnitConversion,
+                ViewSwitchService,
+                Preferences,
+                ViewStates,
+                SubViewStorage,
                 SettingsNormalizationService,
-                WayPointsService, DiveSchedules,
-                ReloadDispatcher, ApplicationSettingsService,
+                WayPointsService,
+                DiveSchedules,
+                ReloadDispatcher,
+                ApplicationSettingsService,
                 MdbModalService
             ]
         });
@@ -41,12 +47,11 @@ describe('PreferencesStore', () => {
         localStorage.clear();
     });
 
-    it('loads saved disclaimer', inject([PreferencesStore, PlannerService],
-        (service: PreferencesStore) => {
-            service.disableDisclaimer();
-            const enabled = service.disclaimerEnabled();
-            expect(enabled).toBeFalsy();
-        }));
+    it('loads saved disclaimer', inject([PreferencesStore, PlannerService], (service: PreferencesStore) => {
+        service.disableDisclaimer();
+        const enabled = service.disclaimerEnabled();
+        expect(enabled).toBeFalsy();
+    }));
 
     describe('Preferences', () => {
         let options: OptionsService;
@@ -90,23 +95,22 @@ describe('PreferencesStore', () => {
             }).toEqual(expected);
         });
 
-        it('Options values are loaded after save', inject([ViewSwitchService],
-            (viewSwitch: ViewSwitchService) => {
-                // not going to test all options, since it is a flat structure
-                options.gfLow = 0.3;
-                options.descentSpeed = 15;
-                viewSwitch.isComplex = true; // otherwise reset of GF.
-                sut.save();
+        it('Options values are loaded after save', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+            // not going to test all options, since it is a flat structure
+            options.gfLow = 0.3;
+            options.descentSpeed = 15;
+            viewSwitch.isComplex = true; // otherwise reset of GF.
+            sut.save();
 
-                options.gfLow = 0.35;
-                options.descentSpeed = 17;
-                sut.load();
+            options.gfLow = 0.35;
+            options.descentSpeed = 17;
+            sut.load();
 
-                const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
-                expected.descentSpeed = 15;
-                expected.safetyStop = SafetyStop.auto;
-                expect(options.getOptions()).toEqual(expected);
-            }));
+            const expected = new Options(0.3, 0.85, 1.4, 1.6, Salinity.fresh);
+            expected.descentSpeed = 15;
+            expected.safetyStop = SafetyStop.auto;
+            expect(options.getOptions()).toEqual(expected);
+        }));
 
         it('Tanks are loaded after save', inject(
             [PlannerService, ViewSwitchService],
@@ -147,9 +151,11 @@ describe('PreferencesStore', () => {
                 expect(tanksService.tankData).toEqual(expected);
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(0, 6);
                 expect(tanksService.tanks[1].workingPressureBars).toBeCloseTo(0, 6);
-            }));
+            }
+        ));
 
-        it('Plan is loaded after save', inject([PlannerService, ViewSwitchService],
+        it('Plan is loaded after save', inject(
+            [PlannerService, ViewSwitchService],
             (planner: PlannerService, viewSwitch: ViewSwitchService) => {
                 viewSwitch.isComplex = true;
                 tanksService.addTank();
@@ -168,26 +174,26 @@ describe('PreferencesStore', () => {
                 expect(tanksService.tanks.length).toEqual(3);
                 expect(depthsService.segments.length).toEqual(3);
                 expect(depthsService.segments[2].tank?.id).toEqual(2);
-            }));
+            }
+        ));
 
-        it('Simple profile is loaded after save and trims tank', inject([PlannerService],
-            (planner: PlannerService) => {
-                const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
+        it('Simple profile is loaded after save and trims tank', inject([PlannerService], (planner: PlannerService) => {
+            const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
 
-                // invalid operations for simple profile simulate wrong data
-                tanksService.addTank();
-                tanksService.addTank();
+            // invalid operations for simple profile simulate wrong data
+            tanksService.addTank();
+            tanksService.addTank();
 
-                depthsService.addSegment();
-                planner.calculate(1);
-                sut.save();
+            depthsService.addSegment();
+            planner.calculate(1);
+            sut.save();
 
-                sut.load();
+            sut.load();
 
-                expect(tanksService.tanks.length).toEqual(1);
-                expect(depthsService.segments.length).toEqual(2);
-                expect(optionsResetToSimple).toHaveBeenCalledTimes(1);
-            }));
+            expect(tanksService.tanks.length).toEqual(1);
+            expect(depthsService.segments.length).toEqual(2);
+            expect(optionsResetToSimple).toHaveBeenCalledTimes(1);
+        }));
 
         it('Applies imperial units', inject(
             [PreferencesStore, UnitConversion, SettingsNormalizationService],
@@ -205,64 +211,60 @@ describe('PreferencesStore', () => {
                 expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);
                 expect(units.imperialUnits).toBeTruthy();
-            }));
+            }
+        ));
 
-        it('Save and Load Defaults - First dive is updated from default', inject(
-            [DiveSchedules],
-            (schedules: DiveSchedules) => {
-                tanksService.firstTank.size = 20;
-                depthsService.plannedDepth = 21;
+        it('Save and Load Defaults - First dive is updated from default', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            tanksService.firstTank.size = 20;
+            depthsService.plannedDepth = 21;
 
-                sut.saveDefault();
-                tanksService.firstTank.size = 22;
-                depthsService.plannedDepth = 23;
+            sut.saveDefault();
+            tanksService.firstTank.size = 22;
+            depthsService.plannedDepth = 23;
 
-                sut.loadDefault(schedules.selected);
+            sut.loadDefault(schedules.selected);
 
-                expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
-                expect(depthsService.plannedDepth).toBeCloseTo(21, 1);
-            }));
+            expect(tanksService.firstTank.size).toBeCloseTo(20, 1);
+            expect(depthsService.plannedDepth).toBeCloseTo(21, 1);
+        }));
 
-        it('Load Defaults when no default is defined', inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
-                localStorage.clear();
+        it('Load Defaults when no default is defined', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            localStorage.clear();
 
-                sut.ensureDefault();
-                tanksService.firstTank.size = 22;
-                depthsService.plannedDepth = 23;
-                sut.loadDefault(schedules.selected);
+            sut.ensureDefault();
+            tanksService.firstTank.size = 22;
+            depthsService.plannedDepth = 23;
+            sut.loadDefault(schedules.selected);
 
-                expect(tanksService.firstTank.size).toBeCloseTo(15, 1);
-                expect(depthsService.plannedDepth).toBeCloseTo(30, 1);
-            }));
+            expect(tanksService.firstTank.size).toBeCloseTo(15, 1);
+            expect(depthsService.plannedDepth).toBeCloseTo(30, 1);
+        }));
 
-        it('AppSettings load defaults', inject([ApplicationSettingsService],
-            (appSettings: ApplicationSettingsService) => {
-                localStorage.clear();
+        it('AppSettings load defaults', inject([ApplicationSettingsService], (appSettings: ApplicationSettingsService) => {
+            localStorage.clear();
 
-                sut.ensureDefault();
+            sut.ensureDefault();
 
-                expect(appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
-                expect(appSettings.primaryTankReserve).toBeCloseTo(30, 1);
-                expect(appSettings.stageTankReserve).toBeCloseTo(20, 1);
-            }));
+            expect(appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
+            expect(appSettings.primaryTankReserve).toBeCloseTo(30, 1);
+            expect(appSettings.stageTankReserve).toBeCloseTo(20, 1);
+        }));
 
-        it('AppSettings loads saved values', inject([ApplicationSettingsService],
-            (appSettings: ApplicationSettingsService) => {
-                appSettings.maxGasDensity = 6;
-                appSettings.primaryTankReserve = 31;
-                appSettings.stageTankReserve = 21;
+        it('AppSettings loads saved values', inject([ApplicationSettingsService], (appSettings: ApplicationSettingsService) => {
+            appSettings.maxGasDensity = 6;
+            appSettings.primaryTankReserve = 31;
+            appSettings.stageTankReserve = 21;
 
-                sut.save();
-                appSettings.maxGasDensity = 5.3;
-                appSettings.primaryTankReserve = 32;
-                appSettings.stageTankReserve = 22;
-                sut.load();
+            sut.save();
+            appSettings.maxGasDensity = 5.3;
+            appSettings.primaryTankReserve = 32;
+            appSettings.stageTankReserve = 22;
+            sut.load();
 
-                expect(appSettings.maxGasDensity).toBeCloseTo(6, 1);
-                expect(appSettings.primaryTankReserve).toBeCloseTo(31, 1);
-                expect(appSettings.stageTankReserve).toBeCloseTo(21, 1);
-            }));
+            expect(appSettings.maxGasDensity).toBeCloseTo(6, 1);
+            expect(appSettings.primaryTankReserve).toBeCloseTo(31, 1);
+            expect(appSettings.stageTankReserve).toBeCloseTo(21, 1);
+        }));
 
         it('Air breaks loads saved values', () => {
             localStorage.clear();

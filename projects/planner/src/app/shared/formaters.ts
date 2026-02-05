@@ -5,7 +5,7 @@ export class DateFormats {
      *  Chart formatting
      *  Not showing days in chart, because it consumes lot of space
      *  https://github.com/d3/d3-time-format/blob/main/README.md
-    */
+     */
     public static selectChartTimeFormat(seconds: number): string {
         if (DateFormats.hasHoursRuntime(seconds)) {
             return '%H:%M:%S';
@@ -25,7 +25,6 @@ export class DateFormats {
 
         return 'm:ss';
     }
-
 
     /**
      * Converts duration in seconds to Date structure
@@ -57,7 +56,7 @@ export class DateFormats {
      * Returns null, if value cant be parsed.
      */
     public static parseToShortTime(newValue?: string | null): number | null {
-        if(!newValue) {
+        if (!newValue) {
             return null;
         }
 
@@ -65,7 +64,7 @@ export class DateFormats {
         // the only way how set first dive is by using the applyFirst method
         // const candidate = newValue || '00:00';
         const parsed = newValue.match(timeFormat);
-        if(parsed) {
+        if (parsed) {
             const newHours = Number(parsed[1]) * Time.oneHour;
             const newMinutes = Number(parsed[2]) * Time.oneMinute;
             const newSeconds = newHours + newMinutes;
@@ -79,9 +78,9 @@ export class DateFormats {
      *  Converts to number of seconds to string in form "HH:MM".
      */
     public static formatShortTime(seconds: number): string {
-        const resultHours = Precision.floor(seconds / (Time.oneHour));
+        const resultHours = Precision.floor(seconds / Time.oneHour);
         const resultHoursPad = resultHours.toString().padStart(2, '0');
-        let resultMinutes = (seconds % (Time.oneHour)) / Time.oneMinute;
+        let resultMinutes = (seconds % Time.oneHour) / Time.oneMinute;
         resultMinutes = Precision.floor(resultMinutes);
         const resultMinutesPad = resultMinutes.toString().padStart(2, '0');
         const result = `${resultHoursPad}:${resultMinutesPad}`;

@@ -25,7 +25,7 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 export class ComplexTanksPage {
-    constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
+    constructor(private fixture: ComponentFixture<TanksComplexComponent>) {}
 
     public sizeInput(index: number): HTMLInputElement {
         const id = `#sizeItemB-${index} input`; // we check on large display only
@@ -84,18 +84,24 @@ describe('Tanks Complex component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls,
-                ValidatorGroups, DecimalPipe, ViewSwitchService,
-                WayPointsService, SubViewStorage, ViewStates,
-                Preferences, PreferencesStore, DiveSchedules,
-                ReloadDispatcher, MdbModalService,
-                provideAnimations(),
+                WorkersFactoryCommon,
+                UnitConversion,
+                PlannerService,
+                InputControls,
+                ValidatorGroups,
+                DecimalPipe,
+                ViewSwitchService,
+                WayPointsService,
+                SubViewStorage,
+                ViewStates,
+                Preferences,
+                PreferencesStore,
+                DiveSchedules,
+                ReloadDispatcher,
+                MdbModalService,
+                provideAnimations()
             ],
-            imports: [
-                ReactiveFormsModule, TanksComplexComponent,
-                OxygenDropDownComponent, OxygenComponent,
-            ]
+            imports: [ReactiveFormsModule, TanksComplexComponent, OxygenDropDownComponent, OxygenComponent]
         }).compileComponents();
     });
 
@@ -104,25 +110,23 @@ describe('Tanks Complex component', () => {
         component = fixture.componentInstance;
         complexPage = new ComplexTanksPage(fixture);
         const dispatcher = TestBed.inject(ReloadDispatcher);
-        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
-            .and.callFake(() => { });
+        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged').and.callFake(() => {});
     });
 
-    it('Switch to complex view rebinds all tanks', inject([DiveSchedules],
-        (schedules: DiveSchedules) => {
-            const tanksService = schedules.selected.tanksService;
-            tanksService.addTank();
-            const secondTank = tanksService.tanks[1];
-            secondTank.startPressure = 150;
-            secondTank.size = 20;
-            secondTank.o2 = 25;
-            secondTank.he = 31;
-            fixture.detectChanges();
-            expect(complexPage.sizeInput(1).value).toBe('20');
-            expect(complexPage.pressureInput(1).value).toBe('150');
-            expect(complexPage.o2Input(1).value).toBe('25');
-            expect(complexPage.heInput(1).value).toBe('31');
-        }));
+    it('Switch to complex view rebinds all tanks', inject([DiveSchedules], (schedules: DiveSchedules) => {
+        const tanksService = schedules.selected.tanksService;
+        tanksService.addTank();
+        const secondTank = tanksService.tanks[1];
+        secondTank.startPressure = 150;
+        secondTank.size = 20;
+        secondTank.o2 = 25;
+        secondTank.he = 31;
+        fixture.detectChanges();
+        expect(complexPage.sizeInput(1).value).toBe('20');
+        expect(complexPage.pressureInput(1).value).toBe('150');
+        expect(complexPage.o2Input(1).value).toBe('25');
+        expect(complexPage.heInput(1).value).toBe('31');
+    }));
 
     it('Adds tank', () => {
         fixture.detectChanges();
@@ -163,7 +167,7 @@ describe('Tanks Complex component', () => {
             expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('doesn\'t break working pressure', () => {
+        it("doesn't break working pressure", () => {
             expect(component.tanks[0].workingPressure).not.toBeNaN();
         });
     });

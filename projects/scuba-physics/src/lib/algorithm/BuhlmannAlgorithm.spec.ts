@@ -6,7 +6,7 @@ import { OptionExtensions } from './Options.spec';
 import { Salinity } from '../physics/pressure-converter';
 import { Options, SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 function concatenatePlan(decoPlan: Segment[]): string {
     let planText = '';
@@ -231,8 +231,7 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const planText = calculatePlan(gases, segments);
 
-        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,60; ' +
-            '9,6,18; 6,6,180; 6,3,18; 3,3,420; 3,0,18;';
+        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,60; ' + '9,6,18; 6,6,180; 6,3,18; 3,3,420; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -247,7 +246,8 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const planText = calculatePlan(gases, segments);
 
-        const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
+        const expectedPlan =
+            '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
             '12,12,120; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
@@ -265,7 +265,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
+            const expectedPlan =
+                '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
                 '18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; 12,9,18; ' +
                 '9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
             expect(planText).toBe(expectedPlan);
@@ -284,7 +285,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = false;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
+            const expectedPlan =
+                '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
                 '18,18,7; 18,15,18; 15,15,84; 15,12,18; 12,12,132; 12,9,18; ' +
                 '9,9,221; 9,6,18; 6,6,267; 6,3,18; 3,3,697; 3,0,18;';
             expect(planText).toBe(expectedPlan);
@@ -351,7 +353,8 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,75,300; 75,75,300; 75,27,288; 27,27,60; 27,24,18; 24,24,60; 24,21,18; ' +
+            const expectedPlan =
+                '0,75,300; 75,75,300; 75,27,288; 27,27,60; 27,24,18; 24,24,60; 24,21,18; ' +
                 '21,21,60; 21,18,18; 18,18,180; 18,15,18; 15,15,180; 15,12,18; 12,12,300; ' +
                 '12,9,18; 9,9,540; 9,6,18; 6,6,1200; 6,3,18; 3,3,3240; 3,0,18;';
             expect(planText).toBe(expectedPlan);
@@ -372,11 +375,11 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,10,60; 10,75,300; 75,75,300; 75,36,234; 36,36,60; 36,21,90; 21,21,60; ' +
+            const expectedPlan =
+                '0,10,60; 10,75,300; 75,75,300; 75,36,234; 36,36,60; 36,21,90; 21,21,60; ' +
                 '21,18,18; 18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; ' +
                 '12,9,18; 9,9,180; 9,6,18; 6,6,240; 6,3,18; 3,3,600; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
-
     });
 });

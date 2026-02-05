@@ -8,7 +8,7 @@ describe('NdlServiceService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ NdlService ]
+            providers: [NdlService]
         });
         service = TestBed.inject(NdlService);
     });

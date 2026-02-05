@@ -8,7 +8,7 @@ describe('Gas label component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [ UnitConversion ]
+            providers: [UnitConversion]
         }).compileComponents();
     });
 

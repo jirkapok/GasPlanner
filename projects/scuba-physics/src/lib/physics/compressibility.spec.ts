@@ -1,6 +1,6 @@
-import { Compressibility } from "./compressibility";
-import { StandardGases } from "../gases/StandardGases";
-import { Gas } from "../gases/Gases";
+import { Compressibility } from './compressibility';
+import { StandardGases } from '../gases/StandardGases';
+import { Gas } from '../gases/Gases';
 
 describe('Gas compressibility', () => {
     const sut = new Compressibility();
@@ -63,7 +63,7 @@ describe('Gas compressibility', () => {
     });
 
     describe('Z-factor', () => {
-        const zFactor = (gas: Gas)=> sut.zFactor(207, gas);
+        const zFactor = (gas: Gas) => sut.zFactor(207, gas);
 
         it('Air at 207 b is 1.04', () => {
             const result = zFactor(StandardGases.air);

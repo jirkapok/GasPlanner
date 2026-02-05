@@ -1,118 +1,159 @@
 <div class="mt-5">
-  <div class="row">
-    <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-      <div class="card">
-        <app-card-header
-          cardTitle="Respiratory minute volume"
-          helpDocument="sac"
-          [headerIcon]="calcIcon">
-        </app-card-header>
-        <div class="card-body">
-          <form [formGroup]="formSac">
-            <div class="mb-4">{{ depthConverterWarning }}</div>
-            <div class="btn-group mb-3" role="group">
-              <button type="button" class="btn" [class.btn-primary]="calc.inSac"
-              (click)="toRmv()">RMV</button>
-              <button type="button" class="btn" [class.btn-primary]="calc.inUsed"
-              (click)="toUsed()">Used</button>
-              <button type="button" class="btn" [class.btn-primary]="calc.inDuration"
-              (click)="toDuration()">Duration</button>
-            </div>
-            <div class="pt-2 mb-4">
-              <label for="depth" class="form-label" mdbLabel>Average depth [{{units.length}}]:</label>
-              <input formControlName="depth" class="form-control" name="depth" id="depth" type="number"
-                [min]="ranges.depth[0]" [max]="ranges.depth[1]" step="1" (input)="inputChanged()"
-                [class.is-invalid]="depthInvalid" />
-                <div class="invalid-feedback position-absolute">Needs to be number {{ranges.depthLabel}}
-                </div>
-              </div>
-              <div class="pt-2 mb-4">
-                <label for="tank" class="form-label" mdbLabel>Tank size [{{units.volume}}]:</label>
-                <app-tank-size [tank]="tank" [sizeForm]="formSac" controlName="tankSize"
-                  (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event)">
-                </app-tank-size>
-                @if (tankInvalid) {
-                  <div class="text-danger form-text position-absolute">Needs to be number {{ranges.tankSizeLabel}}
-                  </div>
-                }
-              </div>
-              @if (units.imperialUnits) {
-                <div class="pt-2 mb-4">
-                  <label for="tank" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:</label>
-                  <input formControlName="workPressure" class="form-control" name="workPressure"
-                    id="workPressure" type="number" [min]="ranges.tankPressure[0]"
-                    [max]="ranges.tankPressure[1]" step="1" (input)="inputChanged()"
-                    [class.is-invalid]="workPressureInvalid" />
-                    <div class="invalid-feedback position-absolute">Needs to be number
-                      {{ranges.tankPressureLabel}}
-                    </div>
-                  </div>
-                }
-                @if (!calc.inDuration) {
-                  <div class="pt-2 mb-4">
-                    <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                    <input formControlName="duration" class="form-control" name="duration" id="dive-time-input"
-                      type="number" [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
-                      (input)="inputChanged()" [class.is-invalid]="durationInvalid" />
-                      <div class="invalid-feedback position-absolute">
-                      Needs to be number {{ ranges.durationLabel }}</div>
-                    </div>
-                  }
-                  @if (!calc.inUsed) {
-                    <div class="pt-2 mb-4">
-                      <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                      <input formControlName="used" class="form-control" name="used" id="used" type="number"
-                        [min]="ranges.consumed[0]" [max]="ranges.consumed[1]" step="1"
-                        (input)="inputChanged()" [class.is-invalid]="usedInvalid" />
-                        <div class="invalid-feedback position-absolute">Needs to be number
-                          {{ranges.consumedLabel}}
+    <div class="row">
+        <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+            <div class="card">
+                <app-card-header cardTitle="Respiratory minute volume" helpDocument="sac" [headerIcon]="calcIcon"> </app-card-header>
+                <div class="card-body">
+                    <form [formGroup]="formSac">
+                        <div class="mb-4">{{ depthConverterWarning }}</div>
+                        <div class="btn-group mb-3" role="group">
+                            <button type="button" class="btn" [class.btn-primary]="calc.inSac" (click)="toRmv()">RMV</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inUsed" (click)="toUsed()">Used</button>
+                            <button type="button" class="btn" [class.btn-primary]="calc.inDuration" (click)="toDuration()">Duration</button>
                         </div>
-                      </div>
-                    }
-                    @if (!calc.inSac) {
-                      <div class="pt-2 mb-4">
-                        <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                        <input formControlName="rmv" class="form-control" name="sac" id="total-rmv-value" type="number"
-                          [min]="ranges.diverRmv[0]" [max]="ranges.diverRmv[1]" step="1"
-                          (input)="inputChanged()" aria-describedby="rmvDescribe"
-                          [class.is-invalid]="rmvInvalid" />
-                          <div class="invalid-feedback position-absolute">Needs to be number
-                            {{ranges.diverRmvLabel}}
-                          </div>
-                          <div id="rmvDescribe" class="form-text" [class.invisible]="rmvInvalid">SAC: {{ gasSac |
-                            number:'1.0-2'}}
-                          {{units.sac}}</div>
+                        <div class="pt-2 mb-4">
+                            <label for="depth" class="form-label" mdbLabel>Average depth [{{ units.length }}]:</label>
+                            <input
+                                formControlName="depth"
+                                class="form-control"
+                                name="depth"
+                                id="depth"
+                                type="number"
+                                [min]="ranges.depth[0]"
+                                [max]="ranges.depth[1]"
+                                step="1"
+                                (input)="inputChanged()"
+                                [class.is-invalid]="depthInvalid"
+                            />
+                            <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.depthLabel }}</div>
                         </div>
-                      }
-                      @if (calc.inSac) {
-                        <div class="pt-2 mb-4 form-outline">
-                          <label for="sac" class="form-label" mdbLabel>RMV [{{units.rmv}}]:</label>
-                          <input class="form-control" [value]="calcRmv" id="total-rmv-valuesac" readonly/>
-                          <small class="form-text text-muted">SAC: {{ gasSac | number:'1.0-2'}}
-                          {{units.sac}}</small>
+                        <div class="pt-2 mb-4">
+                            <label for="tank" class="form-label" mdbLabel>Tank size [{{ units.volume }}]:</label>
+                            <app-tank-size
+                                [tank]="tank"
+                                [sizeForm]="formSac"
+                                controlName="tankSize"
+                                (sizeChange)="inputChanged()"
+                                (applyTemplate)="applyTemplate($event)"
+                            >
+                            </app-tank-size>
+                            @if (tankInvalid) {
+                                <div class="text-danger form-text position-absolute">Needs to be number {{ ranges.tankSizeLabel }}</div>
+                            }
                         </div>
-                      }
-                      @if (calc.inUsed) {
-                        <div class="pt-2 mb-4 form-outline">
-                          <label for="used" class="form-label" mdbLabel>Gas consumed [{{units.pressure}}]:</label>
-                          <input class="form-control" [value]="calcUsed" id="used" readonly/>
-                        </div>
-                      }
-                      @if (calc.inDuration) {
-                        <div class="pt-2 mb-4 form-outline">
-                          <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
-                          <input class="form-control" [value]="calcDuration" id="duration" readonly/>
-                        </div>
-                      }
+                        @if (units.imperialUnits) {
+                            <div class="pt-2 mb-4">
+                                <label for="tank" class="form-label" mdbLabel>Working pressure [{{ units.pressure }}]:</label>
+                                <input
+                                    formControlName="workPressure"
+                                    class="form-control"
+                                    name="workPressure"
+                                    id="workPressure"
+                                    type="number"
+                                    [min]="ranges.tankPressure[0]"
+                                    [max]="ranges.tankPressure[1]"
+                                    step="1"
+                                    (input)="inputChanged()"
+                                    [class.is-invalid]="workPressureInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">
+                                    Needs to be number
+                                    {{ ranges.tankPressureLabel }}
+                                </div>
+                            </div>
+                        }
+                        @if (!calc.inDuration) {
+                            <div class="pt-2 mb-4">
+                                <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
+                                <input
+                                    formControlName="duration"
+                                    class="form-control"
+                                    name="duration"
+                                    id="dive-time-input"
+                                    type="number"
+                                    [min]="ranges.duration[0]"
+                                    [max]="ranges.duration[1]"
+                                    step="1"
+                                    (input)="inputChanged()"
+                                    [class.is-invalid]="durationInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}</div>
+                            </div>
+                        }
+                        @if (!calc.inUsed) {
+                            <div class="pt-2 mb-4">
+                                <label for="used" class="form-label" mdbLabel>Gas consumed [{{ units.pressure }}]:</label>
+                                <input
+                                    formControlName="used"
+                                    class="form-control"
+                                    name="used"
+                                    id="used"
+                                    type="number"
+                                    [min]="ranges.consumed[0]"
+                                    [max]="ranges.consumed[1]"
+                                    step="1"
+                                    (input)="inputChanged()"
+                                    [class.is-invalid]="usedInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">
+                                    Needs to be number
+                                    {{ ranges.consumedLabel }}
+                                </div>
+                            </div>
+                        }
+                        @if (!calc.inSac) {
+                            <div class="pt-2 mb-4">
+                                <label for="sac" class="form-label" mdbLabel>RMV [{{ units.rmv }}]:</label>
+                                <input
+                                    formControlName="rmv"
+                                    class="form-control"
+                                    name="sac"
+                                    id="total-rmv-value"
+                                    type="number"
+                                    [min]="ranges.diverRmv[0]"
+                                    [max]="ranges.diverRmv[1]"
+                                    step="1"
+                                    (input)="inputChanged()"
+                                    aria-describedby="rmvDescribe"
+                                    [class.is-invalid]="rmvInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">
+                                    Needs to be number
+                                    {{ ranges.diverRmvLabel }}
+                                </div>
+                                <div id="rmvDescribe" class="form-text" [class.invisible]="rmvInvalid">
+                                    SAC: {{ gasSac | number: '1.0-2' }} {{ units.sac }}
+                                </div>
+                            </div>
+                        }
+                        @if (calc.inSac) {
+                            <div class="pt-2 mb-4 form-outline">
+                                <label for="sac" class="form-label" mdbLabel>RMV [{{ units.rmv }}]:</label>
+                                <input class="form-control" [value]="calcRmv" id="total-rmv-valuesac" readonly />
+                                <small class="form-text text-muted">SAC: {{ gasSac | number: '1.0-2' }} {{ units.sac }}</small>
+                            </div>
+                        }
+                        @if (calc.inUsed) {
+                            <div class="pt-2 mb-4 form-outline">
+                                <label for="used" class="form-label" mdbLabel>Gas consumed [{{ units.pressure }}]:</label>
+                                <input class="form-control" [value]="calcUsed" id="used" readonly />
+                            </div>
+                        }
+                        @if (calc.inDuration) {
+                            <div class="pt-2 mb-4 form-outline">
+                                <label for="duration" class="form-label" mdbLabel>Dive time [min]:</label>
+                                <input class="form-control" [value]="calcDuration" id="duration" readonly />
+                            </div>
+                        }
                     </form>
-                  </div>
                 </div>
-                <div class="form-group mt-2">
-                  <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
-                  @if (!formSac.invalid) {
-                    <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
-                  }
-                </div>
-              </div>
             </div>
-          </div>
+            <div class="form-group mt-2">
+                <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+                @if (!formSac.invalid) {
+                    <button type="button" class="btn btn-secondary" (click)="use()">Use</button>
+                }
+            </div>
+        </div>
+    </div>
+</div>

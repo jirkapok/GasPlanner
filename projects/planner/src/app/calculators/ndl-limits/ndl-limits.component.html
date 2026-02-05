@@ -1,75 +1,79 @@
 <div class="row mt-5">
-  <div class="col col-12 col-sm-7 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
-    <div class="card ndl-minheight">
-      <app-card-header
-        cardTitle="Options"
-        [headerIcon]="icon"
-        helpDocument="ndl_limits">
-      </app-card-header>
-      <div class="card-body">
-        <div class="pt-2 mb-4">
-          <app-oxygen [tank]="tank" [showBestMix]="false" (gasChange)="calculate()"
-          (standardGasApplied)="calculate()" [toxicity]="toxicity" [nitroxForm]="form"></app-oxygen>
+    <div class="col col-12 col-sm-7 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
+        <div class="card ndl-minheight">
+            <app-card-header cardTitle="Options" [headerIcon]="icon" helpDocument="ndl_limits"> </app-card-header>
+            <div class="card-body">
+                <div class="pt-2 mb-4">
+                    <app-oxygen
+                        [tank]="tank"
+                        [showBestMix]="false"
+                        (gasChange)="calculate()"
+                        (standardGasApplied)="calculate()"
+                        [toxicity]="toxicity"
+                        [nitroxForm]="form"
+                    ></app-oxygen>
+                </div>
+                <div class="pt-2 mb-4">
+                    <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)" [pO2Form]="form" label="Maximum ppO2:">
+                    </app-pp-o2>
+                </div>
+                <div class="pt-2 mb-4">
+                    <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)"> </app-salinity>
+                </div>
+                <div class="pt-2 mb-4">
+                    <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)" [altitudeForm]="form">
+                    </app-altitude>
+                </div>
+                <div class="pt-2">
+                    <app-gradients
+                        [gfLow]="options.gfLow"
+                        [gfHigh]="options.gfHigh"
+                        (inputChange)="gradientsChanged($event)"
+                        [gfForm]="form"
+                        [simple]="false"
+                        [showTitle]="true"
+                    >
+                    </app-gradients>
+                </div>
+            </div>
         </div>
-        <div class="pt-2 mb-4">
-          <app-pp-o2 [maxPpO2]="options.maxPpO2" (ppO2Change)="ppO2Changed($event)"
-            [pO2Form]="form" label="Maximum ppO2:">
-          </app-pp-o2>
-        </div>
-        <div class="pt-2 mb-4">
-          <app-salinity [salinity]="options.salinity" (inputChange)="salinityChanged($event)">
-          </app-salinity>
-        </div>
-        <div class="pt-2 mb-4">
-          <app-altitude [altitude]="options.altitude" (inputChange)="altitudeChanged($event)"
-            [altitudeForm]="form">
-          </app-altitude>
-        </div>
-        <div class="pt-2">
-          <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
-            (inputChange)="gradientsChanged($event)" [gfForm]="form"
-            [simple]="false" [showTitle]="true">
-          </app-gradients>
-        </div>
-      </div>
     </div>
-  </div>
-  <div class="col col-12 col-sm-5 col-md-5 col-lg-3 col-xxl-2 mt-3">
-    <div class="card ndl-minheight">
-      <div class="card-header">
-        <span>No decompression limits</span>
-      </div>
-      <div class="card-body">
-        <table class="table table-sm p-0">
-          <thead class="table-light">
-            <tr>
-              <th class="fw-bold px-1">Depth [{{units.length}}]</th>
-              <th class="fw-bold px-1">Limit [min]</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if (noResults) {
-              <tr>
-                <td colspan="2">
-                  No NDL limits found in meaningful depth range.<br>
-                  Change gas O2 content.
-                </td>
-              </tr>
-            }
-            @for (ndl of this.limits; track ndl) {
-              <tr>
-                <td>{{ ndl.depth }}</td>
-                <td>{{ ndl.limit | number: '1.0-0'}}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div>
+    <div class="col col-12 col-sm-5 col-md-5 col-lg-3 col-xxl-2 mt-3">
+        <div class="card ndl-minheight">
+            <div class="card-header">
+                <span>No decompression limits</span>
+            </div>
+            <div class="card-body">
+                <table class="table table-sm p-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="fw-bold px-1">Depth [{{ units.length }}]</th>
+                            <th class="fw-bold px-1">Limit [min]</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (noResults) {
+                            <tr>
+                                <td colspan="2">
+                                    No NDL limits found in meaningful depth range.<br />
+                                    Change gas O2 content.
+                                </td>
+                            </tr>
+                        }
+                        @for (ndl of this.limits; track ndl) {
+                            <tr>
+                                <td>{{ ndl.depth }}</td>
+                                <td>{{ ndl.limit | number: '1.0-0' }}</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 <div class="row">
-  <div class="form-group mt-3">
-    <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
-  </div>
+    <div class="form-group mt-3">
+        <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+    </div>
 </div>

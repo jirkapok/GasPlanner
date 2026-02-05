@@ -6,7 +6,7 @@ import { OptionsService } from './options.service';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { HighestDensity } from "scuba-physics";
+import { HighestDensity } from 'scuba-physics';
 
 describe('Depths service', () => {
     let depthService: DepthsService;
@@ -15,12 +15,7 @@ describe('Depths service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             imports: [],
-            providers: [
-                UnitConversion, OptionsService,
-                DepthsService, TanksService,
-                DiveResults, ReloadDispatcher,
-                DiveSchedules
-            ]
+            providers: [UnitConversion, OptionsService, DepthsService, TanksService, DiveResults, ReloadDispatcher, DiveSchedules]
         }).compileComponents();
 
         depthService = TestBed.inject(DepthsService);
@@ -48,8 +43,8 @@ describe('Depths service', () => {
         const expectedNdl = 12;
         beforeEach(() => {
             const diveResults = TestBed.inject(DiveResults);
-            diveResults.updateDiveInfo(expectedNdl, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
-            diveResults.updateConsumption(expectedDuration, 0,0,0,0, false, false, []);
+            diveResults.updateDiveInfo(expectedNdl, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            diveResults.updateConsumption(expectedDuration, 0, 0, 0, 0, false, false, []);
         });
 
         describe('When Calculated', () => {
@@ -152,6 +147,7 @@ describe('Depths service', () => {
                 units.imperialUnits = true; // before the depths service was even created
                 const sut = new DepthsService(units, tanksService, dive, optionsService, new ReloadDispatcher());
                 expect(sut.plannedDepth).toBeCloseTo(100, 6);
-            }));
+            }
+        ));
     });
 });

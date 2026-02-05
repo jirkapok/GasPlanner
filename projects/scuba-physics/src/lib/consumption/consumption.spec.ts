@@ -7,8 +7,8 @@ import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from '../algorithm/Options.spec';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
-import { ProfileTissues } from "../algorithm/ProfileTissues";
-import { RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { ProfileTissues } from '../algorithm/ProfileTissues';
+import { RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 
 describe('Consumption', () => {
     const consumptionOptions: ConsumptionOptions = {
@@ -176,11 +176,11 @@ describe('Consumption', () => {
             const tanks = [airTank, ean50Tank];
 
             const profile = [
-                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 1 bar/min * 2 minutes = 5b
-                new Segment(30, 30, airTank.gas, 10 * Time.oneMinute),   // 4b * 1 bar/min * 10 minutes = 40b
-                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),    // 3.5b * 1 bar/min * 2 minute = 7b
-                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),  // 3b * 2 bar/min * 1 minutes = 6b
-                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
+                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute), // 2.5b * 1 bar/min * 2 minutes = 5b
+                new Segment(30, 30, airTank.gas, 10 * Time.oneMinute), // 4b * 1 bar/min * 10 minutes = 40b
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute), // 3.5b * 1 bar/min * 2 minute = 7b
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 2 bar/min * 1 minutes = 6b
+                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute) // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -203,11 +203,11 @@ describe('Consumption', () => {
             const tanks = [airTank, ean50Tank, airTank2];
 
             const profile = [
-                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 2 bar/min * 2 minutes = 10b
-                new Segment(30, 30, airTank.gas, 10 * Time.oneMinute),   // 4b * 2 bar/min * 10 minutes = 80b
-                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),    // 3.5b * 2 bar/min * 2 minute = 14b
-                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),  // 3b * 2 bar/min * 1 minutes = 6b
-                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
+                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute), // 2.5b * 2 bar/min * 2 minutes = 10b
+                new Segment(30, 30, airTank.gas, 10 * Time.oneMinute), // 4b * 2 bar/min * 10 minutes = 80b
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute), // 3.5b * 2 bar/min * 2 minute = 14b
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 2 bar/min * 1 minutes = 6b
+                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute) // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -226,11 +226,11 @@ describe('Consumption', () => {
             const tanks = [airTank, airTank2, ean50Tank];
 
             const profile = [
-                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),     // 2.5b * 2 bar/min * 2 minutes = 10b : 2.air
-                new Segment(30, 30, airTank.gas, 15 * Time.oneMinute),   // 4b * 2 bar/min * 15 minutes = 120b : 2.air
-                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),    // 3.5b * 1 bar/min * 2 minute = 7b : 1. air
-                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),  // 3b * 2 bar/min * 1 minutes = 6b
-                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute)    // 2b * 2 bar/min * 1 minutes = 4b
+                new Segment(0, 30, airTank.gas, 2 * Time.oneMinute), // 2.5b * 2 bar/min * 2 minutes = 10b : 2.air
+                new Segment(30, 30, airTank.gas, 15 * Time.oneMinute), // 4b * 2 bar/min * 15 minutes = 120b : 2.air
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute), // 3.5b * 1 bar/min * 2 minute = 7b : 1. air
+                new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute), // 3b * 2 bar/min * 1 minutes = 6b
+                new Segment(20, 0, ean50Tank.gas, 1 * Time.oneMinute) // 2b * 2 bar/min * 1 minutes = 4b
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -269,7 +269,7 @@ describe('Consumption', () => {
             });
         });
 
-        describe('Used tank wasn\'t provided to update consumption', () => {
+        describe("Used tank wasn't provided to update consumption", () => {
             const airTank = new Tank(10, 200, 21);
             airTank.reserve = 200;
             const ean50Tank = new Tank(10, 100, 50);
@@ -303,8 +303,8 @@ describe('Consumption', () => {
 
             const profile = [
                 new Segment(0, 30, airTank.gas, 2 * Time.oneMinute),
-                new Segment(30, 30, airTank.gas, 15 * Time.oneMinute),  // air relevant only during ascent
-                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute),   // ascent not relevant for emergency
+                new Segment(30, 30, airTank.gas, 15 * Time.oneMinute), // air relevant only during ascent
+                new Segment(30, 20, airTank.gas, 2 * Time.oneMinute), // ascent not relevant for emergency
                 new Segment(20, 20, ean50Tank.gas, 1 * Time.oneMinute),
                 new Segment(20, 0, ean50Tank.gas, 10 * Time.oneMinute)
             ];
@@ -315,7 +315,7 @@ describe('Consumption', () => {
                 // ((4b * 2 * 1) + (3.5b * 1 min * 1 b/min.)) * 3
                 expect(airTank.reserve).toEqual(33);
                 // total: ((3b * 4 bar/min * 1 min) + (2 b * 4 bar/min * 2 min)) * 1.5 = 45 b
-                expect(ean50Tank.reserve).toEqual(30);   // full tank as first in order
+                expect(ean50Tank.reserve).toEqual(30); // full tank as first in order
                 expect(ean50Tank2.reserve).toEqual(14);
             });
         });
@@ -329,7 +329,7 @@ describe('Consumption', () => {
             const profile = [
                 new Segment(0, 30, airTank, 2 * Time.oneMinute),
                 new Segment(30, 30, airTank, 29 * Time.oneMinute),
-                new Segment(30, 30, airTank2, 1 * Time.oneMinute),      // user switch to the same gas
+                new Segment(30, 30, airTank2, 1 * Time.oneMinute), // user switch to the same gas
                 new Segment(30, 20, airTank2, 10 * Time.oneMinute),
                 new Segment(20, 0, ean50Tank.gas, 11 * Time.oneMinute)
             ];
@@ -353,7 +353,7 @@ describe('Consumption', () => {
             const profile = [
                 new Segment(0, 30, ean32Tank, 2 * Time.oneMinute),
                 new Segment(30, 30, ean32Tank, 29 * Time.oneMinute),
-                new Segment(30, 30, airTank, 1 * Time.oneMinute),      // user switch to the same gas
+                new Segment(30, 30, airTank, 1 * Time.oneMinute), // user switch to the same gas
                 new Segment(30, 20, airTank.gas, 10 * Time.oneMinute),
                 new Segment(20, 0, ean50Tank.gas, 11 * Time.oneMinute)
             ];
@@ -379,12 +379,12 @@ describe('Consumption', () => {
             const tanks = [airTank, airTank2, ean50Tank, ean50Tank2];
 
             const descent = new Segment(0, 20, ean50Tank, 2 * Time.oneMinute); // ean50 2b * 2 bar/min * 2 minute = 8b
-            const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute);  // 3 b * 1 b/min * 20 min = 60b
+            const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute); // 3 b * 1 b/min * 20 min = 60b
 
             const profile = [
                 descent,
                 swim,
-                new Segment(20, 0, ean50Tank2.gas, 4 * Time.oneMinute),   // 2 b * 2 bar/min * 4 minute = 16b
+                new Segment(20, 0, ean50Tank2.gas, 4 * Time.oneMinute) // 2 b * 2 bar/min * 4 minute = 16b
             ];
 
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -413,12 +413,12 @@ describe('Consumption', () => {
                 const tanks = [airTank];
 
                 const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
+                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute); // 3 b * 1 b/min * 40 min = 120b
 
                 const profile = [
                     descent,
                     swim,
-                    new Segment(20, 0, airTank.gas, 4 * Time.oneMinute),   // 2 b * 1 bar/min * 4 minute = 8b
+                    new Segment(20, 0, airTank.gas, 4 * Time.oneMinute) // 2 b * 1 bar/min * 4 minute = 8b
                 ];
 
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -435,8 +435,8 @@ describe('Consumption', () => {
                 const tanks = [airTank];
 
                 const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute);  // 3 b * 1 b/min * 40 min = 120b
-                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
+                const swim = new Segment(20, 20, airTank, 40 * Time.oneMinute); // 3 b * 1 b/min * 40 min = 120b
+                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute); // 2 b * 1 bar/min * 4 minute = 8b
 
                 const profile = [descent, swim, ascent];
                 consumption.consumeFromTanks(profile, options3, tanks, consumptionOptions);
@@ -450,8 +450,8 @@ describe('Consumption', () => {
                 const tanks = [airTank];
 
                 const descent = new Segment(0, 20, airTank, 2 * Time.oneMinute); // 2 b * 1 bar/min * 2 minute = 4b
-                const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute);  // 3 b * 1 b/min * 20 min = 60b
-                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute);   // 2 b * 1 bar/min * 4 minute = 8b
+                const swim = new Segment(20, 20, airTank, 20 * Time.oneMinute); // 3 b * 1 b/min * 20 min = 60b
+                const ascent = new Segment(20, 0, airTank, 4 * Time.oneMinute); // 2 b * 1 bar/min * 4 minute = 8b
 
                 const profile = [descent, swim, ascent];
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
@@ -510,9 +510,9 @@ describe('Consumption', () => {
                 new Segment(10, 10, tank1.gas, Time.oneMinute * 10),
                 new Segment(10, 30, tank1.gas, Time.oneMinute * 2),
                 new Segment(30, 30, tank1.gas, Time.oneMinute * 2),
-                new Segment(30, 10, tank1.gas, Time.oneMinute * 2),  // 3 * 1 * 2 = 6
+                new Segment(30, 10, tank1.gas, Time.oneMinute * 2), // 3 * 1 * 2 = 6
                 new Segment(10, 10, tank1.gas, Time.oneMinute * 10), // 2 * 1 * 10 = 20
-                new Segment(10, 0, tank1.gas, Time.oneMinute * 1)    // 1.5 * 1 * 1 = 1.5
+                new Segment(10, 0, tank1.gas, Time.oneMinute * 1) // 1.5 * 1 * 1 = 1.5
             ];
 
             // reserve - ascent from 6. segment = ((4 bar * 1 bar/min * 2 min) + (2.5 b * 1 bar/min * 3 min)) * 3
@@ -531,9 +531,9 @@ describe('Consumption', () => {
                 new Segment(10, 10, tank1.gas, Time.oneMinute * 10),
                 new Segment(10, 20, tank1.gas, Time.oneMinute * 1),
                 new Segment(20, 20, tank1.gas, Time.oneMinute * 10),
-                new Segment(20, 10, tank1.gas, Time.oneMinute * 1),  // 2.5 * 1 * 1 =2.5
+                new Segment(20, 10, tank1.gas, Time.oneMinute * 1), // 2.5 * 1 * 1 =2.5
                 new Segment(10, 10, tank1.gas, Time.oneMinute * 10), // 2 * 1 * 10 = 20
-                new Segment(10, 0, tank1.gas, Time.oneMinute * 1)   // 1.5 * 1 * 1 = 1.5
+                new Segment(10, 0, tank1.gas, Time.oneMinute * 1) // 1.5 * 1 * 1 = 1.5
             ];
 
             // reserve - ascent from 6. segment = ((3 b * 1 bar/min * 2 min) + (2 b * 1 bar/min * 2 min)) * 3

@@ -1,6 +1,4 @@
-import {
-    Options, Salinity
-} from 'scuba-physics';
+import { Options, Salinity } from 'scuba-physics';
 
 export class OptionExtensions {
     public static createOptions(gfLow: number, gfHigh?: number, maxPpO2?: number, maxDecoPpO2?: number, salinity?: Salinity): Options {

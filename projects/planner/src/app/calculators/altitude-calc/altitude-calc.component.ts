@@ -36,7 +36,8 @@ export class AltitudeCalcComponent implements OnInit {
         private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage
+    ) {
         this.loadState();
         this.saveState();
     }

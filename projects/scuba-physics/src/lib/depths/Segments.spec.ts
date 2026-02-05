@@ -3,14 +3,13 @@ import { Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
 
 describe('Segments', () => {
-
     describe('Segments validator', () => {
         const gases = new Gases();
         gases.add(StandardGases.air);
 
         it('At least one segment is required', () => {
             const source = new Segments();
-            const  events = SegmentsValidator.validate(source, gases);
+            const events = SegmentsValidator.validate(source, gases);
             expect(events.length).toBe(1);
         });
 
@@ -20,7 +19,7 @@ describe('Segments', () => {
             // consider validation, that all segments are subsequent
             source.addFlat(StandardGases.air, 5);
 
-            const  events = SegmentsValidator.validate(source, gases);
+            const events = SegmentsValidator.validate(source, gases);
             expect(events.length).toBe(0);
         });
 
@@ -46,7 +45,6 @@ describe('Segments', () => {
             filledSegments.addFlat(StandardGases.air.copy(), 3);
             filledSegments.addFlat(StandardGases.air.copy(), 3);
         });
-
 
         it('are merged', () => {
             const merged = filledSegments.mergeFlat();
@@ -101,7 +99,7 @@ describe('Segments', () => {
             });
         });
 
-        describe('Speed doesn\'t equal', () => {
+        describe("Speed doesn't equal", () => {
             it('different ascent segments', () => {
                 const segment = new Segment(10, 20, StandardGases.air, 15);
                 const segment2 = new Segment(10, 20, StandardGases.air, 35);
@@ -214,7 +212,6 @@ describe('Segments', () => {
             segments.fixStartDepths();
 
             expect(first.startDepth).toBe(0);
-
         });
 
         it('Fixes max. depth', () => {
@@ -234,19 +231,14 @@ describe('Segments', () => {
         });
 
         it('One element returns the only one element depth', () => {
-            const segments: Segment[] = [
-                new Segment(10, 30, StandardGases.air, 60)
-            ];
+            const segments: Segment[] = [new Segment(10, 30, StandardGases.air, 60)];
 
             const averageDepth = Segments.averageDepth(segments);
             expect(averageDepth).toBe(20);
         });
 
         it('0 duration is not added', () => {
-            const segments: Segment[] = [
-                new Segment(40, 40, StandardGases.air, 0),
-                new Segment(40, 40, StandardGases.air, 60)
-            ];
+            const segments: Segment[] = [new Segment(40, 40, StandardGases.air, 0), new Segment(40, 40, StandardGases.air, 60)];
 
             const averageDepth = Segments.averageDepth(segments);
             expect(averageDepth).toBe(40);

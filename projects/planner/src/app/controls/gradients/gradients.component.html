@@ -1,45 +1,77 @@
 <div [formGroup]="gfForm" class="row">
-  @if (showTitle) {
-    <div class="row">
-      <label for="gfLowField" class="form-label">Conservatism (Gradient factors):</label>
-    </div>
-  }
-  <div class="mb-4 col col-12" [ngClass]="{ 'col-sm-6': !simple }">
-    <div>
-      @if (!simple) {
-        <label for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
-      }
-      <div mdbDropdown class="input-group dropdown" [class.form-outline]="simple">
-        @if (simple) {
-          <input id="gfLowField" [value]="conservatism" class="form-control" type="text" readonly />
-        }
-        @if (!simple) {
-          <input id="gfLowField" class="form-control" type="number" formControlName="gfLow"
-            (input)="gfLowChanged()" required [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfLowInvalid" />
-        }
-        <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
-        id="conservatismMenu" mdbDropdownToggle data-mdb-toggle="dropdown" aria-expanded="false"></button>
-        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-          <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName}}</a></li>
-          <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName}}</a>
-        </li>
-        <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName}}</a></li>
-      </ul>
-    </div>
-    @if (gfLowInvalid) {
-      <div class="text-danger form-text position-absolute">
-      Needs to be number {{ minGradient }} - {{ maxGradient }} lower than gradient high</div>
+    @if (showTitle) {
+        <div class="row">
+            <label for="gfLowField" class="form-label">Conservatism (Gradient factors):</label>
+        </div>
     }
-  </div>
-</div>
-@if (!simple) {
-  <div class="mb-4 col col-12 col-sm-6">
-    <label for="gfHighField" class="form-label" mdbLabel>Gradient high [%]:</label>
-    <input id="gfHighField" formControlName="gfHigh" class="form-control" type="number" required
-      (input)="gfHighChanged()" [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfHighInvalid" />
-      <div class="invalid-feedback position-absolute">
-        Needs to be number {{ minGradient }} - {{ maxGradient }}  higher than gradient low
-      </div>
+    <div class="mb-4 col col-12" [ngClass]="{ 'col-sm-6': !simple }">
+        <div>
+            @if (!simple) {
+                <label for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
+            }
+            <div mdbDropdown class="input-group dropdown" [class.form-outline]="simple">
+                @if (simple) {
+                    <input id="gfLowField" [value]="conservatism" class="form-control" type="text" readonly />
+                }
+                @if (!simple) {
+                    <input
+                        id="gfLowField"
+                        class="form-control"
+                        type="number"
+                        formControlName="gfLow"
+                        (input)="gfLowChanged()"
+                        required
+                        [min]="minGradient"
+                        [max]="maxGradient"
+                        step="1"
+                        [class.is-invalid]="gfLowInvalid"
+                    />
+                }
+                <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle dropdown-toggle-split"
+                    id="conservatismMenu"
+                    mdbDropdownToggle
+                    data-mdb-toggle="dropdown"
+                    aria-expanded="false"
+                ></button>
+                <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                    <li (click)="lowConservatism()">
+                        <a class="dropdown-item">{{ standards.lowName }}</a>
+                    </li>
+                    <li (click)="mediumConservatism()">
+                        <a class="dropdown-item">{{ standards.mediumName }}</a>
+                    </li>
+                    <li (click)="highConservatism()">
+                        <a class="dropdown-item">{{ standards.highName }}</a>
+                    </li>
+                </ul>
+            </div>
+            @if (gfLowInvalid) {
+                <div class="text-danger form-text position-absolute">
+                    Needs to be number {{ minGradient }} - {{ maxGradient }} lower than gradient high
+                </div>
+            }
+        </div>
     </div>
-  }
+    @if (!simple) {
+        <div class="mb-4 col col-12 col-sm-6">
+            <label for="gfHighField" class="form-label" mdbLabel>Gradient high [%]:</label>
+            <input
+                id="gfHighField"
+                formControlName="gfHigh"
+                class="form-control"
+                type="number"
+                required
+                (input)="gfHighChanged()"
+                [min]="minGradient"
+                [max]="maxGradient"
+                step="1"
+                [class.is-invalid]="gfHighInvalid"
+            />
+            <div class="invalid-feedback position-absolute">
+                Needs to be number {{ minGradient }} - {{ maxGradient }} higher than gradient low
+            </div>
+        </div>
+    }
 </div>

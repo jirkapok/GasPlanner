@@ -44,20 +44,17 @@ describe('Buhlmann Algorithm - Air breaks', () => {
 
     it('No air break is added if oxygen time is less than max. O2 time', () => {
         const finalSegments = calculatePlan75m(10, 2);
-        const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1049),
-            new Segment(6,0, StandardGases.oxygen, 36)
-        ];
+        const expected: Segment[] = [new Segment(6, 6, StandardGases.oxygen, 1049), new Segment(6, 0, StandardGases.oxygen, 36)];
         expect(finalSegments).toEqual(expected);
     });
 
     it('Adds air break for oxygen time longer than max. O2 time', () => {
         const finalSegments = calculatePlan75m(13, 4);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 124),
-            new Segment(6,0, StandardGases.oxygen, 36)
+            new Segment(6, 6, StandardGases.oxygen, 1200),
+            new Segment(6, 6, StandardGases.trimix1260, 300),
+            new Segment(6, 6, StandardGases.oxygen, 124),
+            new Segment(6, 0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
@@ -68,10 +65,10 @@ describe('Buhlmann Algorithm - Air breaks', () => {
 
         const finalSegments = calculatePlan75m(13, 4);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 720),
-            new Segment(6,6, StandardGases.trimix1260, 360),
-            new Segment(6,6, StandardGases.oxygen, 571),
-            new Segment(6,0, StandardGases.oxygen, 36)
+            new Segment(6, 6, StandardGases.oxygen, 720),
+            new Segment(6, 6, StandardGases.trimix1260, 360),
+            new Segment(6, 6, StandardGases.oxygen, 571),
+            new Segment(6, 0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
@@ -89,9 +86,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
         const finalSegments = calculateFinalSegments(gases, segments, 3);
 
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.ean32, 237),
-            new Segment(6,0, StandardGases.oxygen, 36)
+            new Segment(6, 6, StandardGases.oxygen, 1200),
+            new Segment(6, 6, StandardGases.ean32, 237),
+            new Segment(6, 0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
@@ -99,12 +96,12 @@ describe('Buhlmann Algorithm - Air breaks', () => {
     it('Adds multiple air breaks', () => {
         const finalSegments = calculatePlan75m(30, 6);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 300),
-            new Segment(6,6, StandardGases.oxygen, 883),
-            new Segment(6,0, StandardGases.oxygen, 36)
+            new Segment(6, 6, StandardGases.oxygen, 1200),
+            new Segment(6, 6, StandardGases.trimix1260, 300),
+            new Segment(6, 6, StandardGases.oxygen, 1200),
+            new Segment(6, 6, StandardGases.trimix1260, 300),
+            new Segment(6, 6, StandardGases.oxygen, 883),
+            new Segment(6, 0, StandardGases.oxygen, 36)
         ];
         expect(finalSegments).toEqual(expected);
     });
@@ -114,9 +111,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
 
         const finalSegments = calculatePlan75m(10.5, 3);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 1200),
-            new Segment(6,6, StandardGases.trimix1260, 77),
-            new Segment(6,0, StandardGases.oxygen, 36)
+            new Segment(6, 6, StandardGases.oxygen, 1200),
+            new Segment(6, 6, StandardGases.trimix1260, 77),
+            new Segment(6, 0, StandardGases.oxygen, 36)
         ];
 
         expect(finalSegments).toEqual(expected);
@@ -127,12 +124,12 @@ describe('Buhlmann Algorithm - Air breaks', () => {
 
         const finalSegments = calculatePlan75m(20, 6);
         const expected: Segment[] = [
-            new Segment(6,6, StandardGases.oxygen, 730),
-            new Segment(6,3, StandardGases.oxygen, 18),
-            new Segment(3,3, StandardGases.oxygen, 452),
-            new Segment(3,3, StandardGases.trimix3525, 300),
-            new Segment(3,3, StandardGases.oxygen, 763),
-            new Segment(3,0, StandardGases.oxygen, 18)
+            new Segment(6, 6, StandardGases.oxygen, 730),
+            new Segment(6, 3, StandardGases.oxygen, 18),
+            new Segment(3, 3, StandardGases.oxygen, 452),
+            new Segment(3, 3, StandardGases.trimix3525, 300),
+            new Segment(3, 3, StandardGases.oxygen, 763),
+            new Segment(3, 0, StandardGases.oxygen, 18)
         ];
         expect(finalSegments).toEqual(expected);
     });
@@ -143,9 +140,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
 
             const finalSegments = calculatePlan75m(13, 3);
             const expected: Segment[] = [
-                new Segment(9,6, StandardGases.ean50, 18),
-                new Segment(6,6, StandardGases.oxygen, 1316),
-                new Segment(6,0, StandardGases.oxygen, 36)
+                new Segment(9, 6, StandardGases.ean50, 18),
+                new Segment(6, 6, StandardGases.oxygen, 1316),
+                new Segment(6, 0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);
         });
@@ -163,15 +160,15 @@ describe('Buhlmann Algorithm - Air breaks', () => {
             const finalSegments = calculateFinalSegments(gases, segments, 3);
             // need to compare whole array, because bottom depth is oxygen depth
             const current = [
-                [ finalSegments[0].startDepth, finalSegments[0].endDepth, finalSegments[0].gas, finalSegments[0].duration ],
-                [ finalSegments[1].startDepth, finalSegments[1].endDepth, finalSegments[1].gas, finalSegments[1].duration ],
-                [ finalSegments[2].startDepth, finalSegments[2].endDepth, finalSegments[2].gas, finalSegments[2].duration ],
+                [finalSegments[0].startDepth, finalSegments[0].endDepth, finalSegments[0].gas, finalSegments[0].duration],
+                [finalSegments[1].startDepth, finalSegments[1].endDepth, finalSegments[1].gas, finalSegments[1].duration],
+                [finalSegments[2].startDepth, finalSegments[2].endDepth, finalSegments[2].gas, finalSegments[2].duration]
             ];
 
             const expected = [
-                [ 0, 6, StandardGases.oxygen, 60 ],
-                [ 6, 6, StandardGases.oxygen, 1800 ],
-                [ 6, 0, StandardGases.oxygen, 36 ],
+                [0, 6, StandardGases.oxygen, 60],
+                [6, 6, StandardGases.oxygen, 1800],
+                [6, 0, StandardGases.oxygen, 36]
             ];
             expect(current).toEqual(expected);
         });
@@ -191,9 +188,9 @@ describe('Buhlmann Algorithm - Air breaks', () => {
             const finalSegments = calculateFinalSegments(gases, segments, 3);
 
             const expected: Segment[] = [
-                new Segment(9,6, StandardGases.trimix1070, 18),
-                new Segment(6,6, StandardGases.oxygen, 2490),
-                new Segment(6,0, StandardGases.oxygen, 36)
+                new Segment(9, 6, StandardGases.trimix1070, 18),
+                new Segment(6, 6, StandardGases.oxygen, 2490),
+                new Segment(6, 0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);
         });
@@ -212,10 +209,10 @@ describe('Buhlmann Algorithm - Air breaks', () => {
             const finalSegments = calculateFinalSegments(gases, segments, 4);
 
             const expected: Segment[] = [
-                new Segment(6,6, StandardGases.oxygen, 1200),
-                new Segment(6,6, StandardGases.ean50, 300),
-                new Segment(6,6, StandardGases.oxygen, 794),
-                new Segment(6,0, StandardGases.oxygen, 36)
+                new Segment(6, 6, StandardGases.oxygen, 1200),
+                new Segment(6, 6, StandardGases.ean50, 300),
+                new Segment(6, 6, StandardGases.oxygen, 794),
+                new Segment(6, 0, StandardGases.oxygen, 36)
             ];
             expect(finalSegments).toEqual(expected);
         });

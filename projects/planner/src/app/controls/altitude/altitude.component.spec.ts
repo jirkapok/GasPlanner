@@ -6,8 +6,7 @@ describe('Altitude', () => {
     let fixture: ComponentFixture<AltitudeComponent>;
 
     beforeEach(async () => {
-        await TestBed.configureTestingModule({
-        }).compileComponents();
+        await TestBed.configureTestingModule({}).compileComponents();
     });
 
     beforeEach(() => {

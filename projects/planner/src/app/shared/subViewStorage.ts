@@ -4,17 +4,17 @@ import { PreferencesStore } from './preferencesStore';
 import { Injectable } from '@angular/core';
 
 /**
-* workflows
-* 1. Startup:
-* - AppComponent: loads preferences
-* - Router: user enters any url angular router redirects to correct component based on lastView
-*   A dashboard (loaded as default route or started as mobile app):
-*     A with url arguments: loads state
-*     B no url arguments : loads default state
-*   B subview: load state
-*
-* 2. Navigation (or redirect from Router):
-* - save state directly in component constructor
+ * workflows
+ * 1. Startup:
+ * - AppComponent: loads preferences
+ * - Router: user enters any url angular router redirects to correct component based on lastView
+ *   A dashboard (loaded as default route or started as mobile app):
+ *     A with url arguments: loads state
+ *     B no url arguments : loads default state
+ *   B subview: load state
+ *
+ * 2. Navigation (or redirect from Router):
+ * - save state directly in component constructor
  */
 @Injectable()
 export class SubViewStorage {
@@ -26,8 +26,8 @@ export class SubViewStorage {
 
     constructor(
         private views: ViewStates,
-        private preferences: PreferencesStore) {
-    }
+        private preferences: PreferencesStore
+    ) {}
 
     public reset() {
         this.views.reset();

@@ -25,7 +25,7 @@ import { TankSizeComponent } from '../../controls/tank.size/tank.size.component'
 import { provideAnimations } from '@angular/platform-browser/animations';
 
 class SacPage {
-    constructor(private fixture: ComponentFixture<SacComponent>) { }
+    constructor(private fixture: ComponentFixture<SacComponent>) {}
 
     public get workingPressure(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#workPressure'))?.nativeElement as HTMLInputElement;
@@ -51,20 +51,26 @@ describe('Sac component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                WorkersFactoryCommon, UnitConversion,
-                OptionsService, DecimalPipe,
-                ValidatorGroups, InputControls, SacCalculatorService,
-                SubViewStorage, ViewStates,
-                Preferences, PreferencesStore, PlannerService,
-                ViewSwitchService, ReloadDispatcher, DiveSchedules,
-                ApplicationSettingsService, MdbModalService,
+                WorkersFactoryCommon,
+                UnitConversion,
+                OptionsService,
+                DecimalPipe,
+                ValidatorGroups,
+                InputControls,
+                SacCalculatorService,
+                SubViewStorage,
+                ViewStates,
+                Preferences,
+                PreferencesStore,
+                PlannerService,
+                ViewSwitchService,
+                ReloadDispatcher,
+                DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService,
                 provideAnimations()
             ],
-            imports: [
-                RouterModule.forRoot([]),
-                ReactiveFormsModule, TankSizeComponent,
-                SacComponent
-            ]
+            imports: [RouterModule.forRoot([]), ReactiveFormsModule, TankSizeComponent, SacComponent]
         }).compileComponents();
     });
 
@@ -78,14 +84,13 @@ describe('Sac component', () => {
         sacPage = new SacPage(fixture);
     }
 
-    it('use applies rmv to diver', inject([OptionsService, SacCalculatorService],
-        (options: OptionsService) => {
-            setTestSuite(false);
-            options.diverOptions.rmv = 30;
-            component.use();
-            const applied = options.diverOptions.rmv;
-            expect(applied).toBeCloseTo(20, 5);
-        }));
+    it('use applies rmv to diver', inject([OptionsService, SacCalculatorService], (options: OptionsService) => {
+        setTestSuite(false);
+        options.diverOptions.rmv = 30;
+        component.use();
+        const applied = options.diverOptions.rmv;
+        expect(applied).toBeCloseTo(20, 5);
+    }));
 
     describe('Metric units', () => {
         beforeEach(() => {

@@ -1,8 +1,5 @@
 import { Component } from '@angular/core';
-import {
-    faArrowDown, faArrowUp, faArrowRight, faTasks,
-    faRandom, IconDefinition, faFilter
-} from '@fortawesome/free-solid-svg-icons';
+import { faArrowDown, faArrowUp, faArrowRight, faTasks, faRandom, IconDefinition, faFilter } from '@fortawesome/free-solid-svg-icons';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
@@ -32,7 +29,8 @@ export class WayPointsComponent {
         public units: UnitConversion,
         private selectedWaypoint: SelectedWaypoint,
         private viewSwitch: ViewSwitchService,
-        public stops: StopsFilter) { }
+        public stops: StopsFilter
+    ) {}
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
@@ -40,10 +38,14 @@ export class WayPointsComponent {
 
     public swimActionIcon(point: WayPoint): IconDefinition {
         switch (point.swimAction) {
-            case SwimAction.ascent: return this.up;
-            case SwimAction.descent: return this.down;
-            case SwimAction.switch: return this.switch;
-            default: return this.hover;
+            case SwimAction.ascent:
+                return this.up;
+            case SwimAction.descent:
+                return this.down;
+            case SwimAction.switch:
+                return this.switch;
+            default:
+                return this.hover;
         }
     }
 

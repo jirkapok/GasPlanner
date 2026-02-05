@@ -25,9 +25,11 @@ export class GradientsComponent implements OnInit {
     public readonly maxGradient = ValidatorGroups.maxGradient;
     public standards = new StandardGradientsService();
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
-        private validators: ValidatorGroups) { }
+        private validators: ValidatorGroups
+    ) {}
 
     public get conservatism(): string {
         return this.standards.labelFor(this.gfLow, this.gfHigh);
@@ -64,7 +66,7 @@ export class GradientsComponent implements OnInit {
     }
 
     public ngOnInit(): void {
-        if(!this.gfForm) {
+        if (!this.gfForm) {
             this.gfForm = this.fb.group({
                 gfLow: [Precision.round(this.gfLow * 100, 1), this.validators.gradients],
                 gfHigh: [Precision.round(this.gfHigh * 100, 1), this.validators.gradients]

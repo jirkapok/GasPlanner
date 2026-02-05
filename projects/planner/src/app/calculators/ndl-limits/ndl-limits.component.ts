@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { Location, DecimalPipe } from '@angular/common';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
-import {
-    Options, Salinity, Tank, GasToxicity, Precision
-} from 'scuba-physics';
+import { Options, Salinity, Tank, GasToxicity, Precision } from 'scuba-physics';
 import { NdlLimit, NdlService } from '../../shared/ndl.service';
 import { Gradients } from '../../shared/standard-gradients.service';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -43,7 +41,8 @@ export class NdlLimitsComponent implements OnInit {
         private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        schedules: DiveSchedules) {
+        schedules: DiveSchedules
+    ) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         const defaultTanks = this.units.defaults.tanks;
         // size of the tank is irrelevant in this view
@@ -72,7 +71,7 @@ export class NdlLimitsComponent implements OnInit {
     }
 
     public calculate(): void {
-        if(this.form.invalid) {
+        if (this.form.invalid) {
             return;
         }
 

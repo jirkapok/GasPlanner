@@ -8,7 +8,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     selector: 'app-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss'],
-    imports: [AppinfoComponent, FaIconComponent ],
+    imports: [AppinfoComponent, FaIconComponent]
 })
 export class AboutComponent {
     public exclamation = faExclamationTriangle;

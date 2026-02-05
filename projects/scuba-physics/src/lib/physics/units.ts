@@ -36,7 +36,7 @@ export class MetricUnits implements Units {
         return 'Metric';
     }
 
-    public get lengthShortcut(): string{
+    public get lengthShortcut(): string {
         return 'm';
     }
 
@@ -44,19 +44,19 @@ export class MetricUnits implements Units {
         return 'bar';
     }
 
-    public get volumeShortcut(): string{
+    public get volumeShortcut(): string {
         return 'l';
     }
 
-    public get weightShortcut(): string{
+    public get weightShortcut(): string {
         return 'kg';
     }
 
-    public get altitudeShortcut(): string{
+    public get altitudeShortcut(): string {
         return 'm.a.s.l';
     }
 
-    public get densityShortcut(): string{
+    public get densityShortcut(): string {
         return 'g/l';
     }
 
@@ -123,7 +123,7 @@ export class MetricUnits implements Units {
  * pressure: bar/psi
  * https://en.wikipedia.org/wiki/Pound_per_square_inch
  * 1 bar = 14.503773773022 psi
-*/
+ */
 export class ImperialUnits implements Units {
     private static readonly psiRate = 14.503773773022;
     private static readonly cftRate = 28.316846592;
@@ -139,11 +139,11 @@ export class ImperialUnits implements Units {
     /** 1 g/l  = cca 0.06242796 lb/cuft */
     private static readonly lbPerCuftRate = ImperialUnits.poundRate * ImperialUnits.cftRate;
 
-    public get name(): string{
+    public get name(): string {
         return 'Imperial';
     }
 
-    public get lengthShortcut(): string{
+    public get lengthShortcut(): string {
         return 'ft';
     }
 
@@ -151,19 +151,19 @@ export class ImperialUnits implements Units {
         return 'psi';
     }
 
-    public get volumeShortcut(): string{
+    public get volumeShortcut(): string {
         return 'cuft';
     }
 
-    public get weightShortcut(): string{
+    public get weightShortcut(): string {
         return 'lb';
     }
 
-    public get altitudeShortcut(): string{
+    public get altitudeShortcut(): string {
         return 'ft.a.s.l';
     }
 
-    public get densityShortcut(): string{
+    public get densityShortcut(): string {
         return 'lb/cuft';
     }
 

@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-    BlendPricing
-} from 'scuba-physics';
+import { BlendPricing } from 'scuba-physics';
 import { GasBlenderService } from './gas-blender.service';
 
 @Injectable()
@@ -15,8 +13,7 @@ export class BlendPricingService {
     public topMixPrice = 0;
     public totalPrice = 0;
 
-    public constructor(private gasBlender: GasBlenderService) {
-    }
+    public constructor(private gasBlender: GasBlenderService) {}
 
     public calculate(): void {
         const costs = {

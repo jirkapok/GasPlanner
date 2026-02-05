@@ -23,7 +23,6 @@ export class ToxicityProfiles {
         new Segment(6, 0, StandardGases.oxygen, Time.oneMinute * 1)
     ];
 
-
     /* cns 7 %, otu 21 */
     public static airAt40m: Segment[] = [
         new Segment(0, 40, StandardGases.air, Time.oneMinute * 3),
@@ -36,7 +35,7 @@ export class ToxicityProfiles {
         new Segment(9, 9, StandardGases.air, Time.oneMinute * 5),
         new Segment(9, 6, StandardGases.air, Time.oneMinute * 1),
         new Segment(6, 6, StandardGases.air, Time.oneMinute * 23),
-        new Segment(6, 0, StandardGases.air, Time.oneMinute * 2),
+        new Segment(6, 0, StandardGases.air, Time.oneMinute * 2)
     ];
 
     /* cns 41 %, otu 62 */
@@ -52,7 +51,7 @@ export class ToxicityProfiles {
         new Segment(9, 6, StandardGases.ean50, Time.oneMinute * 1),
 
         new Segment(6, 6, StandardGases.oxygen, Time.oneMinute * 12),
-        new Segment(6, 0, StandardGases.oxygen, Time.oneMinute * 2),
+        new Segment(6, 0, StandardGases.oxygen, Time.oneMinute * 2)
     ];
 }
 
@@ -92,7 +91,7 @@ describe('OtuCalculatorService', () => {
         });
 
         it('0 OTU for 22 min at .4 ppO2', () => {
-            const otu = otuCalculator.calculate(22.0, .4, 0, 0);
+            const otu = otuCalculator.calculate(22.0, 0.4, 0, 0);
             expect(otu).toBe(0);
         });
 
@@ -112,7 +111,7 @@ describe('OtuCalculatorService', () => {
         });
 
         it('28.9712 OTU for 20 min with EAN32 in 30 metres', () => {
-            const otu = otuCalculator.calculate(1200, .32, 30, 36);
+            const otu = otuCalculator.calculate(1200, 0.32, 30, 36);
             expect(otu).toBeCloseTo(31.9046752, 7);
         });
     });
@@ -124,22 +123,22 @@ describe('OtuCalculatorService', () => {
         });
 
         it('0 OTU for 0 min with EAN32 in 30 metres', () => {
-            const otu = otuCalculator.calculate(0, .32, 20, 30);
+            const otu = otuCalculator.calculate(0, 0.32, 20, 30);
             expect(otu).toBe(0);
         });
 
         it('28.9 OTU for 20 min with EAN32 in 30 metres', () => {
-            const otu = otuCalculator.calculate(1320, .32, 36, 36);
+            const otu = otuCalculator.calculate(1320, 0.32, 36, 36);
             expect(otu).toBe(38.28272978563932);
         });
 
         it('2.4026 OTU for 3 min with EAN32 from 0 m to 36 m', () => {
-            const otu = otuCalculator.calculate(180, .32, 0, 36);
+            const otu = otuCalculator.calculate(180, 0.32, 0, 36);
             expect(otu).toBeCloseTo(2.4171302, 7);
         });
 
         it('24.0256 OTU for 30 min with EAN32 from 36 m to 0 m', () => {
-            const otu = otuCalculator.calculate(1800, .32, 36, 0);
+            const otu = otuCalculator.calculate(1800, 0.32, 36, 0);
             expect(otu).toBeCloseTo(24.1713018, 7);
         });
     });

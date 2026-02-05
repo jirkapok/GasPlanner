@@ -15,11 +15,7 @@ describe('Stops filter', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                StopsFilter, UnitConversion,
-                DiveSchedules, ReloadDispatcher,
-                WayPointsService
-            ]
+            providers: [StopsFilter, UnitConversion, DiveSchedules, ReloadDispatcher, WayPointsService]
         });
 
         service = TestBed.inject(StopsFilter);
@@ -34,11 +30,12 @@ describe('Stops filter', () => {
         expect(count).toEqual(7);
     });
 
-    const mapWayPoints = () => service.wayPoints.map(i => ({
-        startDepth: i.startDepth,
-        endDepth: i.endDepth,
-        duration: i.duration
-    }));
+    const mapWayPoints = () =>
+        service.wayPoints.map(i => ({
+            startDepth: i.startDepth,
+            endDepth: i.endDepth,
+            duration: i.duration
+        }));
 
     it('Default profile filters ascent', () => {
         service.switchFilter();
@@ -64,7 +61,7 @@ describe('Stops filter', () => {
             new Segment(12, 12, StandardGases.ean32, 5), // deco stop
             new Segment(12, 6, StandardGases.ean32, 6),
             new Segment(6, 6, StandardGases.oxygen, 7),
-            new Segment(6, 0, StandardGases.oxygen, 8),
+            new Segment(6, 0, StandardGases.oxygen, 8)
         ];
 
         // this is incorrect, because we don't set the used defined waypoints in depths plan

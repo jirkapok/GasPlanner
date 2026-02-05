@@ -12,7 +12,7 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 export class TankSizePage {
-    constructor(private fixture: ComponentFixture<TankSizeComponent>) { }
+    constructor(private fixture: ComponentFixture<TankSizeComponent>) {}
 
     public get sizeInput(): HTMLInputElement {
         const debugSizeElement = this.fixture.debugElement.query(By.css('input'));
@@ -33,14 +33,8 @@ describe('TankSizeComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [
-                UnitConversion, UnitConversion, InputControls,
-                DecimalPipe, ValidatorGroups, provideNoopAnimations()
-            ],
-            imports: [
-                CommonModule, ReactiveFormsModule,
-                MdbFormsModule, MdbDropdownModule, NgFor
-            ]
+            providers: [UnitConversion, UnitConversion, InputControls, DecimalPipe, ValidatorGroups, provideNoopAnimations()],
+            imports: [CommonModule, ReactiveFormsModule, MdbFormsModule, MdbDropdownModule, NgFor]
         }).compileComponents();
     });
 

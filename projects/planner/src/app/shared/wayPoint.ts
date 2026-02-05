@@ -31,7 +31,12 @@ export class WayPoint {
      * @param newDepth in meters
      * @param previousDepth in meters
      */
-    private constructor(private units: UnitConversion, public duration: number, newDepth: number, previousDepth: number = 0) {
+    private constructor(
+        private units: UnitConversion,
+        public duration: number,
+        newDepth: number,
+        previousDepth: number = 0
+    ) {
         this.endTime = Precision.roundTwoDecimals(duration);
         this._endDepth = newDepth;
         this._startDepth = previousDepth;

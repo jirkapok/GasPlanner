@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-    DefaultOptions, Diver, OptionDefaults,
-    Options, SafetyStop, Salinity, GasToxicity,
-    AirBreakOptions
-} from 'scuba-physics';
+import { DefaultOptions, Diver, OptionDefaults, Options, SafetyStop, Salinity, GasToxicity, AirBreakOptions } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 /** All options stored in metric units */
 @Injectable()
@@ -21,7 +17,10 @@ export class OptionsService {
     private _diver: Diver = new Diver();
     private _toxicity = new GasToxicity(this.options);
 
-    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+    constructor(
+        private units: UnitConversion,
+        private dispatcher: ReloadDispatcher
+    ) {
         this.options.salinity = Salinity.fresh;
         this.options.safetyStop = SafetyStop.auto;
         // units rounded default values aren't provided,
@@ -129,10 +128,9 @@ export class OptionsService {
     }
 
     public get decoStopDistance(): number {
-    const source = this.options.decoStopDistance;
-    return this.units.fromMeters(source);
+        const source = this.options.decoStopDistance;
+        return this.units.fromMeters(source);
     }
-
 
     public set maxEND(newValue: number) {
         this.options.maxEND = this.units.toMeters(newValue);
@@ -193,7 +191,7 @@ export class OptionsService {
         this.options.gfLow = newValue;
     }
 
-    public set gfHigh(newValue: number ){
+    public set gfHigh(newValue: number) {
         this.options.gfHigh = newValue;
     }
 
@@ -260,7 +258,7 @@ export class OptionsService {
 
     public resetToSimple(): void {
         const foundGfLabel = this.standardGradients.labelFor(this.gfLow, this.gfHigh);
-        if(foundGfLabel === '') {
+        if (foundGfLabel === '') {
             OptionDefaults.setMediumConservatism(this.options);
         }
     }
@@ -285,7 +283,7 @@ export class OptionsService {
         this.options.ascentSpeed6m = this.units.toMeters(newValues.ascentSpeed6m);
         this.options.descentSpeed = this.units.toMeters(newValues.descentSpeed);
         this.options.lastStopDepth = this.units.toMeters(newValues.lastStopDepth);
-        this.options.maxEND =this.units.toMeters(newValues.maxEND);
+        this.options.maxEND = this.units.toMeters(newValues.maxEND);
         OptionDefaults.useGeneralRecommended(this.options);
     }
 }

@@ -1,19 +1,18 @@
 <div class="card">
-  <div class="card-header">
-    <div class="float-start mt-1">
-      <fa-icon [icon]="icon" class="me-3"></fa-icon>
-      <span>Gas Consumed</span>
+    <div class="card-header">
+        <div class="float-start mt-1">
+            <fa-icon [icon]="icon" class="me-3"></fa-icon>
+            <span>Gas Consumed</span>
+        </div>
     </div>
-  </div>
 
-  <div class="card-body card-minheight card-max-height-md">
-    <div class="pb-3">
-      @if (profileDif.showConsumption) {
-        @for (gasDiff of gasesDifference; track gasDiff) {
-          <app-diff-gas-consumed-tank-chart [gasDiff]="gasDiff">
-          </app-diff-gas-consumed-tank-chart>
-        }
-      }
+    <div class="card-body card-minheight card-max-height-md">
+        <div class="pb-3">
+            @if (profileDif.showConsumption) {
+                @for (gasDiff of gasesDifference; track gasDiff) {
+                    <app-diff-gas-consumed-tank-chart [gasDiff]="gasDiff"> </app-diff-gas-consumed-tank-chart>
+                }
+            }
+        </div>
     </div>
-  </div>
 </div>

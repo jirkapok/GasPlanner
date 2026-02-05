@@ -8,7 +8,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { DashboardStartUp } from '../../shared/startUp';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
-import { ShareDiveService } from "../../shared/ShareDiveService";
+import { ShareDiveService } from '../../shared/ShareDiveService';
 import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { PlanTabsComponent } from '../plan.tabs/plan.tabs.component';
@@ -25,7 +25,20 @@ import { DiveInfoComponent } from '../diveinfo/diveinfo.component';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
-    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
+    imports: [
+        ReactiveFormsModule,
+        FaIconComponent,
+        PlanTabsComponent,
+        NgClass,
+        TanksSimpleComponent,
+        TanksComplexComponent,
+        DepthsSimpleComponent,
+        DepthsComplexComponent,
+        DiveOptionsComponent,
+        ProfileChartComponent,
+        WayPointsComponent,
+        DiveInfoComponent
+    ]
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;
@@ -39,7 +52,8 @@ export class DashboardComponent extends Streamed implements OnInit {
         private dispatcher: ReloadDispatcher,
         public startup: DashboardStartUp,
         private schedules: DiveSchedules,
-        private fb: NonNullableFormBuilder) {
+        private fb: NonNullableFormBuilder
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -57,17 +71,15 @@ export class DashboardComponent extends Streamed implements OnInit {
 
         // because the calculation runs in background first it subscribes,
         // than it starts to receive the event.
-        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId?: number) => {
-                if (this.schedules.selected.id === diveId) {
-                    this.startup.updateQueryParams();
-                }
-            });
-
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe((diveId?: number) => {
+            if (this.schedules.selected.id === diveId) {
                 this.startup.updateQueryParams();
-            });
+            }
+        });
+
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.startup.updateQueryParams();
+        });
     }
 
     public get toastVisible(): boolean {

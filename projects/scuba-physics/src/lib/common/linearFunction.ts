@@ -25,11 +25,10 @@ export class LinearFunction {
 
     /** Returns relative X value, because the xStart is unknown */
     public static xValueAt(yStart: number, speed: number, yValue: number): number {
-        if(speed === 0) {
+        if (speed === 0) {
             return 0;
         }
 
         return (yValue - yStart) / speed;
     }
 }
-

@@ -1,8 +1,16 @@
 import {
-    Time, Segment, Tank,
-    Precision, TankTemplate, Options,
-    Diver, GasDensity, Consumption,
-    Event, EventType, GasNames
+    Time,
+    Segment,
+    Tank,
+    Precision,
+    TankTemplate,
+    Options,
+    Diver,
+    GasDensity,
+    Consumption,
+    Event,
+    EventType,
+    GasNames
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
@@ -24,8 +32,7 @@ export class Level {
         private units: UnitConversion,
         public segment: Segment,
         private tankBound: TankBound
-    ) {
-    }
+    ) {}
 
     public get duration(): number {
         return Time.toMinutes(this.segment.duration);
@@ -79,7 +86,10 @@ export class AppSettings {
 }
 
 export class DiverOptions {
-    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) { }
+    constructor(
+        private options: Options = new Options(),
+        private diver: Diver = new Diver()
+    ) {}
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;
@@ -146,7 +156,10 @@ export interface ITankSize {
 export class TankBound implements IGasContent, ITankSize {
     private _workingPressureBars: number;
 
-    constructor(public tank: Tank, private units: UnitConversion) {
+    constructor(
+        public tank: Tank,
+        private units: UnitConversion
+    ) {
         const defaultTanks = this.units.defaults.tanks;
         const newWorkPressure = defaultTanks.primary.workingPressure;
         this._workingPressureBars = this.units.toBar(newWorkPressure);
@@ -250,8 +263,10 @@ export enum EventSeverity {
 }
 
 export class BoundEvent {
-    constructor(private units: UnitConversion, private event: Event) {
-    }
+    constructor(
+        private units: UnitConversion,
+        private event: Event
+    ) {}
 
     public get isNoDeco(): boolean {
         return this.event.type === EventType.noDecoEnd;
@@ -314,7 +329,8 @@ export class BoundEvent {
             case EventType.noDecoEnd:
             case EventType.safetyStop:
                 return true;
-            default: return false;
+            default:
+                return false;
         }
     }
 
@@ -363,7 +379,8 @@ export class BoundEvent {
                 return 'Deco';
             case EventType.safetyStop:
                 return 'Safety stop';
-            default: return '';
+            default:
+                return '';
         }
     }
 }

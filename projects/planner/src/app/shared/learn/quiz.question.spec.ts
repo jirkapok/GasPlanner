@@ -1,31 +1,25 @@
 import { Question } from './quiz.question';
-import { QuestionTemplate, RoundType, NumberVariable } from "./learn.models";
+import { QuestionTemplate, RoundType, NumberVariable } from './learn.models';
 
 describe('Quiz Question', () => {
     it('Renders variables into question template', () => {
-        const questionTemplate = new QuestionTemplate("Question: with {cccc} and {bbbb} and {aaaa}.",
+        const questionTemplate = new QuestionTemplate(
+            'Question: with {cccc} and {bbbb} and {aaaa}.',
             1,
             RoundType.ceil,
-            [
-                new NumberVariable('aaaa', 1, 1),
-                new NumberVariable('bbbb', 2, 2),
-                new NumberVariable('cccc', 3, 3),
-            ],
-            () => 0);
+            [new NumberVariable('aaaa', 1, 1), new NumberVariable('bbbb', 2, 2), new NumberVariable('cccc', 3, 3)],
+            () => 0
+        );
 
         const question = new Question(questionTemplate);
 
-        expect(question.renderedQuestion).toEqual("Question: with 3 and 2 and 1.");
+        expect(question.renderedQuestion).toEqual('Question: with 3 and 2 and 1.');
     });
 
     const createQuestionWithRounding = (roundType: RoundType) => {
-        const template = new QuestionTemplate("Question: with {aaaa}.",
-            1,
-            roundType,
-            [],
-            (_) => 1.25);
+        const template = new QuestionTemplate('Question: with {aaaa}.', 1, roundType, [], _ => 1.25);
         const question = new Question(template);
-        question.userAnswer = "1";
+        question.userAnswer = '1';
         return question;
     };
 

@@ -26,23 +26,20 @@ describe('LearnComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [
-                CommonModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NgxMdModule,
-                FontAwesomeModule,
-                LearnComponent,
-                MdbModalModule,
-            ],
+            imports: [CommonModule, FormsModule, ReactiveFormsModule, NgxMdModule, FontAwesomeModule, LearnComponent, MdbModalModule],
             providers: [
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 Urls,
                 QuizService,
-                SubViewStorage, ViewStates, Preferences, PreferencesStore,
-                ViewSwitchService, DiveSchedules,
-                UnitConversion, ReloadDispatcher,
+                SubViewStorage,
+                ViewStates,
+                Preferences,
+                PreferencesStore,
+                ViewSwitchService,
+                DiveSchedules,
+                UnitConversion,
+                ReloadDispatcher,
                 ApplicationSettingsService
             ]
         }).compileComponents();

@@ -5,9 +5,7 @@ import { DepthConverter } from '../physics/depth-converter';
  * Respiratory minute volume formulas using ideal gas law.
  */
 export class SacCalculator {
-
-    constructor(private depthConverter: DepthConverter) {
-    }
+    constructor(private depthConverter: DepthConverter) {}
 
     /**
      * Calculate respiratory minute volume (RMV) in liter/minute
@@ -20,7 +18,7 @@ export class SacCalculator {
      */
     public calculateRmv(depth: number, tank: number, used: number, duration: number): number {
         const bars = this.depthConverter.toBar(depth);
-        const result = tank * used / duration / bars;
+        const result = (tank * used) / duration / bars;
         return Precision.ceilTwoDecimals(result);
     }
 
@@ -35,7 +33,7 @@ export class SacCalculator {
      */
     public calculateDuration(depth: number, tank: number, used: number, sac: number): number {
         const bars = this.depthConverter.toBar(depth);
-        const result = tank * used / sac / bars;
+        const result = (tank * used) / sac / bars;
         return Precision.ceil(result);
     }
 
@@ -50,7 +48,7 @@ export class SacCalculator {
      */
     public calculateUsed(depth: number, tank: number, duration: number, sac: number): number {
         const bars = this.depthConverter.toBar(depth);
-        const result = duration * bars * sac / tank;
+        const result = (duration * bars * sac) / tank;
         return Precision.ceil(result);
     }
 }

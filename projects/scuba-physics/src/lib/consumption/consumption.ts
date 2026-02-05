@@ -9,7 +9,7 @@ import { Tank, Tanks } from './Tanks';
 import { Time } from '../physics/Time';
 import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSearch';
 import { PlanFactory } from '../depths/PlanFactory';
-import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 
 class GasVolumes {
     private remaining: Map<number, number> = new Map<number, number>();
@@ -38,7 +38,10 @@ class RmvContext {
     private readonly _stressRmvPerSecond: number;
     private readonly _teamStressRmvPerSecond: number;
 
-    constructor(private options: ConsumptionOptions, public readonly bottomTank: Tank) {
+    constructor(
+        private options: ConsumptionOptions,
+        public readonly bottomTank: Tank
+    ) {
         this.rmvPerSecond = Time.toMinutes(options.diver.rmv);
         this._teamStressRmvPerSecond = Time.toMinutes(options.diver.teamStressRmv);
         this._stressRmvPerSecond = Time.toMinutes(options.diver.stressRmv);
@@ -61,7 +64,7 @@ class RmvContext {
         const minimalReserve = isBottomTank ? this.options.primaryTankReserve : this.options.stageTankReserve;
         const minimalReserveVolume = Tank.realVolume2(tank.size, minimalReserve, tank.gas);
 
-        if(reserveVolume < minimalReserveVolume) {
+        if (reserveVolume < minimalReserveVolume) {
             return minimalReserveVolume;
         }
 
@@ -87,10 +90,14 @@ export class Consumption {
     /** Minimum bars to keep in stage tank, even for shallow dives */
     public static readonly defaultStageReserve = 20;
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter) {}
 
-    private static calculateDecompression(segments: Segments, tanks: Tank[],
-        options: Options, surfaceInterval?: RestingParameters): CalculatedProfile {
+    private static calculateDecompression(
+        segments: Segments,
+        tanks: Tank[],
+        options: Options,
+        surfaceInterval?: RestingParameters
+    ): CalculatedProfile {
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
@@ -110,8 +117,13 @@ export class Consumption {
      * @param consumptionOptions Not null definition how to consume the gases.
      * @param surfaceInterval Optional surface interval, resting from previous dive. Null, for first dive.
      */
-    public consumeFromTanks(segments: Segment[], options: Options, tanks: Tank[],
-        consumptionOptions: ConsumptionOptions, surfaceInterval?: RestingParameters): void {
+    public consumeFromTanks(
+        segments: Segment[],
+        options: Options,
+        tanks: Tank[],
+        consumptionOptions: ConsumptionOptions,
+        surfaceInterval?: RestingParameters
+    ): void {
         if (segments.length < 2) {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
@@ -154,13 +166,18 @@ export class Consumption {
 
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, (s) => !!s.tank);
+        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, s => !!s.tank);
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, consumedBySegmentRmv);
         // if more consumed, drain the tanks
-        remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, () => 0, (_: Segment, remaining: number) => remaining);
+        remainToConsume = this.consumeBySegmentTank(
+            segments,
+            remainToConsume,
+            () => 0,
+            (_: Segment, remaining: number) => remaining
+        );
 
         // and only now we can consume the remaining gas from all other segments
-        remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
+        remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, s => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         // if more consumed, drain the tanks
         this.consumeByGases(tanks, remainToConsume, () => 0);
@@ -177,8 +194,13 @@ export class Consumption {
      * @returns Number of minutes representing maximum time we can spend as bottom time.
      * Returns 0 in case the duration is shorter than user defined segments.
      */
-    public calculateMaxBottomTime(sourceSegments: Segments, tanks: Tank[],
-        consumptionOptions: ConsumptionOptions, options: Options, surfaceInterval?: RestingParameters): number {
+    public calculateMaxBottomTime(
+        sourceSegments: Segments,
+        tanks: Tank[],
+        consumptionOptions: ConsumptionOptions,
+        options: Options,
+        surfaceInterval?: RestingParameters
+    ): number {
         const testSegments = this.createTestProfile(sourceSegments);
         const addedSegment = testSegments.last();
 
@@ -207,8 +229,13 @@ export class Consumption {
         return Precision.floor(totalDuration);
     }
 
-    private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions,
-        options: Options, surfaceInterval?: RestingParameters) {
+    private consumeFromProfile(
+        testSegments: Segments,
+        tanks: Tank[],
+        consumptionOptions: ConsumptionOptions,
+        options: Options,
+        surfaceInterval?: RestingParameters
+    ) {
         const profile = Consumption.calculateDecompression(testSegments, tanks, options, surfaceInterval);
         this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions, surfaceInterval);
     }
@@ -242,23 +269,26 @@ export class Consumption {
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode;
-            let remaining = remainToConsume.get(gasCode);
-            let reallyConsumed = this.consumeFromTank(tank, remaining, minimumVolume);
+            const remaining = remainToConsume.get(gasCode);
+            const reallyConsumed = this.consumeFromTank(tank, remaining, minimumVolume);
             remainToConsume.subtract(gasCode, reallyConsumed);
         }
 
         return remainToConsume;
     }
 
-    private consumeBySegmentTank(segments: Segment[], remainToConsume: GasVolumes,
+    private consumeBySegmentTank(
+        segments: Segment[],
+        remainToConsume: GasVolumes,
         minimumVolume: (t: Tank) => number,
-        getConsumed: (s: Segment, remaining: number) => number): GasVolumes {
+        getConsumed: (s: Segment, remaining: number) => number
+    ): GasVolumes {
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
                 const gasCode = segment.gas.contentCode;
-                let remaining: number = remainToConsume.get(gasCode);
+                const remaining: number = remainToConsume.get(gasCode);
                 const consumeLiters = getConsumed(segment, remaining);
-                let reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimumVolume);
+                const reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimumVolume);
                 remainToConsume.subtract(gasCode, reallyConsumed);
             }
         });
@@ -280,7 +310,7 @@ export class Consumption {
         segments: Segment[],
         remainToConsume: GasVolumes,
         getRmvPerSecond: (segment: Segment) => number,
-        includeSegment: (segment: Segment) => boolean,
+        includeSegment: (segment: Segment) => boolean
     ): GasVolumes {
         for (let index = 0; index < segments.length; index++) {
             const segment = segments[index];

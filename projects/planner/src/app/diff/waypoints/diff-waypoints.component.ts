@@ -18,10 +18,11 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 export class WaypointsDifferenceComponent {
     public tasks = faTasks;
 
-    constructor(public units: UnitConversion,
+    constructor(
+        public units: UnitConversion,
         public profileDiff: ProfileComparatorService,
-        private selectedDiff: SelectedDiffWaypoint) {
-    }
+        private selectedDiff: SelectedDiffWaypoint
+    ) {}
 
     public highlightRow(point: ComparedWaypoint | undefined): void {
         this.selectedDiff.selected = point;

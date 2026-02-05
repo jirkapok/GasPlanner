@@ -10,9 +10,7 @@ describe('TanksService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                UnitConversion, TanksService, ReloadDispatcher
-            ]
+            providers: [UnitConversion, TanksService, ReloadDispatcher]
         });
         service = TestBed.inject(TanksService);
     });
@@ -54,7 +52,7 @@ describe('TanksService', () => {
     });
 
     describe('Load from', () => {
-        it('Doesn\'t update by empty array', () => {
+        it("Doesn't update by empty array", () => {
             service.loadFrom([]);
             expect(service.tanks.length).toEqual(1);
         });
@@ -64,12 +62,9 @@ describe('TanksService', () => {
 
             beforeEach(() => {
                 const dispatcher = TestBed.inject(ReloadDispatcher);
-                dispatcher.tanksReloaded$.subscribe(() => tanksReloaded = true);
+                dispatcher.tanksReloaded$.subscribe(() => (tanksReloaded = true));
 
-                const newTanks = [
-                    Tank.createDefault(),
-                    Tank.createDefault(),
-                ];
+                const newTanks = [Tank.createDefault(), Tank.createDefault()];
                 service.loadFrom(newTanks);
             });
 

@@ -3,16 +3,12 @@ import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
-import {
-    ConsumptionByMix, FeatureFlags, HighestDensity,
-    IConsumedMix, ProfileTissues, Segment,
-    StandardGases, Tank
-} from 'scuba-physics';
+import { ConsumptionByMix, FeatureFlags, HighestDensity, IConsumedMix, ProfileTissues, Segment, StandardGases, Tank } from 'scuba-physics';
 import { WayPoint } from '../wayPoint';
 import { PlannerService } from '../planner.service';
-import { ViewSwitchService } from "../viewSwitchService";
-import { ApplicationSettingsService } from "../ApplicationSettings";
-import { WorkersFactoryCommon } from "../serial.workers.factory";
+import { ViewSwitchService } from '../viewSwitchService';
+import { ApplicationSettingsService } from '../ApplicationSettings';
+import { WorkersFactoryCommon } from '../serial.workers.factory';
 
 describe('ProfileComparison service', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
@@ -24,10 +20,14 @@ describe('ProfileComparison service', () => {
             declarations: [],
             imports: [],
             providers: [
-                ProfileComparatorService, UnitConversion,
-                ReloadDispatcher, DiveSchedules,
-                PlannerService, ViewSwitchService,
-                ApplicationSettingsService, WorkersFactoryCommon
+                ProfileComparatorService,
+                UnitConversion,
+                ReloadDispatcher,
+                DiveSchedules,
+                PlannerService,
+                ViewSwitchService,
+                ApplicationSettingsService,
+                WorkersFactoryCommon
             ]
         }).compileComponents();
     });
@@ -59,22 +59,25 @@ describe('ProfileComparison service', () => {
     });
 
     it('Total duration of one dive', inject([UnitConversion], (units: UnitConversion) => {
-        schedules.selected.diveResult.updateProfile([
-             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 600))
-        ], irrelevantTissues);
+        schedules.selected.diveResult.updateProfile(
+            [WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, 600))],
+            irrelevantTissues
+        );
 
         expect(sut.totalDuration).toEqual(600);
     }));
 
     it('Total duration Profile B dive', inject([UnitConversion], (units: UnitConversion) => {
         schedules.add();
-        schedules.dives[0].diveResult.updateProfile([
-             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 500))
-        ], irrelevantTissues);
+        schedules.dives[0].diveResult.updateProfile(
+            [WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, 500))],
+            irrelevantTissues
+        );
 
-        schedules.dives[1].diveResult.updateProfile([
-             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 700))
-         ], irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(
+            [WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, 700))],
+            irrelevantTissues
+        );
 
         sut.selectProfile(1);
 
@@ -89,8 +92,7 @@ describe('ProfileComparison service', () => {
             schedules.dives[0].tanksService.tankData[0].consumed = 50;
             schedules.dives[1].tanksService.tankData[0].consumed = 100;
             sut.selectProfile(1);
-            combineMethod = spyOn(ConsumptionByMix, 'combine')
-                .and.callThrough();
+            combineMethod = spyOn(ConsumptionByMix, 'combine').and.callThrough();
         });
 
         it('profileACombinedTanks call combined consumption for Profile A', () => {
@@ -163,7 +165,7 @@ describe('ProfileComparison service', () => {
 
         it('Remove selected profile A resets selection to first profile', () => {
             const added = schedules.add();
-            sut.selectProfile(added.index -1);
+            sut.selectProfile(added.index - 1);
             sut.selectProfile(added.index);
             schedules.remove(added);
             schedules.remove(schedules.dives[2]);

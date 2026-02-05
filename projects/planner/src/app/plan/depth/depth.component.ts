@@ -21,11 +21,12 @@ export class DepthComponent implements OnInit {
     @Output() public depthChange = new EventEmitter<number>();
     @Output() public assignMaxDepth = new EventEmitter();
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
-    }
+        public units: UnitConversion
+    ) {}
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.get(this.controlName);

@@ -22,13 +22,7 @@ describe('GasesComparisonService', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [
-                GasesComparisonService,
-                ProfileComparatorService,
-                DiveSchedules,
-                UnitConversion,
-                ReloadDispatcher
-            ]
+            providers: [GasesComparisonService, ProfileComparatorService, DiveSchedules, UnitConversion, ReloadDispatcher]
         }).compileComponents();
 
         sut = TestBed.inject(GasesComparisonService);
@@ -41,19 +35,21 @@ describe('GasesComparisonService', () => {
     });
 
     it('Compares default air tank', () => {
-        assertDifference(sut.gasesDifference, [ new ConsumedGasDifference(
-            StandardGases.air,
-            {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            },
-            {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            }
-        )]);
+        assertDifference(sut.gasesDifference, [
+            new ConsumedGasDifference(
+                StandardGases.air,
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                }
+            )
+        ]);
     });
 
     it('Profile A has one gas more', () => {
@@ -61,24 +57,32 @@ describe('GasesComparisonService', () => {
         tanksA.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
         assertDifference(sut.gasesDifference, [
-            new ConsumedGasDifference(StandardGases.air, {
-                total: 2892.98,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 2892.98,
-                consumed: 0,
-                reserve: 0
-            }),
-            new ConsumedGasDifference(StandardGases.ean32, {
-                total: 2140.8,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            })
+            new ConsumedGasDifference(
+                StandardGases.air,
+                {
+                    total: 2892.98,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 2892.98,
+                    consumed: 0,
+                    reserve: 0
+                }
+            ),
+            new ConsumedGasDifference(
+                StandardGases.ean32,
+                {
+                    total: 2140.8,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 0,
+                    consumed: 0,
+                    reserve: 0
+                }
+            )
         ]);
     });
 
@@ -87,24 +91,32 @@ describe('GasesComparisonService', () => {
         tanksB.tankData[1].assignStandardGas(StandardGases.ean32.name);
 
         assertDifference(sut.gasesDifference, [
-            new ConsumedGasDifference(StandardGases.air, {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            }),
-            new ConsumedGasDifference(StandardGases.ean32, {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 2220,
-                consumed: 0,
-                reserve: 0
-            })
+            new ConsumedGasDifference(
+                StandardGases.air,
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                }
+            ),
+            new ConsumedGasDifference(
+                StandardGases.ean32,
+                {
+                    total: 0,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 2220,
+                    consumed: 0,
+                    reserve: 0
+                }
+            )
         ]);
     });
 
@@ -112,24 +124,32 @@ describe('GasesComparisonService', () => {
         tanksB.tankData[0].assignStandardGas(StandardGases.ean32.name);
 
         assertDifference(sut.gasesDifference, [
-            new ConsumedGasDifference(StandardGases.air, {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            }),
-            new ConsumedGasDifference(StandardGases.ean32, {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            }, {
-                total: 3000,
-                consumed: 0,
-                reserve: 0
-            })
+            new ConsumedGasDifference(
+                StandardGases.air,
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 0,
+                    consumed: 0,
+                    reserve: 0
+                }
+            ),
+            new ConsumedGasDifference(
+                StandardGases.ean32,
+                {
+                    total: 0,
+                    consumed: 0,
+                    reserve: 0
+                },
+                {
+                    total: 3000,
+                    consumed: 0,
+                    reserve: 0
+                }
+            )
         ]);
     });
 

@@ -1,5 +1,4 @@
 export class Time {
-
     /** One seconds as base unit of decompression calculation. */
     public static readonly oneSecond = 1;
 

@@ -22,9 +22,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
-
 export class NitroxPage {
-    constructor(private fixture: ComponentFixture<NitroxComponent>) { }
+    constructor(private fixture: ComponentFixture<NitroxComponent>) {}
 
     public get fO2Input(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#gasO2')).nativeElement as HTMLInputElement;
@@ -42,18 +41,27 @@ describe('Nitrox component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        UnitConversion, InputControls, DecimalPipe,
-        NitroxCalculatorService, ValidatorGroups,
-        ViewStates, PreferencesStore, Preferences,
-        PlannerService, WorkersFactoryCommon,
-        ViewSwitchService, SubViewStorage,
-        ReloadDispatcher, DiveSchedules,
-        OptionsService, ApplicationSettingsService,
-        MdbModalService
-    ],
-    imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, NitroxComponent, OxygenDropDownComponent]
-}).compileComponents();
+            providers: [
+                UnitConversion,
+                InputControls,
+                DecimalPipe,
+                NitroxCalculatorService,
+                ValidatorGroups,
+                ViewStates,
+                PreferencesStore,
+                Preferences,
+                PlannerService,
+                WorkersFactoryCommon,
+                ViewSwitchService,
+                SubViewStorage,
+                ReloadDispatcher,
+                DiveSchedules,
+                OptionsService,
+                ApplicationSettingsService,
+                MdbModalService
+            ],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, NitroxComponent, OxygenDropDownComponent]
+        }).compileComponents();
     });
 
     beforeEach(() => {

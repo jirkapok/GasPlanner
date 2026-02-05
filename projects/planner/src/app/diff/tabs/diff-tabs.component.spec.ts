@@ -14,11 +14,7 @@ describe('DiffTabsComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [DiffTabsComponent],
-            providers: [
-                DiveSchedules, UnitConversion,
-                ReloadDispatcher, ProfileComparatorService,
-                provideAnimations()
-            ]
+            providers: [DiveSchedules, UnitConversion, ReloadDispatcher, ProfileComparatorService, provideAnimations()]
         });
 
         fixture = TestBed.createComponent(DiffTabsComponent);

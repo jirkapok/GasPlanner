@@ -11,7 +11,6 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     templateUrl: './help-modal.component.html',
     styleUrl: './help-modal.component.scss'
 })
-
 export class HelpModalComponent {
     private _path = this.urls.helpMarkdownUrl(Urls.notAvailable);
 
@@ -29,6 +28,6 @@ export class HelpModalComponent {
 
     @Input()
     public set path(value: string) {
-        this._path  = this.urls.helpMarkdownUrl(value);
+        this._path = this.urls.helpMarkdownUrl(value);
     }
 }

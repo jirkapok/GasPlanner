@@ -1,11 +1,7 @@
-import {
-    Ceiling, HighestDensity,
-    TissueOverPressures, LoadedTissues,
-    OtuCalculator, ProfileTissues, Segment
-} from 'scuba-physics';
+import { Ceiling, HighestDensity, TissueOverPressures, LoadedTissues, OtuCalculator, ProfileTissues, Segment } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 class CalculationState {
     private _calculating = false;
@@ -63,7 +59,7 @@ export class DiveResults {
     private _maxTime = 0;
     private _timeToSurface = 0;
     private _emergencyAscentStart = 0;
-    private _emergencyAscent: WayPoint[]  = [];
+    private _emergencyAscent: WayPoint[] = [];
     private _turnPressure = 0;
     private _turnTime = 0;
     private _needsReturn = false;
@@ -218,7 +214,7 @@ export class DiveResults {
     }
 
     public get otuExceeded(): boolean {
-        return this._otu > (.8 * OtuCalculator.dailyLimit);
+        return this._otu > 0.8 * OtuCalculator.dailyLimit;
     }
 
     public get cnsExceeded(): boolean {
@@ -234,14 +230,12 @@ export class DiveResults {
     }
 
     public get hasErrorEvent(): boolean {
-        return this.hasErrors || this.notEnoughGas ||
-            this._events.some(e => e.isError);
+        return this.hasErrors || this.notEnoughGas || this._events.some(e => e.isError);
     }
 
     public get hasWarningEvent(): boolean {
         // TODO move csn and otu to events
-        return this.otuExceeded || this.cnsExceeded ||
-            this._events.some(e => e.isWarning);
+        return this.otuExceeded || this.cnsExceeded || this._events.some(e => e.isWarning);
     }
 
     public get endsOnSurface(): boolean {
@@ -263,15 +257,15 @@ export class DiveResults {
 
     /** Marks each part as not calculated */
     private showStillRunning(): void {
-        if(this.profileCalculation.running) {
+        if (this.profileCalculation.running) {
             this.emptyProfile();
         }
 
-        if(this.diveInfoCalculation.running) {
+        if (this.diveInfoCalculation.running) {
             this.emptyDiveInfo();
         }
 
-        if(this.consumptionCalculation.running) {
+        if (this.consumptionCalculation.running) {
             this.emptyConsumption();
         }
 
@@ -308,9 +302,23 @@ export class DiveResults {
         highestDensity: HighestDensity,
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
-        events: BoundEvent[]): void {
-        this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
-            offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
+        events: BoundEvent[]
+    ): void {
+        this.updateDiveInfoInternal(
+            noDecoTime,
+            notEnoughTime,
+            planDuration,
+            averageDepth,
+            surfaceGradient,
+            offgasingStartTime,
+            offgasingStartDepth,
+            otu,
+            cns,
+            highestDensity,
+            ceilings,
+            tissueOverPressures,
+            events
+        );
         this.diveInfoCalculation.Finished();
     }
 
@@ -322,9 +330,9 @@ export class DiveResults {
         turnTime: number,
         needsReturn: boolean,
         notEnoughGas: boolean,
-        emergencyAscent: WayPoint[]): void {
-        this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart,
-            turnPressure, turnTime, needsReturn, notEnoughGas);
+        emergencyAscent: WayPoint[]
+    ): void {
+        this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart, turnPressure, turnTime, needsReturn, notEnoughGas);
         this.consumptionCalculation.Finished();
         this._emergencyAscent = emergencyAscent;
     }
@@ -359,7 +367,8 @@ export class DiveResults {
         highestDensity: HighestDensity,
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
-        events: BoundEvent[]): void {
+        events: BoundEvent[]
+    ): void {
         this._noDecoTime = noDecoTime;
         this._notEnoughTime = notEnoughTime;
         this._planDuration = planDuration;
@@ -382,7 +391,8 @@ export class DiveResults {
         turnPressure: number,
         turnTime: number,
         needsReturn: boolean,
-        notEnoughGas: boolean): void {
+        notEnoughGas: boolean
+    ): void {
         this._maxTime = maxTime;
         this._timeToSurface = timeToSurface;
         this._emergencyAscentStart = emergencyAscentStart;

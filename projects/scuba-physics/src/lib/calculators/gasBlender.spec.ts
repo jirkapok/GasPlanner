@@ -4,16 +4,16 @@ describe('Gas Blender', () => {
     const createEmptyRequest = (): MixRequest => ({
         source: {
             pressure: 0,
-            o2: .21,
+            o2: 0.21,
             he: 0
         },
         target: {
             pressure: 200,
-            o2: .21,
+            o2: 0.21,
             he: 0
         },
         topMix: {
-            o2: .21,
+            o2: 0.21,
             he: 0
         }
     });
@@ -24,8 +24,13 @@ describe('Gas Blender', () => {
         return result;
     };
 
-    const assertResult = (request: MixRequest, expectedTop: number, expectedO2: number,
-        expectedHe: number, expectedRemove: number = 0): void => {
+    const assertResult = (
+        request: MixRequest,
+        expectedTop: number,
+        expectedO2: number,
+        expectedHe: number,
+        expectedRemove: number = 0
+    ): void => {
         const precision = 6;
         const result = GasBlender.mix(request);
 
@@ -34,11 +39,9 @@ describe('Gas Blender', () => {
         expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, precision);
 
         const sourcePressure = request.source.pressure - result.removeFromSource;
-        const finalPpO2 = (request.source.o2 * sourcePressure + request.topMix.o2 * result.addTop + result.addO2)
-                            / request.target.pressure;
+        const finalPpO2 = (request.source.o2 * sourcePressure + request.topMix.o2 * result.addTop + result.addO2) / request.target.pressure;
         expect(request.target.o2).withContext('final pp O2').toBeCloseTo(finalPpO2, precision);
-        const finalPpHe = (request.source.he * sourcePressure + request.topMix.he * result.addTop + result.addHe)
-                            / request.target.pressure;
+        const finalPpHe = (request.source.he * sourcePressure + request.topMix.he * result.addTop + result.addHe) / request.target.pressure;
         expect(request.target.he).withContext('final pp He').toBeCloseTo(finalPpHe, precision);
 
         const total = sourcePressure + result.addTop + result.addO2 + result.addHe;
@@ -315,7 +318,7 @@ describe('Gas Blender', () => {
                     request.topMix.o2 = 0.23;
                     request.topMix.he = 0.25;
 
-                    assertResult(request, 93.269231, 10.048077,  46.682692);
+                    assertResult(request, 93.269231, 10.048077, 46.682692);
                 });
             });
 
@@ -345,7 +348,6 @@ describe('Gas Blender', () => {
         });
     });
 
-
     describe('Heliox', () => {
         it('Create 10/90 without top mix to empty tank', () => {
             const request = createEmptyRequest();
@@ -359,8 +361,8 @@ describe('Gas Blender', () => {
 
         it('Create 5/95 without top mix to non empty tank', () => {
             const request = createNonEmptyRequest();
-            request.source.o2 = 0.10;
-            request.source.he = 0.90;
+            request.source.o2 = 0.1;
+            request.source.he = 0.9;
             request.target.o2 = 0.05;
             request.target.he = 0.95;
             request.topMix.o2 = 0.25;
@@ -371,8 +373,8 @@ describe('Gas Blender', () => {
 
         it('Can`t create trimix from mix with nitrox in empty tank', () => {
             const request = createNonEmptyRequest();
-            request.source.o2 = 0.10;
-            request.source.he = 0.70;
+            request.source.o2 = 0.1;
+            request.source.he = 0.7;
             request.target.o2 = 0.1;
             request.target.he = 0.9;
             request.topMix.o2 = 0.25;
@@ -423,7 +425,7 @@ describe('Gas Blender', () => {
             request.source.he = 0.35;
             request.source.pressure = 100;
             request.target.o2 = 0.15;
-            request.target.he = 0.30;
+            request.target.he = 0.3;
 
             assertResult(request, 136.563877, 0, 58.14978, 94.713656);
         });
@@ -451,7 +453,7 @@ describe('Gas Blender', () => {
         it('Unable to mix, because top mix contains more oxygen and helium, than needed', () => {
             const request = createNonEmptyRequest();
             request.source.he = 0.25;
-            request.target.o2 = 0.10;
+            request.target.o2 = 0.1;
             request.target.he = 0.25;
             request.topMix.o2 = 0.18;
             request.topMix.he = 0.45;

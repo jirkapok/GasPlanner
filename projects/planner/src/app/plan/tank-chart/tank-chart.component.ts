@@ -18,7 +18,7 @@ export class TankChartComponent {
     @Input()
     public showId = false;
 
-    constructor(public units: UnitConversion) { }
+    constructor(public units: UnitConversion) {}
 
     // for the charts we don't need to convert the value
     // since they are used as percentage

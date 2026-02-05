@@ -14,17 +14,17 @@ describe('ProfileDifferenceChartComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [ProfileDifferenceChartComponent],
-    providers: [
-        UnitConversion,
-        SelectedWaypoint,
-        ProfileComparatorService,
-        ResamplingService,
-        DiveSchedules,
-        ReloadDispatcher,
-        SelectedDiffWaypoint
-    ]
-});
+            imports: [ProfileDifferenceChartComponent],
+            providers: [
+                UnitConversion,
+                SelectedWaypoint,
+                ProfileComparatorService,
+                ResamplingService,
+                DiveSchedules,
+                ReloadDispatcher,
+                SelectedDiffWaypoint
+            ]
+        });
         fixture = TestBed.createComponent(ProfileDifferenceChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

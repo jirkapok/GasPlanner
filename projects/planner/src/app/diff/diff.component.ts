@@ -20,7 +20,14 @@ import { GasConsumedDifferenceComponent } from './gasconsumed/diff-gas-consumed/
     selector: 'app-diff',
     templateUrl: './diff.component.html',
     styleUrls: ['./diff.component.scss'],
-    imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent, GasConsumedDifferenceComponent]
+    imports: [
+        DiffTabsComponent,
+        FaIconComponent,
+        ProfileDifferenceChartComponent,
+        WaypointsDifferenceComponent,
+        DiveResultsDifferenceComponent,
+        GasConsumedDifferenceComponent
+    ]
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;
@@ -38,8 +45,7 @@ export class DiffComponent extends Streamed implements OnInit {
         this.loadState();
         this.saveState();
 
-        this.diff.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.saveState());
+        this.diff.selectionChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.saveState());
     }
 
     public async goToDashboard(): Promise<void> {
@@ -49,7 +55,7 @@ export class DiffComponent extends Streamed implements OnInit {
     private loadState(): void {
         let state: DiffViewState = this.viewStates.loadView(KnownViews.diff);
 
-        if(!state) {
+        if (!state) {
             state = {
                 id: KnownViews.diff,
                 profileA: 0,

@@ -4,7 +4,7 @@ describe('BlendPricing', () => {
     let costs: BlendCosts;
 
     beforeEach(() => {
-        costs  = {
+        costs = {
             addO2: 2,
             o2UnitPrice: 5,
             addHe: 3,
@@ -65,4 +65,3 @@ describe('BlendPricing', () => {
         });
     });
 });
-

@@ -7,7 +7,7 @@ import { WayPoint, SwimAction } from './wayPoint';
 export class StopsFilter {
     public _stopsOnly = false;
 
-    constructor(private schedules: DiveSchedules) { }
+    constructor(private schedules: DiveSchedules) {}
 
     public get stopsOnly(): boolean {
         return this._stopsOnly;
@@ -23,15 +23,17 @@ export class StopsFilter {
     public get wayPoints(): WayPoint[] {
         const allWayPoints = this.dive.wayPoints;
 
-        if(!this.stopsOnly) {
+        if (!this.stopsOnly) {
             return allWayPoints;
         }
 
         const depths = this.schedules.selectedDepths;
-        return allWayPoints.filter((item, index) =>
-            index < depths.startAscentIndex ||     // all user defined waypoints
-            index === allWayPoints.length - 1 ||   // ascent to surface
-            (item.swimAction === SwimAction.hover || item.swimAction === SwimAction.switch)  // all stops
+        return allWayPoints.filter(
+            (item, index) =>
+                index < depths.startAscentIndex || // all user defined waypoints
+                index === allWayPoints.length - 1 || // ascent to surface
+                item.swimAction === SwimAction.hover ||
+                item.swimAction === SwimAction.switch // all stops
         );
     }
 

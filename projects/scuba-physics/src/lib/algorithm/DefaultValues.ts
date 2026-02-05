@@ -58,7 +58,7 @@ export class MetricDefaults implements DefaultValues {
         return {
             ascentSpeed50perc: OptionDefaults.ascentSpeed50perc,
             ascentSpeed50percTo6m: OptionDefaults.ascentSpeed50percTo6m,
-            ascentSpeed6m:  OptionDefaults.ascentSpeed6m,
+            ascentSpeed6m: OptionDefaults.ascentSpeed6m,
             descentSpeed: OptionDefaults.descentSpeed,
             lastStopDepth: OptionDefaults.lastStopDepth,
             maxEND: OptionDefaults.maxEND
@@ -106,7 +106,7 @@ export class ImperialDefaults implements DefaultValues {
         return {
             ascentSpeed50perc: ImperialDefaults.recreSpeed,
             ascentSpeed50percTo6m: ImperialDefaults.depthDistance * 2,
-            ascentSpeed6m:  ImperialDefaults.depthDistance,
+            ascentSpeed6m: ImperialDefaults.depthDistance,
             descentSpeed: ImperialDefaults.descentSpeed,
             lastStopDepth: ImperialDefaults.depthDistance,
             maxEND: ImperialDefaults.maxEnd

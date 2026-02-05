@@ -18,9 +18,9 @@ export class WorkersFactoryCommon {
         return {
             calculated$: subject,
             calculate: (request: ProfileRequestDto): void => {
-                this.tryAction((r) => PlanningTasks.calculateDecompression(r), request, subject, failedSubject);
+                this.tryAction(r => PlanningTasks.calculateDecompression(r), request, subject, failedSubject);
             },
-            failed$: failedSubject,
+            failed$: failedSubject
         };
     }
 
@@ -30,9 +30,9 @@ export class WorkersFactoryCommon {
         return {
             calculated$: subject,
             calculate: (request: DiveInfoRequestDto): void => {
-                this.tryAction((r) => PlanningTasks.diveInfo(r), request, subject, failedSubject);
+                this.tryAction(r => PlanningTasks.diveInfo(r), request, subject, failedSubject);
             },
-            failed$: failedSubject,
+            failed$: failedSubject
         };
     }
 
@@ -42,15 +42,19 @@ export class WorkersFactoryCommon {
         return {
             calculated$: subject,
             calculate: (request: ConsumptionRequestDto): void => {
-                this.tryAction((r) => PlanningTasks.calculateConsumption(r), request, subject, failedSubject);
+                this.tryAction(r => PlanningTasks.calculateConsumption(r), request, subject, failedSubject);
             },
-            failed$: failedSubject,
+            failed$: failedSubject
         };
     }
 
     /** simulate worker error reporting */
-    private tryAction<TRequest, TResponse>(action: (r: TRequest) => TResponse,
-        request: TRequest, subject$: Subject<TResponse>, failed$: Subject<void>): void {
+    private tryAction<TRequest, TResponse>(
+        action: (r: TRequest) => TResponse,
+        request: TRequest,
+        subject$: Subject<TResponse>,
+        failed$: Subject<void>
+    ): void {
         try {
             const result = action(request);
             subject$.next(result);

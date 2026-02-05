@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
-import {
-    Precision, StandardGases, Tank, GasMixtures
-} from 'scuba-physics';
+import { Precision, StandardGases, Tank, GasMixtures } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { GasBlenderService } from '../../shared/gas-blender.service';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -51,8 +49,8 @@ export class GasBlenderComponent implements OnInit {
         private validators: ValidatorGroups,
         private inputs: InputControls,
         private viewStates: SubViewStorage,
-        private fb: NonNullableFormBuilder) {
-    }
+        private fb: NonNullableFormBuilder
+    ) {}
 
     public get ranges(): RangeConstants {
         return this.units.ranges;
@@ -123,7 +121,7 @@ export class GasBlenderComponent implements OnInit {
     }
 
     public applyChange(): void {
-        if(this.blenderForm.invalid) {
+        if (this.blenderForm.invalid) {
             return;
         }
 
@@ -149,7 +147,7 @@ export class GasBlenderComponent implements OnInit {
     }
 
     public applyTemplate(): void {
-        if(this.blenderForm.invalid) {
+        if (this.blenderForm.invalid) {
             return;
         }
 
@@ -182,7 +180,8 @@ export class GasBlenderComponent implements OnInit {
         this.calc.topMix.o2 = state.topMix.o2;
         this.calc.topMix.he = state.topMix.he;
 
-        if(state.prices) { // added in version 0.1.30, does not have to be present
+        if (state.prices) {
+            // added in version 0.1.30, does not have to be present
             this.pricing.o2UnitPrice = state.prices.o2UnitPrice;
             this.pricing.heUnitPrice = state.prices.heUnitPrice;
             this.pricing.topMixUnitPrice = state.prices.topMixUnitPrice;
@@ -223,7 +222,7 @@ export class GasBlenderComponent implements OnInit {
             },
             topMix: {
                 o2: StandardGases.ean32.fO2 * 100,
-                he: 0,
+                he: 0
             },
             prices: {
                 o2UnitPrice: 0,

@@ -6,7 +6,7 @@ import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
 import { Ceiling, FeatureFlags } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
@@ -19,8 +19,10 @@ export class ChartPlotterFactory {
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
 
-    constructor(private resampling: ResamplingService, private units: UnitConversion) {
-    }
+    constructor(
+        private resampling: ResamplingService,
+        private units: UnitConversion
+    ) {}
 
     public createOptions(): Partial<Plotly.Config> {
         return {
@@ -160,11 +162,11 @@ export class DiveTracesBuilder {
         const events = this.plotEvents(diveResult.events);
         const emergencyDepths = this.plotEmergencyDepths(diveResult.emergencyAscent);
 
-        if(this.showEmergencyAscent) {
-            return [ ...profileTraces, emergencyDepths, ceilings, events ];
+        if (this.showEmergencyAscent) {
+            return [...profileTraces, emergencyDepths, ceilings, events];
         }
 
-        return [ ...profileTraces, ceilings, events ];
+        return [...profileTraces, ceilings, events];
     }
 
     public profileTraces(): Partial<Plotly.PlotData>[] {
@@ -282,10 +284,12 @@ export class ChartPlotter {
     private layout: Partial<Plotly.Layout>;
 
     /** Provide traces in reverse order to keep the last on top */
-    constructor(public elementName: string,
-                private totalDuration: () => number,
-                chartPlotterFactory: ChartPlotterFactory,
-                ...traceBuilders: DiveTracesBuilder[]) {
+    constructor(
+        public elementName: string,
+        private totalDuration: () => number,
+        chartPlotterFactory: ChartPlotterFactory,
+        ...traceBuilders: DiveTracesBuilder[]
+    ) {
         this.builders = traceBuilders;
         this.cursor1 = chartPlotterFactory.createCursor();
         this.layout = chartPlotterFactory.createLayout();
@@ -305,7 +309,7 @@ export class ChartPlotter {
             shapes: []
         };
 
-        if(wayPoint) {
+        if (wayPoint) {
             this.updateCursor(wayPoint, this.cursor1);
             update.shapes!.push(this.cursor1);
         }
@@ -315,9 +319,11 @@ export class ChartPlotter {
 
     public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.PlotData>[]): void {
         this.updateLayoutThickFormat();
-        const traces: Plotly.Data[] = _(this.builders).map(b => getTraces(b))
+        const traces: Plotly.Data[] = _(this.builders)
+            .map(b => getTraces(b))
             .flatten()
-            .toArray().value();
+            .toArray()
+            .value();
         void Plotly.react(this.elementName, traces, this.layout, this.options);
     }
 

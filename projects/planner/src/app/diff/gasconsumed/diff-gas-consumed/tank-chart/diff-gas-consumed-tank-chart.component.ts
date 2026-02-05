@@ -14,19 +14,20 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [FaIconComponent, NgClass, DecimalPipe]
 })
 export class GasConsumedDifferenceTankComponent {
-    @Input({required: true})
+    @Input({ required: true })
     public gasDiff = new ConsumedGasDifference(
-            StandardGases.air.copy(),
-            {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            },
-            {
-                total: 0,
-                consumed: 0,
-                reserve: 0
-            });
+        StandardGases.air.copy(),
+        {
+            total: 0,
+            consumed: 0,
+            reserve: 0
+        },
+        {
+            total: 0,
+            consumed: 0,
+            reserve: 0
+        }
+    );
 
     @Input()
     public collapsed = false;
@@ -35,7 +36,10 @@ export class GasConsumedDifferenceTankComponent {
     public faArrowRight = faArrowRight;
     public faMinus = faMinus;
 
-    constructor(public units: UnitConversion, public profileDiff: ProfileComparatorService) { }
+    constructor(
+        public units: UnitConversion,
+        public profileDiff: ProfileComparatorService
+    ) {}
 
     public get gasName(): string {
         return this.gasDiff.gas.name;

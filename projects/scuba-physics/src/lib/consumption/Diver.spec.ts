@@ -1,5 +1,5 @@
-import { Diver} from './Diver';
-import { Tank} from './Tanks';
+import { Diver } from './Diver';
+import { Tank } from './Tanks';
 
 describe('Diver', () => {
     describe('Create', () => {
@@ -30,7 +30,7 @@ describe('Diver', () => {
         expect(diver.stressRmv).toBe(35);
     });
 
-    it('calculates teamStressRmv from stressRmv', () =>{
+    it('calculates teamStressRmv from stressRmv', () => {
         const diver = new Diver(20, 24);
         expect(diver.teamStressRmv).toBe(48);
     });
@@ -49,5 +49,3 @@ describe('Diver', () => {
         expect(diver2.stressRmv).toBe(45);
     });
 });
-
-

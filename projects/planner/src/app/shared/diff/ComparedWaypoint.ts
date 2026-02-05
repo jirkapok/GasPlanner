@@ -16,7 +16,8 @@ export class ComparedWaypoint {
     public constructor(
         runtime: number,
         public wayPointA: WayPoint | undefined,
-        public wayPointB: WayPoint | undefined) {
+        public wayPointB: WayPoint | undefined
+    ) {
         this.runTime = runtime;
         this.depthA = this.wayPointA?.endDepth;
         this.durationA = this.wayPointA?.duration;

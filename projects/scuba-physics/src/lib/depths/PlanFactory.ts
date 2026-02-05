@@ -4,11 +4,10 @@ import { Time } from '../physics/Time';
 import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
-import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {
-
     /**
      * Generates descent and swim segments for one level profile and returns newly created segments.
      * Returns always two segments.
@@ -40,7 +39,12 @@ export class PlanFactory {
         return Precision.ceil(estimate);
     }
 
-    public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[], surfaceInterval?: RestingParameters): Segment[] {
+    public static emergencyAscent(
+        originalPlan: Segment[],
+        options: Options,
+        tanks: Tank[],
+        surfaceInterval?: RestingParameters
+    ): Segment[] {
         const profile = Segments.fromCollection(originalPlan);
         const emergencySegments = profile.deepestPart();
         const issueSegmentIndex = emergencySegments.length;
@@ -83,7 +87,7 @@ export class PlanFactory {
     private static addUserDefinedAscent(emergencySegments: Segment[], originalPlan: Segment[], issueSegmentIndex: number): void {
         for (let index = issueSegmentIndex; index < originalPlan.length; index++) {
             const userSegment = originalPlan[index];
-            if(!userSegment.tank) {
+            if (!userSegment.tank) {
                 return;
             }
 

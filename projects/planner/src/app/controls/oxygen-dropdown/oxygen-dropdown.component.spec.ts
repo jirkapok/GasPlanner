@@ -10,7 +10,7 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { OxygenDropDownComponent } from './oxygen-dropdown.component';
 
 export class OxygenDropDownPage {
-    constructor(private fixture: ComponentFixture<OxygenDropDownComponent>) { }
+    constructor(private fixture: ComponentFixture<OxygenDropDownComponent>) {}
 
     public get oxygenInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('input')).nativeElement as HTMLInputElement;
@@ -24,13 +24,9 @@ describe('Oxygen DropDown component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [UnitConversion,
-        InputControls, DecimalPipe,
-        ValidatorGroups, OptionsService
-    ],
-    imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
-})
-            .compileComponents();
+            providers: [UnitConversion, InputControls, DecimalPipe, ValidatorGroups, OptionsService],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
+        }).compileComponents();
     });
 
     beforeEach(() => {

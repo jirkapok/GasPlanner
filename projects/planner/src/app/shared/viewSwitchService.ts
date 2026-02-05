@@ -5,8 +5,7 @@ import { DiveSchedules } from './dive.schedules';
 export class ViewSwitchService {
     private _isComplex = false;
 
-    constructor(private schedules: DiveSchedules) {
-    }
+    constructor(private schedules: DiveSchedules) {}
 
     public get isComplex(): boolean {
         return this._isComplex;

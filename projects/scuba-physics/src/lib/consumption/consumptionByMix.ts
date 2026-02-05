@@ -24,7 +24,8 @@ export class ConsumptionByMix {
      * @param tanks with already calculated consumption and reserve
      */
     public static combine(tanks: Tank[]): IConsumedMix[] {
-        return _(tanks).groupBy(t => t.gas.contentCode)
+        return _(tanks)
+            .groupBy(t => t.gas.contentCode)
             .map((gasTanks: Tank[]) => {
                 const gasResult: IConsumedMix = {
                     gas: gasTanks[0].gas,
@@ -40,6 +41,7 @@ export class ConsumptionByMix {
                 });
 
                 return gasResult;
-            }).value();
+            })
+            .value();
     }
 }

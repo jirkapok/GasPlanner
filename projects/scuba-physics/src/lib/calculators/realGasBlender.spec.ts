@@ -15,8 +15,7 @@ describe('Real Gas blender', () => {
         // Third top mix -
         const gas3 = new GasMix(21, 0);
 
-
-        const result =new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
+        const result = new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
         const expected = `
 Start with 0.0 bar of AIR.
 Top up with EAN100 up to 22.2 bar and end up with EAN100.
@@ -43,7 +42,7 @@ Use 22.5 litres of EAN100
         // Third top mix -
         const gas3 = new GasMix(21, 0);
 
-        const result =new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
+        const result = new RealBlender().blend(pi, gasi, pf, gasf, gas1, gas2, gas3);
         const expected = `
 Start with 50.0 bar of AIR.
 Top up with EAN100 up to 76.1 bar and end up with EAN49.

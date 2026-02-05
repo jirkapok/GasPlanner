@@ -79,7 +79,7 @@ export class ReloadDispatcher {
         this.onTankRemoved.next(removed);
     }
 
-    public sendTankChanged(){
+    public sendTankChanged() {
         Logger.debug('Tank changed');
         this.onTankChanged.next();
     }

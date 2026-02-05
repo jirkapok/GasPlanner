@@ -7,7 +7,7 @@ describe('StandardGradientsService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [ StandardGradientsService ]
+            providers: [StandardGradientsService]
         });
         service = TestBed.inject(StandardGradientsService);
     });

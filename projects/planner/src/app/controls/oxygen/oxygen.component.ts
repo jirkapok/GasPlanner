@@ -24,8 +24,8 @@ export class OxygenComponent implements OnInit {
 
     constructor(
         private fb: NonNullableFormBuilder,
-        public units: UnitConversion) {
-    }
+        public units: UnitConversion
+    ) {}
 
     public ngOnInit(): void {
         if (!this.nitroxForm) {

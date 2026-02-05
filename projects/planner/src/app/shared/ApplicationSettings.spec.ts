@@ -9,9 +9,7 @@ describe('ApplicationSettingsService', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             imports: [],
-            providers: [
-                ApplicationSettingsService, UnitConversion
-            ]
+            providers: [ApplicationSettingsService, UnitConversion]
         }).compileComponents();
 
         sut = TestBed.inject(ApplicationSettingsService);

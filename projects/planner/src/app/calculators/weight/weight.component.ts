@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, AbstractControl, ReactiveFormsModule } from '@angular/forms';
-import {
-    Precision, Tank, TankTemplate, AirWeight
-} from 'scuba-physics';
+import { Precision, Tank, TankTemplate, AirWeight } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { InputControls } from '../../shared/inputcontrols';
@@ -12,7 +10,7 @@ import { KnownViews } from '../../shared/viewStates';
 import { WeightViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { TankBound } from '../../shared/models';
-import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
@@ -40,7 +38,8 @@ export class WeightCalcComponent implements OnInit {
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage,
-        private setttings: ApplicationSettingsService) {
+        private setttings: ApplicationSettingsService
+    ) {
         this.tank = new TankBound(Tank.createDefault(), this.units);
         this.loadState();
         this.saveState();
@@ -78,12 +77,11 @@ export class WeightCalcComponent implements OnInit {
 
     public ngOnInit(): void {
         this.weightForm = this.fb.group({
-            consumed: [this.consumed, this.validators.rangeFor(this.ranges.consumed)],
+            consumed: [this.consumed, this.validators.rangeFor(this.ranges.consumed)]
         });
 
-        if(this.units.imperialUnits) {
-            const workPressureControl = this.fb.control(
-                Precision.round(this.tank.workingPressure, 1), this.validators.tankPressure);
+        if (this.units.imperialUnits) {
+            const workPressureControl = this.fb.control(Precision.round(this.tank.workingPressure, 1), this.validators.tankPressure);
             this.weightForm.addControl('workPressure', workPressureControl);
         }
     }
@@ -94,7 +92,7 @@ export class WeightCalcComponent implements OnInit {
         }
 
         this.weightForm.patchValue({
-            workPressure: template.workingPressure,
+            workPressure: template.workingPressure
         });
 
         this.inputChanged();
@@ -144,7 +142,7 @@ export class WeightCalcComponent implements OnInit {
     }
 
     private setWorkingPressure(newValue: number): void {
-        if(this.units.imperialUnits) {
+        if (this.units.imperialUnits) {
             this.tank.workingPressure = Precision.round(newValue, 1);
         }
     }

@@ -1,13 +1,9 @@
-import {
-    Tank, Ceiling, EventType,
-    Salinity, SafetyStop,
-    TissueOverPressures
-} from 'scuba-physics';
+import { Tank, Ceiling, EventType, Salinity, SafetyStop, TissueOverPressures } from 'scuba-physics';
 import { ViewState } from './views.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
-    quizSessions:  QuizSessionDto[];
+    quizSessions: QuizSessionDto[];
 }
 
 export interface AppStates {
@@ -69,10 +65,9 @@ export interface PlanRequestDto {
     surfaceInterval: number;
 }
 
-export interface ProfileRequestDto extends PlanRequestDto {
-}
+export type ProfileRequestDto = PlanRequestDto;
 
-export interface DiveInfoRequestDto extends PlanRequestDto{
+export interface DiveInfoRequestDto extends PlanRequestDto {
     eventOptions: EventOptionsDto;
     calculatedProfile: SegmentDto[];
     /** At end of the calculated profile, not previous one */

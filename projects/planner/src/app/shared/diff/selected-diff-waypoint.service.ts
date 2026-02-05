@@ -8,8 +8,7 @@ export class SelectedDiffWaypoint {
     @Output() public selectedChanged = new EventEmitter<ComparedWaypoint>();
     private lastSelected: ComparedWaypoint | undefined;
 
-    constructor(private profilesDiff: ProfileComparatorService) {
-    }
+    constructor(private profilesDiff: ProfileComparatorService) {}
 
     @Input()
     public set selectedTimeStamp(newValue: string) {

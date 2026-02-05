@@ -7,7 +7,7 @@ export interface DepthOptions {
 }
 
 export class DepthConverterFactory {
-    constructor(private options: DepthOptions) { }
+    constructor(private options: DepthOptions) {}
 
     /** Creates new instance of depth converter based on provided salinity */
     create(): DepthConverter {
@@ -26,7 +26,10 @@ export class DepthConverter {
     private _surfacePressure: number;
     private _gravity = Gravity.standard;
 
-    private constructor(private density: number, altitude: number) {
+    private constructor(
+        private density: number,
+        altitude: number
+    ) {
         const pressureInPascals = AltitudePressure.pressure(altitude);
         this._surfacePressure = PressureConverter.pascalToBar(pressureInPascals);
     }
@@ -78,7 +81,7 @@ export class DepthConverter {
      */
     public toBar(depth: number): number {
         const weightDensity = this.density * this._gravity;
-        return PressureConverter.pascalToBar((depth * weightDensity)) + this._surfacePressure;
+        return PressureConverter.pascalToBar(depth * weightDensity) + this._surfacePressure;
     }
 
     /**

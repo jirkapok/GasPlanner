@@ -27,11 +27,12 @@ export class OxygenDropDownComponent implements OnInit {
     @Output() public assignBestMix = new EventEmitter();
     @Output() public standardGasApplied = new EventEmitter<string>();
 
-    constructor(private fb: NonNullableFormBuilder,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private inputs: InputControls,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
-    }
+        public units: UnitConversion
+    ) {}
 
     public get standardGases(): string[] {
         if (this.showTrimixGases) {

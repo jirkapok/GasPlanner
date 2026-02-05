@@ -5,7 +5,6 @@ import { AppinfoComponent } from '../appinfo/appinfo.component';
     selector: 'app-footer',
     templateUrl: './footer.component.html',
     styleUrls: ['./footer.component.scss'],
-    imports: [ AppinfoComponent ]
+    imports: [AppinfoComponent]
 })
-export class AppFooterComponent {
-}
+export class AppFooterComponent {}

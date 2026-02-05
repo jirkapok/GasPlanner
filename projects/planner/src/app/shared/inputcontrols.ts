@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 
 @Injectable()
 export class InputControls {
-
     constructor(private numberPipe: DecimalPipe) {}
 
     public controlInValid(control: AbstractControl | undefined): boolean {

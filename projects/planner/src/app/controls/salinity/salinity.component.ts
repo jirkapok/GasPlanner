@@ -9,11 +9,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-salinity',
     templateUrl: './salinity.component.html',
     styleUrls: ['./salinity.component.scss'],
-    imports: [
-    ReactiveFormsModule,
-    MdbFormsModule,
-    MdbDropdownModule
-],
+    imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule]
 })
 export class SalinityComponent {
     @Input()
@@ -28,12 +24,12 @@ export class SalinityComponent {
 
     public get salinityOption(): string {
         switch (this.salinity) {
-        case Salinity.salt:
-            return this.saltName;
-        case Salinity.brackish:
-            return this.brackishName;
-        default:
-            return this.freshName;
+            case Salinity.salt:
+                return this.saltName;
+            case Salinity.brackish:
+                return this.brackishName;
+            default:
+                return this.freshName;
         }
     }
 

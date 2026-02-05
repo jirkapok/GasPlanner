@@ -21,7 +21,10 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
     public reloadIcon = faRotate;
     private activeTabIndex = 0;
 
-    constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef) {
+    constructor(
+        public schedules: ManagedDiveSchedules,
+        private cd: ChangeDetectorRef
+    ) {
         super();
     }
 
@@ -32,10 +35,9 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
         this.activeTabIndex = selectedIndex;
         this.cd.detectChanges();
 
-        this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((e: MdbTabChange) => {
-                this.selectedChanged(e);
-            });
+        this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$)).subscribe((e: MdbTabChange) => {
+            this.selectedChanged(e);
+        });
     }
 
     public closeTab(dive: DiveSchedule): void {

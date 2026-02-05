@@ -8,7 +8,7 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DepthComponent } from './depth.component';
 
 export class DepthPage {
-    constructor(private fixture: ComponentFixture<DepthComponent>) { }
+    constructor(private fixture: ComponentFixture<DepthComponent>) {}
 
     public get depthInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#depthField')).nativeElement as HTMLInputElement;
@@ -27,13 +27,9 @@ describe('DepthComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, DepthComponent],
-    providers: [
-        UnitConversion, ValidatorGroups,
-        InputControls, DecimalPipe
-    ]
-})
-            .compileComponents();
+            imports: [ReactiveFormsModule, DepthComponent],
+            providers: [UnitConversion, ValidatorGroups, InputControls, DecimalPipe]
+        }).compileComponents();
     });
 
     beforeEach(() => {
@@ -45,7 +41,7 @@ describe('DepthComponent', () => {
     });
 
     it('Fires value changed', () => {
-        component.depthChange.subscribe(() => changeFired = true);
+        component.depthChange.subscribe(() => (changeFired = true));
         changeFired = false;
         page.depthInput.value = '70';
         page.depthInput.dispatchEvent(new Event('input'));
@@ -54,7 +50,7 @@ describe('DepthComponent', () => {
 
     it('Fires apply max depth', () => {
         let eventFired = false;
-        component.assignMaxDepth.subscribe(() => eventFired = true);
+        component.assignMaxDepth.subscribe(() => (eventFired = true));
         page.applyMaxDepthButton.click();
         expect(eventFired).toBeTruthy();
     });

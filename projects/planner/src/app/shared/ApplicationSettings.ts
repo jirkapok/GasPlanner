@@ -8,8 +8,7 @@ import { AppOptionsDto } from './serialization.model';
 export class ApplicationSettingsService {
     public appSettings = new AppSettings();
 
-    constructor(private units: UnitConversion) {
-    }
+    constructor(private units: UnitConversion) {}
 
     /** in metric **/
     public get settings(): AppSettings {

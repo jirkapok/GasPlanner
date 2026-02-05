@@ -16,7 +16,7 @@ class PressureSegment {
         public startDepth: number,
         public endDepth: number,
         public duration: number
-    ) { }
+    ) {}
 
     public get minDepth(): number {
         return Math.min(this.startDepth, this.endDepth);
@@ -120,8 +120,7 @@ class EventsContext {
 
     /** Tank is only assigned by user */
     public get switchingTank(): boolean {
-        return !!this.previous && !!this.previous.tank && !!this.current.tank &&
-            this.previous.tank !== this.current.tank;
+        return !!this.previous && !!this.previous.tank && !!this.current.tank && this.previous.tank !== this.current.tank;
     }
 
     /**
@@ -130,8 +129,7 @@ class EventsContext {
      */
     public get brokenOxygenDuration(): boolean {
         // independent on the air break options, because we want it even breaks are disabled
-        return this.current.gas.compositionEquals(StandardGases.oxygen) &&
-               this.current.duration > Time.oneMinute * 20;
+        return this.current.gas.compositionEquals(StandardGases.oxygen) && this.current.duration > Time.oneMinute * 20;
     }
 
     /** Gets maximum narcotic depth in bars */
@@ -277,7 +275,8 @@ export class ProfileEvents {
                 let highDepth = segment.startDepth; // gas switch
                 let timeStamp = context.elapsed;
 
-                if (segment.startDepth < gasMod) { // ascent
+                if (segment.startDepth < gasMod) {
+                    // ascent
                     highDepth = gasMod;
                     timeStamp += segment.timeAt(highDepth);
                 }
@@ -292,7 +291,8 @@ export class ProfileEvents {
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
         const current = context.current;
         const gasCeiling = current.gas.ceiling(context.simpleDepths.surfacePressure);
-        const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||
+        const shouldAdd =
+            (segment.minDepth < gasCeiling && context.switchingGas) ||
             (segment.startDepth > gasCeiling && gasCeiling > segment.endDepth && segment.isAscent) ||
             // only at beginning of a dive
             (current.startDepth === 0 && segment.startDepth < gasCeiling && segment.isDescent);
@@ -302,7 +302,8 @@ export class ProfileEvents {
             let lowDepth = segment.startDepth;
             let timeStamp = context.elapsed;
 
-            if (segment.startDepth > gasCeiling) { // ascent
+            if (segment.startDepth > gasCeiling) {
+                // ascent
                 lowDepth = gasCeiling;
                 timeStamp += segment.timeAt(lowDepth);
             }
@@ -369,10 +370,9 @@ export class ProfileEvents {
         const startEnd = context.gasEnd(pressureSegment.startDepth);
         const endEnd = context.gasEnd(pressureSegment.endDepth);
 
-        if (context.maxMnd < startEnd && context.fixedMnd ||
-            context.maxMnd < endEnd && context.fixedMnd) {
+        if ((context.maxMnd < startEnd && context.fixedMnd) || (context.maxMnd < endEnd && context.fixedMnd)) {
             // gas switch already bellow maxMnd
-            if(pressureSegment.startDepth > context.maxMnd) {
+            if (pressureSegment.startDepth > context.maxMnd) {
                 this.addMndEvent(context, context.elapsed, current.startDepth);
             } else {
                 const mndRange = { start: pressureSegment.startDepth, end: pressureSegment.endDepth };
@@ -409,10 +409,9 @@ export class ProfileEvents {
         // add if there is a gas switch to different gas
         // ignore switch to the same gas
         // descent => density is higher at end
-        if ((switchToDifferentDensity && startDensity > context.maxDensity) ||
-            (isDescent && endDensity > context.maxDensity)) {
+        if ((switchToDifferentDensity && startDensity > context.maxDensity) || (isDescent && endDensity > context.maxDensity)) {
             // gas switch while ascending
-            if(current.startDepth > current.endDepth) {
+            if (current.startDepth > current.endDepth) {
                 const event = EventsFactory.createHighDensity(context.elapsed, current.startDepth, current.gas);
                 context.events.add(event);
             } else {
@@ -472,7 +471,10 @@ class CeilingContext {
     public ndlCeilingMarked = false;
     private _current: Segment;
 
-    constructor(public events: Events, current: Segment) {
+    constructor(
+        public events: Events,
+        current: Segment
+    ) {
         this._current = current;
     }
 

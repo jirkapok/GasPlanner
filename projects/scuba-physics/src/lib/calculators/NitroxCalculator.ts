@@ -4,8 +4,7 @@ import { DepthLevels } from '../depths/DepthLevels';
 import { GasMixtures } from '../gases/GasMixtures';
 
 export class GasSwitchCalculator {
-    constructor(private depthLevels: DepthLevels) {
-    }
+    constructor(private depthLevels: DepthLevels) {}
 
     /**
      * Calculates recommended switch depth for given gas rounded to meters.
@@ -26,8 +25,10 @@ export class GasSwitchCalculator {
  * except gas switch depth (see GasSwitchCalculator).
  */
 export class NitroxCalculator {
-    constructor(private depthConverter: DepthConverter, private o2InAir = GasMixtures.o2InAir) {
-    }
+    constructor(
+        private depthConverter: DepthConverter,
+        private o2InAir = GasMixtures.o2InAir
+    ) {}
 
     /**
      * Calculates equivalent air depth for given nitrox gas mix.
@@ -41,7 +42,7 @@ export class NitroxCalculator {
         const bars = this.depthConverter.toBar(depth);
         const result = GasMixtures.ead(fO2, bars, this.o2InAir);
 
-        if(result <= this.depthConverter.surfacePressure) {
+        if (result <= this.depthConverter.surfacePressure) {
             return 0;
         }
 
@@ -60,7 +61,7 @@ export class NitroxCalculator {
     public bestMix(pO2: number, depth: number): number {
         let result = GasMixtures.bestMix(pO2, depth, this.depthConverter) * 100;
         result = Precision.fix(result);
-        return Precision.floor(result, 2) ;
+        return Precision.floor(result, 2);
     }
 
     /**

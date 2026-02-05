@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
+import { Component } from '@angular/core';
+import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DiveResultsTableDifferenceComponent } from './table/diff-diveresults-table.component';
 

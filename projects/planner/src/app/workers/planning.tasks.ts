@@ -1,14 +1,33 @@
 import {
-    Segments, Tanks, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator,
-    DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
-    RestingParameters, Segment, PlanFactory, ConsumptionOptions,
-    Tank, ProfileTissues
+    Segments,
+    Tanks,
+    ProfileEvents,
+    DepthConverterFactory,
+    Consumption,
+    Time,
+    Diver,
+    OtuCalculator,
+    CnsCalculator,
+    DensityAtDepth,
+    EventOptions,
+    AlgorithmParams,
+    BuhlmannAlgorithm,
+    RestingParameters,
+    Segment,
+    PlanFactory,
+    ConsumptionOptions,
+    Tank,
+    ProfileTissues
 } from 'scuba-physics';
 import {
-    ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto,
-    PlanRequestDto, SegmentDto
+    ProfileRequestDto,
+    ProfileResultDto,
+    ConsumptionRequestDto,
+    ConsumptionResultDto,
+    DiveInfoResultDto,
+    DiveInfoRequestDto,
+    PlanRequestDto,
+    SegmentDto
 } from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
@@ -102,7 +121,7 @@ export class PlanningTasks {
         const consumptionOptions: ConsumptionOptions = {
             diver: diver,
             primaryTankReserve: task.consumptionOptions.primaryTankReserve,
-            stageTankReserve: task.consumptionOptions.stageTankReserve,
+            stageTankReserve: task.consumptionOptions.stageTankReserve
         };
 
         const previousTissues = DtoSerialization.toTissues(task.previousTissues);
@@ -120,12 +139,12 @@ export class PlanningTasks {
             maxTime: maxTime,
             timeToSurface: timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
-            emergencyAscent: DtoSerialization.fromSegments(emergencyAscent),
+            emergencyAscent: DtoSerialization.fromSegments(emergencyAscent)
         };
     }
 
     private static selectConsumptionPlan(segments: Segment[], isComplex: boolean): Segments {
-        if(isComplex) {
+        if (isComplex) {
             return Segments.fromCollection(segments);
         }
 

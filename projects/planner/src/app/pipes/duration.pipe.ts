@@ -10,7 +10,7 @@ export class DurationPipe implements PipeTransform {
     constructor(private datePipe: DatePipe) {}
 
     transform(value: number | undefined, maxValue: number): string {
-        if(!value) {
+        if (!value) {
             return '';
         }
 
@@ -22,7 +22,7 @@ export class DurationPipe implements PipeTransform {
         let hours = Time.toHours(value);
         hours = Math.trunc(hours);
 
-        if(hours >= 1) {
+        if (hours >= 1) {
             return `${hours}:${minutesPart}`;
         }
 

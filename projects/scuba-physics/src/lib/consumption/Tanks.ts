@@ -2,7 +2,7 @@ import { Precision } from '../common/precision';
 import { GasMixtures } from '../gases/GasMixtures';
 import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
-import { Compressibility } from "../physics/compressibility";
+import { Compressibility } from '../physics/compressibility';
 
 export interface TankFill {
     /** Start pressure in bars as non zero positive number as shown on the pressure gauge (not absolute pressure). */
@@ -16,7 +16,7 @@ export class Tanks {
         const gases = new Gases();
 
         // everything except first gas is considered as deco gas
-        tanks.forEach((tank) => {
+        tanks.forEach(tank => {
             gases.add(tank.gas);
         });
 
@@ -88,11 +88,11 @@ export class Tank implements TankFill {
      * @param startPressure Filled in bars of gas
      */
     constructor(size: number, startPressure: number, o2Percent: number) {
-        if(size < Tank.minimumSize) {
+        if (size < Tank.minimumSize) {
             throw new Error('Size needs to be non zero positive amount in liters');
         }
 
-        if(startPressure < Tank.minimumZero) {
+        if (startPressure < Tank.minimumZero) {
             throw new Error('Start pressure needs to be positive number greater than atmospheric pressure in bars');
         }
 
@@ -210,12 +210,12 @@ export class Tank implements TankFill {
 
     /** In meaning of percents of pressure not volume. */
     public get percentsRemaining(): number {
-        return this.endPressure / this.startPressure * 100;
+        return (this.endPressure / this.startPressure) * 100;
     }
 
     /** In meaning of percents of pressure not volume. */
     public get percentsReserve(): number {
-        const result = this.reserve / this.startPressure * 100;
+        const result = (this.reserve / this.startPressure) * 100;
 
         if (result > 100) {
             return 100;
@@ -249,19 +249,19 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
-       if(newValue < Tank.minimumZero) {
-           this._startPressure = Tank.minimumZero;
-       } else {
-           this._startPressure = newValue;
-       }
+        if (newValue < Tank.minimumZero) {
+            this._startPressure = Tank.minimumZero;
+        } else {
+            this._startPressure = newValue;
+        }
 
-       this.fitStoredVolumes();
+        this.fitStoredVolumes();
     }
 
     public set size(newValue: number) {
         // Consider to make the size readonly
-        if(newValue < Tank.minimumSize) {
-            this._size = Tank.minimumSize
+        if (newValue < Tank.minimumSize) {
+            this._size = Tank.minimumSize;
         } else {
             this._size = newValue;
         }
@@ -275,7 +275,8 @@ export class Tank implements TankFill {
     }
 
     public set consumedVolume(newVolume: number) {
-        if(newVolume > this.volume) { // This ensures reasonable pressure
+        if (newVolume > this.volume) {
+            // This ensures reasonable pressure
             newVolume = this.volume;
         }
 
@@ -290,7 +291,8 @@ export class Tank implements TankFill {
     }
 
     public set reserveVolume(newVolume: number) {
-        if(newVolume > this.volume) { // This ensures reasonable pressure
+        if (newVolume > this.volume) {
+            // This ensures reasonable pressure
             newVolume = this.volume;
         }
 
@@ -361,18 +363,18 @@ export class Tank implements TankFill {
 
     /** to keep volume and pressure aligned */
     private updateConsumed(newPressure: number, newVolume: number): void {
-        if(newVolume > this.volume) {
+        if (newVolume > this.volume) {
             this._consumedVolume = this.volume;
-        } else if(newVolume < Tank.minimumZero) {
+        } else if (newVolume < Tank.minimumZero) {
             this._consumedVolume = Tank.minimumZero;
         } else {
             this._consumedVolume = newVolume;
         }
 
         // because rounding still does not have to fit
-        if(newPressure > this.startPressure) {
+        if (newPressure > this.startPressure) {
             this._consumed = this.startPressure;
-        } else if(newPressure < Tank.minimumZero) {
+        } else if (newPressure < Tank.minimumZero) {
             this._consumed = Tank.minimumZero;
         } else {
             this._consumed = newPressure;
@@ -380,25 +382,24 @@ export class Tank implements TankFill {
     }
 
     private updateReserve(newPressure: number, newVolume: number) {
-        if(newVolume > this.volume) {
+        if (newVolume > this.volume) {
             this._reserveVolume = this.volume;
-        } else if(newVolume < Tank.minimumZero) {
+        } else if (newVolume < Tank.minimumZero) {
             this._reserveVolume = Tank.minimumZero;
         } else {
             this._reserveVolume = newVolume;
         }
 
         // because rounding still does not have to fit
-        if(newPressure > this.startPressure) {
+        if (newPressure > this.startPressure) {
             this._reserve = this.startPressure;
-        } else if(newPressure < Tank.minimumZero) {
+        } else if (newPressure < Tank.minimumZero) {
             this._reserve = Tank.minimumZero;
         } else {
             this._reserve = newPressure;
         }
     }
 }
-
 
 /**
  * Fix for O2 from 21 % in the UI to 20.9 stored for Air.

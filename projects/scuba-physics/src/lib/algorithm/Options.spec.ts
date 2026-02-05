@@ -17,13 +17,12 @@ export class OptionExtensions {
     }
 }
 
-
 describe('Options', () => {
     describe('LoadFrom', () => {
         it('applies 0 m altitude', () => {
-            const sut = OptionExtensions.createOptions(1,1,1,1,Salinity.fresh);
+            const sut = OptionExtensions.createOptions(1, 1, 1, 1, Salinity.fresh);
             sut.altitude = 500;
-            const modified = OptionExtensions.createOptions(1,1,1,1,Salinity.fresh);
+            const modified = OptionExtensions.createOptions(1, 1, 1, 1, Salinity.fresh);
             modified.altitude = 0;
             sut.loadFrom(modified);
             expect(sut).toEqual(modified);
@@ -46,7 +45,7 @@ describe('Options', () => {
             sut.roundStopsToMinutes = true;
             sut.safetyStop = SafetyStop.never;
 
-            const modified = OptionExtensions.createOptions(1,1,1,1,Salinity.fresh);
+            const modified = OptionExtensions.createOptions(1, 1, 1, 1, Salinity.fresh);
             modified.loadFrom(sut);
             expect(sut).toEqual(modified);
         });

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';
@@ -34,12 +34,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService,
-        private reloadDispatcher: ReloadDispatcher) {
+        private reloadDispatcher: ReloadDispatcher
+    ) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        const profileATraces = chartPlotterFactory.withNamePrefix('Profile A ')
-            .create(() => this.profileComparatorService.profileAResults);
+        const profileATraces = chartPlotterFactory.withNamePrefix('Profile A ').create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('Profile B ')
             .wthAverageDepthColor('rgb(188,191,192)')
@@ -49,30 +49,32 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventLineColor('rgb(118,119,120)')
             .create(() => this.profileComparatorService.profileBResults);
 
-        this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
-            chartPlotterFactory, profileBTraces, profileATraces);
+        this.plotter = new ChartPlotter(
+            'diveplotdiff',
+            () => this.profileComparatorService.totalDuration,
+            chartPlotterFactory,
+            profileBTraces,
+            profileATraces
+        );
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
-        this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.plotCharts();
-                }
-            });
+        this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            if (this.profilesCalculated) {
+                this.plotCharts();
+            }
+        });
 
-        this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((selected: ComparedWaypoint) => {
-                this.selectWayPoint(selected);
-            });
+        this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$)).subscribe((selected: ComparedWaypoint) => {
+            this.selectWayPoint(selected);
+        });
 
-        this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.plotCharts();
-                    this.plotlyHoverLeave();
-                }
-            });
+        this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            if (this.profilesCalculated) {
+                this.plotCharts();
+                this.plotlyHoverLeave();
+            }
+        });
     }
 
     public get profilesCalculated(): boolean {
@@ -114,8 +116,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotCharts(): void {
         this.plotter.plotAllCharts();
 
-        if(this.showHeatMap) {
-            var overPressures = this.profileComparatorService.overPressures;
+        if (this.showHeatMap) {
+            const overPressures = this.profileComparatorService.overPressures;
             this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
             this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
         }

@@ -56,8 +56,7 @@ describe('Performance', () => {
         const algorithm = new BuhlmannAlgorithm();
         const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
 
-        assertDuration('Decompression calculation duration', 150,
-            () => algorithm.decompression(parameters));
+        assertDuration('Decompression calculation duration', 150, () => algorithm.decompression(parameters));
     });
 
     it('No decompression time calculated within 50 ms', () => {
@@ -66,8 +65,7 @@ describe('Performance', () => {
 
         const simpleDive = AlgorithmParams.forSimpleDive(6, StandardGases.air, options);
 
-        assertDuration('No Decompression Limit calculation duration', 50,
-            () => algorithm.noDecoLimit(simpleDive));
+        assertDuration('No Decompression Limit calculation duration', 50, () => algorithm.noDecoLimit(simpleDive));
     });
 
     it('Consumption Max bottom time is calculated within 1000 ms', () => {
@@ -91,7 +89,8 @@ describe('Performance', () => {
         segments.add(5, tank.gas, Time.oneMinute);
         segments.addFlat(tank.gas, Time.oneMinute * 10);
 
-        assertDuration('Consumption Max bottom time duration', 1000,
-            () => consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options));
+        assertDuration('Consumption Max bottom time duration', 1000, () =>
+            consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options)
+        );
     });
 });

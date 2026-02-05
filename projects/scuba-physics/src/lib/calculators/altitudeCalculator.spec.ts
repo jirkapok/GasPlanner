@@ -8,11 +8,8 @@ describe('Altitude calculator service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             imports: [],
-            providers: [
-                AltitudeCalculator
-            ]
-        })
-            .compileComponents();
+            providers: [AltitudeCalculator]
+        }).compileComponents();
 
         calc = TestBed.inject(AltitudeCalculator);
     });
@@ -39,7 +36,7 @@ describe('Altitude calculator service', () => {
 
     it('Changing altitude updates theoretical depth', () => {
         calc.altitude = 500;
-        expect(calc.theoreticalDepth).toBeCloseTo(21.228600, 6);
+        expect(calc.theoreticalDepth).toBeCloseTo(21.2286, 6);
     });
 
     it('Changing pressure updates theoretical depth', () => {

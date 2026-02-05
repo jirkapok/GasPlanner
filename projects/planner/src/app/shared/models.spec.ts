@@ -16,7 +16,7 @@ describe('Bound tank', () => {
         expect(tank.label).toBe('3. Air/15/200');
     });
 
-    it('Working pressure can\'t be NaN', () => {
+    it("Working pressure can't be NaN", () => {
         tank.workingPressure = NaN;
         expect(tank.workingPressure).not.toBeNaN();
     });

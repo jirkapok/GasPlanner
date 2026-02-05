@@ -14,10 +14,10 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
-import { ReactiveFormsModule } from "@angular/forms";
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { By } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
@@ -25,21 +25,25 @@ describe('WeightCalcComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [
-        UnitConversion, ValidatorGroups, InputControls,
-        DecimalPipe, SubViewStorage, ViewStates,
-        PreferencesStore, PlannerService, WorkersFactoryCommon,
-        Preferences, ViewSwitchService,
-        ReloadDispatcher, DiveSchedules,
-        ApplicationSettingsService,
-        MdbModalService
-    ],
-    imports: [
-        RouterTestingModule.withRoutes([]),
-        ReactiveFormsModule,
-        WeightCalcComponent
-    ]
-}).compileComponents();
+            providers: [
+                UnitConversion,
+                ValidatorGroups,
+                InputControls,
+                DecimalPipe,
+                SubViewStorage,
+                ViewStates,
+                PreferencesStore,
+                PlannerService,
+                WorkersFactoryCommon,
+                Preferences,
+                ViewSwitchService,
+                ReloadDispatcher,
+                DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService
+            ],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, WeightCalcComponent]
+        }).compileComponents();
     });
 
     beforeEach(() => {

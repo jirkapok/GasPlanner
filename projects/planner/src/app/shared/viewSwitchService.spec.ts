@@ -15,10 +15,7 @@ describe('View Switch service', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            providers: [
-                ViewSwitchService, UnitConversion,
-                DiveSchedules, ReloadDispatcher
-            ],
+            providers: [ViewSwitchService, UnitConversion, DiveSchedules, ReloadDispatcher],
             imports: []
         }).compileComponents();
     });

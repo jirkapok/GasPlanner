@@ -2,11 +2,7 @@ import { Injectable } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import {
-    ConsumptionByMix, IConsumedMix,
-    SurfaceIntervalParameters, BuhlmannAlgorithm,
-    TissueOverPressures, Time
-} from 'scuba-physics';
+import { ConsumptionByMix, IConsumedMix, SurfaceIntervalParameters, BuhlmannAlgorithm, TissueOverPressures, Time } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -25,20 +21,21 @@ export class ProfileComparatorService extends Streamed {
     private _selectionChanged$: Observable<void>;
     private _wayPoints: ComparedWaypoint[] = [];
 
-    constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher) {
+    constructor(
+        private schedules: DiveSchedules,
+        private dispatcher: ReloadDispatcher
+    ) {
         super();
         this._selectionChanged$ = this._onSelectionChanged.asObservable();
 
-        if(this.hasTwoProfiles) {
+        if (this.hasTwoProfiles) {
             this.selectProfile(1);
         }
 
-        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.updateWayPoints());
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.updateWayPoints());
 
         // In case dive removed
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.resetSelection());
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.resetSelection());
     }
 
     public get profileAIndex(): number {
@@ -86,15 +83,19 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get totalDuration(): number {
-        if(this.profileAResults.totalDuration > this.profileBResults.totalDuration){
+        if (this.profileAResults.totalDuration > this.profileBResults.totalDuration) {
             return this.profileAResults.totalDuration;
         }
         return this.profileBResults.totalDuration;
     }
 
     public get bothResultsCalculated(): boolean {
-        return this.profileAResults.calculated && !this.profileAResults.failed &&
-            this.profileBResults.calculated && !this.profileBResults.failed;
+        return (
+            this.profileAResults.calculated &&
+            !this.profileAResults.failed &&
+            this.profileBResults.calculated &&
+            !this.profileBResults.failed
+        );
     }
 
     public get difference(): ComparedWaypoint[] {
@@ -122,7 +123,7 @@ export class ProfileComparatorService extends Streamed {
         const surfaceInterval = Math.abs(durationDiff);
 
         // add to the shorter one and don't store it in the result, since it is used only for the diff
-        if(durationDiff > 0) {
+        if (durationDiff > 0) {
             const surfaceIntervalOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
             const profileBOverPressures = [...this.profileBResults.tissueOverPressures, ...surfaceIntervalOverPressures];
             return {
@@ -139,16 +140,16 @@ export class ProfileComparatorService extends Streamed {
         };
     }
 
-    private get wayPointsA(): WayPoint[]{
+    private get wayPointsA(): WayPoint[] {
         return this.profileAResults.wayPoints;
     }
 
-    private get wayPointsB(): WayPoint[]{
+    private get wayPointsB(): WayPoint[] {
         return this.profileBResults.wayPoints;
     }
 
     public selectProfile(index: number): void {
-        if(this._profileAIndex === index || this._profileBIndex === index){
+        if (this._profileAIndex === index || this._profileBIndex === index) {
             index = this._profileAIndex; // switch selected profiles
         }
 
@@ -161,11 +162,11 @@ export class ProfileComparatorService extends Streamed {
     private resetSelection(): void {
         const maxIndex = this.schedules.length;
 
-        if(this._profileAIndex >= maxIndex) {
+        if (this._profileAIndex >= maxIndex) {
             this._profileAIndex = 0;
         }
 
-        if(this._profileBIndex >= maxIndex) {
+        if (this._profileBIndex >= maxIndex) {
             this._profileBIndex = 0;
         }
 
@@ -176,13 +177,13 @@ export class ProfileComparatorService extends Streamed {
     private updateWayPoints(): void {
         this._wayPoints = [];
 
-        if(!this.bothResultsCalculated){
+        if (!this.bothResultsCalculated) {
             return;
         }
 
         const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
 
-        while(context.hasNext) {
+        while (context.hasNext) {
             const row = context.toRow();
             this._wayPoints.unshift(row);
             context.next();
@@ -206,7 +207,10 @@ class WaypointsDiffContext {
     private _endTimeA = this.defaultTime;
     private _endTimeB = this.defaultTime;
 
-    constructor(private wayPointsA: WayPoint[], private wayPointsB: WayPoint[]) {
+    constructor(
+        private wayPointsA: WayPoint[],
+        private wayPointsB: WayPoint[]
+    ) {
         this.updateA();
         this.updateB();
     }

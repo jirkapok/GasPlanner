@@ -8,8 +8,7 @@ export class ValidatorGroups {
     public static readonly minGradient = 10;
     public static readonly maxGradient = 120;
 
-    constructor(private units: UnitConversion) {
-    }
+    constructor(private units: UnitConversion) {}
 
     public get nitroxOxygen(): ValidatorFn[] {
         return this.rangeFor(this.ranges.nitroxOxygen);
@@ -56,7 +55,7 @@ export class ValidatorGroups {
     }
 
     public get gradients(): ValidatorFn[] {
-        return this.rangeFor([ValidatorGroups.minGradient,ValidatorGroups.maxGradient]);
+        return this.rangeFor([ValidatorGroups.minGradient, ValidatorGroups.maxGradient]);
     }
 
     public get speed(): ValidatorFn[] {
@@ -68,12 +67,12 @@ export class ValidatorGroups {
     }
 
     public get decoStopDistance(): ValidatorFn[] {
-    return this.rangeFor(this.ranges.decoStopDistance);
+        return this.rangeFor(this.ranges.decoStopDistance);
     }
 
     /** Duration in minutes 1-100 */
     public get duration100(): ValidatorFn[] {
-        return this.rangeFor([1,100]);
+        return this.rangeFor([1, 100]);
     }
 
     public get maxEnd(): ValidatorFn[] {
@@ -109,7 +108,7 @@ export class ValidatorGroups {
             const value = field?.value;
             const parsed = DateFormats.parseToShortTime(value);
 
-            if(value !== null && (value.length === 0 || !parsed)) {
+            if (value !== null && (value.length === 0 || !parsed)) {
                 return {
                     surfaceInterval: true
                 };

@@ -1,93 +1,137 @@
 <form [formGroup]="redForm">
-  <div class="row mt-5">
-    <div class="col col-12 col-lg-8 col-xxl-6 mt-3">
-      <div class="card">
-        <app-card-header
-          cardTitle="Cylinder Balancing Calculator"
-          [headerIcon]="calcIcon"
-          helpDocument="redundancies">
-        </app-card-header>
-        <div class="card-body row">
-          <div class="col col-12 col-sm-6 col-md-4">
-            <div>First tank</div>
-            <div>
-              <div class="pt-2 mb-4">
-                <label for="tankSize" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
-                <app-tank-size [sizeForm]="redForm" [tank]="firstTank" controlName="firstTankSize"
-                  (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event, firstTank)">
-                </app-tank-size>
-                @if (firstTankSizeInvalid) {
-                  <div class="text-danger form-text position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
-                }
-              </div>
-            </div>
-            @if (units.imperialUnits) {
-              <div class="mb-4">
-                <label for="firstTankWorkPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
-                </label>
-                <input class="form-control" type="number" (input)="inputChanged()" id="firstTankWorkPressure"
-                  formControlName="firstTankWorkPressure" required [min]="ranges.tankPressure[0]"
-                  [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankWorkPressureInvalid" />
-                  <div class="invalid-feedback position-absolute">Needs to be number
-                  {{ranges.tankPressureLabel}}</div>
-                </div>
-              }
-              <div class="mb-4">
-                <label for="firstTankPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
-                </label>
-                <input class="form-control" type="number" (input)="inputChanged()" id="firstTankPressure"
-                  formControlName="firstTankPressure" required [min]="ranges.tankPressure[0]"
-                  [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="firstTankPressureInvalid" />
-                  <div class="invalid-feedback position-absolute">Needs to be number
-                  {{ranges.tankPressureLabel}}</div>
-                </div>
-              </div>
-              <div class="col col-12 col-sm-6 col-md-4">
-                <div>Second tank</div>
-                <div>
-                  <div class="pt-2 mb-4">
-                    <label for="tankSize" class="form-label" mdbLabel>Size [{{units.volume}}]:</label>
-                    <app-tank-size [sizeForm]="redForm" [tank]="secondTank" controlName="secondTankSize"
-                      (sizeChange)="inputChanged()" (applyTemplate)="applyTemplate($event, secondTank)">
-                    </app-tank-size>
-                    @if (secondTankSizeInvalid) {
-                      <div class="text-danger form-text position-absolute">Needs to be number {{ranges.tankSizeLabel}}</div>
-                    }
-                  </div>
-                </div>
-                @if (units.imperialUnits) {
-                  <div class="mb-4">
-                    <label for="secondTankWorkPressure" class="form-label" mdbLabel>Working pressure [{{units.pressure}}]:
-                    </label>
-                    <input class="form-control" type="number" (input)="inputChanged()" id="secondTankWorkPressure"
-                      formControlName="secondTankWorkPressure" required [min]="ranges.tankPressure[0]"
-                      [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="secondTankWorkPressureInvalid" />
-                      <div class="invalid-feedback position-absolute">Needs to be number
-                      {{ranges.tankPressureLabel}}</div>
+    <div class="row mt-5">
+        <div class="col col-12 col-lg-8 col-xxl-6 mt-3">
+            <div class="card">
+                <app-card-header cardTitle="Cylinder Balancing Calculator" [headerIcon]="calcIcon" helpDocument="redundancies">
+                </app-card-header>
+                <div class="card-body row">
+                    <div class="col col-12 col-sm-6 col-md-4">
+                        <div>First tank</div>
+                        <div>
+                            <div class="pt-2 mb-4">
+                                <label for="tankSize" class="form-label" mdbLabel>Size [{{ units.volume }}]:</label>
+                                <app-tank-size
+                                    [sizeForm]="redForm"
+                                    [tank]="firstTank"
+                                    controlName="firstTankSize"
+                                    (sizeChange)="inputChanged()"
+                                    (applyTemplate)="applyTemplate($event, firstTank)"
+                                >
+                                </app-tank-size>
+                                @if (firstTankSizeInvalid) {
+                                    <div class="text-danger form-text position-absolute">Needs to be number {{ ranges.tankSizeLabel }}</div>
+                                }
+                            </div>
+                        </div>
+                        @if (units.imperialUnits) {
+                            <div class="mb-4">
+                                <label for="firstTankWorkPressure" class="form-label" mdbLabel
+                                    >Working pressure [{{ units.pressure }}]:
+                                </label>
+                                <input
+                                    class="form-control"
+                                    type="number"
+                                    (input)="inputChanged()"
+                                    id="firstTankWorkPressure"
+                                    formControlName="firstTankWorkPressure"
+                                    required
+                                    [min]="ranges.tankPressure[0]"
+                                    [max]="ranges.tankPressure[1]"
+                                    step="1"
+                                    [class.is-invalid]="firstTankWorkPressureInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.tankPressureLabel }}</div>
+                            </div>
+                        }
+                        <div class="mb-4">
+                            <label for="firstTankPressure" class="form-label" mdbLabel>Start pressure [{{ units.pressure }}]: </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                (input)="inputChanged()"
+                                id="firstTankPressure"
+                                formControlName="firstTankPressure"
+                                required
+                                [min]="ranges.tankPressure[0]"
+                                [max]="ranges.tankPressure[1]"
+                                step="1"
+                                [class.is-invalid]="firstTankPressureInvalid"
+                            />
+                            <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.tankPressureLabel }}</div>
+                        </div>
                     </div>
-                  }
-                  <div class="mb-4">
-                    <label for="secondTankPressure" class="form-label" mdbLabel>Start pressure [{{units.pressure}}]:
-                    </label>
-                    <input class="form-control" type="number" (input)="inputChanged()" id="secondTankPressure"
-                      formControlName="secondTankPressure" required [min]="ranges.tankPressure[0]"
-                      [max]="ranges.tankPressure[1]" step="1" [class.is-invalid]="secondTankPressureInvalid" />
-                      <div class="invalid-feedback position-absolute">Needs to be number
-                      {{ranges.tankPressureLabel}}</div>
+                    <div class="col col-12 col-sm-6 col-md-4">
+                        <div>Second tank</div>
+                        <div>
+                            <div class="pt-2 mb-4">
+                                <label for="tankSize" class="form-label" mdbLabel>Size [{{ units.volume }}]:</label>
+                                <app-tank-size
+                                    [sizeForm]="redForm"
+                                    [tank]="secondTank"
+                                    controlName="secondTankSize"
+                                    (sizeChange)="inputChanged()"
+                                    (applyTemplate)="applyTemplate($event, secondTank)"
+                                >
+                                </app-tank-size>
+                                @if (secondTankSizeInvalid) {
+                                    <div class="text-danger form-text position-absolute">Needs to be number {{ ranges.tankSizeLabel }}</div>
+                                }
+                            </div>
+                        </div>
+                        @if (units.imperialUnits) {
+                            <div class="mb-4">
+                                <label for="secondTankWorkPressure" class="form-label" mdbLabel
+                                    >Working pressure [{{ units.pressure }}]:
+                                </label>
+                                <input
+                                    class="form-control"
+                                    type="number"
+                                    (input)="inputChanged()"
+                                    id="secondTankWorkPressure"
+                                    formControlName="secondTankWorkPressure"
+                                    required
+                                    [min]="ranges.tankPressure[0]"
+                                    [max]="ranges.tankPressure[1]"
+                                    step="1"
+                                    [class.is-invalid]="secondTankWorkPressureInvalid"
+                                />
+                                <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.tankPressureLabel }}</div>
+                            </div>
+                        }
+                        <div class="mb-4">
+                            <label for="secondTankPressure" class="form-label" mdbLabel>Start pressure [{{ units.pressure }}]: </label>
+                            <input
+                                class="form-control"
+                                type="number"
+                                (input)="inputChanged()"
+                                id="secondTankPressure"
+                                formControlName="secondTankPressure"
+                                required
+                                [min]="ranges.tankPressure[0]"
+                                [max]="ranges.tankPressure[1]"
+                                step="1"
+                                [class.is-invalid]="secondTankPressureInvalid"
+                            />
+                            <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.tankPressureLabel }}</div>
+                        </div>
                     </div>
-                  </div>
-                  <div class="col col-12 col-sm-6 col-md-4 form-outline">
-                    <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{units.pressure}}]:</label>
-                    <input class="form-control" name="finalPressure" id="finalPressure"
-                      [value]="calc.finalPressure | number: '1.0-1'" readonly />
+                    <div class="col col-12 col-sm-6 col-md-4 form-outline">
+                        <label for="finalPressure" class="form-label" mdbLabel>Final pressure [{{ units.pressure }}]:</label>
+                        <input
+                            class="form-control"
+                            name="finalPressure"
+                            id="finalPressure"
+                            [value]="calc.finalPressure | number: '1.0-1'"
+                            readonly
+                        />
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-            <div class="row">
-              <div class="form-group mt-3">
-                <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
-              </div>
-            </div>
-          </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group mt-3">
+            <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+        </div>
+    </div>
+</form>

@@ -1,16 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TankTemplate, Precision } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ITankSize } from '../../shared/models';
-import {ValidatorGroups} from '../../shared/ValidatorGroups';
-import {InputControls} from '../../shared/inputcontrols';
-import {RedundanciesService} from '../../shared/redundancies.service';
-import {RedundanciesViewState, TankFillState} from '../../shared/views.model';
-import {KnownViews} from '../../shared/viewStates';
-import {SubViewStorage} from '../../shared/subViewStorage';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { RedundanciesService } from '../../shared/redundancies.service';
+import { RedundanciesViewState, TankFillState } from '../../shared/views.model';
+import { KnownViews } from '../../shared/viewStates';
+import { SubViewStorage } from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
@@ -34,12 +34,14 @@ export class RedundanciesComponent implements OnInit {
     public redForm!: FormGroup<RedundanciesForm>;
     public calc: RedundanciesService;
 
-    constructor(public location: Location,
+    constructor(
+        public location: Location,
         public units: UnitConversion,
         private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls) {
+        private inputs: InputControls
+    ) {
         this.calc = new RedundanciesService(this.units);
     }
 
@@ -93,21 +95,22 @@ export class RedundanciesComponent implements OnInit {
             firstTankSize: [Precision.round(this.firstTank.size, 1), this.validators.tankSize],
             firstTankPressure: [Precision.round(this.firstTank.startPressure, 1), this.validators.tankPressure],
             secondTankSize: [Precision.round(this.secondTank.size, 1), this.validators.tankSize],
-            secondTankPressure: [Precision.round(this.secondTank.startPressure, 1), this.validators.tankPressure],
+            secondTankPressure: [Precision.round(this.secondTank.startPressure, 1), this.validators.tankPressure]
         });
 
-        if(this.units.imperialUnits) {
-            const firstTankWorkPressure = this.fb.control(
-                Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure);
+        if (this.units.imperialUnits) {
+            const firstTankWorkPressure = this.fb.control(Precision.round(this.firstTank.workingPressure, 1), this.validators.tankPressure);
             this.redForm.addControl('firstTankWorkPressure', firstTankWorkPressure);
             const secondTankWorkPressure = this.fb.control(
-                Precision.round(this.secondTank.workingPressure, 1), this.validators.tankPressure);
+                Precision.round(this.secondTank.workingPressure, 1),
+                this.validators.tankPressure
+            );
             this.redForm.addControl('secondTankWorkPressure', secondTankWorkPressure);
         }
     }
 
     public applyTemplate(template: TankTemplate, tank: ITankSize): void {
-        if(this.redForm.invalid) {
+        if (this.redForm.invalid) {
             return;
         }
 
@@ -115,14 +118,14 @@ export class RedundanciesComponent implements OnInit {
 
         this.redForm.patchValue({
             firstTankWorkPressure: this.firstTank.workingPressure,
-            secondTankWorkPressure: this.secondTank.workingPressure,
+            secondTankWorkPressure: this.secondTank.workingPressure
         });
 
         this.inputChanged();
     }
 
     public inputChanged(): void {
-        if(this.redForm.invalid) {
+        if (this.redForm.invalid) {
             return;
         }
 

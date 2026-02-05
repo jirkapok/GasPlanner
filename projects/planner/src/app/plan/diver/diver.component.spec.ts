@@ -36,14 +36,9 @@ describe('DiverComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, DiverComponent, PpO2Component],
-    providers: [
-        UnitConversion,
-        ValidatorGroups,
-        InputControls,
-        DecimalPipe
-    ]
-}).compileComponents();
+            imports: [ReactiveFormsModule, DiverComponent, PpO2Component],
+            providers: [UnitConversion, ValidatorGroups, InputControls, DecimalPipe]
+        }).compileComponents();
     });
 
     beforeEach(() => {

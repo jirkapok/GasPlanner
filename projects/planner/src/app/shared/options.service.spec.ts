@@ -3,17 +3,14 @@ import { Options } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 describe('Options Service', () => {
     let service: OptionsService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            providers: [
-                OptionsService, UnitConversion,
-                ReloadDispatcher
-            ]
+            providers: [OptionsService, UnitConversion, ReloadDispatcher]
         });
         service = TestBed.inject(OptionsService);
     });
@@ -132,8 +129,6 @@ describe('Options Service', () => {
             });
         });
     });
-
-
 
     describe('Diver', () => {
         it('Max ppO2 updates diver ppO2', () => {

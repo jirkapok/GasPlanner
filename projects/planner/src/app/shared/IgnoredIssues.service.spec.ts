@@ -8,7 +8,7 @@ describe('IgnoredIssuesService', () => {
     let sut: IgnoredIssuesService;
     const switchToHigherN2Event = Event.create(EventType.isobaricCounterDiffusion, 0, 0, StandardGases.air);
     const highGasDensityEvent = Event.create(EventType.highGasDensity, 0, 0, StandardGases.air);
-    const noDecoEndEvent =Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air);
+    const noDecoEndEvent = Event.create(EventType.noDecoEnd, 0, 0, StandardGases.air);
     const highAscentSpeedEvent = Event.create(EventType.highAscentSpeed, 0, 0, StandardGases.air);
     const testEvents: Event[] = [switchToHigherN2Event, highGasDensityEvent, noDecoEndEvent, highAscentSpeedEvent];
 
@@ -36,7 +36,7 @@ describe('IgnoredIssuesService', () => {
         appSettings.noDecoIgnored = true;
         const filteredResult = sut.filterIgnored(testEvents);
 
-        expect(filteredResult).toEqual([ switchToHigherN2Event, highGasDensityEvent, highAscentSpeedEvent]);
+        expect(filteredResult).toEqual([switchToHigherN2Event, highGasDensityEvent, highAscentSpeedEvent]);
     });
 
     it('should not filter out any issues when every issues are off', () => {

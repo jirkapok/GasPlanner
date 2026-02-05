@@ -88,7 +88,6 @@ export interface DiffViewState extends ViewState {
     profileB: number;
 }
 
-
 export interface LearnViewState extends ViewState {
     topic: string;
     category: string;

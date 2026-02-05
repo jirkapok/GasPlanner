@@ -3,7 +3,7 @@ import { Precision, Ceiling } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 export interface AxisValues {
     xValues: Date[];
@@ -16,8 +16,7 @@ export interface EventValues extends AxisValues {
 
 @Injectable()
 export class ResamplingService {
-    constructor(private units: UnitConversion) {
-    }
+    constructor(private units: UnitConversion) {}
 
     public resampleAverageDepth(wayPoints: WayPoint[]): AxisValues {
         const xValues: Date[] = [];
@@ -38,7 +37,7 @@ export class ResamplingService {
         const yValues: number[] = [];
         const labels: string[] = [];
 
-        events.forEach((event) => {
+        events.forEach(event => {
             if (event.showInProfileChart) {
                 xValues.push(DateFormats.toDate(event.timeStamp));
                 const convertedDepth = event.depth;
@@ -60,7 +59,7 @@ export class ResamplingService {
         const yValues: number[] = [];
 
         // possible performance optimization = remove all waypoints, where ceiling = 0 and depth didn't change
-        ceilings.forEach((item) => {
+        ceilings.forEach(item => {
             xValues.push(DateFormats.toDate(item.time));
             const depth = this.convertDepth(item.depth);
             yValues.push(depth);
@@ -76,7 +75,7 @@ export class ResamplingService {
         const xValues: Date[] = [];
         const yValues: number[] = [];
 
-        wayPoints.forEach((item) => {
+        wayPoints.forEach(item => {
             this.resampleDepthsToSeconds(xValues, yValues, item);
         });
 

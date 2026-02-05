@@ -1,7 +1,5 @@
 import { Question } from './quiz.question';
-import {
-    Precision
-} from 'scuba-physics';
+import { Precision } from 'scuba-physics';
 
 export type VariableOption = number;
 
@@ -26,7 +24,7 @@ export class NumberVariable implements Variable {
 
     public nextRandomValue(): number {
         const randomValue = Math.random() * (this.max - this.min) + this.min;
-        const rounded =  Precision.round(randomValue, this.decimals);
+        const rounded = Precision.round(randomValue, this.decimals);
 
         if (rounded > this.max) {
             return this.max;

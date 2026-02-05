@@ -5,5 +5,3 @@ addEventListener('message', ({ data }) => {
     const response = PlanningTasks.calculateConsumption(data);
     postMessage(response);
 });
-
-

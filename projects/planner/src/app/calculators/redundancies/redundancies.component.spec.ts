@@ -14,7 +14,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 
 describe('RedundanciesComponent', () => {
     let component: RedundanciesComponent;
@@ -22,17 +22,25 @@ describe('RedundanciesComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [RedundanciesComponent],
-    providers: [
-        UnitConversion, ValidatorGroups, InputControls,
-        DecimalPipe, SubViewStorage, ViewStates,
-        PreferencesStore, PlannerService, WorkersFactoryCommon,
-        Preferences, ViewSwitchService,
-        ReloadDispatcher, DiveSchedules,
-        ApplicationSettingsService,
-        MdbModalService
-    ]
-});
+            imports: [RedundanciesComponent],
+            providers: [
+                UnitConversion,
+                ValidatorGroups,
+                InputControls,
+                DecimalPipe,
+                SubViewStorage,
+                ViewStates,
+                PreferencesStore,
+                PlannerService,
+                WorkersFactoryCommon,
+                Preferences,
+                ViewSwitchService,
+                ReloadDispatcher,
+                DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService
+            ]
+        });
 
         const units = TestBed.inject(UnitConversion);
         units.imperialUnits = true;
@@ -43,9 +51,9 @@ describe('RedundanciesComponent', () => {
     });
 
     it('Creates default tank dimensions in imperial units', () => {
-        expect(component.firstTank.size).toBeCloseTo(124.1 , 1);
+        expect(component.firstTank.size).toBeCloseTo(124.1, 1);
         expect(component.firstTank.workingPressure).toBeCloseTo(3442);
-        expect(component.secondTank.size).toBeCloseTo(124.1 , 1);
+        expect(component.secondTank.size).toBeCloseTo(124.1, 1);
         expect(component.secondTank.workingPressure).toBeCloseTo(3442);
     });
 });

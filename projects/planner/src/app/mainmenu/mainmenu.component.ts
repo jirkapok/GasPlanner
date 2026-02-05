@@ -1,18 +1,22 @@
 import { Component } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import {
-    faBars, faMountainSun, faHouse, faLungs, faTable,
-    faWeightHanging, faPercent, faFileLines,
-    faFaucet, faShareFromSquare, faTrashCan,
+    faBars,
+    faMountainSun,
+    faHouse,
+    faLungs,
+    faTable,
+    faWeightHanging,
+    faPercent,
+    faFileLines,
+    faFaucet,
+    faShareFromSquare,
+    faTrashCan,
     faClone
 } from '@fortawesome/free-solid-svg-icons';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 import { ShareDiveService } from '../shared/ShareDiveService';
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Router, RouterLink,
-} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, RouterLink } from '@angular/router';
 import { filter, map, takeUntil } from 'rxjs';
 import { Streamed } from '../shared/streamed';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -24,12 +28,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
     styleUrls: ['./mainmenu.component.scss'],
-    imports: [
-    RouterLink,
-    FaIconComponent,
-    MdbCollapseModule,
-    MdbDropdownModule
-]
+    imports: [RouterLink, FaIconComponent, MdbCollapseModule, MdbDropdownModule]
 })
 export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;
@@ -52,16 +51,19 @@ export class MainMenuComponent extends Streamed {
         private route: ActivatedRoute,
         private schedules: ManagedDiveSchedules,
         private share: ShareDiveService,
-        public urls: Urls) {
+        public urls: Urls
+    ) {
         super();
-        this.router.events.pipe(
-            takeUntil(this.unsubscribe$),
-            filter((event) => event instanceof NavigationEnd),
-            map(() => this.rootRoute(this.route)),
-            filter((r: ActivatedRoute) => r.outlet === 'primary'),
-        ).subscribe((currentRoute: ActivatedRoute) => {
-            this.inPlanner = currentRoute.snapshot.url.length === 0;
-        });
+        this.router.events
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(event => event instanceof NavigationEnd),
+                map(() => this.rootRoute(this.route)),
+                filter((r: ActivatedRoute) => r.outlet === 'primary')
+            )
+            .subscribe((currentRoute: ActivatedRoute) => {
+                this.inPlanner = currentRoute.snapshot.url.length === 0;
+            });
     }
 
     public get canDeleteDive(): boolean {

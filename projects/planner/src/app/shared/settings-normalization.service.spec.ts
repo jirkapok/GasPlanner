@@ -29,9 +29,12 @@ describe('SettingsNormalizationService', () => {
         TestBed.configureTestingModule({
             declarations: [],
             providers: [
-                RouterTestingModule, UnitConversion,
-                SettingsNormalizationService, ReloadDispatcher,
-                ViewStates, DiveSchedules,
+                RouterTestingModule,
+                UnitConversion,
+                SettingsNormalizationService,
+                ReloadDispatcher,
+                ViewStates,
+                DiveSchedules,
                 ApplicationSettingsService
             ],
             imports: [RouterTestingModule.withRoutes([])]
@@ -108,7 +111,7 @@ describe('SettingsNormalizationService', () => {
         it('Updates diver rounded rmv', () => {
             const units = TestBed.inject(UnitConversion);
             const rmv = units.fromLiter(optionsService.diverOptions.rmv);
-            expect(rmv).toBeCloseTo(0.70060, 5);
+            expect(rmv).toBeCloseTo(0.7006, 5);
         });
 
         it('Rounds options feet', () => {
@@ -171,7 +174,7 @@ describe('SettingsNormalizationService', () => {
         });
 
         it('Updates diver rounded rmv liters', () => {
-            expect(optionsService.diverOptions.rmv).toBeCloseTo(19.84000, 5);
+            expect(optionsService.diverOptions.rmv).toBeCloseTo(19.84, 5);
         });
 
         it('Rounds options meters using recreational values', () => {

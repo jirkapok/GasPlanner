@@ -1,7 +1,4 @@
-import {
-    CalculatedProfile, CalculatedProfileStatistics,
-    Event, StandardGases, Time
-} from 'scuba-physics';
+import { CalculatedProfile, CalculatedProfileStatistics, Event, StandardGases, Time } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from './Options.spec';
@@ -10,7 +7,8 @@ import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
 import {
     ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoRequestDto,
+    ConsumptionResultDto,
+    DiveInfoRequestDto,
     DiveInfoResultDto,
     ProfileResultDto
 } from './serialization.model';
@@ -40,10 +38,14 @@ describe('PlannerService', () => {
             declarations: [],
             providers: [
                 WorkersFactoryCommon,
-                PlannerService, UnitConversion,
-                DiveSchedules, ReloadDispatcher,
-                SettingsNormalizationService, ViewStates,
-                ViewSwitchService, ApplicationSettingsService
+                PlannerService,
+                UnitConversion,
+                DiveSchedules,
+                ReloadDispatcher,
+                SettingsNormalizationService,
+                ViewStates,
+                ViewSwitchService,
+                ApplicationSettingsService
             ],
             imports: []
         }).compileComponents();
@@ -69,8 +71,8 @@ describe('PlannerService', () => {
         beforeEach(() => {
             profilesReceived = [];
             infosReceived = [];
-            dispatcher.wayPointsCalculated$.subscribe((source) => profilesReceived.push(source));
-            dispatcher.infoCalculated$.subscribe((source) => infosReceived.push(source));
+            dispatcher.wayPointsCalculated$.subscribe(source => profilesReceived.push(source));
+            dispatcher.infoCalculated$.subscribe(source => infosReceived.push(source));
             TestBed.inject(DiveSchedules).add();
             planner.calculate(2);
         });
@@ -109,7 +111,8 @@ describe('PlannerService', () => {
     });
 
     describe('Imperial units are used', () => {
-        it('Stops reflect units', inject([UnitConversion, SettingsNormalizationService],
+        it('Stops reflect units', inject(
+            [UnitConversion, SettingsNormalizationService],
             (units: UnitConversion, normalization: SettingsNormalizationService) => {
                 units.imperialUnits = true;
                 normalization.apply();
@@ -123,9 +126,9 @@ describe('PlannerService', () => {
                 const wayPoints = dive.wayPoints;
                 expect(wayPoints[3].endDepth).toBeCloseTo(70, 4); // Ean50 switch
                 expect(wayPoints[5].endDepth).toBeCloseTo(20, 4); // O2 switch
-            }));
+            }
+        ));
     });
-
 
     describe('Successfully calculates 30m for 15 minutes (defaults)', () => {
         it('8 minutes time to surface', () => {
@@ -147,7 +150,7 @@ describe('PlannerService', () => {
 
     describe('Shows Warnings', () => {
         it('60m for 50 minutes maximum depth exceeded', () => {
-            depthsService.plannedDepth =60;
+            depthsService.plannedDepth = 60;
             planner.calculate(1);
             const hasEvents = dive.events.length > 0;
             expect(hasEvents).toBeTruthy();
@@ -185,8 +188,7 @@ describe('PlannerService', () => {
             expect(dive.wayPoints[3].endDepth).toEqual(21);
         });
 
-        it('Max bottom time uses previous dive surface interval',  inject([DiveSchedules],
-            (schedules: DiveSchedules) => {
+        it('Max bottom time uses previous dive surface interval', inject([DiveSchedules], (schedules: DiveSchedules) => {
             const firstDive = schedules.dives[0];
             // make some interesting dive
             firstDive.depths.plannedDepth = 40;
@@ -200,7 +202,7 @@ describe('PlannerService', () => {
 
     describe('Errors', () => {
         const createProfileResultDto = (): ProfileResultDto => {
-            const events: Event[] = [ Event.createError('') ];
+            const events: Event[] = [Event.createError('')];
             const profile = CalculatedProfileStatistics.fromStatisticsErrors(depthsService.segments, events);
             const profileDto = DtoSerialization.fromProfile(profile);
             return {
@@ -222,11 +224,10 @@ describe('PlannerService', () => {
             let infoFinished = false;
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callFake(() => createProfileResultDto());
+                spyOn(PlanningTasks, 'calculateDecompression').and.callFake(() => createProfileResultDto());
 
-                dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
-                dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
+                dispatcher.wayPointsCalculated$.subscribe(() => (wayPointsFinished = true));
+                dispatcher.infoCalculated$.subscribe(() => (infoFinished = true));
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate(1);
@@ -252,11 +253,11 @@ describe('PlannerService', () => {
                 expectDiveMarkedAsCalculated(dive);
             });
 
-            it('Doesn\'t call no deco task', () => {
+            it("Doesn't call no deco task", () => {
                 expect(noDecoSpy).not.toHaveBeenCalled();
             });
 
-            it('Doesn\'t call consumption task', () => {
+            it("Doesn't call consumption task", () => {
                 expect(consumptionSpy).not.toHaveBeenCalled();
             });
         });
@@ -269,11 +270,10 @@ describe('PlannerService', () => {
             const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.throwError('Profile failed');
+                spyOn(PlanningTasks, 'calculateDecompression').and.throwError('Profile failed');
 
-                dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
-                dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
+                dispatcher.wayPointsCalculated$.subscribe(() => (wayPointsFinished = true));
+                dispatcher.infoCalculated$.subscribe(source => infoFinished.push(source));
                 noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
                 consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
                 planner.calculate(1);
@@ -305,10 +305,9 @@ describe('PlannerService', () => {
             const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'diveInfo')
-                    .and.throwError('No deco failed');
+                spyOn(PlanningTasks, 'diveInfo').and.throwError('No deco failed');
 
-                dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
+                dispatcher.infoCalculated$.subscribe(source => infoFinished.push(source));
                 planner.calculate(1);
             });
 
@@ -325,10 +324,9 @@ describe('PlannerService', () => {
             let infoFinished: number | undefined = -1; // unknown id
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.throwError('Consumption failed');
+                spyOn(PlanningTasks, 'calculateConsumption').and.throwError('Consumption failed');
 
-                dispatcher.infoCalculated$.subscribe((source) => infoFinished = source);
+                dispatcher.infoCalculated$.subscribe(source => (infoFinished = source));
                 planner.calculate(1);
             });
 
@@ -346,13 +344,12 @@ describe('PlannerService', () => {
             let diveCalculated = false;
 
             beforeEach(() => {
-                dispatcher.infoCalculated$.subscribe(() => diveCalculated = true);
+                dispatcher.infoCalculated$.subscribe(() => (diveCalculated = true));
                 diveCalculated = false;
             });
 
             it('skips calculate', () => {
-                const calculateDecoSpy = spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callThrough();
+                const calculateDecoSpy = spyOn(PlanningTasks, 'calculateDecompression').and.callThrough();
 
                 planner.calculate(unknownDiveId);
                 expect(calculateDecoSpy).toHaveBeenCalledTimes(0);
@@ -360,25 +357,22 @@ describe('PlannerService', () => {
             });
 
             it('interrupts calculation processing calculated profile', () => {
-                const calculateConsumptionSpy = spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.callThrough();
+                const calculateConsumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
 
-                const calculateInfoSpy = spyOn(PlanningTasks, 'diveInfo')
-                    .and.callThrough();
+                const calculateInfoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
 
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callFake(() => ({
-                        diveId: unknownDiveId,
-                        profile: {
-                            segments: [],
-                            ceilings: [],
-                            finalTissues: [],
-                            tissues: [],
-                            tissueOverPressures: CalculatedProfile.emptyTissueOverPressures,
-                            errors: []
-                        },
-                        events: []
-                    }));
+                spyOn(PlanningTasks, 'calculateDecompression').and.callFake(() => ({
+                    diveId: unknownDiveId,
+                    profile: {
+                        segments: [],
+                        ceilings: [],
+                        finalTissues: [],
+                        tissues: [],
+                        tissueOverPressures: CalculatedProfile.emptyTissueOverPressures,
+                        errors: []
+                    },
+                    events: []
+                }));
 
                 planner.calculate(1);
                 expect(calculateConsumptionSpy).toHaveBeenCalledTimes(0);
@@ -387,45 +381,43 @@ describe('PlannerService', () => {
             });
 
             it('does not apply consumption result', () => {
-                spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.callFake(() => ({
-                        diveId: unknownDiveId,
-                        maxTime: 0,
-                        timeToSurface: 0,
-                        tanks: [],
-                        emergencyAscent: []
-                    }));
+                spyOn(PlanningTasks, 'calculateConsumption').and.callFake(() => ({
+                    diveId: unknownDiveId,
+                    maxTime: 0,
+                    timeToSurface: 0,
+                    tanks: [],
+                    emergencyAscent: []
+                }));
 
-                expect( () => planner.calculate(1)).not.toThrow();
+                expect(() => planner.calculate(1)).not.toThrow();
                 expect(diveCalculated).toBeFalsy();
             });
 
             it('does not apply dive info result', () => {
-                spyOn(PlanningTasks, 'diveInfo')
-                    .and.callFake(() => ({
-                        diveId: unknownDiveId,
-                        noDeco: 0,
-                        otu: 0,
-                        cns: 0,
-                        density: {
-                            gas: {
-                                fO2: 0,
-                                fHe: 0
-                            },
-                            depth: 0,
-                            density: 0,
+                spyOn(PlanningTasks, 'diveInfo').and.callFake(() => ({
+                    diveId: unknownDiveId,
+                    noDeco: 0,
+                    otu: 0,
+                    cns: 0,
+                    density: {
+                        gas: {
+                            fO2: 0,
+                            fHe: 0
                         },
-                        averageDepth: 0,
-                        events: [],
-                        surfaceGradient: 0,
-                        offgasingStartTime: 0,
-                        offgasingStartDepth: 0,
-                        ceilings: [],
-                        tissues: [],
-                        tissueOverPressures: []
-                    }));
+                        depth: 0,
+                        density: 0
+                    },
+                    averageDepth: 0,
+                    events: [],
+                    surfaceGradient: 0,
+                    offgasingStartTime: 0,
+                    offgasingStartDepth: 0,
+                    ceilings: [],
+                    tissues: [],
+                    tissueOverPressures: []
+                }));
 
-                expect( () => planner.calculate(1)).not.toThrow();
+                expect(() => planner.calculate(1)).not.toThrow();
                 expect(diveCalculated).toBeFalsy();
             });
         });
@@ -465,8 +457,7 @@ describe('PlannerService', () => {
         });
     });
 
-describe('Deco stop distance is applied', () => {
-
+    describe('Deco stop distance is applied', () => {
         it('applies 5 m stop interval when decoStopDistance = 5 m', () => {
             depthsService.planDuration = 40;
             optionsService.getOptions().decoStopDistance = 5;

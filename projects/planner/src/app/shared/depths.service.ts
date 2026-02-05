@@ -6,9 +6,7 @@ import { TanksService } from './tanks.service';
 import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
-import {
-    Tank, Segment, GasNames, Precision, GasToxicity
-} from 'scuba-physics';
+import { Tank, Segment, GasNames, Precision, GasToxicity } from 'scuba-physics';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 
@@ -23,20 +21,20 @@ export class DepthsService extends Streamed {
         private tanksService: TanksService,
         private dive: DiveResults,
         private optionsService: OptionsService,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher
+    ) {
         super();
         this.toxicity = this.optionsService.toxicity;
 
         // this enforces to initialize the levels, needs to be called after subscribe to plan
-        if(this.plan.maxDepth === 0) {
+        if (this.plan.maxDepth === 0) {
             let requiredDepth = this.units.defaults.stopsDistance * 10; // 30 m or 100 ft
             requiredDepth = this.units.toMeters(requiredDepth);
             const options = this.optionsService.getOptions();
-            this.plan.setSimple(requiredDepth, 12,  this.firstTank, options);
+            this.plan.setSimple(requiredDepth, 12, this.firstTank, options);
         }
 
-        this.dispatcher.tankRemoved$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((removed: Tank) => this.tankRemoved(removed));
+        this.dispatcher.tankRemoved$.pipe(takeUntil(this.unsubscribe$)).subscribe((removed: Tank) => this.tankRemoved(removed));
 
         this.updateLevels();
     }

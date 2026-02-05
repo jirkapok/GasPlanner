@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {PreferencesStore} from './preferencesStore';
-import {DiveSchedule, DiveSchedules} from './dive.schedules';
-import {DelayedScheduleService} from './delayedSchedule.service';
+import { Injectable } from '@angular/core';
+import { PreferencesStore } from './preferencesStore';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
+import { DelayedScheduleService } from './delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
 
 @Injectable()
@@ -63,7 +63,7 @@ export class ManagedDiveSchedules {
         this.preferences.saveDefault();
     }
 
-    public loadAll(){
+    public loadAll() {
         this.preferences.load();
         // we dont need to load the selected dive, since it is loaded by preferences
         this.schedule.startScheduling();

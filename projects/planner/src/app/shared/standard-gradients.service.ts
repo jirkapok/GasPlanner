@@ -2,7 +2,10 @@ import { Injectable } from '@angular/core';
 import { OptionDefaults } from 'scuba-physics';
 
 export class Gradients {
-    constructor(public gfLow: number, public gfHeigh: number) {}
+    constructor(
+        public gfLow: number,
+        public gfHeigh: number
+    ) {}
 }
 
 @Injectable()
@@ -17,13 +20,13 @@ export class StandardGradientsService {
     constructor() {
         this.gfMap.set(this.lowName, new Gradients(0.45, 0.95));
         this.gfMap.set(this.mediumName, new Gradients(OptionDefaults.gfLow, OptionDefaults.gfHigh));
-        this.gfMap.set(this.highName, new Gradients(0.30, 0.75));
+        this.gfMap.set(this.highName, new Gradients(0.3, 0.75));
     }
 
     public labelFor(gfLow: number, gfHigh: number): string {
         for (const key of this.gfMap.keys()) {
             const entry = this.gfMap.get(key) || this.empty;
-            if(entry.gfLow === gfLow && entry.gfHeigh === gfHigh) {
+            if (entry.gfLow === gfLow && entry.gfHeigh === gfHigh) {
                 return key;
             }
         }

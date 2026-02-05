@@ -1,13 +1,11 @@
 import { Component } from '@angular/core';
-import {
-    faExclamationCircle, faExclamationTriangle, faInfoCircle
-} from '@fortawesome/free-solid-svg-icons';
+import { faExclamationCircle, faExclamationTriangle, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
 import { OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
-import { BoundEvent } from "../../shared/models";
+import { BoundEvent } from '../../shared/models';
 import { DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DurationPipe } from '../../pipes/duration.pipe';
@@ -26,13 +24,16 @@ export class DiveIssuesComponent {
 
     constructor(
         public units: UnitConversion,
-        private schedules: DiveSchedules) {
-    }
+        private schedules: DiveSchedules
+    ) {}
 
     /** Needs to be sorted by order we want to show them */
     public get events(): BoundEvent[] {
         return _(this.dive.events)
-            .sortBy(e => this.severityDescending(e), e => e.timeStamp)
+            .sortBy(
+                e => this.severityDescending(e),
+                e => e.timeStamp
+            )
             .value();
     }
 

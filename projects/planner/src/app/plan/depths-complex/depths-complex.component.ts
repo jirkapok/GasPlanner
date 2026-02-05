@@ -32,7 +32,15 @@ interface DepthsForm {
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, DecimalPipe]
+    imports: [
+        CardHeaderComponent,
+        ReactiveFormsModule,
+        SurfaceIntervalComponent,
+        MdbAccordionModule,
+        FaIconComponent,
+        MdbDropdownModule,
+        DecimalPipe
+    ]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;
@@ -47,7 +55,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        public dispatcher: ReloadDispatcher) {
+        public dispatcher: ReloadDispatcher
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -118,17 +127,15 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         });
 
         // for simple view, this is also kicked of when switching to simple view
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.reload();
-            });
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.reload();
+        });
 
-        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((source: DepthsService) => {
-                if(this.depths === source) {
-                    this.reload();
-                }
-            });
+        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe((source: DepthsService) => {
+            if (this.depths === source) {
+                this.reload();
+            }
+        });
 
         this.rootForm.addControl('depths', this.complexForm);
     }

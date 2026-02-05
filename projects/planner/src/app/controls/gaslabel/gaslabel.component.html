@@ -1,9 +1,9 @@
 <small class="text-muted">
-  @if (showName) {
-    <span class="fw-bold">{{tank.name}} </span>
-  }
-  MOD: {{gasMod | number:'1.0-0' }} {{units.length}}, switch {{gasDecoMod | number:'1.0-0' }} {{units.length}}
-  @if (isTrimix) {
-    <span>, MND: {{gasMnd | number:'1.0-0' }} {{units.length}}</span>
-  }
+    @if (showName) {
+        <span class="fw-bold">{{ tank.name }} </span>
+    }
+    MOD: {{ gasMod | number: '1.0-0' }} {{ units.length }}, switch {{ gasDecoMod | number: '1.0-0' }} {{ units.length }}
+    @if (isTrimix) {
+        <span>, MND: {{ gasMnd | number: '1.0-0' }} {{ units.length }}</span>
+    }
 </small>

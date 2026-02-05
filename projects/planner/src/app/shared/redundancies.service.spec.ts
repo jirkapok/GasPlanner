@@ -1,11 +1,11 @@
-import {RedundanciesService} from './redundancies.service';
-import {UnitConversion} from './UnitConversion';
+import { RedundanciesService } from './redundancies.service';
+import { UnitConversion } from './UnitConversion';
 
 describe('Redundancies service', () => {
     it('Calculates final pressure', () => {
         const sut = new RedundanciesService(new UnitConversion());
         sut.firstTank.startPressure = 100;
-        expect(sut.finalPressure).toBeCloseTo(148.2 , 1);
+        expect(sut.finalPressure).toBeCloseTo(148.2, 1);
     });
 
     it('Calculates Imperial final pressure', () => {

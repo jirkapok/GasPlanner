@@ -1,13 +1,15 @@
 <div class="no-wrap">
     <div class="label-header" [@labelState]="state">
-        <div class="profile-header primary-header">
-            PROFILE A
-        </div>
+        <div class="profile-header primary-header">PROFILE A</div>
 
-        <div class="profile-header secondary-header">
-            PROFILE B
-        </div>
+        <div class="profile-header secondary-header">PROFILE B</div>
     </div>
-    <button type="button" class="btn" [ngClass]="{'btn-outline-secondary': selected, 'btn-secondary': !selected}" (click)="selectProfile()">
-        {{this.title}}</button>
+    <button
+        type="button"
+        class="btn"
+        [ngClass]="{ 'btn-outline-secondary': selected, 'btn-secondary': !selected }"
+        (click)="selectProfile()"
+    >
+        {{ this.title }}
+    </button>
 </div>

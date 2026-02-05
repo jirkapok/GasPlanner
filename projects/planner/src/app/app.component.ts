@@ -7,10 +7,9 @@ import { MainMenuComponent } from './mainmenu/mainmenu.component';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [MainMenuComponent,  AppFooterComponent, RouterOutlet],
+    imports: [MainMenuComponent, AppFooterComponent, RouterOutlet],
     standalone: true
 })
 export class AppComponent {
-    constructor() {
-    }
+    constructor() {}
 }

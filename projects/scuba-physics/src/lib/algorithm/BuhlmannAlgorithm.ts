@@ -1,13 +1,9 @@
-import {
-    LoadSegment, TissuesValidator, Tissues
-} from './Tissues';
+import { LoadSegment, TissuesValidator, Tissues } from './Tissues';
 import { Gas, Gases, GasesValidator } from '../gases/Gases';
 import { Segment, Segments, SegmentsValidator } from '../depths/Segments';
 import { DepthConverter, DepthConverterFactory } from '../physics/depth-converter';
 import { Time } from '../physics/Time';
-import {
-    CalculatedProfile, CalculatedProfileStatistics, Ceiling, Event
-} from './CalculatedProfile';
+import { CalculatedProfile, CalculatedProfileStatistics, Ceiling, Event } from './CalculatedProfile';
 import { Options } from './Options';
 import { Precision } from '../common/precision';
 import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSearch';
@@ -17,14 +13,18 @@ import { StandardGases } from '../gases/StandardGases';
 import { LoadedTissues } from './Tissues.api';
 import {
     AlgorithmParams,
-    durationFor, SurfaceIntervalApplied,
+    durationFor,
+    SurfaceIntervalApplied,
     SurfaceIntervalAppliedStatistics,
     SurfaceIntervalParameters
 } from './BuhlmannAlgorithmParameters';
 
 type CreateAlgorithmContext = (
-    gases: Gases, segments: Segments, options: Options,
-    depthConverter: DepthConverter, previousTissues: LoadedTissues
+    gases: Gases,
+    segments: Segments,
+    options: Options,
+    depthConverter: DepthConverter,
+    previousTissues: LoadedTissues
 ) => AlgorithmContext;
 
 export class BuhlmannAlgorithm {
@@ -54,7 +54,7 @@ export class BuhlmannAlgorithm {
             () => ({
                 finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude)
             }),
-            (context) => ({
+            context => ({
                 finalTissues: context.finalTissues
             })
         );
@@ -77,7 +77,7 @@ export class BuhlmannAlgorithm {
                 finalTissues: Tissues.createLoadedAt(surfaceInterval.altitude),
                 tissueOverPressures: []
             }),
-            (context) => ({
+            context => ({
                 finalTissues: context.finalTissues,
                 tissueOverPressures: context.tissueOverPressures
             })
@@ -140,8 +140,13 @@ export class BuhlmannAlgorithm {
 
     private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
         const merged = context.segments.mergeFlat(algorithmParams.segments.length);
-        return CalculatedProfileStatistics.fromStatisticsProfile(merged, context.ceilings,
-            context.tissueOverPressures, context.finalTissues, context.tissuesHistory);
+        return CalculatedProfileStatistics.fromStatisticsProfile(
+            merged,
+            context.ceilings,
+            context.tissueOverPressures,
+            context.finalTissues,
+            context.tissuesHistory
+        );
     }
 
     private toSimpleProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfile {
@@ -155,19 +160,19 @@ export class BuhlmannAlgorithm {
         toErrorResult: () => TResult,
         toValidResult: (c: AlgorithmContext) => TResult
     ): TResult {
-        if(!TissuesValidator.valid(previousTissues)) {
+        if (!TissuesValidator.valid(previousTissues)) {
             throw Error('Provided tissues collection isn`t valid. It needs have valid items of 16 compartments ordered by halftime.');
         }
 
-        if(altitude < 0) {
+        if (altitude < 0) {
             throw Error('Altitude needs to be positive number or 0.');
         }
 
-        if(surfaceInterval < 0) {
+        if (surfaceInterval < 0) {
             throw Error('Surface interval needs to be positive number or 0.');
         }
 
-        if(surfaceInterval === Number.POSITIVE_INFINITY) {
+        if (surfaceInterval === Number.POSITIVE_INFINITY) {
             return toErrorResult();
         }
 
@@ -205,9 +210,9 @@ export class BuhlmannAlgorithm {
                 estimationStep: Time.oneMinute * 20,
                 initialValue: 0,
                 maxValue: Time.oneDay,
-                doWork: (newDuration) => this.swimDecoStop(context, memento, newDuration),
+                doWork: newDuration => this.swimDecoStop(context, memento, newDuration),
                 // max stop duration was chosen as one day which may not be enough for saturation divers
-                meetsCondition: () => this.needsDecoStop(context, nextStop),
+                meetsCondition: () => this.needsDecoStop(context, nextStop)
             };
 
             const interval = new BinaryIntervalSearch();
@@ -249,7 +254,7 @@ export class BuhlmannAlgorithm {
     private swimOxygenStop(context: AlgorithmContext, totalStopDuration: number): void {
         const airBreak = new AirBreakContext(context, totalStopDuration);
 
-        while(airBreak.needsStop) {
+        while (airBreak.needsStop) {
             // here we don't count with gas switch duration (it is part of the stop)
             airBreak.switchStopGas();
             this.swimStopDuration(context, airBreak.stopDuration);

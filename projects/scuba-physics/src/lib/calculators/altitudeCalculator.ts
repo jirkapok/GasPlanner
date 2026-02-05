@@ -1,7 +1,4 @@
-import {
-    AltitudePressure, PressureConverter
-} from '../physics/pressure-converter';
-
+import { AltitudePressure, PressureConverter } from '../physics/pressure-converter';
 
 /** Inspired by https://www.divebuddy.com/calculator/ */
 export class AltitudeCalculator {

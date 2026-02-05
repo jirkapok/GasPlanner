@@ -21,10 +21,10 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { BrowserAnimationsModule, } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export class SimpleTanksPage {
-    constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
+    constructor(private fixture: ComponentFixture<TanksSimpleComponent>) {}
 
     public get sizeInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#tankSize')).nativeElement as HTMLInputElement;
@@ -58,17 +58,29 @@ describe('Tanks Simple component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                WorkersFactoryCommon, UnitConversion,
-                PlannerService, InputControls, DiveSchedules,
-                ValidatorGroups, PreferencesStore, Preferences,
-                DecimalPipe, ViewSwitchService, WayPointsService,
-                SubViewStorage, ViewStates, ReloadDispatcher,
+                WorkersFactoryCommon,
+                UnitConversion,
+                PlannerService,
+                InputControls,
+                DiveSchedules,
+                ValidatorGroups,
+                PreferencesStore,
+                Preferences,
+                DecimalPipe,
+                ViewSwitchService,
+                WayPointsService,
+                SubViewStorage,
+                ViewStates,
+                ReloadDispatcher,
                 MdbModalService
             ],
             imports: [
-                ReactiveFormsModule, TankSizeComponent,
-                TanksSimpleComponent, OxygenComponent,
-                OxygenDropDownComponent, BrowserAnimationsModule
+                ReactiveFormsModule,
+                TankSizeComponent,
+                TanksSimpleComponent,
+                OxygenComponent,
+                OxygenDropDownComponent,
+                BrowserAnimationsModule
             ]
         }).compileComponents();
     });
@@ -78,8 +90,7 @@ describe('Tanks Simple component', () => {
         component = fixture.componentInstance;
         simplePage = new SimpleTanksPage(fixture);
         const dispatcher = TestBed.inject(ReloadDispatcher);
-        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
-            .and.callFake(() => { });
+        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged').and.callFake(() => {});
     });
 
     it('Switch to simple view rebinds first tank', () => {
@@ -110,7 +121,7 @@ describe('Tanks Simple component', () => {
             expect(dispatcherSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('doesn\'t break working pressure', () => {
+        it("doesn't break working pressure", () => {
             expect(component.firstTank.workingPressure).not.toBeNaN();
         });
     });
@@ -126,11 +137,10 @@ describe('Tanks Simple component', () => {
     });
 
     describe('Imperial units', () => {
-        it('adjusts sac', inject([UnitConversion],
-            (units: UnitConversion) => {
-                units.imperialUnits = true;
-                const sac = component.gasSac();
-                expect(sac).toBeCloseTo(19.33836, 5);
-            }));
+        it('adjusts sac', inject([UnitConversion], (units: UnitConversion) => {
+            units.imperialUnits = true;
+            const sac = component.gasSac();
+            expect(sac).toBeCloseTo(19.33836, 5);
+        }));
     });
 });

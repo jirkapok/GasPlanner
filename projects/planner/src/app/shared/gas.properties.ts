@@ -1,13 +1,10 @@
-import {
-    GasProperties, Tank, GasDensity, GasMixtures
-} from 'scuba-physics';
+import { GasProperties, Tank, GasDensity, GasMixtures } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 
 export class BoundGasProperties {
     private readonly calc = new GasProperties();
 
-    constructor(private units: UnitConversion) {
-    }
+    constructor(private units: UnitConversion) {}
 
     public get tank(): Tank {
         return this.calc.tank;

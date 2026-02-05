@@ -1,7 +1,4 @@
-import {
-    AppPreferencesDto, DiverDto, GasDto,
-    OptionsDto, SegmentDto, TankDto, DiveDto
-} from './serialization.model';
+import { AppPreferencesDto, DiverDto, GasDto, OptionsDto, SegmentDto, TankDto, DiveDto } from './serialization.model';
 import _ from 'lodash';
 import { Precision, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from './UnitConversion';
@@ -16,14 +13,14 @@ export class PlanValidation {
         this.units = this.ranges.units;
 
         // duration ranges are both the same for both units.
-        const maxDuration  = Time.toSeconds(this.ranges.duration[1]);
+        const maxDuration = Time.toSeconds(this.ranges.duration[1]);
         // min only 1 second, since simple profiles may have auto calculated descent shorter than one minute
         // but this is not valid for complex dives, needs to be fixed during deserialization
         this.durationRange = [Time.oneSecond, maxDuration];
     }
 
     public validate(appDto: AppPreferencesDto): boolean {
-        if(appDto.dives.length === 0) {
+        if (appDto.dives.length === 0) {
             return false;
         }
 
@@ -36,7 +33,7 @@ export class PlanValidation {
 
     private createUnits(imperialUnits: boolean): RangeConstants {
         // values stored in metric doesn't have to fit to imperial ranges when saving imperial
-        if(imperialUnits) {
+        if (imperialUnits) {
             return UnitConversion.createImperial();
         }
 
@@ -54,24 +51,34 @@ export class PlanValidation {
     }
 
     private selectContentRanges(isComplex: boolean): [[number, number], [number, number]] {
-        if(isComplex) {
+        if (isComplex) {
             return [this.ranges.trimixOxygen, this.ranges.tankHe];
         }
 
-        return [this.ranges.nitroxOxygen, [0,0]];
+        return [this.ranges.nitroxOxygen, [0, 0]];
     }
 
-    private allTanksValid(imperialUnits: boolean, tanks: TankDto[], maxTankId: number,
-        contentRanges: [[number, number], [number, number]]): boolean {
+    private allTanksValid(
+        imperialUnits: boolean,
+        tanks: TankDto[],
+        maxTankId: number,
+        contentRanges: [[number, number], [number, number]]
+    ): boolean {
         const hasTanks = tanks.length > 0;
         const allValid = _(tanks).every(t => this.isValidTank(imperialUnits, t, maxTankId, contentRanges));
-        const uniqueIds = _(tanks).map(t=> t.id).uniq();
+        const uniqueIds = _(tanks)
+            .map(t => t.id)
+            .uniq();
         const countValid = uniqueIds.size() === tanks.length;
         return hasTanks && allValid && countValid;
     }
 
-    private isValidTank(imperialUnits: boolean, tank: TankDto, maxId: number,
-        contentRanges: [[number, number], [number, number]]): boolean {
+    private isValidTank(
+        imperialUnits: boolean,
+        tank: TankDto,
+        maxId: number,
+        contentRanges: [[number, number], [number, number]]
+    ): boolean {
         // the rest will be recalculated
         const idValid = this.isInRange(tank.id, [1, maxId]);
         const sizeValid = this.isTankSizeValid(tank);
@@ -82,7 +89,7 @@ export class PlanValidation {
     }
 
     private workingPressureValid(imperialUnits: boolean, tank: TankDto): boolean {
-        if(imperialUnits) {
+        if (imperialUnits) {
             return this.isPressureInRange(tank.workPressure, this.ranges.tankPressure);
         }
 
@@ -95,14 +102,12 @@ export class PlanValidation {
         // because range is in percent
         const o2Valid = this.isInRange(gas.fO2 * 100, contentRanges[0]);
         const heValid = this.isInRange(gas.fHe * 100, contentRanges[1]);
-        const contentValid = ((gas.fO2 + gas.fHe) <= 1);
+        const contentValid = gas.fO2 + gas.fHe <= 1;
         return isAir || (o2Valid && heValid && contentValid);
     }
 
-    private allSegmentsValid(segments: SegmentDto[], maxTankId: number,
-        contentRanges: [[number, number], [number, number]]): boolean {
-        return segments.length > 0 &&
-            _(segments).every(s => this.isValidSegment(s, maxTankId, contentRanges));
+    private allSegmentsValid(segments: SegmentDto[], maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
+        return segments.length > 0 && _(segments).every(s => this.isValidSegment(s, maxTankId, contentRanges));
     }
 
     private isValidSegment(segment: SegmentDto, maxTankId: number, contentRanges: [[number, number], [number, number]]): boolean {
@@ -119,20 +124,22 @@ export class PlanValidation {
 
     private optionsValid(options: OptionsDto): boolean {
         // we don't check boolean values, since they are imported correctly
-        return this.isLengthInRange(options.altitude, this.ranges.altitude) &&
-        this.isLengthInRange(options.ascentSpeed50perc, this.ranges.speed) &&
-        this.isLengthInRange(options.ascentSpeed50percTo6m, this.ranges.speed) &&
-        this.isLengthInRange(options.ascentSpeed6m, this.ranges.speed) &&
-        this.isLengthInRange(options.descentSpeed, this.ranges.speed) &&
-        this.isInRange(options.gasSwitchDuration, [1, 10]) &&
-        this.isInRange(options.gfHigh, [0.1, 1]) &&
-        this.isInRange(options.gfLow, [0.1, 1]) &&
-        this.isLengthInRange(options.maxEND, this.ranges.narcoticDepth) &&
-        this.isInRange(options.maxPpO2, this.ranges.ppO2) &&
-        this.isInRange(options.maxDecoPpO2, this.ranges.ppO2) &&
-        this.isInRange(options.problemSolvingDuration, [1, 100]) &&
-        options.safetyStop in SafetyStop &&
-        options.salinity in Salinity;
+        return (
+            this.isLengthInRange(options.altitude, this.ranges.altitude) &&
+            this.isLengthInRange(options.ascentSpeed50perc, this.ranges.speed) &&
+            this.isLengthInRange(options.ascentSpeed50percTo6m, this.ranges.speed) &&
+            this.isLengthInRange(options.ascentSpeed6m, this.ranges.speed) &&
+            this.isLengthInRange(options.descentSpeed, this.ranges.speed) &&
+            this.isInRange(options.gasSwitchDuration, [1, 10]) &&
+            this.isInRange(options.gfHigh, [0.1, 1]) &&
+            this.isInRange(options.gfLow, [0.1, 1]) &&
+            this.isLengthInRange(options.maxEND, this.ranges.narcoticDepth) &&
+            this.isInRange(options.maxPpO2, this.ranges.ppO2) &&
+            this.isInRange(options.maxDecoPpO2, this.ranges.ppO2) &&
+            this.isInRange(options.problemSolvingDuration, [1, 100]) &&
+            options.safetyStop in SafetyStop &&
+            options.salinity in Salinity
+        );
     }
 
     private diverValid(diver: DiverDto): boolean {
@@ -167,7 +174,7 @@ export class PlanValidation {
         return this.isInRange(value, range);
     }
 
-    private isInRange(value: number, range: [number, number], ): boolean {
+    private isInRange(value: number, range: [number, number]): boolean {
         // to prevent calculation precision issues, rmv needs at least 4 decimals
         const rounded = Precision.round(value, 6);
         return range[0] <= rounded && rounded <= range[1];

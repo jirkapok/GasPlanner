@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Time, Segment, Segments, PlanFactory,
-    Options, Tank } from 'scuba-physics';
+import { Time, Segment, Segments, PlanFactory, Options, Tank } from 'scuba-physics';
 import { Strategies } from './models';
 
 @Injectable()
@@ -10,8 +9,7 @@ export class Plan {
     public strategy: Strategies = Strategies.ALL;
     private _segments: Segments = new Segments();
 
-    constructor() {
-    }
+    constructor() {}
 
     public get length(): number {
         return this._segments.length;

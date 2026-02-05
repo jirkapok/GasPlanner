@@ -14,7 +14,7 @@ describe('Air weight', () => {
 
     it('150 b consumed from 10L tank returns 1.8 kg', () => {
         const tank = new Tank(10, 150, 20);
-        tank.consumed  = 150;
+        tank.consumed = 150;
         const weight = AirWeight.tankVolumeWeight(tank);
         expect(weight).toBeCloseTo(1.8162, 4);
     });

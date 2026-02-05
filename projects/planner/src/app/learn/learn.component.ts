@@ -21,10 +21,7 @@ import { Urls } from '../shared/navigation.service';
 @Component({
     selector: 'app-learn',
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgClass, FormsModule],
-    providers: [
-        NgxMdService, Urls, QuizService, PreferencesStore, HelpService,
-        MarkdownCustomization, SubViewStorage
-    ],
+    providers: [NgxMdService, Urls, QuizService, PreferencesStore, HelpService, MarkdownCustomization, SubViewStorage],
     templateUrl: './learn.component.html',
     styleUrls: ['./learn.component.scss']
 })
@@ -45,7 +42,7 @@ export class LearnComponent {
         private help: HelpService,
         private preferencesStore: PreferencesStore,
         private markdown: MarkdownCustomization,
-        private viewStates: SubViewStorage,
+        private viewStates: SubViewStorage
     ) {
         this.loadState();
         this.markdown.configure();
@@ -105,20 +102,20 @@ export class LearnComponent {
         this.quizService.validateCurrentAnswer();
         this.preferencesStore.save();
 
-        if(this.session.shouldCelebrate) {
+        if (this.session.shouldCelebrate) {
             this.switchToScore();
         }
     }
 
     public getRoundingExplanation(roundType: RoundType): string {
         switch (roundType) {
-        case RoundType.floor:
-            return 'down';
-        case RoundType.ceil:
-            return 'up';
-        case RoundType.round:
-        default:
-            return '';
+            case RoundType.floor:
+                return 'down';
+            case RoundType.ceil:
+                return 'up';
+            case RoundType.round:
+            default:
+                return '';
         }
     }
 
@@ -171,7 +168,7 @@ export class LearnComponent {
             particleCount: 240,
             spread: 90,
             origin: { y: 0.6 },
-            colors: ['#00c6ff', '#0072ff', '#ffffff'],
+            colors: ['#00c6ff', '#0072ff', '#ffffff']
         });
     }
 
@@ -188,9 +185,7 @@ export class LearnComponent {
     }
 
     private loadState(): void {
-        let state: LearnViewState = this.viewStates.loadView(
-            KnownViews.learn
-        );
+        let state: LearnViewState = this.viewStates.loadView(KnownViews.learn);
 
         if (!state) {
             state = this.createState();
@@ -207,7 +202,7 @@ export class LearnComponent {
 
     private createState(): LearnViewState {
         return {
-            id:  KnownViews.learn,
+            id: KnownViews.learn,
             topic: this.selectedTopic.name,
             category: this.selectedCategory.name
         };

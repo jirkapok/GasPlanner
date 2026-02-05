@@ -10,7 +10,10 @@ import { ReloadDispatcher } from './reloadDispatcher';
 export class TanksService {
     private _tanks: TankBound[] = [];
 
-    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+    constructor(
+        private units: UnitConversion,
+        private dispatcher: ReloadDispatcher
+    ) {
         const defaultTanks = this.units.defaults.tanks;
         this.addTankBy(defaultTanks.primary.size, defaultTanks.primary.workingPressure);
     }
@@ -37,7 +40,8 @@ export class TanksService {
     }
 
     public get tankData(): Tank[] {
-        return _(this._tanks).map(bt => bt.tank)
+        return _(this._tanks)
+            .map(bt => bt.tank)
             .value();
     }
 

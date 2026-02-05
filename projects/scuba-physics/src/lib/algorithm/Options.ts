@@ -67,7 +67,7 @@ export class AirBreakOptions {
 
         /** in minutes */
         public bottomGasDuration: number = OptionDefaults.airBreakBottomGasDuration
-    ) { }
+    ) {}
 
     public loadFrom(source: AirBreakOptions): void {
         this.enabled = source.enabled;
@@ -200,7 +200,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         // environment
         this.salinity = other.salinity || this.salinity;
         // altitude is the only one property, which accepts 0;
-        this.altitude = (other.altitude || other.altitude === 0) ? other.altitude : this.altitude;
+        this.altitude = other.altitude || other.altitude === 0 ? other.altitude : this.altitude;
         this.roundStopsToMinutes = other.roundStopsToMinutes;
         this.gasSwitchDuration = other.gasSwitchDuration || this.gasSwitchDuration;
         this.problemSolvingDuration = other.problemSolvingDuration || this.problemSolvingDuration;
@@ -208,7 +208,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         // depths
         this.lastStopDepth = other.lastStopDepth || this.lastStopDepth;
         this.decoStopDistance = other.decoStopDistance || this.decoStopDistance;
-        this.minimumAutoStopDepth =  other.minimumAutoStopDepth || this.minimumAutoStopDepth;
+        this.minimumAutoStopDepth = other.minimumAutoStopDepth || this.minimumAutoStopDepth;
         this.safetyStop = other.safetyStop || this.safetyStop;
         this.maxEND = other.maxEND || this.maxEND;
 

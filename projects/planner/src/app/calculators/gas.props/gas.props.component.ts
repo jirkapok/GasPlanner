@@ -30,7 +30,15 @@ interface GasForm {
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe]
+    imports: [
+        CardHeaderComponent,
+        ReactiveFormsModule,
+        OxygenDropDownComponent,
+        PpO2Component,
+        MdbFormsModule,
+        FaIconComponent,
+        DecimalPipe
+    ]
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;
@@ -46,7 +54,8 @@ export class GasPropertiesCalcComponent implements OnInit {
         public units: UnitConversion,
         public location: Location,
         settings: ApplicationSettingsService,
-        private viewStates: SubViewStorage) {
+        private viewStates: SubViewStorage
+    ) {
         this.calc = new BoundGasProperties(this.units);
         this.calc.maxDensity = settings.maxGasDensity;
         this.loadState();
@@ -90,7 +99,7 @@ export class GasPropertiesCalcComponent implements OnInit {
             he: [this.tank.he, this.validators.rangeFor(this.ranges.tankHe)],
             maxPO2: [this.calc.maxPpO2, this.validators.rangeFor(this.ranges.ppO2)],
             depth: [Precision.round(this.calc.depth, 1), this.validators.rangeFor(this.ranges.depth)],
-            mndLimit: [Precision.round(this.calc.mndLimit,1), this.validators.rangeFor(this.ranges.narcoticDepth)],
+            mndLimit: [Precision.round(this.calc.mndLimit, 1), this.validators.rangeFor(this.ranges.narcoticDepth)]
         });
     }
 
@@ -128,7 +137,7 @@ export class GasPropertiesCalcComponent implements OnInit {
         // because they affect each other
         this.gasForm.patchValue({
             o2: this.tank.o2,
-            he: this.tank.he,
+            he: this.tank.he
         });
     }
 
@@ -140,16 +149,16 @@ export class GasPropertiesCalcComponent implements OnInit {
         }
 
         this.tank.he = state.he;
-        this.tank.o2 =  state.o2;
+        this.tank.o2 = state.o2;
         this.calc.maxPpO2 = state.maxPO2;
         this.calc.depth = this.units.fromMeters(state.depth);
 
         // upgrade
-        if(state.mndLimit) {
+        if (state.mndLimit) {
             this.calc.mndLimit = this.units.fromMeters(state.mndLimit);
         }
 
-        if(this.calc.oxygenNarcotic !== state.oxygenNarcotic) {
+        if (this.calc.oxygenNarcotic !== state.oxygenNarcotic) {
             this.calc.switchOxygenNarcotic();
         }
     }

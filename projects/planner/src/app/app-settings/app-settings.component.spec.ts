@@ -25,7 +25,7 @@ import { values } from 'lodash';
 import { AppSettings } from '../shared/models';
 
 export class AppSettingsPage {
-    constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
+    constructor(private fixture: ComponentFixture<AppSettingsComponent>) {}
 
     public get imperialRadio(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#imperialRadio')).nativeElement as HTMLInputElement;
@@ -43,24 +43,22 @@ export class AppSettingsPage {
         return this.fixture.debugElement.query(By.css('#resetToDefault')).nativeElement as HTMLButtonElement;
     }
 
-     public get maxDensityInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="maxDensity"]')).nativeElement as HTMLInputElement;
+    public get maxDensityInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('[formControlName="maxDensity"]')).nativeElement as HTMLInputElement;
     }
 
     public get primaryReserveInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="primaryTankReserve"]')).nativeElement as HTMLInputElement;
-
+        return this.fixture.debugElement.query(By.css('[formControlName="primaryTankReserve"]')).nativeElement as HTMLInputElement;
     }
 
     public get stageReserveInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="stageTankReserve"]')).nativeElement as HTMLInputElement;
-
+        return this.fixture.debugElement.query(By.css('[formControlName="stageTankReserve"]')).nativeElement as HTMLInputElement;
     }
 
     public setInputValue(input: HTMLInputElement, value: number | string): void {
-    input.value = String(value);
-    input.dispatchEvent(new Event('input'));
-    this.fixture.detectChanges();
+        input.value = String(value);
+        input.dispatchEvent(new Event('input'));
+        this.fixture.detectChanges();
     }
 }
 
@@ -72,14 +70,8 @@ describe('App settings component', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             declarations: [],
-            imports: [
-                ReactiveFormsModule, AppSettingsComponent,
-                CardHeaderComponent
-            ],
-            providers: [
-                MdbModalService, DiveSchedules,
-                UnitConversion, ReloadDispatcher
-            ]
+            imports: [ReactiveFormsModule, AppSettingsComponent, CardHeaderComponent],
+            providers: [MdbModalService, DiveSchedules, UnitConversion, ReloadDispatcher]
         }).compileComponents();
     });
 
@@ -108,8 +100,7 @@ describe('App settings component', () => {
             expect(options.maxEND).toBeCloseTo(98, 4);
         });
 
-        it('Applies units change', inject([UnitConversion],
-            (units: UnitConversion) => {
+        it('Applies units change', inject([UnitConversion], (units: UnitConversion) => {
             expect(units.imperialUnits).toBeTruthy();
         }));
 
@@ -129,19 +120,16 @@ describe('App settings component', () => {
             component.use();
             const schedules = TestBed.inject(DiveSchedules);
             options = schedules.selected.optionsService;
-        })
+        });
 
         it('Should set Max Gas density after switch to metric units', () => {
             expect(component.appSettings.maxGasDensity).toBeCloseTo(5.7, 1);
-
         });
 
         it('Should return to default values of max density after changing values', () => {
-
             page.setInputValue(page.maxDensityInput, 4.5);
             page.setInputValue(page.primaryReserveInput, 29);
             page.setInputValue(page.stageReserveInput, 19);
-
 
             page.useButton.click();
             fixture.detectChanges();
@@ -151,8 +139,7 @@ describe('App settings component', () => {
 
             expect(page.maxDensityInput.value).toBeCloseTo(component.appSettings.defaultMaxGasDensity, 1);
             expect(page.primaryReserveInput.value).toBeCloseTo(component.appSettings.defaultPrimaryTankReserve, 1);
-            expect(page.stageReserveInput.value).toBeCloseTo(20,1);
-
+            expect(page.stageReserveInput.value).toBeCloseTo(20, 1);
         });
 
         it('Should use stepping precision 0,1 after increasing max density by one step', () => {
@@ -160,7 +147,6 @@ describe('App settings component', () => {
             fixture.detectChanges();
 
             expect(page.maxDensityInput.value).toBeCloseTo(5.8, 1);
-
         });
     });
 });

@@ -23,12 +23,12 @@ describe('ConsumedByMix', () => {
         firstEan.consumed = 90;
 
         firstEan.assignStandardGas('Ean32');
-        const sourceTanks = [ firstAir, secondAir, firstEan ];
+        const sourceTanks = [firstAir, secondAir, firstEan];
         const result = ConsumptionByMix.combine(sourceTanks);
 
         const assertResult = (mapFn: (s: IConsumedMix) => number, expected: number[]): void => {
             const mapped = _(result).map(mapFn).value();
-            mapped.forEach((n, index) => expect(n).toBeCloseTo(expected[index], 1))
+            mapped.forEach((n, index) => expect(n).toBeCloseTo(expected[index], 1));
         };
 
         it('Groups by Gas', () => {

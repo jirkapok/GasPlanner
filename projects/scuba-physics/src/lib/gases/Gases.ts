@@ -55,7 +55,10 @@ export class OCGasSource {
     private depthLevels: DepthLevels;
     private depthConverter: DepthConverter;
 
-    constructor(private gases: Gases, options: DepthLevelOptions) {
+    constructor(
+        private gases: Gases,
+        options: DepthLevelOptions
+    ) {
         // because we want to handle gas switch depths from user perspective not from pressure point of view
         this.depthConverter = DepthConverter.simple();
         this.depthLevels = new DepthLevels(this.depthConverter, options);
@@ -136,9 +139,12 @@ export class Gas {
      * @param _fO2 partial pressure of O2 in the mix, range 0-1
      * @param _fHe partial pressure of He in the mix, range 0-1
      */
-    constructor(private _fO2: number, private _fHe: number) {
+    constructor(
+        private _fO2: number,
+        private _fHe: number
+    ) {
         if (this.contentExceeds100percent()) {
-            throw new Error('O2 + He can\'t exceed 100 %');
+            throw new Error("O2 + He can't exceed 100 %");
         }
 
         this.updateContentCode();
@@ -228,19 +234,17 @@ export class Gas {
     }
 
     /**
-    * Calculates minimum depth at which the gas is breathe able.
-    *
-    * @param surfacePressure surface pressure in bars.
-    * @returns Depth in bars.
-    */
+     * Calculates minimum depth at which the gas is breathe able.
+     *
+     * @param surfacePressure surface pressure in bars.
+     * @returns Depth in bars.
+     */
     public ceiling(surfacePressure: number): number {
         return GasMixtures.ceiling(this._fO2, surfacePressure);
     }
 
     public compositionEquals(other: Gas): boolean {
-        return !!other &&
-            this._fO2 === other._fO2 &&
-            this._fHe === other._fHe;
+        return !!other && this._fO2 === other._fO2 && this._fHe === other._fHe;
     }
 
     public toString(): string {
@@ -260,7 +264,6 @@ export class Gas {
     private updateContentCode(): void {
         const fourK = 10000;
         // considered identical gas rounding on two decimal places
-        this._contentCode = Precision.round(this._fO2 * fourK * fourK) +
-                            Precision.round(this._fHe * fourK);
+        this._contentCode = Precision.round(this._fO2 * fourK * fourK) + Precision.round(this._fHe * fourK);
     }
 }

@@ -6,18 +6,42 @@
  *    >0: is ongasing, +1 = 100% gradient i.e. at m-value, more means exceeded limit.
  **/
 export type TissueOverPressures = [
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number,
-    number, number, number, number
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number,
+    number
 ];
 
 /** Set of 16 tissues. */
 export type LoadedTissues = [
-    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
-    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
-    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue,
-    LoadedTissue, LoadedTissue, LoadedTissue, LoadedTissue
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue,
+    LoadedTissue
 ];
 
 /**

@@ -14,8 +14,7 @@ export class QuizSession {
     private _celebrated = false;
     private _hintUsed = false;
 
-    constructor(private readonly sourceCategory: Category) {
-    }
+    constructor(private readonly sourceCategory: Category) {}
 
     public get correctAnswers(): number {
         return this._correctAnswers;
@@ -38,7 +37,7 @@ export class QuizSession {
     }
 
     public get correctPercentage(): number {
-        if(this.maxPoints === 0) {
+        if (this.maxPoints === 0) {
             return 0;
         }
 
@@ -58,7 +57,7 @@ export class QuizSession {
     }
 
     public get anyHintUsed(): boolean {
-        return (this.maxPoints !== this.totalScore) && (this.totalAnswered > 0);
+        return this.maxPoints !== this.totalScore && this.totalAnswered > 0;
     }
 
     public static fromDto(dto: QuizSessionDto, sourceCategory: Category): QuizSession {
@@ -73,7 +72,7 @@ export class QuizSession {
     public answerCorrectly(): void {
         this._totalAnswered++;
         this._correctAnswers++;
-        const points= this._hintUsed ? QuizSession.pointsHinted : QuizSession.pointsCorrect;
+        const points = this._hintUsed ? QuizSession.pointsHinted : QuizSession.pointsCorrect;
         this._totalScore += points;
         this.resetHinted();
         this.finishIfEligible();
@@ -93,8 +92,9 @@ export class QuizSession {
     }
 
     private get canFinishSession(): boolean {
-        return this.totalAnswered >= QuizSession.requiredAnsweredCount &&
-            this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate;
+        return (
+            this.totalAnswered >= QuizSession.requiredAnsweredCount && this.correctPercentage >= QuizSession.minimalAcceptableSuccessRate
+        );
     }
 
     private finishIfEligible(): void {
@@ -126,4 +126,3 @@ export class QuizSession {
         this._hintUsed = false;
     }
 }
-

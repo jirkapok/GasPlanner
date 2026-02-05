@@ -22,7 +22,8 @@ export class DelayedScheduleService extends Streamed {
         private dispatcher: ReloadDispatcher,
         private planner: PlannerService,
         private diveSchedules: DiveSchedules,
-        private views: SubViewStorage) {
+        private views: SubViewStorage
+    ) {
         super();
     }
 
@@ -39,24 +40,18 @@ export class DelayedScheduleService extends Streamed {
     }
 
     private registerEventListeners(): void {
-        this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleSelected());
+        this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.scheduleSelected());
 
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleSelected());
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.scheduleSelected());
 
-        this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleSelected());
+        this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.scheduleSelected());
 
-        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleSelected());
+        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.scheduleSelected());
 
-        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.scheduleAll());
+        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.scheduleAll());
 
         // we need to serialize since next dive can be calculated only after previous one has results
-        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId) => this.scheduleNextDive(diveId));
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(diveId => this.scheduleNextDive(diveId));
     }
 
     private schedule(diveId: number): void {
@@ -64,7 +59,7 @@ export class DelayedScheduleService extends Streamed {
 
         // this prevents fast changes to schedule the same dive, but does not prevent th schedule other dives.
         // Expects user is unable to select dive within the delayMilliseconds.
-        if(this.scheduledDiveId === diveId) {
+        if (this.scheduledDiveId === diveId) {
             return;
         }
 
@@ -78,14 +73,14 @@ export class DelayedScheduleService extends Streamed {
     }
 
     private scheduleNextDive(diveId?: number): void {
-        if(!diveId) {
+        if (!diveId) {
             return;
         }
 
         const nextId = diveId + 1;
         const nextDive = this.diveSchedules.byId(nextId);
 
-        if(nextDive && nextDive.isRepetitive) {
+        if (nextDive && nextDive.isRepetitive) {
             this.schedule(nextId);
         }
     }

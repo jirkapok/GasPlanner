@@ -214,7 +214,7 @@ describe('Tank', () => {
                 expect(tank.startPressure).toBe(200);
                 expect(tank.endPressure).toBe(0);
                 expect(tank.consumed).toBe(200);
-                expect(tank.volume).toBeCloseTo(38.573030, 6);
+                expect(tank.volume).toBeCloseTo(38.57303, 6);
             });
         });
 
@@ -291,7 +291,7 @@ describe('Tank', () => {
             expect(modified.gas).toEqual(StandardGases.trimix1070);
         });
 
-        it('Nothing changed if, gas wasn\'t found', () => {
+        it("Nothing changed if, gas wasn't found", () => {
             const modified = new Tank(10, 200, 21);
             modified.assignStandardGas('unknown');
             expect(modified.gas).toEqual(StandardGases.air);
@@ -389,7 +389,7 @@ describe('Tank', () => {
             sut.reserveVolume = 18500; // cca 770 b theoretical pressure
             expect(sut.reserve).toBeCloseTo(200, 6);
             expect(sut.reserveVolume).toBeCloseTo(4628.763582, 6);
-        })
+        });
 
         it('Set consumed volume to reasonable volume', () => {
             const sut = new Tank(24, 200, 21);

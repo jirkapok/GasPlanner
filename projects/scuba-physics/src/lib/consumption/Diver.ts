@@ -11,7 +11,10 @@ export class Diver {
      * @param rmv liter/min
      * @param rmvStress liter/min
      */
-    constructor(public rmv: number = Diver.defaultSac, rmvStress?: number) {
+    constructor(
+        public rmv: number = Diver.defaultSac,
+        rmvStress?: number
+    ) {
         this.stressRmv = rmvStress || rmv * 1.5;
     }
 

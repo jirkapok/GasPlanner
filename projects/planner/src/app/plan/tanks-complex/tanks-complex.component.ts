@@ -36,15 +36,15 @@ interface TanksForm {
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
     imports: [
-    ReactiveFormsModule,
-    CardHeaderComponent,
-    MdbAccordionModule,
-    FaIconComponent,
-    TankSizeComponent,
-    OxygenDropDownComponent,
-    GaslabelComponent,
-    DecimalPipe
-],
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        MdbAccordionModule,
+        FaIconComponent,
+        TankSizeComponent,
+        OxygenDropDownComponent,
+        GaslabelComponent,
+        DecimalPipe
+    ]
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;
@@ -59,7 +59,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -90,15 +91,13 @@ export class TanksComplexComponent extends Streamed implements OnInit {
             boundTanks: rows
         });
 
-        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((source: TanksService) => {
-                if(this.tanksService === source) {
-                    this.reloadAll();
-                }
-            });
+        this.dispatcher.tanksReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe((source: TanksService) => {
+            if (this.tanksService === source) {
+                this.reloadAll();
+            }
+        });
 
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reloadAll());
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.reloadAll());
 
         this.rootForm.addControl('tanksForm', this.tanksForm);
     }
@@ -233,7 +232,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
             tankSize: [Precision.round(tank.size, 1), this.validators.tankSize],
             tankStartPressure: [Precision.round(tank.startPressure, 1), this.validators.tankPressure],
             tankO2: [Precision.round(tank.o2, 1), this.validators.trimixOxygen],
-            tankHe: [Precision.round(tank.he, 1), this.validators.trimixHe],
+            tankHe: [Precision.round(tank.he, 1), this.validators.trimixHe]
         });
 
         if (this.units.imperialUnits) {

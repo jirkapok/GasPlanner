@@ -1,9 +1,7 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { formatNumber, DecimalPipe } from '@angular/common';
 import { takeUntil } from 'rxjs';
-import {
-    faSlidersH, faShareFromSquare, faExclamationTriangle
-} from '@fortawesome/free-solid-svg-icons';
+import { faSlidersH, faShareFromSquare, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
 import { Tank, GasToxicity } from 'scuba-physics';
@@ -29,15 +27,15 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
     imports: [
-    CardHeaderComponent,
-    FaIconComponent,
-    MdbTabsModule,
-    CalculatingComponent,
-    TankChartComponent,
-    DiveIssuesComponent,
-    DecimalPipe,
-    DurationPipe
-]
+        CardHeaderComponent,
+        FaIconComponent,
+        MdbTabsModule,
+        CalculatingComponent,
+        TankChartComponent,
+        DiveIssuesComponent,
+        DecimalPipe,
+        DurationPipe
+    ]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
@@ -52,13 +50,13 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules
+    ) {
         super();
 
-        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId)=> {
-                this.checkIssuesTab(diveId);
-            });
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe(diveId => {
+            this.checkIssuesTab(diveId);
+        });
     }
 
     public get isComplex(): boolean {
@@ -93,7 +91,7 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     }
 
     public get cnsText(): string {
-        if(this.dive.cns >= 1000) {
+        if (this.dive.cns >= 1000) {
             return TextConstants.cnsOverOneThousand;
         }
 
@@ -125,10 +123,9 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((e: MdbTabChange) => {
-                this.selectedChanged(e);
-            });
+        this.tabs?.activeTabChange.pipe(takeUntil(this.unsubscribe$)).subscribe((e: MdbTabChange) => {
+            this.selectedChanged(e);
+        });
     }
 
     public applyMaxDuration(): void {
@@ -149,9 +146,11 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     private checkIssuesTab(diveId: number | undefined) {
         const selectedDive = this.schedules.selected;
-        if (selectedDive.id === diveId &&
+        if (
+            selectedDive.id === diveId &&
             (selectedDive.diveResult.hasErrorEvent || selectedDive.diveResult.hasWarningEvent) &&
-            (this.lastSelected === 0 || (!selectedDive.diveResult.notEnoughGas && this.lastSelected === 1))) {
+            (this.lastSelected === 0 || (!selectedDive.diveResult.notEnoughGas && this.lastSelected === 1))
+        ) {
             this.tabs?.setActiveTab(this.issuesTabIndex);
         }
     }

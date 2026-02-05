@@ -8,9 +8,7 @@ import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { Streamed } from '../../shared/streamed';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
-import {
-    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder
-} from '../../shared/chartPlotter';
+import { ChartPlotter, ChartPlotterFactory, DiveTracesBuilder } from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
@@ -42,35 +40,31 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules
+    ) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        this.profileTraces = chartPlotterFactory.withNamePrefix('')
-            .create(() => this.dive);
+        this.profileTraces = chartPlotterFactory.withNamePrefix('').create(() => this.dive);
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
-        this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId?: number) => {
-                if (this.schedules.selected.id === diveId) {
-                    this.plotProfile();
-                    this.plotlyHoverLeave();
-                }
-            });
+        this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe((diveId?: number) => {
+            if (this.schedules.selected.id === diveId) {
+                this.plotProfile();
+                this.plotlyHoverLeave();
+            }
+        });
 
-        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((diveId?: number) => {
-                if (this.schedules.selected.id === diveId) {
-                    this.plotAllCharts();
-                    this.plotlyHoverLeave();
-                }
-            });
+        this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$)).subscribe((diveId?: number) => {
+            if (this.schedules.selected.id === diveId) {
+                this.plotAllCharts();
+                this.plotlyHoverLeave();
+            }
+        });
 
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotAllCharts());
-        this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.plotAllCharts());
+        this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$)).subscribe(wayPoint => this.selectWayPoint(wayPoint));
     }
 
     public get profileCalculated(): boolean {

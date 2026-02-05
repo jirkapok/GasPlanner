@@ -40,7 +40,8 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher
+    ) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -81,25 +82,21 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
             depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
         });
 
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.reload();
+        });
+
+        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
+            this.reload();
+        });
+
+        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$)).subscribe((source: DepthsService) => {
+            if (this.depths === source) {
                 this.reload();
-            });
+            }
+        });
 
-        this.dispatcher.setToSimple$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.reload();
-            });
-
-        this.dispatcher.depthsReloaded$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((source: DepthsService) => {
-                if(this.depths === source) {
-                    this.reload();
-                }
-            });
-
-        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.reload());
+        this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$)).subscribe(() => this.reload());
 
         this.rootForm.addControl('simpleDepths', this.simpleForm);
     }

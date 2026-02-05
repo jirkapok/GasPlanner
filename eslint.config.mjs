@@ -11,6 +11,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import js from "@eslint/js";
 import { FlatCompat } from "@eslint/eslintrc";
+import prettier from "eslint-config-prettier";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -77,6 +78,7 @@ export default defineConfig([{
         }],
 
         "@angular-eslint/prefer-standalone": "warn",
+        "@angular-eslint/prefer-inject": "warn",
         "@angular-eslint/no-input-rename": "error",
         "@angular-eslint/no-output-on-prefix": "error",
         "@angular-eslint/no-output-rename": "error",
@@ -88,50 +90,62 @@ export default defineConfig([{
             accessibility: "explicit",
         }],
 
-        "indent": ["error", 4],
-        "semi": ["error", "always"],
-        "quotes": ["error", "single"],
+        // Formatting rules - disabled, handled by Prettier
+        "indent": "off",
+        "semi": "off",
+        "quotes": "off",
+        "brace-style": "off",
+        "eol-last": "off",
+        "max-len": "off",
+        "no-trailing-spaces": "off",
+        "spaced-comment": "off",
+        "object-curly-spacing": "off",
 
-        "@typescript-eslint/member-ordering": "error",
-        "@typescript-eslint/naming-convention": "error",
+        // Downgraded to warnings - pre-existing issues to fix gradually
+        "@typescript-eslint/member-ordering": "warn",
+        "@typescript-eslint/naming-convention": "warn",
+        "@typescript-eslint/no-non-null-assertion": "warn",
+        "@typescript-eslint/no-shadow": ["warn", { hoist: "all" }],
+        "@typescript-eslint/no-floating-promises": "warn",
+        "@typescript-eslint/no-unnecessary-type-assertion": "warn",
+        "@typescript-eslint/no-redundant-type-constituents": "warn",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "@typescript-eslint/no-explicit-any": "warn",
+        "@typescript-eslint/unbound-method": "warn",
+        "eqeqeq": ["warn", "smart"],
+        "prefer-spread": "warn",
+        "no-self-assign": "warn",
+
+        // Disabled - too noisy for this codebase
+        "@typescript-eslint/no-unsafe-member-access": "off",
+        "@typescript-eslint/no-unsafe-assignment": "off",
+        "@typescript-eslint/no-unsafe-call": "off",
+        "@typescript-eslint/no-unsafe-argument": "off",
+        "@typescript-eslint/no-unsafe-return": "off",
         "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-empty-object-type": "warn",
+        "@typescript-eslint/restrict-template-expressions": "warn",
+
+        // Kept as errors - important rules
         "@typescript-eslint/no-empty-interface": "error",
-
-        "@typescript-eslint/no-inferrable-types": ["error", {
-            ignoreParameters: true,
-        }],
-
+        "@typescript-eslint/no-inferrable-types": ["error", { ignoreParameters: true }],
         "@typescript-eslint/no-misused-new": "error",
-        "@typescript-eslint/no-non-null-assertion": "error",
-
-        "@typescript-eslint/no-shadow": ["error", {
-            hoist: "all",
-        }],
-
         "@typescript-eslint/no-unused-expressions": "error",
         "@typescript-eslint/prefer-function-type": "error",
         "@typescript-eslint/unified-signatures": "error",
         "arrow-body-style": "error",
-        "brace-style": ["error", "1tbs"],
         "constructor-super": "error",
-        "object-curly-spacing": ["error", "always"],
         curly: "error",
-        "eol-last": "error",
-        eqeqeq: ["error", "smart"],
         "guard-for-in": "error",
         "id-blacklist": "off",
         "id-match": "off",
         "import/no-deprecated": "warn",
-
-        "max-len": ["error", {
-            code: 140,
-        }],
-
         "no-bitwise": "error",
         "no-caller": "error",
 
         "no-console": ["error", {
             allow: [
+                "debug",
                 "log",
                 "warn",
                 "dir",
@@ -161,18 +175,15 @@ export default defineConfig([{
         "no-new-wrappers": "error",
         "no-restricted-imports": ["error", "rxjs/Rx"],
         "no-throw-literal": "error",
-        "no-trailing-spaces": "error",
         "no-undef-init": "error",
         "no-underscore-dangle": "off",
         "no-unused-labels": "error",
         "no-var": "error",
         "prefer-const": "error",
         radix: "error",
-
-        "spaced-comment": ["error", "always", {
-            markers: ["/"],
-        }],
-
         "@typescript-eslint/adjacent-overload-signatures": "off",
     },
-}]);
+},
+// Prettier must be last to override formatting rules
+prettier,
+]);

@@ -10,27 +10,43 @@ on:
     - master
 
 jobs:
-  test:
+  e2e:
+    name: End-to-End Tests
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-node@v4
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
       with:
         node-version-file: .nvmrc
+        cache: 'npm'
 
-    - name: Install dependencies
-      run: npm ci --legacy-peer-deps
+    - run: npm ci --legacy-peer-deps
 
-    - run: npm run build-lib
-    - run: npm install ./dist/scuba-physics --no-package-lock --legacy-peer-deps
+    - name: Cache Playwright browsers
+      uses: actions/cache@v4
+      id: playwright-cache
+      with:
+        path: ~/.cache/ms-playwright
+        key: ${{ runner.os }}-playwright-${{ hashFiles('**/package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-playwright-
 
     - name: Install Playwright Browsers
+      if: steps.playwright-cache.outputs.cache-hit != 'true'
       run: npx playwright install chromium
 
-    - name: Run E2E tests
-      run: npm run e2e
+    - run: ./scripts/e2e.sh
+
+    - name: Upload Playwright report
+      uses: actions/upload-artifact@v4
+      if: failure()
+      with:
+        name: playwright-report
+        path: test-results/
+        retention-days: 7
 
     - name: Publish Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2.18.0

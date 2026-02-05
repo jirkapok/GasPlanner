@@ -8,11 +8,14 @@
     "build": "ng build --configuration production planner",
     "build-lib": "ng build --configuration production scuba-physics",
     "test": "ng test",
-    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
+    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch --code-coverage",
     "test-lib": "ng test --project scuba-physics",
-    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
+    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --code-coverage",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "format": "prettier --write \"projects/**/*.{ts,html,scss,css,json}\"",
+    "format:check": "prettier --check \"projects/**/*.{ts,html,scss,css,json}\"",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -82,7 +85,20 @@
     "karma-junit-reporter": "^2.0.1",
     "karma-verbose-reporter": "^0.0.8",
     "ng-packagr": "^20.3.2",
+    "prettier": "^3.4.2",
+    "eslint-config-prettier": "^9.1.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.3.0",
     "playwright-ng-schematics": "^20.0.2",
     "typescript": "^5.8.3"
+  },
+  "lint-staged": {
+    "projects/**/*.{ts,html}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "projects/**/*.{scss,css,json}": [
+      "prettier --write"
+    ]
   }
 }

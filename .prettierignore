@@ -1,0 +1,18 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+coverage/
+test-results/
+
+# Angular cache
+.angular/
+
+# IDE
+.idea/
+.vscode/
+
+# Misc
+*.log
+package-lock.json

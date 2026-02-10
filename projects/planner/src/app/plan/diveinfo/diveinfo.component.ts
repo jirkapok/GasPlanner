@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
-import { Tank, GasToxicity } from 'scuba-physics';
+import { Tank, GasToxicity, Ceiling } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { Streamed } from '../../shared/streamed';
@@ -118,6 +118,10 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public get toxicity(): GasToxicity {
         return this.schedules.selectedToxicity;
+    }
+
+    public get maxCeiling(): Ceiling | undefined {
+        return this.dive.maxCeiling;
     }
 
     private get depthsService(): DepthsService {

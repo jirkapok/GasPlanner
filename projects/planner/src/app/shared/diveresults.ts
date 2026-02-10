@@ -1,11 +1,12 @@
 import {
     Ceiling, HighestDensity,
     TissueOverPressures, LoadedTissues,
-    OtuCalculator, ProfileTissues, Segment
+    OtuCalculator, ProfileTissues
 } from 'scuba-physics';
+import _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 class CalculationState {
     private _calculating = false;
@@ -55,6 +56,7 @@ export class DiveResults {
     private _cns = 0;
     private _highestDensity = HighestDensity.createDefault();
     private _ceilings: Ceiling[] = [];
+    private _maxCeiling?: Ceiling;
     // 16 tissues overpressure history
     private _tissueOverPressures: TissueOverPressures[] = [];
     private _events: BoundEvent[] = [];
@@ -129,6 +131,10 @@ export class DiveResults {
 
     public get ceilings(): Ceiling[] {
         return this._ceilings;
+    }
+
+    public get maxCeiling(): Ceiling | undefined {
+        return this._maxCeiling;
     }
 
     public get tissueOverPressures(): TissueOverPressures[] {
@@ -373,6 +379,7 @@ export class DiveResults {
         this._ceilings = ceilings;
         this._tissueOverPressures = tissueOverPressures;
         this._events = events;
+        this._maxCeiling = _(this._ceilings).maxBy(c => c.depth);
     }
 
     private updateConsumptionInternal(

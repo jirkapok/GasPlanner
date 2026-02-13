@@ -12,7 +12,8 @@
     "test-lib": "ng test --project scuba-physics",
     "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "prepare": "husky"
   },
   "private": true,
   "dependencies": {
@@ -55,6 +56,8 @@
     "@angular/build": "^20.3.14",
     "@angular/cli": "^20.3.14",
     "@angular/compiler-cli": "^20.3.16",
+    "@commitlint/cli": "^20.4.1",
+    "@commitlint/config-conventional": "^20.4.1",
     "@eslint/compat": "^2.0.1",
     "@eslint/eslintrc": "^3.3.3",
     "@eslint/js": "^9.39.2",
@@ -75,6 +78,7 @@
     "eslint-plugin-jasmine": "^4.2.2",
     "globals": "^16.2.0",
     "http-server": "^14.1.1",
+    "husky": "^9.1.7",
     "jasmine-core": "^5.7.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",

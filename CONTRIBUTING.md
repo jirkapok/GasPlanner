@@ -1,7 +1,7 @@
 # Contributing
 
 No extra rules are applied. Just follow the general rules of contributing to a project and linter settings.
-Create Pull requests to the develop branch and link issue the PR solves.
+Create Pull requests to the **master** branch and link issue the PR solves.
 
 
 ## List of contributors

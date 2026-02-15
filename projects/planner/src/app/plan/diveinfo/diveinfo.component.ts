@@ -29,15 +29,15 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
     imports: [
-    CardHeaderComponent,
-    FaIconComponent,
-    MdbTabsModule,
-    CalculatingComponent,
-    TankChartComponent,
-    DiveIssuesComponent,
-    DecimalPipe,
-    DurationPipe
-]
+        CardHeaderComponent,
+        FaIconComponent,
+        MdbTabsModule,
+        CalculatingComponent,
+        TankChartComponent,
+        DiveIssuesComponent,
+        DecimalPipe,
+        DurationPipe
+    ]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
@@ -122,6 +122,11 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public get maxCeiling(): Ceiling | undefined {
         return this.dive.maxCeiling;
+    }
+
+    public get showHighestCeiling(): boolean {
+        const maxCeilingDepth = this.maxCeiling?.depth ?? 0;
+        return maxCeilingDepth > 0;
     }
 
     private get depthsService(): DepthsService {

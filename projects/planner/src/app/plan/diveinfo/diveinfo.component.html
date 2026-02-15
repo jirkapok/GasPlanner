@@ -98,14 +98,14 @@
                   }
                 </td>
               </tr>
-              @if (maxCeiling) {
+              @if (showHighestCeiling) {
                   <tr>
                       <td>Highest ceiling [{{ units.length }}]:</td>
                       <td class="table-active">
                           @if (dive.calculated) {
                         <span>
-                          <strong>{{ maxCeiling.depth | number:'1.0-1' }}</strong>
-                          (at {{ maxCeiling.time | duration:maxCeiling.time }})
+                          <strong>{{ maxCeiling!.depth | number:'1.0-1' }}</strong>
+                          (at {{ maxCeiling!.time | duration:maxCeiling!.time }})
                         </span>
                           }
                       </td>

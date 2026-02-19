@@ -12,7 +12,7 @@ export interface GasFractions {
 
 export class RebreatherGasCalculator {
 
-    private static readonly R = 8.314;        // J/(mol·K)
+    private static readonly R = 8.314;
     private static readonly PaPerATA = 101325;
 
     static calculate(
@@ -21,10 +21,10 @@ export class RebreatherGasCalculator {
         fO2Dil: number,
         fHeDil: number,
         options?: {
-            ppo2Setpoint?: number;       // eCCR
-            o2FlowLpmAmbient?: number;   // mCCR
-            dilFlowLpmAmbient?: number;  // mCCR & pSCR
-            metabolicO2LpmSTP?: number;  // mCCR & pSCR
+            ppo2Setpoint?: number;
+            o2FlowLpmAmbient?: number;
+            dilFlowLpmAmbient?: number;
+            metabolicO2LpmSTP?: number;
             temperatureK?: number;
         }
     ): GasFractions {
@@ -45,13 +45,11 @@ export class RebreatherGasCalculator {
                 return this.calculateECCR(depthMeters, ppo2Setpoint, fO2Dil, fHeDil);
 
             case RebreatherMode.PSCR:
-                return this.calculatePSCR(
-                    pAmbPa,
+                return this.calculatePSCR_SteadyFO2(
                     fO2Dil,
                     fHeDil,
                     dilFlowLpmAmbient,
-                    metabolicO2LpmSTP,
-                    temperatureK
+                    metabolicO2LpmSTP
                 );
 
             case RebreatherMode.MCCR:
@@ -75,6 +73,8 @@ export class RebreatherGasCalculator {
     // =============================
     private static calculateECCR(
         depthMeters: number,
+        // range: , recommended descent = 0.7, bottom = 1.3, ascent 1.0
+        // switch to bottom sp at 20 - 25 m, to ascent at first stop
         ppo2Setpoint: number,
         fO2Dil: number,
         fHeDil: number
@@ -95,85 +95,64 @@ export class RebreatherGasCalculator {
     }
 
     // =============================
-    // pSCR
+    // pSCR — STEADY-STATE FO2 MODEL
     // =============================
-    private static calculatePSCR(
-        pAmbPa: number,
+    private static calculatePSCR_InjectionRatio(
         fO2Dil: number,
         fHeDil: number,
-        dilFlowLpmAmbient: number,
-        metabolicO2LpmSTP: number,
-        temperatureK: number
+        // range: 4-12, minimum > 1/fO2
+        injectionRatio: number,
+        depth: number // bar
     ): GasFractions {
+
+        if (injectionRatio <= 0)
+            throw new Error("Injection ratio must be > 0");
 
         const fN2Dil = 1 - fO2Dil - fHeDil;
 
-        const flowM3sAmb = (dilFlowLpmAmbient / 1000) / 60;
-        const molIn = (pAmbPa * flowM3sAmb) / (this.R * temperatureK);
+        // Steady-state FO2
+        // injectionRatio needs to be > oxygenExtraction. In case extraction = 1, injection ration needs to be > 1
+        let fO2Loop = fO2Dil - (1 / injectionRatio);
+        fO2Loop = this.clamp(fO2Loop, 0, 1);
 
-        const flowM3sO2_STP = (metabolicO2LpmSTP / 1000) / 60;
-        const molO2 = (this.PaPerATA * flowM3sO2_STP) / (this.R * temperatureK);
+        // Renormalize inert gases
+        const inertLoop = 1 - fO2Loop;
+        const inertDil = 1 - fO2Dil;
 
-        const gamma = molO2 / molIn;
-        if (gamma >= 1) {
-            throw new Error("Metabolic O2 demand exceeds supply");
-        }
+        const fHeLoop = inertDil > 0 ? inertLoop * (fHeDil / inertDil) : 0;
+        const fN2Loop = inertDil > 0 ? inertLoop * (fN2Dil / inertDil) : 0;
 
-        const fO2Loop = (fO2Dil - gamma) / (1 - gamma);
-        const fHeLoop = fHeDil / (1 - gamma);
-        const fN2Loop = fN2Dil / (1 - gamma);
-
-        return {
-            FO2: this.clamp(fO2Loop, 0, 1),
-            FHe: this.clamp(fHeLoop, 0, 1),
-            FN2: this.clamp(fN2Loop, 0, 1)
-        };
+        return { FO2: fO2Loop, FHe: fHeLoop, FN2: fN2Loop }; // TODO normalize to bar
     }
 
-    // =============================
-    // mCCR
-    // =============================
-    private static calculateMCCR(
-        pAmbPa: number,
-        fO2Dil: number,
-        fHeDil: number,
-        o2FlowLpmAmbient: number,
-        dilFlowLpmAmbient: number,
-        metabolicO2LpmSTP: number,
-        temperatureK: number
-    ): GasFractions {
 
-        const fN2Dil = 1 - fO2Dil - fHeDil;
+    // TODO do we even need this if o2Flow = metabolic?
+    // Because it would mean that pO2 didnt change = diluent O2
+    /**
+     * Simplified steady-state mCCR loop PO2.
+     * The loop PO₂ settles where O₂ addition equals metabolic use.
+     *
+     * depthM — depth in meters
+     * FO2_dil — diluent O2 fraction (0–1)
+     * o2Flow — manual O2 addition rate (L/min, surface equivalent)
+     * metabolic — diver O2 consumption (L/min, surface equivalent)
+     */
+    mccrLoopPO2(
+        depthM: number,
+        FO2_dil: number,
+        o2Flow: number,
+        metabolic: number = 1.0
+    ): number {
 
-        const o2FlowM3s = (o2FlowLpmAmbient / 1000) / 60;
-        const dilFlowM3s = (dilFlowLpmAmbient / 1000) / 60;
+        const P = 1 + depthM / 10; // ambient pressure (bar)
 
-        const molInTotal =
-            (pAmbPa * (o2FlowM3s + dilFlowM3s)) / (this.R * temperatureK);
+        // Diluent contribution
+        const diluentPO2 = P * FO2_dil;
 
-        const flowM3sO2_STP = (metabolicO2LpmSTP / 1000) / 60;
-        const molO2 = (this.PaPerATA * flowM3sO2_STP) / (this.R * temperatureK);
+        // Excess O2 accumulation (compressed in loop)
+        const excess = Math.max(0, o2Flow - metabolic) / P;
 
-        const gamma = molO2 / molInTotal;
-        if (gamma >= 1) {
-            throw new Error("Metabolic O2 demand exceeds supply");
-        }
-
-        const fO2Inflow =
-            (o2FlowM3s + dilFlowM3s * fO2Dil) /
-            (o2FlowM3s + dilFlowM3s);
-
-        const fO2Loop = (fO2Inflow - gamma) / (1 - gamma);
-
-        const inertTotalDil = 1 - fO2Dil;
-        const fHeLoop = (fHeDil / inertTotalDil) * (1 - fO2Loop);
-        const fN2Loop = (fN2Dil / inertTotalDil) * (1 - fO2Loop);
-
-        return {
-            FO2: this.clamp(fO2Loop, 0, 1),
-            FHe: this.clamp(fHeLoop, 0, 1),
-            FN2: this.clamp(fN2Loop, 0, 1)
-        };
+        return diluentPO2 + excess;
     }
 
     private static clamp(value: number, min: number, max: number): number {

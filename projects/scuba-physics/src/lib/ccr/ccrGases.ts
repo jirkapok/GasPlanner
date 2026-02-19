@@ -140,8 +140,8 @@ export class RebreatherGasCalculator {
     mccrLoopPO2(
         depthM: number,
         FO2_dil: number,
-        o2Flow: number,
-        metabolic: number = 1.0
+        o2Flow: number,  // 0.8 -2.0, default 1.2
+        metabolic: number = 1.0 // range: 0.7-3.0, default 1.0
     ): number {
 
         const P = 1 + depthM / 10; // ambient pressure (bar)

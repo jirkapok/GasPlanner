@@ -1,12 +1,15 @@
 <#
     .SYNOPSIS
-        use this script as automation for release at github
+        DEPRECATED: Releases are now automated via CI. See .github/workflows/ci.yml
+        This script is kept for reference only.
 
     .EXAMPLE
         ./release.ps1 v1.0
 
         Publishes new version to github pages with tag "v1.0".
 #>
+
+Write-Warning "DEPRECATED: Releases are now automated via CI. See .github/workflows/ci.yml"
 
 param(
     [Parameter(Mandatory = $true)]

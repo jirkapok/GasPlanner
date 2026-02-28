@@ -1,6 +1,4 @@
-# Example Nitrox Equivalent air depth calculation
-
-## Formulas
+**Formulas**
 
 nitrogen fraction = 1 - oxygen fraction in the mix
 
@@ -10,7 +8,7 @@ equivalent air depth pressure = (pressure at depth * oxygen fraction) / 0.79
 equivalent air depth = convert equivalent air depth pressure to depth
 
 
-## Example
+**Example**
 
 What is the equivalent air depth of nitrox mix with 32 % oxygen at 30 m?
 

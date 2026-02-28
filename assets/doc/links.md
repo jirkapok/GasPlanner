@@ -54,6 +54,7 @@ Following list of external sources was used to develop this application and can 
   * https://github.com/subsurface/subsurface/blob/master/core/gas-model.c
   * https://thetheoreticaldiver.org/wordpress/index.php/2021/11/16/blending-real-gases/
   * https://scubaboard.com/community/threads/real-gas-the-real-deal.624674/#post-9772444
+  * https://blender-toolkit.t-provider.de/
 * Thalmann algorithm for deeper depths (https://indepthmag.com/thalmann-algorithm/)
 * Deco myths <https://hhssoftware.com/v-planner/decomyths.html>
 

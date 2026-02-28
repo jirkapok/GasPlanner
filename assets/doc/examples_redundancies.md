@@ -1,10 +1,8 @@
-## Example redundancies calculations
+**Formulas**
 
-## Formulas
+final pressure = (first tank pressure * first tank size + second tank pressure * second tank size) / (sum of tank sizes)
 
-final pressure = (first tank pressure * first tank size + second tank pressure * second tank size) / (sum of tank sizes) 
-
-## Example
+**Example**
 
 What is the final pressure in two tanks with different sizes and pressures?
 

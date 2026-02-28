@@ -1,12 +1,10 @@
-# Example Nitrox best mix calculation
-
-## Formulas
+**Formulas**
 
 depth pressure = convert maximum operational depth to pressure
 
 O2 fraction in mix = partial pressure O2 / maximum operational depth pressure 
 
-## Example
+**Example**
 
 What is the best mix (in percents) at partial pressure 1.4 at depth 30 m?
 

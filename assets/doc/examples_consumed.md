@@ -1,13 +1,11 @@
-# Example Gas consumed calculation
-
-## Formulas
+**Formulas**
 
 SAC =  RMV / tank size
 
 consumed gas = SAC * average depth in bars * duration
 
 
-## Example
+**Example**
 
 How much gas did i use (in bars) at average depth 15 m, with tank 10 L for 45 minutes where my respiratory minute volume (RMV) was 20 L/min?
 

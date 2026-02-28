@@ -1,12 +1,10 @@
-# Example Respiratory minute volume calculations
-
-## Formulas
+**Formulas**
 
 SAC = consumed gas / (average depth in bars * duration)
 
 RMV = SAC * tank size
 
-## Example
+**Example**
 
 During dive where average depth was 15 meters for 45 minutes i consumed 150 bars from 15 liter tank. What is my SAC and RMV?
 

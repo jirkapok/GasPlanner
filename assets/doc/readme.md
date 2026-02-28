@@ -32,6 +32,6 @@
     * [Altitude](./altitude.md)
     * [Weight](./weight.md)
     * [Gas properties](./gas_properties.md)
-    * [Redundancies](./redundancies.md)
+    * [Cylinder Balancing](./redundancies.md)
     * [Gas blender](./gas_blender.md)
 * [External reading](./links.md)

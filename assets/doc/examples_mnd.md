@@ -1,11 +1,9 @@
-# Example equivalent narcotic depth calculations
-
-## Formulas
+**Formulas**
 
 Maximum narcotic depth = narcotic depth limit / (1 - Helium fraction)
 
 
-## Example
+**Example**
 
 You plan a dive and consider Air narcotic for depths below 30 meters. 
 Team selects Trimix 21/35 as a gas. What is the maximum narcotic depth for this gas?

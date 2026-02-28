@@ -1,14 +1,9 @@
-## 👋 Hi there!
+👋 Hi there! It looks like you're new here, welcome!
 
-It looks like you're new here — welcome! 🎉
+Click the ℹ️ icon on any card to get help.
 
-Would you like a quick walkthrough to learn scuba diving math?
-
-Here’s how to get started:
-- ✅ Choose a **topic** and **category**
-- 🧠 Solve quiz questions
-- 🏅 Earn badges by completing categories
+Would you like to learn scuba diving math and 
+earn badges 🏅 by completing quiz questions?
 
 👉 [Start learning now](/learn)
 
-Need help later? Click the ❓ icon at any time!

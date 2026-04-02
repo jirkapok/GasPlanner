@@ -20,9 +20,21 @@
             }
         ],
         [
+            "@semantic-release/exec",
+            {
+                "prepareCmd": "pwsh ./build/bump-version.ps1 -Version ${nextRelease.version}"
+            }
+        ],
+        [
             "@semantic-release/git",
             {
-                "assets": ["package.json", "package-lock.json", "CHANGELOG.md"],
+                "assets": [
+                    "package.json",
+                    "package-lock.json",
+                    "CHANGELOG.md",
+                    "projects/scuba-physics/package.json",
+                    "projects/planner/src/manifest.webmanifest"
+                ],
                 "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
             }
         ],

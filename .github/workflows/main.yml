@@ -102,6 +102,8 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     permissions:
       contents: write
+    env:
+      SITE_URL: https://dugong.online
     steps:
       - uses: actions/checkout@v4
         with:
@@ -115,6 +117,31 @@ jobs:
           cache: npm
 
       - run: npm ci --legacy-peer-deps
-      - run: pwsh ./build/deploy.ps1
+
+      - name: Save previous gh-pages commit
+        id: pre-deploy
+        run: echo "sha=$(git rev-parse origin/gh-pages)" >> "$GITHUB_OUTPUT"
+
+      - name: Read expected version
+        id: version
+        run: echo "value=$(node -p "require('./package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy to gh-pages
+        run: pwsh ./build/deploy.ps1
         env:
           DEPLOY_VERSION: ${{ github.sha }}
+
+      - name: Wait for deployment to go live
+        run: pwsh ./build/wait-for-deploy.ps1 -ExpectedVersion ${{ steps.version.outputs.value }} -SiteUrl ${{ env.SITE_URL }}
+
+      - name: Install Playwright browsers
+        run: npx playwright install chromium
+
+      - name: Run production smoke test
+        run: npx playwright test --project=chromium
+        env:
+          PLAYWRIGHT_TEST_BASE_URL: ${{ env.SITE_URL }}
+
+      - name: Rollback on failure
+        if: failure()
+        run: pwsh ./build/rollback-deploy.ps1 -CommitSha ${{ steps.pre-deploy.outputs.sha }}

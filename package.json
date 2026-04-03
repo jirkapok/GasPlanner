@@ -8,9 +8,9 @@
     "build": "ng build --configuration production planner",
     "build-lib": "ng build --configuration production scuba-physics",
     "test": "ng test",
-    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch",
+    "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch --code-coverage",
     "test-lib": "ng test --project scuba-physics",
-    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch",
+    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --code-coverage --exclude **/performanceTests.spec.ts",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

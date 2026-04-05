@@ -30,6 +30,18 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - run: pwsh ./build/test.ps1
 
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-reports
+          path: coverage/
+          retention-days: 14
+
+      - name: Generate coverage summary
+        if: always()
+        run: pwsh ./build/coverage-summary.ps1
+
       - name: Publish Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: always()

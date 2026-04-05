@@ -10,7 +10,7 @@
         [
             "@semantic-release/changelog",
             {
-                "changelogFile": "CHANGELOG.md"
+                "changelogFile": "doc/CHANGELOG.md"
             }
         ],
         [
@@ -31,7 +31,7 @@
                 "assets": [
                     "package.json",
                     "package-lock.json",
-                    "CHANGELOG.md",
+                    "doc/CHANGELOG.md",
                     "projects/scuba-physics/package.json",
                     "projects/planner/src/manifest.webmanifest"
                 ],

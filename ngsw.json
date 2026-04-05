@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1775158719783,
+  "timestamp": 1775383005113,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main-JECTFVLU.js",
+        "/main-ACLOT4N4.js",
         "/manifest.webmanifest",
         "/polyfills-P6A55ORB.js",
         "/styles-OTHSXBDU.css",
@@ -31,6 +31,7 @@
         "ignoreVary": true
       },
       "urls": [
+        "/assets/doc/CHANGELOG.md",
         "/assets/doc/altitude.md",
         "/assets/doc/application.md",
         "/assets/doc/consumed.md",
@@ -115,6 +116,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
+    "/assets/doc/CHANGELOG.md": "64b4e40801b8720fecbd72f4dc68829ad6aaaad8",
     "/assets/doc/altitude.md": "a0f80c9a7b3b8a6ab632623a446fe96285a90c76",
     "/assets/doc/application.md": "5d849bdd5fe89419bff5e6ad3a28b5c8d5a73cb2",
     "/assets/doc/consumed.md": "1a750976947ea6576cc3236ef412d6ba21ecc4a3",
@@ -183,8 +185,8 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "e25d32226580873050c6b195d54bbc76b9f40a96",
-    "/main-JECTFVLU.js": "3712e13bf4beaceec4a187438f094f405a4252dc",
+    "/index.html": "36444771938c92f61a1a8d1a62de9a88e4a48010",
+    "/main-ACLOT4N4.js": "f686d5e77558c28e9c054cbdeef27d034592bb9f",
     "/manifest.webmanifest": "6229da383b38a80fd268502019208386e72917f9",
     "/polyfills-P6A55ORB.js": "1a0a1ccbe2cadbc403b71643bd99b21cdaba0375",
     "/styles-OTHSXBDU.css": "f1400eccd7d0f3bdbc9180253ae03ca738852b9d",

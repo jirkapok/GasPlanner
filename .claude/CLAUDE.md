@@ -57,6 +57,15 @@ Heavy dive-profile/consumption/decompression math runs off the main thread. `pro
 
 Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob in `angular.json` (both `build` and `test` targets). They're rendered at runtime by `HelpComponent` using `ngx-md`, routed as `/help/:document/:anchor`.
 
+### CI/CD pipeline (`.github/workflows/main.yml`, `build/*.ps1`)
+
+Tiered, each tier gated on the previous, later tiers restricted to `master`:
+
+1. **Unit tests** (every push) — `build/test.ps1`: `scuba-physics` Karma tests, then `build/install-lib.ps1` builds the lib and `npm install`s it from `dist/scuba-physics` (mirrors real consumption, not a workspace link), then `planner` Karma tests.
+2. **E2E** (PRs + `master`, needs #1) — `build/e2e.ps1`: reinstalls the built lib, installs Playwright Chromium, runs `npm run e2e`.
+3. **Release** (`master` only, needs #1+#2) — `npx semantic-release` (`.releaserc.json`): derives next version from conventional commits, updates `doc/CHANGELOG.md`, runs `build/bump-version.ps1` to stamp the version into `scuba-physics/package.json` and the PWA manifest's `id`, commits as `chore(release): X.Y.Z`, creates a GitHub release.
+4. **Deploy** (after release) — `build/deploy.ps1`: builds lib+app, uses a `git worktree` to update `gh-pages` in place (wipes old build files, copies in `dist/planner`, duplicates `index.html` → `404.html` for SPA routing on GitHub Pages), pushes if changed. `build/wait-for-deploy.ps1` then polls the live `manifest.webmanifest` `id` until it matches the released version (cache-busted, 4 min timeout) before a Playwright smoke test runs against production. On any deploy-stage failure, `build/rollback-deploy.ps1` force-resets `gh-pages` to the pre-deploy SHA — deploys self-heal without manual intervention.
+
 ## Conventions
 
 - Keep new UI/state code in the standalone-component style (no NgModules); don't reintroduce them.
@@ -72,3 +81,5 @@ Markdown docs live in `doc/` at the repo root and are copied into the app bundle
 - Don't place localizable texts into the typescript when possible.
 - When creating custom scripts use typescript or powershell.
 - Update the UI immediately after fields are changed.
+- Write commit messages in Conventional Commits format (`type(scope): summary`, e.g. `fix: weight calculator wrong usage of consumed amount`), since `semantic-release` on `master` parses commit types to decide the next version: `fix` → patch, `feat` → minor, `docs` → patch (custom rule in `.releaserc.json`), a `BREAKING CHANGE:` footer (or `!` after type) → major, other types (`chore`, `ci`, `refactor`, `test`, …) do not trigger a release by default. See [CI/CD pipeline](#cicd-pipeline-githubworkflowsmainyml-buildps1) above.
+- Always start implementing new feature in new branch checkout from latest clean master.

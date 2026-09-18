@@ -18,23 +18,25 @@ describe('BlendPricingService', () => {
         sut.topMixUnitPrice = 4;
     });
 
+    // Prices are derived from GasBlender.mix(), which uses real-gas (compressibility) math, so the
+    // expected amounts below reflect that instead of ideal-gas-law arithmetic.
     it('Calculates gas prices', () => {
         sut.calculate();
 
-        expect(sut.o2Price).toBeCloseTo(5.88235294, 8);
-        expect(sut.hePrice).toBeCloseTo(150);
-        expect(sut.topMixPrice).toBeCloseTo(588.2352941176471, 8);
-        expect(sut.totalPrice).toBeCloseTo(744.1176470576471, 8);
+        expect(sut.o2Price).toBeCloseTo(5.612974819672118, 5);
+        expect(sut.hePrice).toBeCloseTo(147.38736772700753, 5);
+        expect(sut.topMixPrice).toBeCloseTo(592.257560057979, 5);
+        expect(sut.totalPrice).toBeCloseTo(745.2579026046587, 5);
     });
 
     it('Calculates gas prices in Imperial units', () => {
         units.imperialUnits = true;
         sut.calculate();
 
-        expect(sut.o2Price).toBeCloseTo(85.31631629483086, 8);
-        expect(sut.hePrice).toBeCloseTo(2175.5660659533, 8);
-        expect(sut.topMixPrice).toBeCloseTo(8531.631631189413, 8);
-        expect(sut.totalPrice).toBeCloseTo(10792.514013437543, 8);
+        expect(sut.o2Price).toBeCloseTo(81.40931697819336, 5);
+        expect(sut.hePrice).toBeCloseTo(2137.6730385137207, 5);
+        expect(sut.topMixPrice).toBeCloseTo(8589.96966644292, 5);
+        expect(sut.totalPrice).toBeCloseTo(10809.052021934833, 5);
     });
 });
 

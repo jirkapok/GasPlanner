@@ -4,7 +4,6 @@ import { Compressibility } from '../physics/compressibility';
 import { StandardGases } from '../gases/StandardGases';
 import { Gas } from '../gases/Gases';
 import { GasMixtures } from '../gases/GasMixtures';
-import { GasMix } from "./realGasBlender";
 
 /**
  * Blending result showing amount of each component used
@@ -54,6 +53,9 @@ export interface TopRequest {
 
 /** Gas mix blending math */
 export class GasBlender {
+    /** Below this threshold a volume/pressure difference is treated as real-gas solver noise and snapped to 0. */
+    private static readonly precision = 0.000001;
+
     /**
      * Calculates final pressure combining two tanks A and B with different volume and start pressure
      * using real gas compressibility.
@@ -124,9 +126,9 @@ export class GasBlender {
     }
 
     /**
-     * Math describing to create required amount of mixture from current tank content using o2, he and topping mix.
-     * The formula expects ideal gas law.
-     * Result is guarantied with precision on 6 decimal places.
+     * Math describing how to create a required mixture from current tank content using O2, He and topping mix.
+     * Gas quantities are calculated as normal volumes and converted to pressure changes for each fill step.
+     * Result is guarantied with precision on 5 decimal places.
      */
     public static mix(request: MixRequest): MixResult {
         GasBlender.validate(request.source, 'Source');
@@ -140,112 +142,95 @@ export class GasBlender {
         const sourceVolume = compressibility.normalVolume(request.source.pressure, initialGas);
 
         const finalfN2 = GasBlender.fN2(request.target);
-        const finalN2Bars  = finalfN2 * request.target.pressure;
         const finalN2Volume = finalfN2 * targetVolume;
-
         const currentfN2 = GasBlender.fN2(request.source);
-        const currentN2Bars = currentfN2 * request.source.pressure;
         const currentN2Volume = currentfN2 * sourceVolume;
-
-        let addN2Bars = finalN2Bars - currentN2Bars;
-        let addN2Volume = finalN2Volume - currentN2Volume;
-        addN2Bars = Precision.round(addN2Bars, 8);
-        addN2Volume = Precision.round(addN2Volume, 8);
+        const addN2Volume = GasBlender.cleanDifference(
+            Precision.round(finalN2Volume - currentN2Volume, 8)
+        );
 
         // Even the top mix contains more nitrogen than target, we are still able to mix
         // by adding less top mix and more He and O2
-        if(addN2Bars < 0) {
-            const removeSourceBars = -(addN2Bars / currentfN2);
+        if(addN2Volume < 0) {
             const removeSourceVolume = -(addN2Volume / currentfN2);
-            return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
+            return GasBlender.mixByRemovingVolume(compressibility, request, removeSourceVolume);
         }
 
         const topfN2 = GasBlender.fN2(request.topMix);
-        const addTopBars = addN2Bars / topfN2;
         const addTopVolume = addN2Volume / topfN2;
-        const targetHeBars = request.target.he * request.target.pressure;
         const targetHeVolume = request.target.he * targetVolume;
-        const sourceHeBars = request.source.he * request.source.pressure;
         const sourceHeVolume = request.source.he * sourceVolume;
-        const topHeBars = addTopBars * request.topMix.he;
         const topHeVolume = addTopVolume * request.topMix.he;
-        let addHeBars = targetHeBars - sourceHeBars - topHeBars;
-        let addHeVolume = targetHeVolume - sourceHeVolume - topHeVolume;
-        addHeBars = Precision.round(addHeBars, 8);
-        addHeVolume = Precision.round(addHeVolume, 8);
+        const addHeVolume = GasBlender.cleanDifference(
+            Precision.round(targetHeVolume - sourceHeVolume - topHeVolume, 8)
+        );
 
-        if(addHeBars < 0) {
-            const removeSourceBars = -(addHeBars / request.source.he);
+        if(addHeVolume < 0) {
             const removeSourceVolume = -(addHeVolume / request.source.he);
-            return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
+            return GasBlender.mixByRemovingVolume(compressibility, request, removeSourceVolume);
         }
 
-        let addO2Bars = request.target.pressure - request.source.pressure - addHeBars - addTopBars;
-        let addO2Volume = targetVolume - sourceVolume - addHeVolume - addTopVolume;
-        addO2Bars = Precision.round(addO2Bars, 8);
-        addO2Volume = Precision.round(addO2Volume, 8);
+        const addO2Volume = GasBlender.cleanDifference(
+            Precision.round(targetVolume - sourceVolume - addHeVolume - addTopVolume, 8)
+        );
 
-        if(addO2Bars < 0) {
-            const removeSourceBars = -(addO2Bars / request.source.o2);
+        if(addO2Volume < 0) {
             const removeSourceVolume = -(addO2Volume / request.source.o2);
-            return GasBlender.mixByRemoving(request, removeSourceBars); // TODO
+            return GasBlender.mixByRemovingVolume(compressibility, request, removeSourceVolume);
         }
 
         const volumeAfterHe = sourceVolume + addHeVolume;
-
-        // const mixAfterHe = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1) / (ivol + top1),
-        //     100 * (gasi.fHe * ivol + gas1.fHe * top1) / (ivol + top1));
-
-        // const pressureAfterHe = this.compress.pressure(mixAfterO2, ivol + top1);
-        // addHeBars = pressureAfterHe - request.source.pressure;
-
         const volumeAfterO2 = sourceVolume + addHeVolume + addO2Volume;
-        // const mixAfterO2 = new GasMix(100 * (gasi.fO2 * ivol + gas1.fO2 * top1 + gas2.fO2 * top2) / (ivol + top1 + top2),
-        //     100 * (gasi.fHe * ivol + gas1.fHe * top1 + gas2.fHe * top2) / (ivol + top1 + top2));
-
-        // const pressureAfterO2 = this.compress.pressure(newmix2.toGas(), ivol + top1 + top2);
-        // addO2Bars = pressureAfterO2 - pressureAfterHe;
-
-        // mixAfterTop = targetGas;
-        // addTopBars = request.target.pressure - pressureAfterO2;
+        const pressureAfterHe = GasBlender.pressureForVolume(
+            compressibility,
+            volumeAfterHe,
+            request.source.o2 * sourceVolume,
+            request.source.he * sourceVolume + addHeVolume
+        );
+        const pressureAfterO2 = GasBlender.pressureForVolume(
+            compressibility,
+            volumeAfterO2,
+            request.source.o2 * sourceVolume + addO2Volume,
+            request.source.he * sourceVolume + addHeVolume
+        );
 
         return {
-            addO2: addO2Bars,
-            addHe: addHeBars,
-            addTop: addTopBars,
+            addO2: GasBlender.cleanDifference(pressureAfterO2 - pressureAfterHe),
+            addHe: GasBlender.cleanDifference(pressureAfterHe - request.source.pressure),
+            addTop: GasBlender.cleanDifference(request.target.pressure - pressureAfterO2),
             removeFromSource: 0
         };
     }
 
-    private static mixByRemoving(request: MixRequest, removeSourceBars: number) {
+    private static mixByRemovingVolume(compressibility: Compressibility, request: MixRequest,
+        removeSourceVolume: number): MixResult {
         const newRequest = GasBlender.copyRequest(request);
-        // const expectedRemove = Precision.floor(removeSource, 8);
+        const sourceGas = new Gas(request.source.o2, request.source.he);
+        const sourceVolume = compressibility.normalVolume(request.source.pressure, sourceGas);
 
-        if(removeSourceBars > request.source.pressure) {
+        if(removeSourceVolume > sourceVolume) {
             throw new Error('Unable to mix required gas because target contains less he or oxygen than top mix.');
         }
 
-        newRequest.source.pressure -= removeSourceBars;
+        newRequest.source.pressure = compressibility.pressure(sourceGas, sourceVolume - removeSourceVolume);
         const result =  GasBlender.mix(newRequest);
-        // aggregate the removed pressure from all the recursive calls
-        result.removeFromSource += removeSourceBars;
+        result.removeFromSource += request.source.pressure - newRequest.source.pressure;
         return result;
     }
 
-    // private static mixByRemovingVolume(removeSourceVolume: number) {
-    //     const newRequest = GasBlender.copyRequest(request);
-    //     // const expectedRemove = Precision.floor(removeSource, 8);
-    //
-    //     if(removeSourceVolume > request.source.pressure) {
-    //         throw new Error('Unable to mix required gas because target contains less he or oxygen than top mix.');
-    //     }
-    //
-    //     newRequest.source.pressure -= removeSourceVolume;
-    //     const result =  GasBlender.mix(newRequest);
-    //     // aggregate the removed pressure from all the recursive calls
-    //     result.removeFromSource += removeSourceVolume;
-    //     return result;
-    // }
+    private static pressureForVolume(compressibility: Compressibility, volume: number,
+        o2Volume: number, heVolume: number): number {
+        if (volume === 0) {
+            return 0;
+        }
+
+        const gas = new Gas(o2Volume / volume, heVolume / volume);
+        return compressibility.pressure(gas, volume);
+    }
+
+    private static cleanDifference(difference: number): number {
+        return Math.abs(difference) < GasBlender.precision ? 0 : difference;
+    }
 
     private static fN2(mix: Mix): number {
         return GasMixtures.n2(mix.o2, mix.he);

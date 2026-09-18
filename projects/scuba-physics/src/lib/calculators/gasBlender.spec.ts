@@ -1,4 +1,6 @@
 import { GasBlender, MixRequest } from './gasBlender';
+import { Compressibility } from '../physics/compressibility';
+import { Gas } from '../gases/Gases';
 
 describe('Gas Blender', () => {
     const createEmptyRequest = (): MixRequest => ({
@@ -26,24 +28,62 @@ describe('Gas Blender', () => {
 
     const assertResult = (request: MixRequest, expectedTop: number, expectedO2: number,
         expectedHe: number, expectedRemove: number = 0): void => {
-        const precision = 6;
+        // Compressibility.pressure() converges to an absolute residual tolerance rather than a pressure
+        // tolerance, so chained real-gas conversions (e.g. the recursive removal path, plus this helper's
+        // own independent recomputation) can each add up to ~1e-6 b of noise.
+        const precision = 5;
         const result = GasBlender.mix(request);
 
         expect(result.addTop).withContext('top pressure').toBeCloseTo(expectedTop, precision);
         expect(result.addO2).withContext('add O2').toBeCloseTo(expectedO2, precision);
         expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, precision);
+        expect(result.removeFromSource).withContext('remove from source').toBeCloseTo(expectedRemove, precision);
 
-        const sourcePressure = request.source.pressure - result.removeFromSource;
-        const finalPpO2 = (request.source.o2 * sourcePressure + request.topMix.o2 * result.addTop + result.addO2)
-                            / request.target.pressure;
-        expect(request.target.o2).withContext('final pp O2').toBeCloseTo(finalPpO2, precision);
-        const finalPpHe = (request.source.he * sourcePressure + request.topMix.he * result.addTop + result.addHe)
-                            / request.target.pressure;
-        expect(request.target.he).withContext('final pp He').toBeCloseTo(finalPpHe, precision);
+        const compressibility = new Compressibility();
+        const targetGas = new Gas(request.target.o2, request.target.he);
+        const sourceGas = new Gas(request.source.o2, request.source.he);
+        const remainingSourcePressure = request.source.pressure - result.removeFromSource;
+        const sourceVolume = compressibility.normalVolume(remainingSourcePressure, sourceGas);
+        const targetVolume = compressibility.normalVolume(request.target.pressure, targetGas);
+        const targetN2Volume = targetGas.fN2 * targetVolume;
+        const sourceN2Volume = sourceGas.fN2 * sourceVolume;
+        const topN2 = 1 - request.topMix.o2 - request.topMix.he;
+        const topVolume = (targetN2Volume - sourceN2Volume) / topN2;
+        const heVolume = targetGas.fHe * targetVolume - sourceGas.fHe * sourceVolume - request.topMix.he * topVolume;
+        const o2Volume = targetVolume - sourceVolume - heVolume - topVolume;
 
-        const total = sourcePressure + result.addTop + result.addO2 + result.addHe;
-        expect(request.target.pressure).withContext('Sum pressures').toBeCloseTo(total, precision);
-        expect(result.removeFromSource).toBeCloseTo(expectedRemove, precision);
+        expect(result.addO2).withContext('add O2 is non-negative').toBeGreaterThanOrEqual(0);
+        expect(result.addHe).withContext('add He is non-negative').toBeGreaterThanOrEqual(0);
+        expect(result.addTop).withContext('add top is non-negative').toBeGreaterThanOrEqual(0);
+        expect(heVolume).withContext('required He normal volume').toBeGreaterThanOrEqual(-1e-6);
+        expect(o2Volume).withContext('required O2 normal volume').toBeGreaterThanOrEqual(-1e-6);
+        expect(topVolume).withContext('required top normal volume').toBeGreaterThanOrEqual(-1e-6);
+
+        const pressureForVolume = (volume: number, o2VolumeValue: number, heVolumeValue: number): number => {
+            if (volume === 0) {
+                return 0;
+            }
+
+            return compressibility.pressure(new Gas(o2VolumeValue / volume, heVolumeValue / volume), volume);
+        };
+        const volumeAfterHe = sourceVolume + heVolume;
+        const pressureAfterHe = pressureForVolume(
+            volumeAfterHe,
+            sourceGas.fO2 * sourceVolume,
+            sourceGas.fHe * sourceVolume + heVolume
+        );
+        const volumeAfterO2 = volumeAfterHe + o2Volume;
+        const pressureAfterO2 = pressureForVolume(
+            volumeAfterO2,
+            sourceGas.fO2 * sourceVolume + o2Volume,
+            sourceGas.fHe * sourceVolume + heVolume
+        );
+
+        expect(result.addHe).withContext('helium fill pressure').toBeCloseTo(pressureAfterHe - remainingSourcePressure, precision);
+        expect(result.addO2).withContext('oxygen fill pressure').toBeCloseTo(pressureAfterO2 - pressureAfterHe, precision);
+        expect(result.addTop).withContext('top fill pressure').toBeCloseTo(request.target.pressure - pressureAfterO2, precision);
+        expect(remainingSourcePressure + result.addHe + result.addO2 + result.addTop)
+            .withContext('staged pressures reach target').toBeCloseTo(request.target.pressure, precision);
     };
 
     describe('Parameters validation', () => {
@@ -126,7 +166,18 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.21;
                 request.target.o2 = 0.32;
 
-                assertResult(request, 172.151899, 27.848101, 0);
+                assertResult(request, 173.284493, 26.715507, 0);
+            });
+
+            it('returns real-gas staged pressures for Ean32 from O2 and air', () => {
+                const request = createEmptyRequest();
+                request.target.o2 = 0.32;
+
+                const result = GasBlender.mix(request);
+
+                expect(result.addHe).toBeCloseTo(0, 6);
+                expect(result.addO2).toBeCloseTo(26.715507, 6);
+                expect(result.addTop).toBeCloseTo(173.284493, 6);
             });
 
             it('Ean50 from O2 and Ean32 to empty tank', () => {
@@ -134,7 +185,7 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.32;
                 request.target.o2 = 0.5;
 
-                assertResult(request, 147.058824, 52.941176, 0);
+                assertResult(request, 148.959798, 51.040202, 0);
             });
 
             it('Fixes small numbers rounding', () => {
@@ -168,7 +219,7 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.21;
                 request.target.o2 = 0.32;
 
-                assertResult(request, 122.151899, 27.848101, 0);
+                assertResult(request, 123.85206, 26.14794, 0);
             });
 
             it('Ean50 from O2 and air to Ean32 tank', () => {
@@ -177,7 +228,7 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.21;
                 request.target.o2 = 0.5;
 
-                assertResult(request, 83.544304, 66.4556962, 0);
+                assertResult(request, 87.063152, 62.936848, 0);
             });
 
             it('Can`t create Air from Ean32 to non empty tank', () => {
@@ -208,7 +259,18 @@ describe('Gas Blender', () => {
                 request.target.he = 0.35;
                 request.topMix.o2 = 0.21;
 
-                assertResult(request, 111.392405, 18.607595, 70);
+                assertResult(request, 113.528983, 17.562463, 68.908554);
+            });
+
+            it('returns real-gas staged pressures for 21/35 from O2, He and air', () => {
+                const request = createEmptyRequest();
+                request.target.he = 0.35;
+
+                const result = GasBlender.mix(request);
+
+                expect(result.addHe).toBeCloseTo(68.908554, 6);
+                expect(result.addO2).toBeCloseTo(17.562463, 6);
+                expect(result.addTop).toBeCloseTo(113.528983, 6);
             });
 
             it('18/45 using O2, he and Ean32 to empty tank', () => {
@@ -217,7 +279,7 @@ describe('Gas Blender', () => {
                 request.target.he = 0.45;
                 request.topMix.o2 = 0.32;
 
-                assertResult(request, 108.823529, 1.176471, 90);
+                assertResult(request, 110.044592, 1.1123, 88.843109);
             });
 
             it('21/35 using 23/25 to empty tank', () => {
@@ -227,7 +289,7 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.23;
                 request.topMix.he = 0.25;
 
-                assertResult(request, 169.230769, 3.076923, 27.6923076);
+                assertResult(request, 170.355755, 2.917116, 26.727129);
             });
 
             it('35/25 using 25/25', () => {
@@ -237,7 +299,7 @@ describe('Gas Blender', () => {
                 request.topMix.o2 = 0.25;
                 request.topMix.he = 0.25;
 
-                assertResult(request, 160, 30, 10);
+                assertResult(request, 161.706712, 28.557179, 9.736109);
             });
 
             it('Can`t create 18/45 using 25/25', () => {
@@ -272,7 +334,7 @@ describe('Gas Blender', () => {
                     request.topMix.o2 = 0.25;
                     request.topMix.he = 0.25;
 
-                    assertResult(request, 150, 0, 0);
+                    assertResult(request, 149.999999, 0, 0);
                 });
 
                 it('21/35 from 21/35 using O2, he and air', () => {
@@ -282,7 +344,7 @@ describe('Gas Blender', () => {
                     request.target.o2 = 0.21;
                     request.target.he = 0.35;
 
-                    assertResult(request, 83.544304, 13.955696, 52.5);
+                    assertResult(request, 84.942303, 12.958467, 52.09923);
                 });
 
                 it('18/45 from 21/35 using 25/25', () => {
@@ -294,7 +356,7 @@ describe('Gas Blender', () => {
                     request.topMix.o2 = 0.21;
                     request.topMix.he = 0.25;
 
-                    assertResult(request, 90.740741, 4.444444, 54.814815);
+                    assertResult(request, 91.154479, 4.0156, 54.829921);
                 });
             });
 
@@ -305,7 +367,7 @@ describe('Gas Blender', () => {
                     request.target.he = 0.45;
                     request.topMix.o2 = 0.32;
 
-                    assertResult(request, 50.735294, 9.264706, 90);
+                    assertResult(request, 48.84256, 9.386277, 91.771163);
                 });
 
                 it('21/35 using 23/25', () => {
@@ -315,7 +377,7 @@ describe('Gas Blender', () => {
                     request.topMix.o2 = 0.23;
                     request.topMix.he = 0.25;
 
-                    assertResult(request, 93.269231, 10.048077,  46.682692);
+                    assertResult(request, 92.327648, 9.825635, 47.846717);
                 });
             });
 
@@ -354,7 +416,7 @@ describe('Gas Blender', () => {
             request.topMix.o2 = 0.25;
             request.topMix.he = 0.25;
 
-            assertResult(request, 0, 20, 180);
+            assertResult(request, 0, 19.20533, 180.79467);
         });
 
         it('Create 5/95 without top mix to non empty tank', () => {
@@ -366,7 +428,7 @@ describe('Gas Blender', () => {
             request.topMix.o2 = 0.25;
             request.topMix.he = 0.25;
 
-            assertResult(request, 0, 5, 145);
+            assertResult(request, 0, 4.472772, 145.527228);
         });
 
         it('Can`t create trimix from mix with nitrox in empty tank', () => {
@@ -378,7 +440,7 @@ describe('Gas Blender', () => {
             request.topMix.o2 = 0.25;
             request.topMix.he = 0.25;
 
-            assertResult(request, 0, 20, 180, 50);
+            assertResult(request, 0, 19.20533, 180.79467, 50);
         });
     });
 
@@ -395,7 +457,22 @@ describe('Gas Blender', () => {
             request.topMix.o2 = 0.21;
             request.topMix.he = 0;
 
-            assertResult(request, 0, 52.941176, 0, 52.941176);
+            assertResult(request, 0, 53.886666, 0, 53.886666);
+        });
+
+        it('converts a normal-volume vent to its real-gas pressure drop', () => {
+            const request = createNonEmptyRequest();
+            request.source.o2 = 0.32;
+            request.source.pressure = 200;
+            request.target.o2 = 0.5;
+            request.topMix.o2 = 0.21;
+
+            const result = GasBlender.mix(request);
+
+            expect(result.removeFromSource).toBeCloseTo(53.886666, 6);
+            expect(result.addHe).toBeCloseTo(0, 6);
+            expect(result.addTop).toBeCloseTo(0, 6);
+            expect(result.addO2).toBeCloseTo(53.886666, 6);
         });
 
         it('Trimix 21/25 from 21/35 needs to remove helium', () => {
@@ -405,7 +482,7 @@ describe('Gas Blender', () => {
             request.target.he = 0.25;
             request.topMix.he = 0;
 
-            assertResult(request, 57.142857, 0, 0, 57.142857);
+            assertResult(request, 60.31164, 0, 0, 60.311639);
         });
 
         it('Ean32 from Ean50 needs to remove oxygen', () => {
@@ -414,7 +491,7 @@ describe('Gas Blender', () => {
             request.source.pressure = 200;
             request.target.o2 = 0.32;
 
-            assertResult(request, 124.137931, 0, 0, 124.137931);
+            assertResult(request, 127.416352, 0, 0, 127.416352);
         });
 
         it('Trimix 15/30 from 25/35 needs to remove everything', () => {
@@ -425,7 +502,7 @@ describe('Gas Blender', () => {
             request.target.o2 = 0.15;
             request.target.he = 0.30;
 
-            assertResult(request, 136.563877, 0, 58.14978, 94.713656);
+            assertResult(request, 138.140699, 0, 56.841368, 94.982067);
         });
 
         // no need to care about too much nitrogen in top mix, since we compensate it by adding O2 and He

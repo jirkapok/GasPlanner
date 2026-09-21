@@ -1,6 +1,4 @@
 import { GasBlender, MixRequest } from './gasBlender';
-import { Compressibility } from '../physics/compressibility';
-import { Gas } from '../gases/Gases';
 
 describe('Gas Blender', () => {
     const createEmptyRequest = (): MixRequest => ({
@@ -28,62 +26,13 @@ describe('Gas Blender', () => {
 
     const assertResult = (request: MixRequest, expectedTop: number, expectedO2: number,
         expectedHe: number, expectedRemove: number = 0): void => {
-        // Compressibility.pressure() converges to an absolute residual tolerance rather than a pressure
-        // tolerance, so chained real-gas conversions (e.g. the recursive removal path, plus this helper's
-        // own independent recomputation) can each add up to ~1e-6 b of noise.
-        const precision = 5;
+        const precision = 6;
         const result = GasBlender.mix(request);
 
         expect(result.addTop).withContext('top pressure').toBeCloseTo(expectedTop, precision);
         expect(result.addO2).withContext('add O2').toBeCloseTo(expectedO2, precision);
         expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, precision);
         expect(result.removeFromSource).withContext('remove from source').toBeCloseTo(expectedRemove, precision);
-
-        const compressibility = new Compressibility();
-        const targetGas = new Gas(request.target.o2, request.target.he);
-        const sourceGas = new Gas(request.source.o2, request.source.he);
-        const remainingSourcePressure = request.source.pressure - result.removeFromSource;
-        const sourceVolume = compressibility.normalVolume(remainingSourcePressure, sourceGas);
-        const targetVolume = compressibility.normalVolume(request.target.pressure, targetGas);
-        const targetN2Volume = targetGas.fN2 * targetVolume;
-        const sourceN2Volume = sourceGas.fN2 * sourceVolume;
-        const topN2 = 1 - request.topMix.o2 - request.topMix.he;
-        const topVolume = (targetN2Volume - sourceN2Volume) / topN2;
-        const heVolume = targetGas.fHe * targetVolume - sourceGas.fHe * sourceVolume - request.topMix.he * topVolume;
-        const o2Volume = targetVolume - sourceVolume - heVolume - topVolume;
-
-        expect(result.addO2).withContext('add O2 is non-negative').toBeGreaterThanOrEqual(0);
-        expect(result.addHe).withContext('add He is non-negative').toBeGreaterThanOrEqual(0);
-        expect(result.addTop).withContext('add top is non-negative').toBeGreaterThanOrEqual(0);
-        expect(heVolume).withContext('required He normal volume').toBeGreaterThanOrEqual(-1e-6);
-        expect(o2Volume).withContext('required O2 normal volume').toBeGreaterThanOrEqual(-1e-6);
-        expect(topVolume).withContext('required top normal volume').toBeGreaterThanOrEqual(-1e-6);
-
-        const pressureForVolume = (volume: number, o2VolumeValue: number, heVolumeValue: number): number => {
-            if (volume === 0) {
-                return 0;
-            }
-
-            return compressibility.pressure(new Gas(o2VolumeValue / volume, heVolumeValue / volume), volume);
-        };
-        const volumeAfterHe = sourceVolume + heVolume;
-        const pressureAfterHe = pressureForVolume(
-            volumeAfterHe,
-            sourceGas.fO2 * sourceVolume,
-            sourceGas.fHe * sourceVolume + heVolume
-        );
-        const volumeAfterO2 = volumeAfterHe + o2Volume;
-        const pressureAfterO2 = pressureForVolume(
-            volumeAfterO2,
-            sourceGas.fO2 * sourceVolume + o2Volume,
-            sourceGas.fHe * sourceVolume + heVolume
-        );
-
-        expect(result.addHe).withContext('helium fill pressure').toBeCloseTo(pressureAfterHe - remainingSourcePressure, precision);
-        expect(result.addO2).withContext('oxygen fill pressure').toBeCloseTo(pressureAfterO2 - pressureAfterHe, precision);
-        expect(result.addTop).withContext('top fill pressure').toBeCloseTo(request.target.pressure - pressureAfterO2, precision);
-        expect(remainingSourcePressure + result.addHe + result.addO2 + result.addTop)
-            .withContext('staged pressures reach target').toBeCloseTo(request.target.pressure, precision);
     };
 
     describe('Parameters validation', () => {

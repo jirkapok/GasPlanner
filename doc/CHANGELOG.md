@@ -1,3 +1,10 @@
+# [0.2.0](https://github.com/jirkapok/GasPlanner/compare/v0.1.38...v0.2.0) (2026-09-21)
+
+
+### Features
+
+* real bas blender ([a7b71b0](https://github.com/jirkapok/GasPlanner/commit/a7b71b07ec7c27f055d241659bffed42ad8ba602))
+
 ## [0.1.38](https://github.com/jirkapok/GasPlanner/compare/v0.1.37...v0.1.38) (2026-04-15)
 
 

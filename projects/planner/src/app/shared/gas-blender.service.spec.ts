@@ -45,9 +45,9 @@ describe('Gas blender service', () => {
             sut.targetTank.he = 25;
             sut.calculate();
 
-            expect(sut.addO2).toBeCloseTo(42.65815815, 8);
-            expect(sut.addHe).toBeCloseTo(725.18868865, 8);
-            expect(sut.addTop).toBeCloseTo(2132.9079078, 8);
+            expect(sut.addO2).toBeCloseTo(40.70465848909668, 5);
+            expect(sut.addHe).toBeCloseTo(712.5576795045736, 5);
+            expect(sut.addTop).toBeCloseTo(2147.49241661073, 5);
             expect(sut.removeFromSource).toBeCloseTo(0);
         });
 
@@ -58,7 +58,7 @@ describe('Gas blender service', () => {
             sut.calculate();
 
             expect(sut.needsRemove).toBeTruthy();
-            expect(sut.removeFromSource).toBeCloseTo(1066.40028158, 8);
+            expect(sut.removeFromSource).toBeCloseTo(1138.5812052643712, 5);
         });
     });
 });

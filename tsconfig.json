@@ -26,10 +26,6 @@
     },
     "target": "ES2022",
     "module": "es2020",
-    "lib": [
-      "es2022",
-      "dom"
-    ],
     "useDefineForClassFields": false
   },
   "angularCompilerOptions": {

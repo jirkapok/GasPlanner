@@ -1,3 +1,4 @@
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LearnComponent } from './learn.component';
 import { NgxMdModule } from 'ngx-md';
@@ -67,6 +68,7 @@ describe('LearnComponent', () => {
     it('Select category changes quiz question', () => {
         const topic = component.quizService.topics[1];
         component.select(topic, topic.categories[0]);
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
 
         expect(component.selectedCategory).toBe(topic.categories[0]);

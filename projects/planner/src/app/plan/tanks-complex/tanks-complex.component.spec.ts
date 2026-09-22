@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { TankTemplate } from 'scuba-physics';
-import { DebugElement } from '@angular/core';
+import { ChangeDetectorRef, DebugElement } from '@angular/core';
 import _ from 'lodash';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
@@ -127,6 +127,7 @@ describe('Tanks Complex component', () => {
     it('Adds tank', () => {
         fixture.detectChanges();
         component.addTank();
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
         expect(component.tanks.length).toBe(2);
         expect(complexPage.removeButtons()).toBe(1);
@@ -138,6 +139,7 @@ describe('Tanks Complex component', () => {
         component.addTank();
         component.addTank();
         component.removeTank(3);
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
 
         expect(component.tanks.length).toBe(3);
@@ -204,6 +206,7 @@ describe('Tanks Complex component', () => {
             workingPressure: 100
         };
         component.assignTankTemplate(0, template);
+        fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
         expect(complexPage.sizeInput(0).value).toBe('30');
     });

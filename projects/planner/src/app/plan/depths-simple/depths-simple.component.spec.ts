@@ -1,4 +1,5 @@
 import { DecimalPipe } from '@angular/common';
+import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, inject, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
@@ -137,6 +138,7 @@ describe('Depths Simple Component', () => {
         it('Does apply valid value', inject([DiveSchedules],
             (schedules: DiveSchedules) => {
                 schedules.add();
+                fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
                 fixture.detectChanges();
                 simplePage.surfaceIntervalInput.value = '02:30';
                 simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
@@ -147,6 +149,7 @@ describe('Depths Simple Component', () => {
             (schedules: DiveSchedules) => {
                 schedules.add();
                 schedules.selected.surfaceInterval = Time.oneHour; // to switch from readonly
+                fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
                 fixture.detectChanges();
                 simplePage.surfaceIntervalInput.value = '02:aa';
                 simplePage.surfaceIntervalInput.dispatchEvent(new Event('input'));
@@ -158,11 +161,14 @@ describe('Depths Simple Component', () => {
     describe('Depth imperial', () => {
         beforeEach(() => {
             component.units.imperialUnits = true;
+            fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
             fixture.detectChanges();
         });
 
         it('Applies max depth', () => {
             component.assignMaxDepth();
+            fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
+            fixture.detectChanges();
             expect(simplePage.depthInput.value).toBeCloseTo(98.4, 1);
         });
 

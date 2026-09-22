@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { NgClass, DecimalPipe } from '@angular/common';
@@ -8,6 +8,7 @@ import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
     selector: 'app-tankchart',
     templateUrl: './tank-chart.component.html',
     styleUrls: ['./tank-chart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GaslabelComponent, NgClass, DecimalPipe]
 })
 export class TankChartComponent {

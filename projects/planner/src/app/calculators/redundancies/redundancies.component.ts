@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -27,6 +27,7 @@ interface RedundanciesForm {
     selector: 'app-redundancies',
     templateUrl: './redundancies.component.html',
     styleUrls: ['./redundancies.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class RedundanciesComponent implements OnInit {

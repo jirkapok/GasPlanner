@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -10,6 +10,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
     styleUrls: ['./pp-o2.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule]
 })
 export class PpO2Component implements OnInit {

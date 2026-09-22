@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { Location, DecimalPipe } from '@angular/common';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +25,7 @@ import { GradientsComponent } from '../../controls/gradients/gradients.component
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, DecimalPipe]
 })
 export class NdlLimitsComponent implements OnInit {

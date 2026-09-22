@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { faPercent } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -29,6 +29,7 @@ interface NitroxForm {
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, OxygenDropDownComponent, DecimalPipe]
 })
 export class NitroxComponent implements OnInit {

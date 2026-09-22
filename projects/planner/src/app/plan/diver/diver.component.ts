@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -14,6 +14,7 @@ import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
     selector: 'app-diver',
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, PpO2Component]
 })
 export class DiverComponent extends Streamed implements OnInit {

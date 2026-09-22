@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import {
     animate, keyframes, state, style, transition, trigger
 } from '@angular/animations';
@@ -29,6 +29,7 @@ import { NgClass } from '@angular/common';
                 ]))]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass]
 })
 export class DiffTabsButtonComponent {

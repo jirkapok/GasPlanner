@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
 import { takeUntil } from 'rxjs';
@@ -35,6 +35,7 @@ interface TanksForm {
     selector: 'app-tanks-complex',
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     ReactiveFormsModule,
     CardHeaderComponent,

@@ -2,7 +2,6 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
@@ -17,11 +16,11 @@
     "importHelpers": true,
     "paths": {
       "scuba-physics": [
-        "dist/scuba-physics/scuba-physics",
-        "dist/scuba-physics"
+        "./dist/scuba-physics/scuba-physics",
+        "./dist/scuba-physics"
       ],
       "plotly.js-dist": [
-        "node_modules/@types/plotly.js"
+        "./node_modules/@types/plotly.js"
       ]
     },
     "target": "ES2022",

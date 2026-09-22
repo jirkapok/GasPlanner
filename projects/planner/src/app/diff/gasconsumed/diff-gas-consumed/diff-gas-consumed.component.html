@@ -9,7 +9,7 @@
   <div class="card-body card-minheight card-max-height-md">
     <div class="pb-3">
       @if (profileDif.showConsumption) {
-        @for (gasDiff of gasesDifference; track gasDiff) {
+        @for (gasDiff of gasesDifference; track gasDiff.gas.contentCode) {
           <app-diff-gas-consumed-tank-chart [gasDiff]="gasDiff">
           </app-diff-gas-consumed-tank-chart>
         }

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { CommonModule, DecimalPipe } from '@angular/common';
@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ReactiveFormsModule,
     DecimalPipe
 ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [ UnitConversion ]
 })
 export class GaslabelComponent {

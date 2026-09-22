@@ -15,7 +15,7 @@ import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('PlanTabsComponent', () => {
@@ -26,7 +26,7 @@ describe('PlanTabsComponent', () => {
         TestBed.configureTestingModule({
     imports: [MdbTabsModule, PlanTabsComponent],
     providers: [
-        provideHttpClient(),
+        provideHttpClient(withXhr()),
         provideHttpClientTesting(),
         UnitConversion, ReloadDispatcher,
         DiveSchedules, ManagedDiveSchedules,

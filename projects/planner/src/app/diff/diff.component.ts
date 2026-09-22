@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
@@ -20,6 +20,7 @@ import { GasConsumedDifferenceComponent } from './gasconsumed/diff-gas-consumed/
     selector: 'app-diff',
     templateUrl: './diff.component.html',
     styleUrls: ['./diff.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent, GasConsumedDifferenceComponent]
 })
 export class DiffComponent extends Streamed implements OnInit {

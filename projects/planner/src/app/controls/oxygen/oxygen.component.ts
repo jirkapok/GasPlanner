@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -10,6 +10,7 @@ import { GaslabelComponent } from '../gaslabel/gaslabel.component';
     selector: 'app-oxygen',
     templateUrl: './oxygen.component.html',
     styleUrls: ['./oxygen.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, OxygenDropDownComponent, GaslabelComponent]
 })
 export class OxygenComponent implements OnInit {

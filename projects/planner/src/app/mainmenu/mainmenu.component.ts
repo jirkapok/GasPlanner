@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
@@ -24,6 +24,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-mainmenu',
     templateUrl: './mainmenu.component.html',
     styleUrls: ['./mainmenu.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     RouterLink,
     FaIconComponent,

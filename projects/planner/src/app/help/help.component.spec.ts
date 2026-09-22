@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { HelpComponent } from "./help.component";
 import { Urls } from "../shared/navigation.service";
 import { NgxMdModule } from "ngx-md";
-import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClient, withXhr } from "@angular/common/http";
 import { provideHttpClientTesting } from "@angular/common/http/testing";
 import { SubViewStorage } from "../shared/subViewStorage";
 import { ViewStates } from "../shared/viewStates";
@@ -24,7 +24,7 @@ describe('Help component', () => {
             declarations: [],
             imports: [ReactiveFormsModule, NgxMdModule],
             providers: [
-                provideHttpClient(),
+                provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
                 Urls, SubViewStorage, ViewStates,
                 PreferencesStore, Preferences,

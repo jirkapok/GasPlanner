@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -35,6 +35,7 @@ interface IGasBlenderForm {
     selector: 'app-gas-blender',
     templateUrl: './gas-blender.component.html',
     styleUrls: ['./gas-blender.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, NgClass, FaIconComponent, OxygenDropDownComponent, DecimalPipe]
 })
 export class GasBlenderComponent implements OnInit {

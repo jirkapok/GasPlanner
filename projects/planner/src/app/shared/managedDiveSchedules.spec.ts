@@ -16,7 +16,7 @@ import {ReloadDispatcher} from './reloadDispatcher';
 import { DepthsService } from './depths.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('Managed Schedules', () => {
@@ -60,7 +60,7 @@ describe('Managed Schedules', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
-                provideHttpClient(),
+                provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
                 ManagedDiveSchedules, UnitConversion,
                 DiveSchedules, PreferencesStore,

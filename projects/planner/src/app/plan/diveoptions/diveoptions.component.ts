@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -27,6 +27,7 @@ import { DiverComponent } from '../diver/diver.component';
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {

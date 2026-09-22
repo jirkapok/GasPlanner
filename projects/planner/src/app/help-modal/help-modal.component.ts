@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
@@ -9,6 +9,7 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
     imports: [NgxMdModule],
     providers: [Urls, NgxMdService, MarkdownCustomization],
     templateUrl: './help-modal.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './help-modal.component.scss'
 })
 

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import _ from 'lodash';
 import { NgxMdModule  } from 'ngx-md';
 import { NgClass, Location } from '@angular/common';
@@ -15,6 +15,7 @@ import { SubViewStorage } from '../shared/subViewStorage';
     imports: [NgxMdModule, FontAwesomeModule, NgClass],
     providers: [MarkdownCustomization],
     templateUrl: './help.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./help.component.scss']
 })
 export class HelpComponent implements OnInit {

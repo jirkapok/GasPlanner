@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -15,6 +15,7 @@ import { DecimalPipe } from '@angular/common';
         InputControls, DecimalPipe,
         ValidatorGroups, UnitConversion
     ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     ReactiveFormsModule,
     MdbFormsModule,

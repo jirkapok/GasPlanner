@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     AbstractControl, FormControl, FormGroup,
     NonNullableFormBuilder, ReactiveFormsModule
@@ -21,6 +21,7 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
     selector: 'app-surface-interval',
     templateUrl: './surface-interval.component.html',
     styleUrls: ['./surface-interval.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     MaskitoDirective,
     ReactiveFormsModule,

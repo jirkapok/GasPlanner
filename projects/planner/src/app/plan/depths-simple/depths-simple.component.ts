@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -27,6 +27,7 @@ interface SimpleDepthsForm {
     selector: 'app-depths-simple',
     templateUrl: './depths-simple.component.html',
     styleUrls: ['./depths-simple.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, DecimalPipe]
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {

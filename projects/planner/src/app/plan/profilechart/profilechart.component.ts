@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -24,6 +24,7 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {

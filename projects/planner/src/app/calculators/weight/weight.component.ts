@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, AbstractControl, ReactiveFormsModule } from '@angular/forms';
@@ -26,6 +26,7 @@ interface WeightForm {
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class WeightCalcComponent implements OnInit {

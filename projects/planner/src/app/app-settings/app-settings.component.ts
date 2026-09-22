@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
@@ -32,6 +32,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     MdbCheckboxModule,
     MdbFormsModule
 ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         DecimalPipe, InputControls, ValidatorGroups,
         SettingsNormalizationService, ApplicationSettingsService,

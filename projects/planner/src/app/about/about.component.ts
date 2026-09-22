@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Urls } from '../shared/navigation.service';
 import { AppinfoComponent } from '../appinfo/appinfo.component';
@@ -8,6 +8,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     selector: 'app-about',
     templateUrl: './about.component.html',
     styleUrls: ['./about.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [AppinfoComponent, FaIconComponent ],
 })
 export class AboutComponent {

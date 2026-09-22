@@ -3,7 +3,7 @@ import { ServiceWorkerModule } from '@angular/service-worker';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
@@ -181,7 +181,7 @@ const STANDALONE = [
 
 const SERVICES = [
     MdbModalService,
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withXhr(), withInterceptorsFromDi()),
     { provide: WorkersFactoryCommon, useClass: WorkersFactory },
     DatePipe,
     DecimalPipe,

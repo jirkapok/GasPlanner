@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -28,6 +28,7 @@ interface TankForm {
     selector: 'app-tanks-simple',
     templateUrl: './tanks-simple.component.html',
     styleUrls: ['./tanks-simple.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, OxygenComponent, DecimalPipe]
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {

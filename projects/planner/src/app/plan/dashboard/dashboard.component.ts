@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { faExclamationTriangle, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -25,6 +25,7 @@ import { DiveInfoComponent } from '../diveinfo/diveinfo.component';
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
 })
 export class DashboardComponent extends Streamed implements OnInit {

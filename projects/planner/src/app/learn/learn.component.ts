@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
@@ -26,6 +26,7 @@ import { Urls } from '../shared/navigation.service';
         MarkdownCustomization, SubViewStorage
     ],
     templateUrl: './learn.component.html',
+    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent {

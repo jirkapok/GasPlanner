@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -13,6 +13,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
     styleUrls: ['./oxygen-dropdown.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule]
 })
 export class OxygenDropDownComponent implements OnInit {

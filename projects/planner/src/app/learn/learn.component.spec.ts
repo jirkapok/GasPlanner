@@ -2,7 +2,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LearnComponent } from './learn.component';
 import { NgxMdModule } from 'ngx-md';
-import { provideHttpClient } from '@angular/common/http';
+import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -37,7 +37,7 @@ describe('LearnComponent', () => {
                 MdbModalModule,
             ],
             providers: [
-                provideHttpClient(),
+                provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
                 Urls,
                 QuizService,

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location, DecimalPipe } from '@angular/common';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { faLungs } from '@fortawesome/free-solid-svg-icons';
@@ -29,6 +29,7 @@ interface SacForm {
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
 })
 export class SacComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { formatNumber, DecimalPipe } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import {
@@ -28,6 +28,7 @@ import { DurationPipe } from '../../pipes/duration.pipe';
     selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CardHeaderComponent,
         FaIconComponent,

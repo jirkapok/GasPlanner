@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -18,6 +18,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     MdbFormsModule,
     MdbDropdownModule
 ],
+    changeDetection: ChangeDetectionStrategy.Eager,
     providers: [
         InputControls, DecimalPipe
     ]

@@ -6,19 +6,20 @@ import { PreferencesStore } from './preferencesStore';
 export interface LanguageOption {
     code: string;
     nativeName: string;
-    flag: string;
+    /** ISO 3166-1 alpha-2 country code used as the `flag-icons` CSS class suffix (`fi-<countryCode>`). */
+    countryCode: string;
 }
 
 @Injectable()
 export class LanguageService {
     public readonly languages: LanguageOption[] = [
-        { code: 'en', nativeName: 'English', flag: '🇬🇧' },
-        { code: 'de', nativeName: 'Deutsch', flag: '🇩🇪' },
-        { code: 'cs', nativeName: 'Čeština', flag: '🇨🇿' },
-        { code: 'es', nativeName: 'Español', flag: '🇪🇸' },
-        { code: 'fr', nativeName: 'Français', flag: '🇫🇷' },
-        { code: 'ru', nativeName: 'Русский', flag: '🇷🇺' },
-        { code: 'zh', nativeName: '简体中文', flag: '🇨🇳' },
+        { code: 'en', nativeName: 'English', countryCode: 'gb' },
+        { code: 'de', nativeName: 'Deutsch', countryCode: 'de' },
+        { code: 'cs', nativeName: 'Čeština', countryCode: 'cz' },
+        { code: 'es', nativeName: 'Español', countryCode: 'es' },
+        { code: 'fr', nativeName: 'Français', countryCode: 'fr' },
+        { code: 'ru', nativeName: 'Русский', countryCode: 'ru' },
+        { code: 'zh', nativeName: '简体中文', countryCode: 'cn' },
     ];
 
     private static readonly defaultCode = 'en';

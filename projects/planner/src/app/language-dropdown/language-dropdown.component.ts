@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
-import { LanguageService } from '../shared/language.service';
+import { LanguageOption, LanguageService } from '../shared/language.service';
 
 @Component({
     selector: 'app-language-dropdown',
@@ -15,7 +15,7 @@ export class LanguageDropdownComponent {
 
     constructor(public language: LanguageService) {}
 
-    public get current(): { code: string; nativeName: string; flag: string } | undefined {
+    public get current(): LanguageOption | undefined {
         return this.language.languages.find(l => l.code === this.language.currentLanguage);
     }
 

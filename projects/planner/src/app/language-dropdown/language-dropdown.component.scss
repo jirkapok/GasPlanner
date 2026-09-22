@@ -1,3 +1,46 @@
 .dropdown-item.active {
     font-weight: bold;
 }
+
+// Only the 7 supported languages' rectangular flags are referenced individually here
+// (rather than importing the full flag-icons stylesheet) because that stylesheet
+// references both its 4x3 and 1x1 variants for all ~270 flags under the same basename,
+// which collides in Angular's build output.
+.fi {
+    background-size: contain;
+    background-position: 50%;
+    background-repeat: no-repeat;
+    position: relative;
+    display: inline-block;
+    width: 1.333333em;
+    height: 1em;
+    vertical-align: middle;
+}
+
+.fi-gb {
+    background-image: url("flag-icons/flags/4x3/gb.svg");
+}
+
+.fi-de {
+    background-image: url("flag-icons/flags/4x3/de.svg");
+}
+
+.fi-cz {
+    background-image: url("flag-icons/flags/4x3/cz.svg");
+}
+
+.fi-es {
+    background-image: url("flag-icons/flags/4x3/es.svg");
+}
+
+.fi-fr {
+    background-image: url("flag-icons/flags/4x3/fr.svg");
+}
+
+.fi-ru {
+    background-image: url("flag-icons/flags/4x3/ru.svg");
+}
+
+.fi-cn {
+    background-image: url("flag-icons/flags/4x3/cn.svg");
+}

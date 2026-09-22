@@ -16,6 +16,7 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { TranslatePipe } from '@ngx-translate/core';
 interface SacForm {
     depth: FormControl<number>;
     tankSize: FormControl<number>;
@@ -30,7 +31,7 @@ interface SacForm {
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe, TranslatePipe]
 })
 export class SacComponent implements OnInit {
     public calcIcon = faLungs;

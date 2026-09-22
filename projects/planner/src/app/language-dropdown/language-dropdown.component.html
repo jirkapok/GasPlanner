@@ -1,0 +1,20 @@
+<div class="dropdown" mdbDropdown>
+  @if (navbar) {
+    <a class="nav-link dropdown-toggle" id="languageMenu" mdbDropdownToggle>
+      <span aria-hidden="true">{{ current?.flag }}</span>
+    </a>
+  } @else {
+    <button type="button" class="btn btn-default dropdown-toggle" id="languageMenuButton" mdbDropdownToggle>
+      <span aria-hidden="true">{{ current?.flag }}</span> {{ current?.nativeName }}
+    </button>
+  }
+  <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageMenu" mdbDropdownMenu>
+    @for (lang of language.languages; track lang.code) {
+      <li (click)="select(lang.code)">
+        <a class="dropdown-item" [class.active]="lang.code === language.currentLanguage">
+          <span aria-hidden="true">{{ lang.flag }}</span> {{ lang.nativeName }}
+        </a>
+      </li>
+    }
+  </ul>
+</div>

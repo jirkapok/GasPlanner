@@ -215,18 +215,18 @@
               <td>CNS toxicity [%]:</td>
               <td class="border-start">
                 <div>
-                  {{resultsDiff.cnsA}}
+                  {{resultsDiff.cnsA | translate}}
                 </div>
               </td>
               <td class="border-start">
                 <div>
-                  {{resultsDiff.cnsB}}
+                  {{resultsDiff.cnsB | translate}}
                 </div>
               </td>
               <td class="{{resultsDiff.cns.bgColor}} border-start border-end">
                 <div class="delta d-flex justify-content-between align-items-center">
                   <strong>
-                    {{ resultsDiff.cnsDifference | number:'1.0-0' }}
+                    {{ resultsDiff.cnsDifference | translate }}
                   </strong>
                   <fa-icon [icon] ="resultsDiff.cns.arrow"/>
                 </div>

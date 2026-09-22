@@ -34,6 +34,8 @@
     "@maskito/angular": "^5.5.0",
     "@maskito/core": "^5.5.0",
     "@maskito/kit": "^5.5.0",
+    "@ngx-translate/core": "^18.0.0",
+    "@ngx-translate/http-loader": "^18.0.0",
     "@popperjs/core": "^2.11.8",
     "add-to-homescreen": "github:docluv/add-to-homescreen",
     "canvas-confetti": "^1.9.4",

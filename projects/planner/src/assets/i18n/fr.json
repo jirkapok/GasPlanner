@@ -1,0 +1,115 @@
+{
+  "menu": {
+    "calculators": "Calculatrices",
+    "planner": "Planificateur",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "Nitrox",
+    "gasProperties": "Propriétés du gaz",
+    "altitude": "Altitude",
+    "weight": "Poids",
+    "ndlTable": "Table NDL",
+    "cylinderBalancing": "Équilibrage des blocs",
+    "gasBlender": "Mélangeur de gaz",
+    "dive": "Plongée",
+    "clone": "Dupliquer",
+    "saveAsDefault": "Enregistrer par défaut",
+    "loadDefault": "Charger par défaut",
+    "share": "Partager",
+    "delete": "Supprimer",
+    "settings": "Paramètres",
+    "compareDives": "Comparer les plongées",
+    "standardGases": "Gaz standards",
+    "help": "Aide",
+    "learn": "Apprendre",
+    "about": "À propos"
+  },
+  "personalization": {
+    "cardTitle": "Personnalisation",
+    "metricUnits": "Unités métriques (m, l, bar)",
+    "imperialUnits": "Unités impériales (ft, cuft, psi)",
+    "imperialExperimental": "(Expérimental, non recommandé)",
+    "language": "Langue"
+  },
+  "textConstants": {
+    "depthConverterWarning": "Cette calculatrice utilise une conversion de profondeur simplifiée (1 ATM = 1 bar), les valeurs affichées ici sont donc moins précises que dans le reste de l'application. Elle utilise également la loi des gaz parfaits, donc le Rmv calculé est inférieur à la réalité.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "fresh": "Douce",
+    "brackish": "Saumâtre (EN13319)",
+    "salt": "Salée"
+  },
+  "diveOptions": {
+    "allUsable": "Entièrement utilisable",
+    "halfUsable": "Moitié utilisable",
+    "thirdUsable": "Un tiers utilisable"
+  },
+  "options": {
+    "safetyOff": "Jamais",
+    "safetyOn": "Toujours",
+    "safetyAuto": "Automatique (> {{level}} {{unit}})"
+  },
+  "gradients": {
+    "low": "Faible (45/95)",
+    "medium": "Moyen (40/85)",
+    "high": "Élevé (30/75)"
+  },
+  "waypoints": {
+    "ascent": "remontée",
+    "descent": "descente",
+    "switch": "changement de gaz",
+    "hover": "palier"
+  },
+  "events": {
+    "deco": "Déco",
+    "safetyStop": "Palier de sécurité"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "Application",
+        "usage": "Utilisation de l'application",
+        "settings": "Paramètres de l'application"
+      },
+      "plan": {
+        "title": "Plan de plongée",
+        "tanks": "Blocs",
+        "standardGases": "Gaz standards",
+        "depths": "Profondeurs",
+        "surfaceInterval": "Intervalle de surface"
+      },
+      "options": {
+        "title": "Options de plongée",
+        "general": "Général",
+        "environment": "Environnement",
+        "conservatism": "Conservatisme",
+        "gases": "Gaz",
+        "airBreaks": "Pauses d'air",
+        "stops": "Paliers",
+        "speeds": "Vitesses",
+        "diver": "Plongeur"
+      },
+      "results": {
+        "title": "Résultats de plongée",
+        "diveInfoTable": "Tableau d'informations de plongée",
+        "oxygenToxicity": "Toxicité de l'oxygène",
+        "events": "Événements causant des erreurs et des avertissements",
+        "consumedGasCharts": "Graphiques de consommation de gaz",
+        "wayPointsTable": "Tableau des points de plongée",
+        "profileChart": "Graphique du profil de plongée",
+        "tissuesHeatMap": "Carte thermique des tissus"
+      },
+      "calculators": {
+        "title": "Calculatrices",
+        "sac": "RMV/SAC",
+        "nitrox": "Nitrox",
+        "ndl": "Table des limites sans décompression (NDL)",
+        "altitude": "Altitude",
+        "weight": "Poids",
+        "gasProperties": "Propriétés du gaz",
+        "redundancies": "Équilibrage des blocs",
+        "gasBlender": "Mélangeur de gaz"
+      }
+    }
+  }
+}

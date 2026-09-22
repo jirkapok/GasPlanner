@@ -1,0 +1,115 @@
+{
+  "menu": {
+    "calculators": "Calculators",
+    "planner": "Planner",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "Nitrox",
+    "gasProperties": "Gas properties",
+    "altitude": "Altitude",
+    "weight": "Weight",
+    "ndlTable": "NDL table",
+    "cylinderBalancing": "Cylinder Balancing",
+    "gasBlender": "Gas blender",
+    "dive": "Dive",
+    "clone": "Clone",
+    "saveAsDefault": "Save as default",
+    "loadDefault": "Load default",
+    "share": "Share",
+    "delete": "Delete",
+    "settings": "Settings",
+    "compareDives": "Compare dives",
+    "standardGases": "Standard gases",
+    "help": "Help",
+    "learn": "Learn",
+    "about": "About"
+  },
+  "personalization": {
+    "cardTitle": "Personalization",
+    "metricUnits": "Metric units (m, l, bar)",
+    "imperialUnits": "Imperial units (ft, cuft, psi)",
+    "imperialExperimental": "(Experimental, not recommended)",
+    "language": "Language"
+  },
+  "textConstants": {
+    "depthConverterWarning": "This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the values shown here are less precise, than in rest of the application. Also it uses ideal gas law, so the calculated Rmv is lower then in reality.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "fresh": "Fresh",
+    "brackish": "Brackish (EN13319)",
+    "salt": "Salt"
+  },
+  "diveOptions": {
+    "allUsable": "All usable",
+    "halfUsable": "Half usable",
+    "thirdUsable": "Thirds usable"
+  },
+  "options": {
+    "safetyOff": "Never",
+    "safetyOn": "Always",
+    "safetyAuto": "Auto (> {{level}} {{unit}})"
+  },
+  "gradients": {
+    "low": "Low (45/95)",
+    "medium": "Medium (40/85)",
+    "high": "High (30/75)"
+  },
+  "waypoints": {
+    "ascent": "ascent",
+    "descent": "descent",
+    "switch": "switch",
+    "hover": "hover"
+  },
+  "events": {
+    "deco": "Deco",
+    "safetyStop": "Safety stop"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "Application",
+        "usage": "Application usage",
+        "settings": "Application settings"
+      },
+      "plan": {
+        "title": "Dive Plan",
+        "tanks": "Tanks",
+        "standardGases": "Standard gases",
+        "depths": "Depths",
+        "surfaceInterval": "Surface interval"
+      },
+      "options": {
+        "title": "Dive Options",
+        "general": "General",
+        "environment": "Environment",
+        "conservatism": "Conservatism",
+        "gases": "Gases",
+        "airBreaks": "Air breaks",
+        "stops": "Stops",
+        "speeds": "Speeds",
+        "diver": "Diver"
+      },
+      "results": {
+        "title": "Dive Results",
+        "diveInfoTable": "Dive info table",
+        "oxygenToxicity": "Oxygen toxicity",
+        "events": "Events causing errors and warnings",
+        "consumedGasCharts": "Consumed gas charts",
+        "wayPointsTable": "Dive way points table",
+        "profileChart": "Dive profile chart",
+        "tissuesHeatMap": "Tissues heat map"
+      },
+      "calculators": {
+        "title": "Calculators",
+        "sac": "RMV/SAC",
+        "nitrox": "Nitrox",
+        "ndl": "No decompression limits (NDL) table",
+        "altitude": "Altitude",
+        "weight": "Weight",
+        "gasProperties": "Gas properties",
+        "redundancies": "Cylinder Balancing",
+        "gasBlender": "Gas blender"
+      }
+    }
+  }
+}

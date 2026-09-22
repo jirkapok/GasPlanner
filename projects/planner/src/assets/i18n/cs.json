@@ -1,0 +1,115 @@
+{
+  "menu": {
+    "calculators": "Kalkulačky",
+    "planner": "Plánovač",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "Nitrox",
+    "gasProperties": "Vlastnosti plynu",
+    "altitude": "Nadmořská výška",
+    "weight": "Zátěž",
+    "ndlTable": "Tabulka NDL",
+    "cylinderBalancing": "Vyvážení lahví",
+    "gasBlender": "Míchání plynů",
+    "dive": "Ponor",
+    "clone": "Duplikovat",
+    "saveAsDefault": "Uložit jako výchozí",
+    "loadDefault": "Načíst výchozí",
+    "share": "Sdílet",
+    "delete": "Smazat",
+    "settings": "Nastavení",
+    "compareDives": "Porovnat ponory",
+    "standardGases": "Standardní směsi",
+    "help": "Nápověda",
+    "learn": "Výuka",
+    "about": "O aplikaci"
+  },
+  "personalization": {
+    "cardTitle": "Personalizace",
+    "metricUnits": "Metrické jednotky (m, l, bar)",
+    "imperialUnits": "Imperiální jednotky (ft, cuft, psi)",
+    "imperialExperimental": "(Experimentální, nedoporučuje se)",
+    "language": "Jazyk"
+  },
+  "textConstants": {
+    "depthConverterWarning": "Tato kalkulačka používá zjednodušený přepočet hloubky (1 ATM = 1 bar), takže zobrazené hodnoty jsou méně přesné než ve zbytku aplikace. Kromě toho používá zákon ideálního plynu, takže vypočtená hodnota Rmv je nižší než ve skutečnosti.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "fresh": "Sladká voda",
+    "brackish": "Brakická voda (EN13319)",
+    "salt": "Slaná voda"
+  },
+  "diveOptions": {
+    "allUsable": "Celý objem využitelný",
+    "halfUsable": "Polovina objemu využitelná",
+    "thirdUsable": "Třetina objemu využitelná"
+  },
+  "options": {
+    "safetyOff": "Nikdy",
+    "safetyOn": "Vždy",
+    "safetyAuto": "Automaticky (> {{level}} {{unit}})"
+  },
+  "gradients": {
+    "low": "Nízký (45/95)",
+    "medium": "Střední (40/85)",
+    "high": "Vysoký (30/75)"
+  },
+  "waypoints": {
+    "ascent": "výstup",
+    "descent": "sestup",
+    "switch": "přepnutí plynu",
+    "hover": "zastávka"
+  },
+  "events": {
+    "deco": "Dekomprese",
+    "safetyStop": "Bezpečnostní zastávka"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "Aplikace",
+        "usage": "Používání aplikace",
+        "settings": "Nastavení aplikace"
+      },
+      "plan": {
+        "title": "Plán ponoru",
+        "tanks": "Lahve",
+        "standardGases": "Standardní směsi",
+        "depths": "Hloubky",
+        "surfaceInterval": "Povrchová pauza"
+      },
+      "options": {
+        "title": "Možnosti ponoru",
+        "general": "Obecné",
+        "environment": "Prostředí",
+        "conservatism": "Konzervatismus",
+        "gases": "Plyny",
+        "airBreaks": "Vzduchové přestávky",
+        "stops": "Zastávky",
+        "speeds": "Rychlosti",
+        "diver": "Potápěč"
+      },
+      "results": {
+        "title": "Výsledky ponoru",
+        "diveInfoTable": "Tabulka informací o ponoru",
+        "oxygenToxicity": "Toxicita kyslíku",
+        "events": "Události způsobující chyby a varování",
+        "consumedGasCharts": "Grafy spotřeby plynu",
+        "wayPointsTable": "Tabulka bodů ponoru",
+        "profileChart": "Graf profilu ponoru",
+        "tissuesHeatMap": "Tepelná mapa tkání"
+      },
+      "calculators": {
+        "title": "Kalkulačky",
+        "sac": "RMV/SAC",
+        "nitrox": "Nitrox",
+        "ndl": "Tabulka bezdekompresních limitů (NDL)",
+        "altitude": "Nadmořská výška",
+        "weight": "Zátěž",
+        "gasProperties": "Vlastnosti plynu",
+        "redundancies": "Vyvážení lahví",
+        "gasBlender": "Míchání plynů"
+      }
+    }
+  }
+}

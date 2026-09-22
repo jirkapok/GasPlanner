@@ -1,0 +1,115 @@
+{
+  "menu": {
+    "calculators": "计算器",
+    "planner": "计划器",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "富氧空气",
+    "gasProperties": "气体属性",
+    "altitude": "高原",
+    "weight": "配重",
+    "ndlTable": "NDL 表",
+    "cylinderBalancing": "气瓶平衡",
+    "gasBlender": "气体混合器",
+    "dive": "潜水",
+    "clone": "克隆",
+    "saveAsDefault": "保存为默认",
+    "loadDefault": "加载默认",
+    "share": "分享",
+    "delete": "删除",
+    "settings": "设置",
+    "compareDives": "比较潜水",
+    "standardGases": "标准气体",
+    "help": "帮助",
+    "learn": "学习",
+    "about": "关于"
+  },
+  "personalization": {
+    "cardTitle": "个性化",
+    "metricUnits": "公制单位（米、升、巴）",
+    "imperialUnits": "英制单位（英尺、立方英尺、psi）",
+    "imperialExperimental": "（实验性功能，不建议使用）",
+    "language": "语言"
+  },
+  "textConstants": {
+    "depthConverterWarning": "此计算器使用简化的深度换算（1 标准大气压 = 1 巴），因此此处显示的数值不如应用程序其他部分精确。此外，它使用理想气体定律，因此计算出的呼吸消耗率（Rmv）会低于实际值。",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "fresh": "淡水",
+    "brackish": "半咸水（EN13319）",
+    "salt": "海水"
+  },
+  "diveOptions": {
+    "allUsable": "全部可用",
+    "halfUsable": "一半可用",
+    "thirdUsable": "三分之一可用"
+  },
+  "options": {
+    "safetyOff": "从不",
+    "safetyOn": "总是",
+    "safetyAuto": "自动（> {{level}} {{unit}}）"
+  },
+  "gradients": {
+    "low": "低 (45/95)",
+    "medium": "中 (40/85)",
+    "high": "高 (30/75)"
+  },
+  "waypoints": {
+    "ascent": "上升",
+    "descent": "下降",
+    "switch": "换气",
+    "hover": "悬停"
+  },
+  "events": {
+    "deco": "减压",
+    "safetyStop": "安全停留"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "应用程序",
+        "usage": "应用程序使用说明",
+        "settings": "应用程序设置"
+      },
+      "plan": {
+        "title": "潜水计划",
+        "tanks": "气瓶",
+        "standardGases": "标准气体",
+        "depths": "深度",
+        "surfaceInterval": "水面间隔"
+      },
+      "options": {
+        "title": "潜水选项",
+        "general": "常规",
+        "environment": "环境",
+        "conservatism": "保守度",
+        "gases": "气体",
+        "airBreaks": "空气休息",
+        "stops": "停留点",
+        "speeds": "速度",
+        "diver": "潜水员"
+      },
+      "results": {
+        "title": "潜水结果",
+        "diveInfoTable": "潜水信息表",
+        "oxygenToxicity": "氧气毒性",
+        "events": "导致错误和警告的事件",
+        "consumedGasCharts": "气体消耗图表",
+        "wayPointsTable": "潜水路点表",
+        "profileChart": "潜水剖面图",
+        "tissuesHeatMap": "组织热图"
+      },
+      "calculators": {
+        "title": "计算器",
+        "sac": "RMV/SAC",
+        "nitrox": "富氧空气",
+        "ndl": "免减压极限（NDL）表",
+        "altitude": "高原",
+        "weight": "配重",
+        "gasProperties": "气体属性",
+        "redundancies": "气瓶平衡",
+        "gasBlender": "气体混合器"
+      }
+    }
+  }
+}

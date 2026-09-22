@@ -35,7 +35,7 @@
             (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
             <td class="px-1 text-center">
               <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"
-              [title]="iconTitle(point)"></fa-icon>
+              [title]="iconTitle(point) | translate"></fa-icon>
             </td>
             <td class="px-1">{{ point.endDepth| number:'1.0-0' }}</td>
             <td class="px-1">{{ point.duration | duration:stops.totalDuration }}</td>

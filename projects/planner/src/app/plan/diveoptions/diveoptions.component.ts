@@ -22,21 +22,25 @@ import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { DiverComponent } from '../diver/diver.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent, MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent]
+    imports: [
+        ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent,
+        MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent, TranslatePipe
+    ]
 })
 export class DiveOptionsComponent extends Streamed implements OnInit {
     @Input() public formValid = true;
     @Input() public rootForm!: FormGroup;
 
-    public readonly allUsableName = 'All usable';
-    public readonly halfUsableName = 'Half usable';
-    public readonly thirdUsableName = 'Thirds usable';
+    public readonly allUsableName = 'diveOptions.allUsable';
+    public readonly halfUsableName = 'diveOptions.halfUsable';
+    public readonly thirdUsableName = 'diveOptions.thirdUsable';
     public strategy = this.allUsableName;
     public icon = faCog;
     public optionsForm!: FormGroup<{

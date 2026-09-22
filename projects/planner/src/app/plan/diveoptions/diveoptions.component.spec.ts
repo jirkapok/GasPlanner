@@ -18,6 +18,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { OptionsService } from '../../shared/options.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('Dive options component', () => {
     let component: DiveOptionsComponent;
@@ -37,7 +38,8 @@ describe('Dive options component', () => {
         ViewStates, SubViewStorage,
         Preferences, PreferencesStore,
         ApplicationSettingsService,
-        MdbModalService, OptionsService
+        MdbModalService, OptionsService,
+        provideTestTranslate()
     ]
 }).compileComponents();
     });

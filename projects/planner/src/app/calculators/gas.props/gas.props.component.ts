@@ -17,6 +17,7 @@ import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-d
 import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface GasForm {
     o2: FormControl<number>;
@@ -31,7 +32,7 @@ interface GasForm {
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent, DecimalPipe, TranslatePipe]
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;

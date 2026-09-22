@@ -23,6 +23,7 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
 import { TankChartComponent } from '../tank-chart/tank-chart.component';
 import { DiveIssuesComponent } from '../dive-issues/dive-issues.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diveinfo',
@@ -37,7 +38,8 @@ import { DurationPipe } from '../../pipes/duration.pipe';
         TankChartComponent,
         DiveIssuesComponent,
         DecimalPipe,
-        DurationPipe
+        DurationPipe,
+        TranslatePipe
     ]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {

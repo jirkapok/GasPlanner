@@ -14,8 +14,9 @@ import {ReloadDispatcher} from './reloadDispatcher';
 export class OptionsService {
     /** Allows set lower speed as 0.1 m/min. for last 6 m on hard deco */
     private static readonly minimumSpeed = 0.1;
-    public readonly safetyOffName = 'Never';
-    public readonly safetyOnName = 'Always';
+    public readonly safetyOffName = 'options.safetyOff';
+    public readonly safetyOnName = 'options.safetyOn';
+    public readonly safetyAutoName = 'options.safetyAuto';
     private standardGradients = new StandardGradientsService();
     private options = new Options();
     private _diver: Diver = new Diver();
@@ -108,12 +109,11 @@ export class OptionsService {
         return this.options.salinity;
     }
 
-    public get safetyAutoName(): string {
-        const level = this.units.defaults.autoStopLevel;
-        return `Auto (> ${level} ${this.units.length})`;
+    public get safetyAutoLevel(): number {
+        return this.units.defaults.autoStopLevel;
     }
 
-    public get safetyStopOption(): string {
+    public get safetyStopKey(): string {
         switch (this.options.safetyStop) {
             case SafetyStop.never:
                 return this.safetyOffName;
@@ -122,6 +122,10 @@ export class OptionsService {
             default:
                 return this.safetyAutoName;
         }
+    }
+
+    public get safetyAutoParams(): Record<string, unknown> {
+        return { level: this.safetyAutoLevel, unit: this.units.length };
     }
 
     public get airBreaks(): AirBreakOptions {

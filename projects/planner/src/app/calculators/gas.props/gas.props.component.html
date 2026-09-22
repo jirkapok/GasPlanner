@@ -141,7 +141,7 @@
                   <span>Warnings</span>
                 </div>
                 <div class="card-body">
-                  <div class="mb-4">{{ depthConverterWarning }}</div>
+                  <div class="mb-4">{{ depthConverterWarning | translate }}</div>
                   @if (calc.minPpO2Exceeded) {
                     <div class="alert alert-warning">
                       <fa-icon [icon]="warningIcon" class="me-2"></fa-icon>

@@ -3,7 +3,7 @@
         <div class="col col-12 col-sm-7 col-lg-5 col-xl-4 col-xxl-3 mt-3">
             <div class="card">
                 <app-card-header
-                    cardTitle="Units"
+                    [cardTitle]="'personalization.cardTitle' | translate"
                     [headerIcon]="flagIcon"
                     helpDocument="settings">
                 </app-card-header>
@@ -11,14 +11,19 @@
                     <div class="form-check">
                         <input type="radio" id="metricRadio" class="form-check-input" formControlName="imperialUnits"
                                [value]="false" />
-                        <label class="custom-control-label" for="metricRadio" value="metric">Metric units (m, l,
-                            bar)</label>
+                        <label class="custom-control-label" for="metricRadio" value="metric">{{ 'personalization.metricUnits' | translate }}</label>
                     </div>
                     <div class="form-check">
                         <input type="radio" id="imperialRadio" class="form-check-input" formControlName="imperialUnits"
                                [value]="true" />
-                        <label class="custom-control-label" for="imperialRadio">Imperial units (ft, cuft, psi)<br>
-                            (Experimental, not recommended)</label>
+                        <label class="custom-control-label" for="imperialRadio">{{ 'personalization.imperialUnits' | translate }}<br>
+                            {{ 'personalization.imperialExperimental' | translate }}</label>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label" mdbLabel>{{ 'personalization.language' | translate }}:</label>
+                        <div>
+                            <app-language-dropdown></app-language-dropdown>
+                        </div>
                     </div>
                 </div>
             </div>

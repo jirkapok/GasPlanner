@@ -1,0 +1,115 @@
+{
+  "menu": {
+    "calculators": "Rechner",
+    "planner": "Planer",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "Nitrox",
+    "gasProperties": "Gaseigenschaften",
+    "altitude": "Höhe",
+    "weight": "Gewicht",
+    "ndlTable": "NDL-Tabelle",
+    "cylinderBalancing": "Flaschenbalance",
+    "gasBlender": "Gasmischer",
+    "dive": "Tauchgang",
+    "clone": "Duplizieren",
+    "saveAsDefault": "Als Standard speichern",
+    "loadDefault": "Standard laden",
+    "share": "Teilen",
+    "delete": "Löschen",
+    "settings": "Einstellungen",
+    "compareDives": "Tauchgänge vergleichen",
+    "standardGases": "Standardgase",
+    "help": "Hilfe",
+    "learn": "Lernen",
+    "about": "Über"
+  },
+  "personalization": {
+    "cardTitle": "Personalisierung",
+    "metricUnits": "Metrische Einheiten (m, l, bar)",
+    "imperialUnits": "Imperiale Einheiten (ft, cuft, psi)",
+    "imperialExperimental": "(Experimentell, nicht empfohlen)",
+    "language": "Sprache"
+  },
+  "textConstants": {
+    "depthConverterWarning": "Dieser Rechner verwendet eine einfache Tiefenumrechnung (1 ATM = 1 bar), daher sind die hier angezeigten Werte weniger genau als im Rest der Anwendung. Außerdem wird das ideale Gasgesetz verwendet, sodass der berechnete Rmv-Wert niedriger ist als in der Realität.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "fresh": "Süßwasser",
+    "brackish": "Brackwasser (EN13319)",
+    "salt": "Salzwasser"
+  },
+  "diveOptions": {
+    "allUsable": "Vollständig nutzbar",
+    "halfUsable": "Zur Hälfte nutzbar",
+    "thirdUsable": "Zu einem Drittel nutzbar"
+  },
+  "options": {
+    "safetyOff": "Nie",
+    "safetyOn": "Immer",
+    "safetyAuto": "Automatisch (> {{level}} {{unit}})"
+  },
+  "gradients": {
+    "low": "Niedrig (45/95)",
+    "medium": "Mittel (40/85)",
+    "high": "Hoch (30/75)"
+  },
+  "waypoints": {
+    "ascent": "Aufstieg",
+    "descent": "Abstieg",
+    "switch": "Gaswechsel",
+    "hover": "Schweben"
+  },
+  "events": {
+    "deco": "Deko",
+    "safetyStop": "Sicherheitsstopp"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "Anwendung",
+        "usage": "Verwendung der Anwendung",
+        "settings": "Anwendungseinstellungen"
+      },
+      "plan": {
+        "title": "Tauchplan",
+        "tanks": "Flaschen",
+        "standardGases": "Standardgase",
+        "depths": "Tiefen",
+        "surfaceInterval": "Oberflächenpause"
+      },
+      "options": {
+        "title": "Tauchoptionen",
+        "general": "Allgemein",
+        "environment": "Umgebung",
+        "conservatism": "Konservatismus",
+        "gases": "Gase",
+        "airBreaks": "Luftpausen",
+        "stops": "Stopps",
+        "speeds": "Geschwindigkeiten",
+        "diver": "Taucher"
+      },
+      "results": {
+        "title": "Tauchergebnisse",
+        "diveInfoTable": "Tauchinfo-Tabelle",
+        "oxygenToxicity": "Sauerstofftoxizität",
+        "events": "Ereignisse, die Fehler und Warnungen verursachen",
+        "consumedGasCharts": "Diagramme des Gasverbrauchs",
+        "wayPointsTable": "Wegpunkttabelle",
+        "profileChart": "Tauchprofildiagramm",
+        "tissuesHeatMap": "Gewebe-Heatmap"
+      },
+      "calculators": {
+        "title": "Rechner",
+        "sac": "RMV/SAC",
+        "nitrox": "Nitrox",
+        "ndl": "Nullzeitgrenzen (NDL)-Tabelle",
+        "altitude": "Höhe",
+        "weight": "Gewicht",
+        "gasProperties": "Gaseigenschaften",
+        "redundancies": "Flaschenbalance",
+        "gasBlender": "Gasmischer"
+      }
+    }
+  }
+}

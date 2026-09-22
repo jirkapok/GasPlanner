@@ -9,7 +9,8 @@
         "files": [
           "/favicon.ico",
           "/index.html",
-          "/manifest.webmanifest",
+          "/manifest*.webmanifest",
+          "/assets/i18n/*.json",
           "/*.css",
           "/*.js"
         ]

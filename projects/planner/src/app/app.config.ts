@@ -4,6 +4,9 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { inject, provideAppInitializer } from '@angular/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
@@ -111,6 +114,8 @@ import { CardHeaderComponent } from './card-header/card-header.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { LanguageService } from './shared/language.service';
+import { LanguageDropdownComponent } from './language-dropdown/language-dropdown.component';
 
 const ANGULAR_MODULES = [
     CommonModule,
@@ -177,11 +182,18 @@ const STANDALONE = [
     GaslabelComponent,
     SalinityComponent,
     TankSizeComponent,
+    LanguageDropdownComponent,
 ];
 
 const SERVICES = [
     MdbModalService,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideTranslateService({
+        loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
+        fallbackLang: 'en',
+    }),
+    provideAppInitializer(() => inject(LanguageService).ready()),
+    LanguageService,
     { provide: WorkersFactoryCommon, useClass: WorkersFactory },
     DatePipe,
     DecimalPipe,

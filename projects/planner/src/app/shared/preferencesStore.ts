@@ -12,6 +12,7 @@ export class PreferencesStore {
     private static readonly showInstallKey = 'showInstall';
     private static readonly quizShownKey = 'quizShown';
     private static readonly confirmedValue = 'confirmed';
+    private static readonly languageKey = 'language';
 
     constructor(private preferencesFactory: Preferences) {}
 
@@ -88,5 +89,13 @@ export class PreferencesStore {
     public installEnabled(): boolean {
         const saved = localStorage.getItem(PreferencesStore.showInstallKey);
         return saved !== PreferencesStore.disclaimerValue;
+    }
+
+    public getLanguage(): string | null {
+        return localStorage.getItem(PreferencesStore.languageKey);
+    }
+
+    public setLanguage(language: string): void {
+        localStorage.setItem(PreferencesStore.languageKey, language);
     }
 }

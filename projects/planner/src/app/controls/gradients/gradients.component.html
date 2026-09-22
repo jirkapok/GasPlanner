@@ -11,7 +11,7 @@
       }
       <div mdbDropdown class="input-group dropdown" [class.form-outline]="simple">
         @if (simple) {
-          <input id="gfLowField" [value]="conservatism" class="form-control" type="text" readonly />
+          <input id="gfLowField" [value]="conservatism | translate" class="form-control" type="text" readonly />
         }
         @if (!simple) {
           <input id="gfLowField" class="form-control" type="number" formControlName="gfLow"
@@ -20,10 +20,10 @@
         <button type="button" class="btn btn-default dropdown-toggle dropdown-toggle-split"
         id="conservatismMenu" mdbDropdownToggle data-mdb-toggle="dropdown" aria-expanded="false"></button>
         <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-          <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName}}</a></li>
-          <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName}}</a>
+          <li (click)="lowConservatism()"><a class="dropdown-item">{{standards.lowName | translate}}</a></li>
+          <li (click)="mediumConservatism()"><a class="dropdown-item">{{standards.mediumName | translate}}</a>
         </li>
-        <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName}}</a></li>
+        <li (click)="highConservatism()"><a class="dropdown-item">{{standards.highName | translate}}</a></li>
       </ul>
     </div>
     @if (gfLowInvalid) {

@@ -7,13 +7,14 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { NgClass } from '@angular/common';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
     styleUrls: ['./gradients.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, NgClass, MdbFormsModule, MdbDropdownModule]
+    imports: [ReactiveFormsModule, NgClass, MdbFormsModule, MdbDropdownModule, TranslatePipe]
 })
 export class GradientsComponent implements OnInit {
     @Input() public showTitle = false;

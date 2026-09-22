@@ -9,10 +9,11 @@ import { MarkdownCustomization } from '../shared/markdown-customization.service'
 import { HelpViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-help',
-    imports: [NgxMdModule, FontAwesomeModule, NgClass],
+    imports: [NgxMdModule, FontAwesomeModule, NgClass, TranslatePipe],
     providers: [MarkdownCustomization],
     templateUrl: './help.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
@@ -28,61 +29,61 @@ export class HelpComponent implements OnInit {
     public sections: any[] = [
         {
             id: HelpComponent.defaultDocument,
-            title: 'Application',
+            title: 'help.menu.application.title',
             items: [
-                { label: 'Application usage', path: HelpComponent.defaultDocument },
-                { label: 'Application settings', path: 'settings' }
+                { label: 'help.menu.application.usage', path: HelpComponent.defaultDocument },
+                { label: 'help.menu.application.settings', path: 'settings' }
             ]
         },
         {
             id: 'plan',
-            title: 'Dive Plan',
+            title: 'help.menu.plan.title',
             items: [
-                { label: 'Tanks', path: 'tanks' },
-                { label: 'Standard gases', path: 'standard_gases' },
-                { label: 'Depths', path: 'depths' },
-                { label: 'Surface interval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
+                { label: 'help.menu.plan.tanks', path: 'tanks' },
+                { label: 'help.menu.plan.standardGases', path: 'standard_gases' },
+                { label: 'help.menu.plan.depths', path: 'depths' },
+                { label: 'help.menu.plan.surfaceInterval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
             ]
         },
         {
             id: 'options',
-            title: 'Dive Options',
+            title: 'help.menu.options.title',
             items: [
-                { label: 'General', path: 'plan_options' },
-                { label: 'Environment', path: 'environment' },
-                { label: 'Conservatism', path: 'gradient_factors' },
-                { label: 'Gases', path: 'plan_options', anchor: 'gases' },
-                { label: 'Air breaks', path: 'plan_options', anchor: 'air-breaks' },
-                { label: 'Stops', path: 'stops' },
-                { label: 'Speeds', path: 'speeds' },
-                { label: 'Diver', path: 'plan_options', anchor: 'diver' }
+                { label: 'help.menu.options.general', path: 'plan_options' },
+                { label: 'help.menu.options.environment', path: 'environment' },
+                { label: 'help.menu.options.conservatism', path: 'gradient_factors' },
+                { label: 'help.menu.options.gases', path: 'plan_options', anchor: 'gases' },
+                { label: 'help.menu.options.airBreaks', path: 'plan_options', anchor: 'air-breaks' },
+                { label: 'help.menu.options.stops', path: 'stops' },
+                { label: 'help.menu.options.speeds', path: 'speeds' },
+                { label: 'help.menu.options.diver', path: 'plan_options', anchor: 'diver' }
             ]
         },
         {
             id: 'results',
-            title: 'Dive Results',
+            title: 'help.menu.results.title',
             items: [
-                { label: 'Dive info table', path: 'diveinfo' },
-                { label: 'Oxygen toxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
-                { label: 'Events causing errors and warnings', path: 'events' },
-                { label: 'Consumed gas charts', path: 'consumed' },
-                { label: 'Dive way points table', path: 'waypoints_table' },
-                { label: 'Dive profile chart', path: 'profile_chart' },
-                { label: 'Tissues heat map', path: 'profile_chart', anchor: 'tissues-heat-map' }
+                { label: 'help.menu.results.diveInfoTable', path: 'diveinfo' },
+                { label: 'help.menu.results.oxygenToxicity', path: 'diveinfo', anchor: 'oxygen-toxicity' },
+                { label: 'help.menu.results.events', path: 'events' },
+                { label: 'help.menu.results.consumedGasCharts', path: 'consumed' },
+                { label: 'help.menu.results.wayPointsTable', path: 'waypoints_table' },
+                { label: 'help.menu.results.profileChart', path: 'profile_chart' },
+                { label: 'help.menu.results.tissuesHeatMap', path: 'profile_chart', anchor: 'tissues-heat-map' }
             ]
         },
         {
             id: 'calculators',
-            title: 'Calculators',
+            title: 'help.menu.calculators.title',
             items: [
-                { label: 'RMV/SAC', path: 'sac' },
-                { label: 'Nitrox', path: 'nitrox' },
-                { label: 'No decompression limits (NDL) table', path: 'ndl_limits' },
-                { label: 'Altitude', path: 'altitude' },
-                { label: 'Weight', path: 'weight' },
-                { label: 'Gas properties', path: 'gas_properties' },
-                { label: 'Cylinder Balancing', path: 'redundancies' },
-                { label: 'Gas blender', path: 'gas_blender' }
+                { label: 'help.menu.calculators.sac', path: 'sac' },
+                { label: 'help.menu.calculators.nitrox', path: 'nitrox' },
+                { label: 'help.menu.calculators.ndl', path: 'ndl_limits' },
+                { label: 'help.menu.calculators.altitude', path: 'altitude' },
+                { label: 'help.menu.calculators.weight', path: 'weight' },
+                { label: 'help.menu.calculators.gasProperties', path: 'gas_properties' },
+                { label: 'help.menu.calculators.redundancies', path: 'redundancies' },
+                { label: 'help.menu.calculators.gasBlender', path: 'gas_blender' }
             ]
         }
     ];

@@ -8,7 +8,7 @@
       </app-card-header>
       <div class="card-body">
         <form [formGroup]="nitroxForm">
-          <div class="mb-4">{{ depthConverterWarning }}</div>
+          <div class="mb-4">{{ depthConverterWarning | translate }}</div>
           <div class="btn-group mb-3" role="group">
             <button type="button" class="btn" [class.btn-primary]="calc.inMod"
             (click)="toMod()">MOD</button>

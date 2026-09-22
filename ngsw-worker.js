@@ -1312,7 +1312,7 @@ ${error.stack}`;
   };
 
   // packages/service-worker/worker/src/debug.js
-  var SW_VERSION = "20.3.31";
+  var SW_VERSION = "22.1.7";
   var DEBUG_LOG_BUFFER_SIZE = 100;
   var DebugHandler = class {
     constructor(driver, adapter2) {
@@ -1590,11 +1590,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       this.scope.addEventListener("push", (event) => this.onPush(event));
       this.scope.addEventListener("notificationclick", (event) => this.onClick(event));
       this.scope.addEventListener("notificationclose", (event) => this.onClose(event));
-      this.scope.addEventListener("pushsubscriptionchange", (event) => (
-        // This is a bug in TypeScript, where they removed `PushSubscriptionChangeEvent`
-        // based on the incorrect assumption that browsers don't support it.
-        this.onPushSubscriptionChange(event)
-      ));
+      this.scope.addEventListener("pushsubscriptionchange", (event) => this.onPushSubscriptionChange(event));
       this.scope.addEventListener("messageerror", (event) => this.onMessageError(event));
       this.scope.addEventListener("unhandledrejection", (event) => this.onUnhandledRejection(event));
       this.debugger = new DebugHandler(this, this.adapter);
@@ -1711,7 +1707,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
       }
       const desc = data.notification;
       let options = {};
-      NOTIFICATION_OPTION_NAMES.filter((name) => desc.hasOwnProperty(name)).forEach((name) => options[name] = desc[name]);
+      NOTIFICATION_OPTION_NAMES.filter((name) => Object.hasOwn(desc, name)).forEach((name) => options[name] = desc[name]);
       await this.scope.registration.showNotification(desc["title"], options);
     }
     async handleClick(notification, action) {
@@ -1877,7 +1873,7 @@ ${msgIdle}`, { headers: this.adapter.newHeaders({ "Content-Type": "text/plain" }
           table.read("assignments"),
           table.read("latest")
         ]);
-        if (!this.versions.has(latest.latest) && !manifests.hasOwnProperty(latest.latest)) {
+        if (!this.versions.has(latest.latest) && !Object.hasOwn(manifests, latest.latest)) {
           this.debugger.log(`Missing manifest for latest version hash ${latest.latest}`, "initialize: read from DB");
           throw new Error(`Missing manifest for latest hash ${latest.latest}`);
         }

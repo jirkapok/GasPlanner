@@ -8,13 +8,14 @@ import { Streamed } from '../../shared/streamed';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-plan-tabs',
     templateUrl: './plan.tabs.component.html',
     styleUrls: ['./plan.tabs.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [MdbTabsModule, FaIconComponent]
+    imports: [MdbTabsModule, FaIconComponent, TranslatePipe]
 })
 export class PlanTabsComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;

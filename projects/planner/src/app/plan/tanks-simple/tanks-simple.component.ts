@@ -16,6 +16,7 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { DecimalPipe } from '@angular/common';
 import { OxygenComponent } from '../../controls/oxygen/oxygen.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface TankForm {
     firstTankSize: FormControl<number>;
@@ -29,7 +30,7 @@ interface TankForm {
     templateUrl: './tanks-simple.component.html',
     styleUrls: ['./tanks-simple.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, OxygenComponent, DecimalPipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, OxygenComponent, DecimalPipe, TranslatePipe]
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

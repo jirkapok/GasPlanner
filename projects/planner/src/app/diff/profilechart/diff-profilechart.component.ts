@@ -14,13 +14,14 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass } from '@angular/common';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-profilechart',
     templateUrl: './diff-profilechart.component.html',
     styleUrls: ['./diff-profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, NgClass, CalculatingComponent]
+    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;

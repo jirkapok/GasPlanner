@@ -20,13 +20,15 @@ import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
 import { SalinityComponent } from '../../controls/salinity/salinity.component';
 import { AltitudeComponent } from '../../controls/altitude/altitude.component';
 import { GradientsComponent } from '../../controls/gradients/gradients.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, DecimalPipe]
+    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, DecimalPipe,
+        TranslatePipe]
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;

@@ -6,13 +6,14 @@ import { ProfileComparatorService } from '../../../../shared/diff/profileCompara
 import { ConsumedGasDifference } from '../../../../shared/diff/gases-comparison.service';
 import { NgClass, DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-gas-consumed-tank-chart',
     templateUrl: './diff-gas-consumed-tank-chart.component.html',
     styleUrl: './diff-gas-consumed-tank-chart.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, NgClass, DecimalPipe]
+    imports: [FaIconComponent, NgClass, DecimalPipe, TranslatePipe]
 })
 export class GasConsumedDifferenceTankComponent {
     @Input({required: true})

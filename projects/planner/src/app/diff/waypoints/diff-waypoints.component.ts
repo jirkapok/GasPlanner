@@ -8,13 +8,14 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { NgClass, DecimalPipe } from '@angular/common';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-waypoints',
     templateUrl: './diff-waypoints.component.html',
     styleUrls: ['./diff-waypoints.component.scss', '../diff.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, CalculatingComponent, NgClass, DecimalPipe, DurationPipe]
+    imports: [FaIconComponent, CalculatingComponent, NgClass, DecimalPipe, DurationPipe, TranslatePipe]
 })
 export class WaypointsDifferenceComponent {
     public tasks = faTasks;

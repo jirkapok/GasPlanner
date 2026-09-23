@@ -1,115 +1,165 @@
 {
   "menu": {
-    "calculators": "Calculadoras",
-    "planner": "Planificador",
-    "rmvSac": "RMV/SAC",
-    "nitrox": "Nitrox",
-    "gasProperties": "Propiedades del gas",
-    "altitude": "Altitud",
-    "weight": "Peso",
-    "ndlTable": "Tabla NDL",
-    "cylinderBalancing": "Balance de botellas",
-    "gasBlender": "Mezclador de gases",
-    "dive": "Inmersión",
-    "clone": "Duplicar",
-    "saveAsDefault": "Guardar como predeterminado",
-    "loadDefault": "Cargar predeterminado",
-    "share": "Compartir",
-    "delete": "Eliminar",
-    "settings": "Configuración",
-    "compareDives": "Comparar inmersiones",
-    "standardGases": "Gases estándar",
-    "help": "Ayuda",
-    "learn": "Aprender",
-    "about": "Acerca de"
+    "calculators": "Calculadoras", "planner": "Planificador", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
+    "gasProperties": "Propiedades del gas", "altitude": "Altitud", "weight": "Peso", "ndlTable": "Tabla NDL",
+    "cylinderBalancing": "Balance de botellas", "gasBlender": "Mezclador de gases", "dive": "Inmersión", "clone": "Duplicar",
+    "saveAsDefault": "Guardar como predeterminado", "loadDefault": "Cargar predeterminado", "share": "Compartir", "delete": "Eliminar",
+    "settings": "Configuración", "compareDives": "Comparar inmersiones", "standardGases": "Gases estándar", "help": "Ayuda",
+    "learn": "Aprender", "about": "Acerca de", "toggleNavigation": "Alternar navegación"
   },
   "personalization": {
-    "cardTitle": "Personalización",
-    "metricUnits": "Unidades métricas (m, l, bar)",
-    "imperialUnits": "Unidades imperiales (ft, cuft, psi)",
-    "imperialExperimental": "(Experimental, no recomendado)",
+    "cardTitle": "Personalización", "metricUnits": "Unidades métricas (m, l, bar)",
+    "imperialUnits": "Unidades imperiales (ft, cuft, psi)", "imperialExperimental": "(Experimental, no recomendado)",
     "language": "Idioma"
   },
   "textConstants": {
     "depthConverterWarning": "Esta calculadora utiliza una conversión de profundidad simplificada (1 ATM = 1 bar), por lo que los valores mostrados aquí son menos precisos que en el resto de la aplicación. Además, utiliza la ley de los gases ideales, por lo que el Rmv calculado es inferior al real.",
     "cnsOverOneThousand": "> 1000"
   },
-  "salinity": {
-    "fresh": "Dulce",
-    "brackish": "Salobre (EN13319)",
-    "salt": "Salada"
-  },
-  "diveOptions": {
-    "allUsable": "Totalmente utilizable",
-    "halfUsable": "Mitad utilizable",
-    "thirdUsable": "Un tercio utilizable"
-  },
-  "options": {
-    "safetyOff": "Nunca",
-    "safetyOn": "Siempre",
-    "safetyAuto": "Automático (> {{level}} {{unit}})"
-  },
+  "salinity": { "label": "Salinidad del agua:", "fresh": "Dulce", "brackish": "Salobre (EN13319)", "salt": "Salada" },
+  "options": { "safetyOff": "Nunca", "safetyOn": "Siempre", "safetyAuto": "Automático (> {{level}} {{unit}})" },
   "gradients": {
-    "low": "Bajo (45/95)",
-    "medium": "Medio (40/85)",
-    "high": "Alto (30/75)"
+    "title": "Conservadurismo (Factores de gradiente):", "lowLabel": "Gradiente bajo [%]:", "highLabel": "Gradiente alto [%]:",
+    "lowerThanHigh": "menor que el gradiente alto", "higherThanLow": "mayor que el gradiente bajo",
+    "low": "Bajo (45/95)", "medium": "Medio (40/85)", "high": "Alto (30/75)"
   },
-  "waypoints": {
-    "ascent": "ascenso",
-    "descent": "descenso",
-    "switch": "cambio de gas",
-    "hover": "parada"
-  },
-  "events": {
-    "deco": "Descompresión",
-    "safetyStop": "Parada de seguridad"
-  },
+  "waypoints": { "ascent": "ascenso", "descent": "descenso", "switch": "cambio de gas", "hover": "parada" },
+  "events": { "deco": "Descompresión", "safetyStop": "Parada de seguridad" },
   "help": {
     "menu": {
-      "application": {
-        "title": "Aplicación",
-        "usage": "Uso de la aplicación",
-        "settings": "Configuración de la aplicación"
-      },
-      "plan": {
-        "title": "Plan de inmersión",
-        "tanks": "Botellas",
-        "standardGases": "Gases estándar",
-        "depths": "Profundidades",
-        "surfaceInterval": "Intervalo de superficie"
-      },
-      "options": {
-        "title": "Opciones de inmersión",
-        "general": "General",
-        "environment": "Entorno",
-        "conservatism": "Conservadurismo",
-        "gases": "Gases",
-        "airBreaks": "Pausas de aire",
-        "stops": "Paradas",
-        "speeds": "Velocidades",
-        "diver": "Buceador"
-      },
-      "results": {
-        "title": "Resultados de la inmersión",
-        "diveInfoTable": "Tabla de información de la inmersión",
-        "oxygenToxicity": "Toxicidad del oxígeno",
-        "events": "Eventos que causan errores y advertencias",
-        "consumedGasCharts": "Gráficos de consumo de gas",
-        "wayPointsTable": "Tabla de puntos de la inmersión",
-        "profileChart": "Gráfico del perfil de inmersión",
-        "tissuesHeatMap": "Mapa de calor de tejidos"
-      },
-      "calculators": {
-        "title": "Calculadoras",
-        "sac": "RMV/SAC",
-        "nitrox": "Nitrox",
-        "ndl": "Tabla de límites sin descompresión (NDL)",
-        "altitude": "Altitud",
-        "weight": "Peso",
-        "gasProperties": "Propiedades del gas",
-        "redundancies": "Balance de botellas",
-        "gasBlender": "Mezclador de gases"
-      }
+      "application": { "title": "Aplicación", "usage": "Uso de la aplicación", "settings": "Configuración de la aplicación" },
+      "plan": { "title": "Plan de inmersión", "tanks": "Botellas", "standardGases": "Gases estándar", "depths": "Profundidades", "surfaceInterval": "Intervalo de superficie" },
+      "options": { "title": "Opciones de inmersión", "general": "General", "environment": "Entorno", "conservatism": "Conservadurismo", "gases": "Gases", "airBreaks": "Pausas de aire", "stops": "Paradas", "speeds": "Velocidades", "diver": "Buceador" },
+      "results": { "title": "Resultados de la inmersión", "diveInfoTable": "Tabla de información de la inmersión", "oxygenToxicity": "Toxicidad del oxígeno", "events": "Eventos que causan errores y advertencias", "consumedGasCharts": "Gráficos de consumo de gas", "wayPointsTable": "Tabla de puntos de la inmersión", "profileChart": "Gráfico del perfil de inmersión", "tissuesHeatMap": "Mapa de calor de tejidos" },
+      "calculators": { "title": "Calculadoras", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Tabla de límites sin descompresión (NDL)", "altitude": "Altitud", "weight": "Peso", "gasProperties": "Propiedades del gas", "redundancies": "Balance de botellas", "gasBlender": "Mezclador de gases" }
     }
-  }
+  },
+  "validation": { "needsNumber": "Debe ser un número" },
+  "altitude": { "label": "Altitud", "seaLevel": "Nivel del mar" },
+  "calculating": { "label": "Calculando..." },
+  "gaslabel": { "mod": "MOD", "switch": "cambio", "mnd": "MND" },
+  "oxygenDropdown": { "o2Label": "O2 [%]:", "bestMix": "Mejor mezcla" },
+  "about": {
+    "title": "Acerca de Gas Planner", "tagline1": "Aplicación de buceo de código abierto para ayudar a los buceadores a planificar sus inmersiones.",
+    "tagline2": "¡Planifica tu inmersión y bucea tu plan!", "disclaimerLabel": "Aviso legal:",
+    "disclaimerText": "Ninguno de los autores, colaboradores, administradores o cualquier otra persona relacionada con este proyecto puede ser responsable del uso que hagas de la información proporcionada por esta aplicación o enlazada desde estas páginas web. Utiliza los resultados bajo tu propia responsabilidad.",
+    "githubProject": "Proyecto en GitHub"
+  },
+  "cardHeader": { "showHelp": "Mostrar ayuda" },
+  "helpModal": { "title": "Ayuda", "close": "Cerrar" },
+  "appinfo": { "version": "Versión" },
+  "ppo2": { "maxPpo2Label": "ppO2 máximo:", "maxDecoPpo2Label": "ppO2 máximo en descompresión:" },
+  "diver": { "rmvLabel": "RMV", "stressRmvLabel": "RMV de estrés" },
+  "diff": { "onlyOneDive": "Solo hay una inmersión planificada. Si deseas comparar inmersiones, define al menos dos.", "goToPlanner": "Ir al planificador" },
+  "diffDiveResults": { "cardTitle": "Resultados de la inmersión" },
+  "diffResultsTable": {
+    "profileA": "Perfil A", "profileB": "Perfil B", "difference": "Diferencia", "totalDiveTime": "Tiempo total de inmersión",
+    "timeToSurface": "Tiempo hasta la superficie", "averageDepth": "Profundidad media", "rockBottomAt": "Reserva de emergencia en",
+    "noDecoTime": "Tiempo sin descompresión", "maxBottomTime": "Tiempo máximo de fondo", "highestGasDensity": "Densidad de gas más alta",
+    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS"
+  },
+  "diffGasConsumed": { "cardTitle": "Gas consumido", "difference": "Diferencia", "gasRemaining": "Gas restante:", "notAvailable": "No disponible", "reserve": "Reserva:" },
+  "diffProfileChart": { "cardTitle": "Gráfico del perfil" },
+  "diffTabs": { "profileA": "PERFIL A", "profileB": "PERFIL B" },
+  "diffWaypoints": { "cardTitle": "Puntos de la inmersión", "profileA": "Perfil A", "profileB": "Perfil B", "run": "Acumulado", "depth": "Profundidad", "duration": "Duración" },
+  "common": { "back": "Atrás", "use": "Usar" },
+  "settings": {
+    "limitsCardTitle": "Límites", "maxGasDensityLabel": "Densidad máxima del gas", "primaryTankReserveLabel": "Reserva mínima de la botella principal",
+    "stageTankReserveLabel": "Reserva mínima de la botella de etapa", "ignoredIssuesCardTitle": "Problemas ignorados (avisos/errores)",
+    "icdLabel": "Contradifusión isobárica (ICD)", "densityExceededLabel": "Densidad máxima del gas superada",
+    "noDecoReachedLabel": "Límite sin descompresión alcanzado", "missingAirBreakLabel": "Falta pausa de aire", "resetToDefault": "Restablecer valores predeterminados"
+  },
+  "altitudeCalc": { "cardTitle": "Calculadora de altitud", "pressureLabel": "Presión atmosférica", "actualDepthLabel": "Profundidad real", "theoreticalDepthLabel": "Profundidad teórica a nivel del mar" },
+  "gasBlender": {
+    "cardTitle": "Mezclador de gases", "showPricingTitle": "Mostrar precios", "sourceLabel": "Origen", "heLabel": "He [%]:",
+    "pressureLabel": "Presión", "topMixLabel": "Mezcla de relleno", "targetLabel": "Objetivo", "resultsLabel": "Resultados",
+    "removeFromSourceLabel": "Extraer del origen", "addO2Label": "Añadir O2", "addHeLabel": "Añadir He", "addTopMixLabel": "Añadir mezcla de relleno",
+    "unableToCalculateMessage": "No es posible calcular la mezcla necesaria, porque la mezcla de relleno contiene más oxígeno o helio que la mezcla objetivo.",
+    "unitPricesLabel": "Precios unitarios", "o2UnitPriceLabel": "Precio unitario O2:", "heUnitPriceLabel": "Precio unitario He:",
+    "topMixUnitPriceLabel": "Precio unitario mezcla de relleno:", "mixPriceLabel": "Precio de la mezcla", "o2PriceLabel": "Precio O2",
+    "hePriceLabel": "Precio He", "topMixPriceLabel": "Precio mezcla de relleno", "totalPriceLabel": "Precio total"
+  },
+  "gasProps": {
+    "cardTitle": "Mezcla de gas", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Profundidad narcótica máxima",
+    "oxygenNarcoticLabel": "El oxígeno es narcótico", "propertiesAtDepthLabel": "Propiedades a la profundidad", "gasPropertiesLabel": "Propiedades del gas",
+    "oxygenPartialPressureLabel": "Presión parcial de oxígeno", "heliumPartialPressureLabel": "Presión parcial de helio",
+    "nitrogenPartialPressureLabel": "Presión parcial de nitrógeno", "totalPartialPressureLabel": "Presión parcial total",
+    "minimumDepthLabel": "Profundidad mínima", "maximumDepthLabel": "Profundidad máxima", "equivalentAirDepthLabel": "Profundidad equivalente en aire",
+    "equivalentNarcoticDepthLabel": "Profundidad narcótica equivalente", "maximumNarcoticDepthLabel": "Profundidad narcótica máxima",
+    "densityLabel": "Densidad", "warningsLabel": "Advertencias", "minimumDepthWarningTitle": "Profundidad mínima: ",
+    "minimumDepthWarningMessage": "Se ha superado el valor mínimo de presión parcial de oxígeno ({{minPpO2}}), que define la profundidad mínima. Añade más contenido de oxígeno o reduce la profundidad requerida.",
+    "maximumDepthWarningTitle": "Profundidad máxima: ",
+    "maximumDepthWarningMessage": "Se ha superado el valor máximo de presión parcial de oxígeno ({{maxPpO2}}). Aumenta el ppO2 máximo, reduce el contenido de oxígeno o reduce la profundidad requerida.",
+    "mndWarningTitle": "Profundidad narcótica equivalente: ",
+    "mndWarningMessage": "Se ha superado el valor máximo de profundidad narcótica ({{mndLimit}} {{unit}}), controlado por la presión parcial de los componentes tóxicos (oxígeno y nitrógeno). Reduce el contenido de nitrógeno añadiendo helio, añadiendo oxígeno o reduce la profundidad requerida.",
+    "densityWarningTitle": "Densidad máxima del gas: ",
+    "densityWarningMessage": "Se ha superado el valor máximo de densidad del gas ({{maxDensity}} {{unit}}). Reduce el contenido de oxígeno o añade más helio."
+  },
+  "ndlLimits": { "optionsCardTitle": "Opciones", "cardTitle": "Límites sin descompresión", "depthColumnLabel": "Profundidad", "limitColumnLabel": "Límite [min]", "noResultsMessageLine1": "No se encontraron límites NDL en un rango de profundidad significativo.", "noResultsMessageLine2": "Cambia el contenido de O2 del gas." },
+  "nitrox": {
+    "cardTitle": "Calculadora de Nitrox", "modTab": "MOD", "bestMixTab": "Mejor mezcla", "ppo2Tab": "ppO2", "eadTab": "EAD",
+    "ppo2Label": "ppO2:", "modLabel": "MOD", "eadPrefix": "EAD:", "depthLabel": "Profundidad", "o2Label": "O2 [%]:", "eadLabel": "EAD",
+    "lowModMessage": "Profundidad operativa final demasiado pequeña. Aumenta el ppO2 o reduce el porcentaje de O2."
+  },
+  "redundancies": { "cardTitle": "Calculadora de balance de botellas", "firstTankLabel": "Primera botella", "sizeLabel": "Tamaño", "workingPressureLabel": "Presión de trabajo", "startPressureLabel": "Presión inicial", "secondTankLabel": "Segunda botella", "finalPressureLabel": "Presión final" },
+  "sac": {
+    "cardTitle": "Volumen minuto respiratorio", "rmvTab": "RMV", "usedTab": "Usado", "durationTab": "Duración",
+    "averageDepthLabel": "Profundidad media", "tankSizeLabel": "Tamaño de la botella", "workingPressureLabel": "Presión de trabajo",
+    "diveTimeLabel": "Tiempo de inmersión", "gasConsumedLabel": "Gas consumido", "rmvLabel": "RMV", "sacPrefix": "SAC:"
+  },
+  "weight": { "cardTitle": "Calculadora de peso", "tankSizeLabel": "Tamaño de la botella", "workingPressureLabel": "Presión de trabajo", "consumedLabel": "Consumido", "lostWeightLabel": "Peso perdido" },
+  "dashboard": {
+    "installMessage": "Para poder usar la aplicación en modo sin conexión, debes añadirla (instalarla) a tu pantalla de inicio.",
+    "installAppleMessage": "Toca el botón \"Compartir\" y luego \"Añadir a pantalla de inicio\".", "addToHomeScreen": "Añadir a pantalla de inicio",
+    "sharePlanTitle": "Compartir plan", "shareUrlCopied": "La dirección URL de este plan de inmersión se copió al portapapeles."
+  },
+  "depth": { "label": "Profundidad", "bestMixLabel": "La mejor mezcla es", "maxDepthTitle": "Establecer la profundidad máxima según el límite narcótico del gas", "maxButton": "Máx" },
+  "depthsComplex": { "cardTitle": "Profundidades", "from": "Desde", "to": "Hasta", "duration": "Duración", "tank": "Botella", "endDepthLabel": "Profundidad final" },
+  "depthsSimple": { "cardTitle": "Profundidad", "bottomTime": "Tiempo de fondo", "noDecoLimit": "Límite sin descompresión", "maxDurationTitle": "Establecer el tiempo de inmersión al máximo según el gas consumido", "maxButton": "Máx", "noDecoTitle": "Establecer el tiempo de inmersión al límite sin descompresión", "noDecoButton": "Sin deco" },
+  "diveIssues": {
+    "calculationError": "Se produjo un error al calcular el perfil.",
+    "notEnoughTimePrefix": "Tiempo insuficiente para realizar la inmersión (la duración debe ser de al menos", "notEnoughTimeSuffix": "min)! Establece un tiempo de inmersión más largo.",
+    "notEnoughGasPrefix": "¡Gas insuficiente para realizar la inmersión! El tiempo de fondo máximo para la cantidad actual de gas es de",
+    "notEnoughGasSuffix": "min. Usa una botella más grande, llénala con más gas, reduce la duración de la inmersión o la profundidad planificada.",
+    "notEnoughGasShort": "¡Gas insuficiente para realizar la inmersión! El tiempo de fondo máximo para la cantidad actual de gas es menor que la inmersión planificada actualmente. Usa una botella más grande, llénala con más gas, reduce la duración de la inmersión o la profundidad planificada.",
+    "brokenCeiling": "¡Se ha superado la profundidad mínima segura (techo)! Cambia tu plan a una mayor profundidad en este punto.",
+    "lowPpo2": "¡Se alcanzó una presión parcial de oxígeno baja (se superó la profundidad mínima)! Existe riesgo de hipoxia. Usa un gas con mayor contenido de oxígeno.",
+    "highPpo2": "¡Se alcanzó una presión parcial de oxígeno alta (se superó la profundidad máxima)! Existe riesgo de toxicidad por oxígeno. Reduce la profundidad o usa un gas con menor contenido de oxígeno.",
+    "highDescentSpeed": "¡Velocidad de descenso alta! Desciende durante más tiempo o desciende a una menor profundidad.",
+    "highAscentSpeed": "¡Velocidad de ascenso alta! Asciende solo hasta una menor profundidad o asciende durante más tiempo.",
+    "highN2Switch": "¡No se recomienda cambiar a un gas con mayor contenido de nitrógeno! Existe riesgo de contradifusión isobárica (IDC). Cambia a otro gas con mayor contenido de helio o menor contenido de nitrógeno.",
+    "mndExceeded": "¡Se ha superado la profundidad narcótica máxima para el gas seleccionado! Reduce la profundidad o usa un gas con mayor contenido de helio.",
+    "highDensity": "¡Se ha superado la densidad de gas máxima recomendada! Reduce la profundidad o usa un gas con mayor contenido de helio (es decir, menor densidad).",
+    "minDepth": "¡Las inmersiones planificadas a poca profundidad durante mucho tiempo pueden derivar en buceo de saturación! Reduce la duración de la inmersión a menos de 5 horas.",
+    "maxDepth": "¡Se ha superado la profundidad máxima en la que el algoritmo fue bien probado con datos reales! Reduce la profundidad máxima.",
+    "missingAirbreak": "Se recomienda no respirar oxígeno puro durante más de 20 minutos. Usa la opción de pausas de aire para generar los cambios de gas adecuados o añade manualmente un cambio al gas de fondo.",
+    "noDecoPrefix": "Se ha superado el tiempo sin descompresión para la profundidad actual (para una inmersión sin descompresión, establece el tiempo máximo de inmersión en", "noDecoSuffix": "min)!",
+    "otuExceededPrefix": "Se ha superado el 80 % de las unidades máximas de toxicidad de oxígeno por exposición única", "otuExceededSuffix": "Existe un alto riesgo de lesión pulmonar. Reduce la cantidad de oxígeno en tus gases, la duración de la inmersión o las profundidades objetivo.",
+    "cnsExceededPrefix": "Se ha superado el 80 % de la toxicidad máxima de oxígeno por exposición única", "cnsExceededSuffix": "Existe un alto riesgo de lesión del CNS. Reduce la cantidad de oxígeno en tus gases, la duración de la inmersión o las profundidades objetivo."
+  },
+  "diveInfo": {
+    "cardTitle": "Información de la inmersión", "resultsTab": "Resultados", "shareTitle": "Compartir la dirección de la inmersión", "share": "Compartir",
+    "totalDiveTime": "Tiempo total de inmersión", "timeToSurface": "Tiempo hasta la superficie", "averageDepth": "Profundidad media",
+    "rockBottomAt": "Reserva de emergencia en", "noDecoTime": "Tiempo sin descompresión", "noDecoTimeTitle": "Establecer el tiempo de inmersión al límite sin descompresión",
+    "use": "Usar", "maxBottomTime": "Tiempo máximo de fondo", "maxBottomTimeTitle": "Establecer el tiempo de inmersión al máximo según el gas consumido",
+    "surfaceGradient": "Gradiente en superficie", "offgasingStart": "Inicio de desaturación", "highestCeiling": "Techo máximo",
+    "highestGasDensity": "Densidad de gas más alta", "turnTime": "Tiempo de retorno", "turnPressure": "Presión de retorno",
+    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS", "consumedTab": "Consumido", "issuesTab": "Problemas"
+  },
+  "diveOptions": {
+    "allUsable": "Totalmente utilizable", "halfUsable": "Mitad utilizable", "thirdUsable": "Un tercio utilizable", "cardTitle": "Opciones",
+    "extendedTrimix": "Extendido (Trimix)", "environmentTab": "Entorno", "conservatismTab": "Conservadurismo", "gasesTab": "Gases",
+    "maxNarcoticDepth": "Profundidad narcótica máxima", "oxygenIsNarcotic": "El oxígeno es narcótico", "airBreaksTab": "Pausas de aire",
+    "generateAirBreaks": "Generar pausas de aire", "maxOxygenStopDuration": "Duración máxima de la parada de oxígeno", "backGasDuration": "Duración del gas de fondo",
+    "stopsTab": "Paradas", "solveProblem": "Resolver problema", "gasSwitch": "Cambio de gas", "lastStopDepth": "Profundidad de la última parada",
+    "decoStopDistance": "Distancia entre paradas de descompresión", "roundDecoStops": "Redondear paradas de descompresión a minutos", "speedsTab": "Velocidades",
+    "descent": "Descenso", "ascentTo50": "Ascenso al 50%", "ascentToX": "Ascenso a", "ascentPrefix": "Ascenso", "toSurface": "a superficie",
+    "diverTab": "Buceador", "recreational": "Recreativo", "recommended": "Recomendado", "addSafetyStop": "Añadir parada de seguridad de 3 min:"
+  },
+  "profileChart": { "cardTitle": "Perfil de la inmersión", "heatmapTitle": "Mostrar mapa de calor de tejidos", "emergencyAscentTitle": "Mostrar ascenso de emergencia" },
+  "surfaceInterval": { "label": "Intervalo de superficie", "firstDive": "Primera inmersión", "thirtyMinutes": "30 minutos", "oneHour": "1 hora", "twoHours": "2 horas", "invalidFormat": "Debe ser un texto con el formato hh:mm" },
+  "tankChart": { "gasRemaining": "Gas restante:", "rockBottom": "Reserva de emergencia:" },
+  "tanksComplex": { "cardTitle": "Botellas", "size": "Tamaño", "workPressure": "P. trabajo", "pressure": "Presión", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Presión de trabajo", "startPressureLabel": "Presión inicial" },
+  "tanksSimple": { "cardTitle": "Botella de gas de fondo", "size": "Tamaño", "sac": "SAC:", "workingPressure": "Presión de trabajo", "startPressure": "Presión inicial" },
+  "waypointsTable": { "cardTitle": "Puntos de la inmersión", "filterTitle": "Filtrar para mostrar solo las paradas", "depth": "Profundidad", "duration": "Duración", "run": "Acumulado", "gas": "Gas" }
 }

@@ -9,13 +9,14 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DiverOptions } from '../../shared/models';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diver',
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, MdbFormsModule, PpO2Component]
+    imports: [ReactiveFormsModule, MdbFormsModule, PpO2Component, TranslatePipe]
 })
 export class DiverComponent extends Streamed implements OnInit {
     @Input() public diver: DiverOptions = new DiverOptions();

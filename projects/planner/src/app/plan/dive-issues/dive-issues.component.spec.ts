@@ -4,6 +4,7 @@ import { DiveIssuesComponent } from './dive-issues.component';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -14,7 +15,7 @@ describe('DiveIssuesComponent', () => {
     imports: [DiveIssuesComponent],
     providers: [
         UnitConversion, DiveSchedules,
-        ReloadDispatcher
+        ReloadDispatcher, provideTestTranslate()
     ]
 });
         fixture = TestBed.createComponent(DiveIssuesComponent);

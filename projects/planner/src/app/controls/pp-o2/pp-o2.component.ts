@@ -5,13 +5,14 @@ import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
     styleUrls: ['./pp-o2.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, MdbFormsModule]
+    imports: [ReactiveFormsModule, MdbFormsModule, TranslatePipe]
 })
 export class PpO2Component implements OnInit {
     @Input() public maxPpO2 = 1.4;

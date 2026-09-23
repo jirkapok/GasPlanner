@@ -1,6 +1,6 @@
 <div class="card">
   <app-card-header
-    cardTitle="Depths"
+    [cardTitle]="'depthsComplex.cardTitle' | translate"
     helpDocument="depths"
     [headerIcon]="cardIcon">
   </app-card-header>
@@ -36,30 +36,30 @@
               <ng-template mdbAccordionItemBody>
                 <div class="row">
                   <div class="col col-6 m-0 pb-0 px-1">
-                    <label for="depthItemB-{{ i }}" class="form-label mt-2">From {{startDepth(i)}} To
+                    <label for="depthItemB-{{ i }}" class="form-label mt-2">{{ 'depthsComplex.from' | translate }} {{startDepth(i)}} {{ 'depthsComplex.to' | translate }}
                     [{{units.length}}]:</label>
                     <input formControlName="endDepth" class="form-control" type="number"
                       id="depthItemB-{{ i }}" (input)="levelChanged(i)" required [min]="0"
                       [max]="ranges.depth[1]" step="1" [class.is-invalid]="depthItemInvalid(i)" />
                       @if (depthItemInvalid(i)) {
                         <div class="text-danger">
-                        Needs to be number {{ranges.depthLabel}}</div>
+                        {{ 'validation.needsNumber' | translate }} {{ranges.depthLabel}}</div>
                       }
                     </div>
                     <div class="col col-6 m-0 pb-0 px-1">
-                      <label for="durationItemB-{{ i }}" class="form-label mt-2">Duration
+                      <label for="durationItemB-{{ i }}" class="form-label mt-2">{{ 'depthsComplex.duration' | translate }}
                       [min]:</label>
                       <input formControlName="duration" class="form-control" type="number"
                         id="durationItemB-{{ i }}" (input)="levelChanged(i)" required
                         [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
                         [class.is-invalid]="durationItemInvalid(i)" />
                         @if (durationItemInvalid(i)) {
-                          <div class="text-danger">Needs to be number
+                          <div class="text-danger">{{ 'validation.needsNumber' | translate }}
                           {{ ranges.durationLabel }}</div>
                         }
                       </div>
                       <div class="col col-12 m-0 pb-0 px-1">
-                        <label for="tanksB-{{ i }}" class="form-label mt-2">Tank:</label>
+                        <label for="tanksB-{{ i }}" class="form-label mt-2">{{ 'depthsComplex.tank' | translate }}:</label>
                         <div mdbDropdown class="input-group dropdown form-outline">
                           <input id="tanksB-{{ i }}" [value]="tankLabelFor(i)" class="form-control"
                             type="text" readonly />
@@ -92,10 +92,10 @@
             <!-- Large devices -->
             <div class="d-none d-md-block" formArrayName="levels">
               <div class="row">
-                <div class="col col-1 m-0 px-1 text-end">From [{{units.length}}]</div>
-                <div class="col col-2 m-0 px-1">To [{{units.length}}]</div>
-                <div class="col col-2 m-0 px-1">Duration [min]</div>
-                <div class="col col-6 m-0 px-1">Tank</div>
+                <div class="col col-1 m-0 px-1 text-end">{{ 'depthsComplex.from' | translate }} [{{units.length}}]</div>
+                <div class="col col-2 m-0 px-1">{{ 'depthsComplex.to' | translate }} [{{units.length}}]</div>
+                <div class="col col-2 m-0 px-1">{{ 'depthsComplex.duration' | translate }} [min]</div>
+                <div class="col col-6 m-0 px-1">{{ 'depthsComplex.tank' | translate }}</div>
                 <div class="col col-1 m-0 px-1">
                   <button class="p-1 btn btn-secondary" id="addLevel" type="button" (click)="addLevel()">
                     <fa-icon [icon]="addIcon" class="fa-xl"></fa-icon>
@@ -150,11 +150,11 @@
                               <div class="col m-0 px-0">
                                 @if (depthItemInvalid(i)) {
                                   <small class="text-danger">
-                                  End depth needs to be number {{ranges.depthLabel}}. </small>
+                                  {{ 'depthsComplex.endDepthLabel' | translate }} {{ 'validation.needsNumber' | translate }} {{ranges.depthLabel}}. </small>
                                 }
                                 @if (durationItemInvalid(i)) {
                                   <small class="text-danger">
-                                  Duration needs to be number {{ ranges.durationLabel }}.</small>
+                                  {{ 'depthsComplex.duration' | translate }} {{ 'validation.needsNumber' | translate }} {{ ranges.durationLabel }}.</small>
                                 }
                               </div>
                             </div>

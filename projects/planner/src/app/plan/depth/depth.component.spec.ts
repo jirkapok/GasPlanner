@@ -6,6 +6,7 @@ import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DepthComponent } from './depth.component';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 export class DepthPage {
     constructor(private fixture: ComponentFixture<DepthComponent>) { }
@@ -30,7 +31,8 @@ describe('DepthComponent', () => {
     imports: [ReactiveFormsModule, DepthComponent],
     providers: [
         UnitConversion, ValidatorGroups,
-        InputControls, DecimalPipe
+        InputControls, DecimalPipe,
+        provideTestTranslate()
     ]
 })
             .compileComponents();

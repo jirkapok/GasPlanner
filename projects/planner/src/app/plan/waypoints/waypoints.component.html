@@ -1,11 +1,11 @@
 <div class="card">
   <app-card-header
-    cardTitle="Dive way points"
+    [cardTitle]="'waypointsTable.cardTitle' | translate"
     helpDocument="waypoints_table"
     [headerIcon]="tasks">
     <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': stops.stopsOnly }" type="button"
       data-toggle="button" [attr.aria-pressed]="stops.stopsOnly"
-      autocomplete="off" (click)="stops.switchFilter()" title="Filter to show stops only">
+      autocomplete="off" (click)="stops.switchFilter()" title="{{ 'waypointsTable.filterTitle' | translate }}">
       <fa-icon [icon]="filterIcon" class="fa-lg"></fa-icon>
     </button>
   </app-card-header>
@@ -14,11 +14,11 @@
       <thead class="table-light">
         <tr>
           <th></th>
-          <th class="fw-bold px-1">Depth [{{units.length}}]</th>
-          <th class="fw-bold px-1">Duration [min]</th>
-          <th class="fw-bold px-1">Run [min]</th>
+          <th class="fw-bold px-1">{{ 'waypointsTable.depth' | translate }} [{{units.length}}]</th>
+          <th class="fw-bold px-1">{{ 'waypointsTable.duration' | translate }} [min]</th>
+          <th class="fw-bold px-1">{{ 'waypointsTable.run' | translate }} [min]</th>
           @if (isComplex) {
-            <th class="fw-bold px-1">Gas</th>
+            <th class="fw-bold px-1">{{ 'waypointsTable.gas' | translate }}</th>
           }
         </tr>
       </thead>

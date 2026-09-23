@@ -1,10 +1,10 @@
 <ng-container [formGroup]="depthForm">
-    <label for="depthField" class="form-label" mdbLabel>Depth [{{units.length}}]:</label>
+    <label for="depthField" class="form-label" mdbLabel>{{ 'depth.label' | translate }} [{{units.length}}]:</label>
     <input id="depthField" [formControlName]="controlName" class="form-control" type="number" required
         [min]="units.ranges.depth[0]" [max]="units.ranges.depth[1]" step="1" (input)="depthChanged()"
         [class.is-invalid]="depthInvalid" />
-    <div class="invalid-feedback position-absolute">Needs to be number {{units.ranges.depthLabel}}</div>
-    <div class="text-muted form-text" [class.invisible]="depthInvalid">Best mix is {{ bestNitroxMix }}</div>
+    <div class="invalid-feedback position-absolute">{{ 'validation.needsNumber' | translate }} {{units.ranges.depthLabel}}</div>
+    <div class="text-muted form-text" [class.invisible]="depthInvalid">{{ 'depth.bestMixLabel' | translate }} {{ bestNitroxMix }}</div>
     <button type="button" class="btn btn-secondary mt-2" id="applyMaxDepthBtn"
-            (click)="applyMaxDepth()" title="Set maximum depth by gas narcotic limit">Max</button>
+            (click)="applyMaxDepth()" title="{{ 'depth.maxDepthTitle' | translate }}">{{ 'depth.maxButton' | translate }}</button>
 </ng-container>

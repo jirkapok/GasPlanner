@@ -1,6 +1,6 @@
 <ng-container [formGroup]="nitroxForm">
   @if (showTitle) {
-    <label for="gasO2" class="form-label" mdbLabel>O2 [%]:</label>
+    <label for="gasO2" class="form-label" mdbLabel>{{ 'oxygenDropdown.o2Label' | translate }}</label>
   }
   <div class="input-group dropdown" mdbDropdown>
     <input class="form-control" type="number" (input)="gasInputChanged()" [formControlName]="this.controlName"
@@ -10,7 +10,7 @@
       <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
         @if (showBestMix) {
           <li (click)="fireAssignBestMix()" id="btnBestMix">
-            <a class="dropdown-item">Best mix</a>
+            <a class="dropdown-item">{{ 'oxygenDropdown.bestMix' | translate }}</a>
           </li>
         }
         @for (stgas of standardGases; track stgas) {
@@ -21,7 +21,7 @@
       </ul>
     </div>
     @if (showTitle && gasO2Invalid) {
-      <div class="text-danger form-text position-absolute">Needs to be number {{
+      <div class="text-danger form-text position-absolute">{{ 'validation.needsNumber' | translate }} {{
       o2RangeLabel }}</div>
     }
   </ng-container>

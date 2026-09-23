@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Tank } from 'scuba-physics';
 import { TankChartComponent } from './tank-chart.component';
 import { UnitConversion } from '../../shared/UnitConversion';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('TankChartComponent', () => {
     let component: TankChartComponent;
@@ -11,7 +12,7 @@ describe('TankChartComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
     imports: [TankChartComponent],
-    providers: [UnitConversion]
+    providers: [UnitConversion, provideTestTranslate()]
 })
             .compileComponents();
     });

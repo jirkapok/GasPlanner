@@ -6,6 +6,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('DiffTabsComponent', () => {
     let component: DiffTabsComponent;
@@ -17,7 +18,7 @@ describe('DiffTabsComponent', () => {
             providers: [
                 DiveSchedules, UnitConversion,
                 ReloadDispatcher, ProfileComparatorService,
-                provideAnimations()
+                provideAnimations(), provideTestTranslate()
             ]
         });
 

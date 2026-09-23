@@ -20,13 +20,14 @@ import { DiveOptionsComponent } from '../diveoptions/diveoptions.component';
 import { ProfileChartComponent } from '../profilechart/profilechart.component';
 import { WayPointsComponent } from '../waypoints/waypoints.component';
 import { DiveInfoComponent } from '../diveinfo/diveinfo.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent]
+    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent, TranslatePipe]
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;

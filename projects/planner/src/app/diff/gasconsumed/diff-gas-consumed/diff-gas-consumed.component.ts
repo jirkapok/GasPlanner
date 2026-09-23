@@ -5,13 +5,14 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 import { GasConsumedDifferenceTankComponent } from './tank-chart/diff-gas-consumed-tank-chart.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-gas-consumed',
     templateUrl: './diff-gas-consumed.component.html',
     styleUrls: ['./diff-gas-consumed.component.scss', '../../diff.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, GasConsumedDifferenceTankComponent]
+    imports: [FaIconComponent, GasConsumedDifferenceTankComponent, TranslatePipe]
 })
 export class GasConsumedDifferenceComponent {
     public icon = faSlidersH;

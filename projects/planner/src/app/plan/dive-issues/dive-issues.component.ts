@@ -11,13 +11,14 @@ import { BoundEvent } from "../../shared/models";
 import { DecimalPipe } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-dive-issues',
     templateUrl: './dive-issues.component.html',
     styleUrls: ['./dive-issues.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, DecimalPipe, DurationPipe]
+    imports: [FaIconComponent, DecimalPipe, DurationPipe, TranslatePipe]
 })
 export class DiveIssuesComponent {
     public exclamation = faExclamationCircle;

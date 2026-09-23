@@ -12,6 +12,7 @@ import { SubViewStorage } from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { AltitudeComponent } from '../../controls/altitude/altitude.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface AltitudeDepthForm {
     pressure: FormControl<number>;
@@ -24,7 +25,7 @@ interface AltitudeDepthForm {
     templateUrl: './altitude-calc.component.html',
     styleUrls: ['./altitude-calc.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, DecimalPipe, TranslatePipe]
 })
 export class AltitudeCalcComponent implements OnInit {
     public calcIcon = faMountainSun;

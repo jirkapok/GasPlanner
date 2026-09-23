@@ -3,13 +3,14 @@ import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { NgClass, DecimalPipe } from '@angular/common';
 import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-tankchart',
     templateUrl: './tank-chart.component.html',
     styleUrls: ['./tank-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [GaslabelComponent, NgClass, DecimalPipe]
+    imports: [GaslabelComponent, NgClass, DecimalPipe, TranslatePipe]
 })
 export class TankChartComponent {
     @Input()

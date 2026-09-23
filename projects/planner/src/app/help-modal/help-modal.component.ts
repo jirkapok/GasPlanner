@@ -3,10 +3,11 @@ import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
 import { NgxMdModule, NgxMdService } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
 import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-help-modal',
-    imports: [NgxMdModule],
+    imports: [NgxMdModule, TranslatePipe],
     providers: [Urls, NgxMdService, MarkdownCustomization],
     templateUrl: './help-modal.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,

@@ -1,13 +1,13 @@
 <div [formGroup]="gfForm" class="row">
   @if (showTitle) {
     <div class="row">
-      <label for="gfLowField" class="form-label">Conservatism (Gradient factors):</label>
+      <label for="gfLowField" class="form-label">{{ 'gradients.title' | translate }}</label>
     </div>
   }
   <div class="mb-4 col col-12" [ngClass]="{ 'col-sm-6': !simple }">
     <div>
       @if (!simple) {
-        <label for="gfLowField" class="form-label" mdbLabel>Gradient low [%]:</label>
+        <label for="gfLowField" class="form-label" mdbLabel>{{ 'gradients.lowLabel' | translate }}</label>
       }
       <div mdbDropdown class="input-group dropdown" [class.form-outline]="simple">
         @if (simple) {
@@ -28,17 +28,17 @@
     </div>
     @if (gfLowInvalid) {
       <div class="text-danger form-text position-absolute">
-      Needs to be number {{ minGradient }} - {{ maxGradient }} lower than gradient high</div>
+      {{ 'validation.needsNumber' | translate }} {{ minGradient }} - {{ maxGradient }} {{ 'gradients.lowerThanHigh' | translate }}</div>
     }
   </div>
 </div>
 @if (!simple) {
   <div class="mb-4 col col-12 col-sm-6">
-    <label for="gfHighField" class="form-label" mdbLabel>Gradient high [%]:</label>
+    <label for="gfHighField" class="form-label" mdbLabel>{{ 'gradients.highLabel' | translate }}</label>
     <input id="gfHighField" formControlName="gfHigh" class="form-control" type="number" required
       (input)="gfHighChanged()" [min]="minGradient" [max]="maxGradient" step="1" [class.is-invalid]="gfHighInvalid" />
       <div class="invalid-feedback position-absolute">
-        Needs to be number {{ minGradient }} - {{ maxGradient }}  higher than gradient low
+        {{ 'validation.needsNumber' | translate }} {{ minGradient }} - {{ maxGradient }} {{ 'gradients.higherThanLow' | translate }}
       </div>
     </div>
   }

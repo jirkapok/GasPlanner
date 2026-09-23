@@ -18,6 +18,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface TankRow {
     tankSize: FormControl<number>;
@@ -44,7 +45,8 @@ interface TanksForm {
     TankSizeComponent,
     OxygenDropDownComponent,
     GaslabelComponent,
-    DecimalPipe
+    DecimalPipe,
+    TranslatePipe
 ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {

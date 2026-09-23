@@ -17,6 +17,7 @@ import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.c
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -33,7 +34,7 @@ interface DepthsForm {
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, DecimalPipe, TranslatePipe]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

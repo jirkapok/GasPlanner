@@ -3,6 +3,7 @@ import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { Urls } from '../shared/navigation.service';
 import { HelpService } from '../shared/learn/help.service';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-card-header',
@@ -10,7 +11,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     styleUrl: './card-header.component.scss',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-        FaIconComponent
+        FaIconComponent, TranslatePipe
     ]
 })
 

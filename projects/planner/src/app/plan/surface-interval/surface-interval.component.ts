@@ -15,6 +15,7 @@ import { Streamed } from '../../shared/streamed';
 import { DateFormats } from '../../shared/formaters';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { TranslatePipe } from '@ngx-translate/core';
 
 
 @Component({
@@ -26,7 +27,8 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
     MaskitoDirective,
     ReactiveFormsModule,
     MdbDropdownModule,
-    MdbFormsModule
+    MdbFormsModule,
+    TranslatePipe
 ]
 })
 export class SurfaceIntervalComponent extends Streamed implements OnInit {

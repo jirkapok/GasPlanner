@@ -1,115 +1,165 @@
 {
   "menu": {
-    "calculators": "Kalkulačky",
-    "planner": "Plánovač",
-    "rmvSac": "RMV/SAC",
-    "nitrox": "Nitrox",
-    "gasProperties": "Vlastnosti plynu",
-    "altitude": "Nadmořská výška",
-    "weight": "Zátěž",
-    "ndlTable": "Tabulka NDL",
-    "cylinderBalancing": "Vyvážení lahví",
-    "gasBlender": "Míchání plynů",
-    "dive": "Ponor",
-    "clone": "Duplikovat",
-    "saveAsDefault": "Uložit jako výchozí",
-    "loadDefault": "Načíst výchozí",
-    "share": "Sdílet",
-    "delete": "Smazat",
-    "settings": "Nastavení",
-    "compareDives": "Porovnat ponory",
-    "standardGases": "Standardní směsi",
-    "help": "Nápověda",
-    "learn": "Výuka",
-    "about": "O aplikaci"
+    "calculators": "Kalkulačky", "planner": "Plánovač", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
+    "gasProperties": "Vlastnosti plynu", "altitude": "Nadmořská výška", "weight": "Zátěž", "ndlTable": "Tabulka NDL",
+    "cylinderBalancing": "Vyvážení lahví", "gasBlender": "Míchání plynů", "dive": "Ponor", "clone": "Duplikovat",
+    "saveAsDefault": "Uložit jako výchozí", "loadDefault": "Načíst výchozí", "share": "Sdílet", "delete": "Smazat",
+    "settings": "Nastavení", "compareDives": "Porovnat ponory", "standardGases": "Standardní směsi", "help": "Nápověda",
+    "learn": "Výuka", "about": "O aplikaci", "toggleNavigation": "Přepnout navigaci"
   },
   "personalization": {
-    "cardTitle": "Personalizace",
-    "metricUnits": "Metrické jednotky (m, l, bar)",
-    "imperialUnits": "Imperiální jednotky (ft, cuft, psi)",
-    "imperialExperimental": "(Experimentální, nedoporučuje se)",
+    "cardTitle": "Personalizace", "metricUnits": "Metrické jednotky (m, l, bar)",
+    "imperialUnits": "Imperiální jednotky (ft, cuft, psi)", "imperialExperimental": "(Experimentální, nedoporučuje se)",
     "language": "Jazyk"
   },
   "textConstants": {
     "depthConverterWarning": "Tato kalkulačka používá zjednodušený přepočet hloubky (1 ATM = 1 bar), takže zobrazené hodnoty jsou méně přesné než ve zbytku aplikace. Kromě toho používá zákon ideálního plynu, takže vypočtená hodnota Rmv je nižší než ve skutečnosti.",
     "cnsOverOneThousand": "> 1000"
   },
-  "salinity": {
-    "fresh": "Sladká voda",
-    "brackish": "Brakická voda (EN13319)",
-    "salt": "Slaná voda"
-  },
-  "diveOptions": {
-    "allUsable": "Celý objem využitelný",
-    "halfUsable": "Polovina objemu využitelná",
-    "thirdUsable": "Třetina objemu využitelná"
-  },
-  "options": {
-    "safetyOff": "Nikdy",
-    "safetyOn": "Vždy",
-    "safetyAuto": "Automaticky (> {{level}} {{unit}})"
-  },
+  "salinity": { "label": "Slanost vody:", "fresh": "Sladká voda", "brackish": "Brakická voda (EN13319)", "salt": "Slaná voda" },
+  "options": { "safetyOff": "Nikdy", "safetyOn": "Vždy", "safetyAuto": "Automaticky (> {{level}} {{unit}})" },
   "gradients": {
-    "low": "Nízký (45/95)",
-    "medium": "Střední (40/85)",
-    "high": "Vysoký (30/75)"
+    "title": "Konzervatismus (gradient faktory):", "lowLabel": "Nízký gradient [%]:", "highLabel": "Vysoký gradient [%]:",
+    "lowerThanHigh": "nižší než horní gradient", "higherThanLow": "vyšší než dolní gradient",
+    "low": "Nízký (45/95)", "medium": "Střední (40/85)", "high": "Vysoký (30/75)"
   },
-  "waypoints": {
-    "ascent": "výstup",
-    "descent": "sestup",
-    "switch": "přepnutí plynu",
-    "hover": "zastávka"
-  },
-  "events": {
-    "deco": "Dekomprese",
-    "safetyStop": "Bezpečnostní zastávka"
-  },
+  "waypoints": { "ascent": "výstup", "descent": "sestup", "switch": "přepnutí plynu", "hover": "zastávka" },
+  "events": { "deco": "Dekomprese", "safetyStop": "Bezpečnostní zastávka" },
   "help": {
     "menu": {
-      "application": {
-        "title": "Aplikace",
-        "usage": "Používání aplikace",
-        "settings": "Nastavení aplikace"
-      },
-      "plan": {
-        "title": "Plán ponoru",
-        "tanks": "Lahve",
-        "standardGases": "Standardní směsi",
-        "depths": "Hloubky",
-        "surfaceInterval": "Povrchová pauza"
-      },
-      "options": {
-        "title": "Možnosti ponoru",
-        "general": "Obecné",
-        "environment": "Prostředí",
-        "conservatism": "Konzervatismus",
-        "gases": "Plyny",
-        "airBreaks": "Vzduchové přestávky",
-        "stops": "Zastávky",
-        "speeds": "Rychlosti",
-        "diver": "Potápěč"
-      },
-      "results": {
-        "title": "Výsledky ponoru",
-        "diveInfoTable": "Tabulka informací o ponoru",
-        "oxygenToxicity": "Toxicita kyslíku",
-        "events": "Události způsobující chyby a varování",
-        "consumedGasCharts": "Grafy spotřeby plynu",
-        "wayPointsTable": "Tabulka bodů ponoru",
-        "profileChart": "Graf profilu ponoru",
-        "tissuesHeatMap": "Tepelná mapa tkání"
-      },
-      "calculators": {
-        "title": "Kalkulačky",
-        "sac": "RMV/SAC",
-        "nitrox": "Nitrox",
-        "ndl": "Tabulka bezdekompresních limitů (NDL)",
-        "altitude": "Nadmořská výška",
-        "weight": "Zátěž",
-        "gasProperties": "Vlastnosti plynu",
-        "redundancies": "Vyvážení lahví",
-        "gasBlender": "Míchání plynů"
-      }
+      "application": { "title": "Aplikace", "usage": "Používání aplikace", "settings": "Nastavení aplikace" },
+      "plan": { "title": "Plán ponoru", "tanks": "Lahve", "standardGases": "Standardní směsi", "depths": "Hloubky", "surfaceInterval": "Povrchová pauza" },
+      "options": { "title": "Možnosti ponoru", "general": "Obecné", "environment": "Prostředí", "conservatism": "Konzervatismus", "gases": "Plyny", "airBreaks": "Vzduchové přestávky", "stops": "Zastávky", "speeds": "Rychlosti", "diver": "Potápěč" },
+      "results": { "title": "Výsledky ponoru", "diveInfoTable": "Tabulka informací o ponoru", "oxygenToxicity": "Toxicita kyslíku", "events": "Události způsobující chyby a varování", "consumedGasCharts": "Grafy spotřeby plynu", "wayPointsTable": "Tabulka bodů ponoru", "profileChart": "Graf profilu ponoru", "tissuesHeatMap": "Tepelná mapa tkání" },
+      "calculators": { "title": "Kalkulačky", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Tabulka bezdekompresních limitů (NDL)", "altitude": "Nadmořská výška", "weight": "Zátěž", "gasProperties": "Vlastnosti plynu", "redundancies": "Vyvážení lahví", "gasBlender": "Míchání plynů" }
     }
-  }
+  },
+  "validation": { "needsNumber": "Musí být číslo" },
+  "altitude": { "label": "Nadmořská výška", "seaLevel": "Hladina moře" },
+  "calculating": { "label": "Počítá se ..." },
+  "gaslabel": { "mod": "MOD", "switch": "přepnutí", "mnd": "MND" },
+  "oxygenDropdown": { "o2Label": "O2 [%]:", "bestMix": "Nejlepší směs" },
+  "about": {
+    "title": "O aplikaci Gas Planner", "tagline1": "Open source potápěčská aplikace, která pomáhá potápěčům plánovat jejich ponory.",
+    "tagline2": "Naplánuj svůj ponor a ponořuj se podle plánu!", "disclaimerLabel": "Upozornění:",
+    "disclaimerText": "Žádný z autorů, přispěvatelů, administrátorů ani nikdo jiný spojený s tímto projektem nemůže nést odpovědnost za vaše použití informací poskytovaných touto aplikací nebo odkazovaných z těchto webových stránek. Výsledky používáte na vlastní riziko.",
+    "githubProject": "Projekt na Githubu"
+  },
+  "cardHeader": { "showHelp": "Zobrazit nápovědu" },
+  "helpModal": { "title": "Nápověda", "close": "Zavřít" },
+  "appinfo": { "version": "Verze" },
+  "ppo2": { "maxPpo2Label": "Maximální ppO2:", "maxDecoPpo2Label": "Maximální dekompresní ppO2:" },
+  "diver": { "rmvLabel": "RMV", "stressRmvLabel": "Stresové RMV" },
+  "diff": { "onlyOneDive": "Je naplánován pouze jeden ponor. Chcete-li ponory porovnat, vytvořte alespoň dva.", "goToPlanner": "Přejít do plánovače" },
+  "diffDiveResults": { "cardTitle": "Výsledky ponoru" },
+  "diffResultsTable": {
+    "profileA": "Profil A", "profileB": "Profil B", "difference": "Rozdíl", "totalDiveTime": "Celková doba ponoru",
+    "timeToSurface": "Čas na hladinu", "averageDepth": "Průměrná hloubka", "rockBottomAt": "Rock bottom při",
+    "noDecoTime": "Bezdekompresní čas", "maxBottomTime": "Maximální doba na dně", "highestGasDensity": "Nejvyšší hustota plynu",
+    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS"
+  },
+  "diffGasConsumed": { "cardTitle": "Spotřeba plynu", "difference": "Rozdíl", "gasRemaining": "Zbývající plyn:", "notAvailable": "Není k dispozici", "reserve": "Rezerva:" },
+  "diffProfileChart": { "cardTitle": "Graf profilu" },
+  "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
+  "diffWaypoints": { "cardTitle": "Body ponoru", "profileA": "Profil A", "profileB": "Profil B", "run": "Run", "depth": "Hloubka", "duration": "Doba" },
+  "common": { "back": "Zpět", "use": "Použít" },
+  "settings": {
+    "limitsCardTitle": "Limity", "maxGasDensityLabel": "Maximální hustota plynu", "primaryTankReserveLabel": "Minimální rezerva hlavní lahve",
+    "stageTankReserveLabel": "Minimální rezerva stage lahve", "ignoredIssuesCardTitle": "Ignorované problémy (varování/chyby)",
+    "icdLabel": "Izobarická kontradifúze (ICD)", "densityExceededLabel": "Překročena maximální hustota plynu",
+    "noDecoReachedLabel": "Dosažen bezdekompresní limit", "missingAirBreakLabel": "Chybějící vzduchová přestávka", "resetToDefault": "Obnovit výchozí nastavení"
+  },
+  "altitudeCalc": { "cardTitle": "Kalkulačka nadmořské výšky", "pressureLabel": "Atmosférický tlak", "actualDepthLabel": "Skutečná hloubka", "theoreticalDepthLabel": "Teoretická hloubka na úrovni moře" },
+  "gasBlender": {
+    "cardTitle": "Míchání plynů", "showPricingTitle": "Zobrazit ceny", "sourceLabel": "Zdroj", "heLabel": "He [%]:",
+    "pressureLabel": "Tlak", "topMixLabel": "Doplňovací směs", "targetLabel": "Cíl", "resultsLabel": "Výsledky",
+    "removeFromSourceLabel": "Odebrat ze zdroje", "addO2Label": "Přidat O2", "addHeLabel": "Přidat He", "addTopMixLabel": "Přidat doplňovací směs",
+    "unableToCalculateMessage": "Nelze vypočítat požadovanou směs, protože doplňovací směs obsahuje více kyslíku nebo helia než cílová směs.",
+    "unitPricesLabel": "Jednotkové ceny", "o2UnitPriceLabel": "Jednotková cena O2:", "heUnitPriceLabel": "Jednotková cena He:",
+    "topMixUnitPriceLabel": "Jednotková cena doplňovací směsi:", "mixPriceLabel": "Cena směsi", "o2PriceLabel": "Cena O2",
+    "hePriceLabel": "Cena He", "topMixPriceLabel": "Cena doplňovací směsi", "totalPriceLabel": "Celková cena"
+  },
+  "gasProps": {
+    "cardTitle": "Plynová směs", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Maximální narkotická hloubka",
+    "oxygenNarcoticLabel": "Kyslík je narkotický", "propertiesAtDepthLabel": "Vlastnosti v hloubce", "gasPropertiesLabel": "Vlastnosti plynu",
+    "oxygenPartialPressureLabel": "Parciální tlak kyslíku", "heliumPartialPressureLabel": "Parciální tlak helia",
+    "nitrogenPartialPressureLabel": "Parciální tlak dusíku", "totalPartialPressureLabel": "Celkový parciální tlak",
+    "minimumDepthLabel": "Minimální hloubka", "maximumDepthLabel": "Maximální hloubka", "equivalentAirDepthLabel": "Ekvivalentní vzduchová hloubka",
+    "equivalentNarcoticDepthLabel": "Ekvivalentní narkotická hloubka", "maximumNarcoticDepthLabel": "Maximální narkotická hloubka",
+    "densityLabel": "Hustota", "warningsLabel": "Varování", "minimumDepthWarningTitle": "Minimální hloubka: ",
+    "minimumDepthWarningMessage": "Byla překročena minimální hodnota parciálního tlaku kyslíku ({{minPpO2}}), která určuje minimální hloubku. Zvyšte obsah kyslíku nebo snižte požadovanou hloubku.",
+    "maximumDepthWarningTitle": "Maximální hloubka: ",
+    "maximumDepthWarningMessage": "Byla překročena maximální hodnota parciálního tlaku kyslíku ({{maxPpO2}}). Zvyšte maximální ppO2, snižte obsah kyslíku nebo snižte požadovanou hloubku.",
+    "mndWarningTitle": "Ekvivalentní narkotická hloubka: ",
+    "mndWarningMessage": "Byla překročena maximální hodnota narkotické hloubky ({{mndLimit}} {{unit}}) řízená parciálním tlakem narkotických složek (kyslíku a dusíku). Snižte obsah dusíku přidáním helia, přidáním kyslíku nebo snižte požadovanou hloubku.",
+    "densityWarningTitle": "Maximální hustota plynu: ",
+    "densityWarningMessage": "Byla překročena maximální hodnota hustoty plynu ({{maxDensity}} {{unit}}). Snižte obsah kyslíku nebo přidejte více helia."
+  },
+  "ndlLimits": { "optionsCardTitle": "Možnosti", "cardTitle": "Bezdekompresní limity", "depthColumnLabel": "Hloubka", "limitColumnLabel": "Limit [min]", "noResultsMessageLine1": "V rozumném rozsahu hloubek nebyly nalezeny žádné NDL limity.", "noResultsMessageLine2": "Změňte obsah O2 v plynu." },
+  "nitrox": {
+    "cardTitle": "Kalkulačka Nitroxu", "modTab": "MOD", "bestMixTab": "Nejlepší směs", "ppo2Tab": "ppO2", "eadTab": "EAD",
+    "ppo2Label": "ppO2:", "modLabel": "MOD", "eadPrefix": "EAD:", "depthLabel": "Hloubka", "o2Label": "O2 [%]:", "eadLabel": "EAD",
+    "lowModMessage": "Příliš malá výsledná provozní hloubka. Zvyšte ppO2 nebo snižte procento O2."
+  },
+  "redundancies": { "cardTitle": "Kalkulačka vyvážení lahví", "firstTankLabel": "První lahev", "sizeLabel": "Objem", "workingPressureLabel": "Pracovní tlak", "startPressureLabel": "Počáteční tlak", "secondTankLabel": "Druhá lahev", "finalPressureLabel": "Konečný tlak" },
+  "sac": {
+    "cardTitle": "Dechová minutová spotřeba", "rmvTab": "RMV", "usedTab": "Spotřebováno", "durationTab": "Doba",
+    "averageDepthLabel": "Průměrná hloubka", "tankSizeLabel": "Objem lahve", "workingPressureLabel": "Pracovní tlak",
+    "diveTimeLabel": "Doba ponoru", "gasConsumedLabel": "Spotřebovaný plyn", "rmvLabel": "RMV", "sacPrefix": "SAC:"
+  },
+  "weight": { "cardTitle": "Kalkulačka zátěže", "tankSizeLabel": "Objem lahve", "workingPressureLabel": "Pracovní tlak", "consumedLabel": "Spotřebováno", "lostWeightLabel": "Ztracená zátěž" },
+  "dashboard": {
+    "installMessage": "Aby bylo možné aplikaci používat v offline režimu, je potřeba ji přidat (nainstalovat) na plochu.",
+    "installAppleMessage": "Klepněte na tlačítko \"Sdílet\" a poté na \"Přidat na plochu\".", "addToHomeScreen": "Přidat na plochu",
+    "sharePlanTitle": "Sdílet plán", "shareUrlCopied": "Adresa URL tohoto plánu ponoru byla zkopírována do schránky."
+  },
+  "depth": { "label": "Hloubka", "bestMixLabel": "Nejlepší směs je", "maxDepthTitle": "Nastavit maximální hloubku podle narkotického limitu plynu", "maxButton": "Max" },
+  "depthsComplex": { "cardTitle": "Hloubky", "from": "Od", "to": "Do", "duration": "Doba", "tank": "Lahev", "endDepthLabel": "Koncová hloubka" },
+  "depthsSimple": { "cardTitle": "Hloubka", "bottomTime": "Doba na dně", "noDecoLimit": "Bezdekompresní limit", "maxDurationTitle": "Nastavit dobu ponoru na maximum podle spotřebovaného plynu", "maxButton": "Max", "noDecoTitle": "Nastavit dobu ponoru na bezdekompresní limit", "noDecoButton": "Bez deko" },
+  "diveIssues": {
+    "calculationError": "Při výpočtu profilu došlo k chybě.",
+    "notEnoughTimePrefix": "Nedostatek času k realizaci ponoru (doba musí být alespoň", "notEnoughTimeSuffix": "min)! Nastavte delší plánovanou dobu ponoru.",
+    "notEnoughGasPrefix": "Nedostatek plynu k realizaci ponoru! Maximální doba na dně pro aktuální množství plynu je",
+    "notEnoughGasSuffix": "min. Použijte větší lahev, naplňte ji větším množstvím plynu, zkraťte dobu ponoru nebo snižte plánovanou hloubku.",
+    "notEnoughGasShort": "Nedostatek plynu k realizaci ponoru! Maximální doba na dně pro aktuální množství plynu je kratší než aktuálně plánovaný ponor. Použijte větší lahev, naplňte ji větším množstvím plynu, zkraťte dobu ponoru nebo snižte plánovanou hloubku.",
+    "brokenCeiling": "Byla překročena minimální bezpečná (stropní) hloubka! Upravte plán na menší hloubku v tomto bodě.",
+    "lowPpo2": "Byl dosažen nízký parciální tlak kyslíku (překročena minimální hloubka)! Hrozí riziko hypoxie. Použijte plyn s vyšším obsahem kyslíku.",
+    "highPpo2": "Byl dosažen vysoký parciální tlak kyslíku (překročena maximální hloubka)! Hrozí riziko kyslíkové toxicity. Snižte hloubku nebo použijte plyn s nižším obsahem kyslíku.",
+    "highDescentSpeed": "Vysoká rychlost sestupu! Sestupujte déle nebo do menší hloubky.",
+    "highAscentSpeed": "Vysoká rychlost výstupu! Vystupujte pouze do menší hloubky nebo vystupujte déle.",
+    "highN2Switch": "Přepnutí na plyn s vyšším obsahem dusíku se nedoporučuje! Hrozí riziko izobarické kontradifúze (IDC). Přepněte na jiný plyn s vyšším obsahem helia nebo nižším obsahem dusíku.",
+    "mndExceeded": "Byla překročena maximální narkotická hloubka pro zvolený plyn! Snižte hloubku nebo použijte plyn s vyšším obsahem helia.",
+    "highDensity": "Byla překročena maximální doporučená hustota plynu! Snižte hloubku nebo použijte plyn s vyšším obsahem helia (tj. nižší hustotou).",
+    "minDepth": "Ponory plánované do malé hloubky po dlouhou dobu mohou vést k saturačnímu potápění! Zkraťte dobu ponoru na méně než 5 hodin.",
+    "maxDepth": "Byla překročena maximální hloubka, do které byl algoritmus dobře otestován na reálných datech! Snižte maximální hloubku.",
+    "missingAirbreak": "Doporučuje se nedýchat čistý kyslík déle než 20 minut. Použijte volbu vzduchových přestávek pro vygenerování správných přepnutí plynu, nebo ručně přidejte přepnutí na dnovou směs.",
+    "noDecoPrefix": "Byl překročen bezdekompresní čas pro aktuální hloubku (pro bezdekompresní ponor nastavte dobu ponoru maximálně na", "noDecoSuffix": "min)!",
+    "otuExceededPrefix": "Bylo překročeno 80 % maximálních jednotek toxicity kyslíku pro jednorázovou expozici", "otuExceededSuffix": "Hrozí vysoké riziko poškození plic. Snižte množství kyslíku ve vašich plynech, dobu ponoru nebo cílové hloubky.",
+    "cnsExceededPrefix": "Bylo překročeno 80 % maximální toxicity kyslíku pro jednorázovou expozici", "cnsExceededSuffix": "Hrozí vysoké riziko poškození CNS. Snižte množství kyslíku ve vašich plynech, dobu ponoru nebo cílové hloubky."
+  },
+  "diveInfo": {
+    "cardTitle": "Informace o ponoru", "resultsTab": "Výsledky", "shareTitle": "Sdílet adresu ponoru", "share": "Sdílet",
+    "totalDiveTime": "Celková doba ponoru", "timeToSurface": "Čas na hladinu", "averageDepth": "Průměrná hloubka",
+    "rockBottomAt": "Rock bottom při", "noDecoTime": "Bezdekompresní čas", "noDecoTimeTitle": "Nastavit dobu ponoru na bezdekompresní limit",
+    "use": "Použít", "maxBottomTime": "Maximální doba na dně", "maxBottomTimeTitle": "Nastavit dobu ponoru na maximum podle spotřebovaného plynu",
+    "surfaceGradient": "Gradient na hladině", "offgasingStart": "Začátek odsycování", "highestCeiling": "Nejvyšší strop",
+    "highestGasDensity": "Nejvyšší hustota plynu", "turnTime": "Čas obratu", "turnPressure": "Tlak obratu",
+    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS", "consumedTab": "Spotřeba", "issuesTab": "Problémy"
+  },
+  "diveOptions": {
+    "allUsable": "Celý objem využitelný", "halfUsable": "Polovina objemu využitelná", "thirdUsable": "Třetina objemu využitelná", "cardTitle": "Možnosti",
+    "extendedTrimix": "Rozšířený (Trimix)", "environmentTab": "Prostředí", "conservatismTab": "Konzervatismus", "gasesTab": "Plyny",
+    "maxNarcoticDepth": "Maximální narkotická hloubka", "oxygenIsNarcotic": "Kyslík je narkotický", "airBreaksTab": "Vzduchové přestávky",
+    "generateAirBreaks": "Generovat vzduchové přestávky", "maxOxygenStopDuration": "Maximální doba kyslíkové zastávky", "backGasDuration": "Doba na dnové směsi",
+    "stopsTab": "Zastávky", "solveProblem": "Řešit problém", "gasSwitch": "Přepnutí plynu", "lastStopDepth": "Hloubka poslední zastávky",
+    "decoStopDistance": "Vzdálenost mezi dekompresními zastávkami", "roundDecoStops": "Zaokrouhlit dekompresní zastávky na minuty", "speedsTab": "Rychlosti",
+    "descent": "Sestup", "ascentTo50": "Výstup do 50 %", "ascentToX": "Výstup do", "ascentPrefix": "Výstup", "toSurface": "na hladinu",
+    "diverTab": "Potápěč", "recreational": "Rekreační", "recommended": "Doporučeno", "addSafetyStop": "Přidat 3min bezpečnostní zastávku:"
+  },
+  "profileChart": { "cardTitle": "Profil ponoru", "heatmapTitle": "Zobrazit tepelnou mapu tkání", "emergencyAscentTitle": "Zobrazit nouzový výstup" },
+  "surfaceInterval": { "label": "Povrchová pauza", "firstDive": "První ponor", "thirtyMinutes": "30 minut", "oneHour": "1 hodina", "twoHours": "2 hodiny", "invalidFormat": "Musí být text ve formátu hh:mm" },
+  "tankChart": { "gasRemaining": "Zbývající plyn:", "rockBottom": "Rock bottom:" },
+  "tanksComplex": { "cardTitle": "Lahve", "size": "Objem", "workPressure": "Prac. tlak", "pressure": "Tlak", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Pracovní tlak", "startPressureLabel": "Počáteční tlak" },
+  "tanksSimple": { "cardTitle": "Lahev s dnovou směsí", "size": "Objem", "sac": "SAC:", "workingPressure": "Pracovní tlak", "startPressure": "Počáteční tlak" },
+  "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" }
 }

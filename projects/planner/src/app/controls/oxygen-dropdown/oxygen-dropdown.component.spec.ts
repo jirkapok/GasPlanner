@@ -8,6 +8,7 @@ import { OptionsService } from '../../shared/options.service';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { OxygenDropDownComponent } from './oxygen-dropdown.component';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 export class OxygenDropDownPage {
     constructor(private fixture: ComponentFixture<OxygenDropDownComponent>) { }
@@ -26,7 +27,8 @@ describe('Oxygen DropDown component', () => {
         await TestBed.configureTestingModule({
     providers: [UnitConversion,
         InputControls, DecimalPipe,
-        ValidatorGroups, OptionsService
+        ValidatorGroups, OptionsService,
+        provideTestTranslate()
     ],
     imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
 })

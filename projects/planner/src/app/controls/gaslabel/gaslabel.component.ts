@@ -3,6 +3,7 @@ import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { CommonModule, DecimalPipe } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-gaslabel',
@@ -11,7 +12,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     imports: [
     CommonModule,
     ReactiveFormsModule,
-    DecimalPipe
+    DecimalPipe,
+    TranslatePipe
 ],
     changeDetection: ChangeDetectionStrategy.Eager,
     providers: [ UnitConversion ]

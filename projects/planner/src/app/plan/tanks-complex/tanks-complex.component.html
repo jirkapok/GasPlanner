@@ -1,6 +1,6 @@
 <div class="card" [formGroup]="tanksForm">
   <app-card-header
-    cardTitle="Tanks"
+    [cardTitle]="'tanksComplex.cardTitle' | translate"
     helpDocument="tanks"
     [headerIcon]="icon">
   </app-card-header>
@@ -28,19 +28,19 @@
           <ng-template mdbAccordionItemBody>
             <div class="row">
               <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
-                <label for="sizeItemB-{{ i }}" class="form-label">Size
+                <label for="sizeItemB-{{ i }}" class="form-label">{{ 'tanksComplex.size' | translate }}
                 [{{units.volume}}]:</label>
                 <app-tank-size [sizeForm]="bound" id="sizeItemB-{{ i }}" (sizeChange)="tankChanged(i)"
                 (applyTemplate)="assignTankTemplate(i, $event)"></app-tank-size>
                 @if (tankSizeInvalid(i)) {
-                  <div class="text-danger">Needs to be number
+                  <div class="text-danger">{{ 'validation.needsNumber' | translate }}
                     {{ranges.tankSizeLabel}}
                   </div>
                 }
               </div>
               @if (units.imperialUnits) {
                 <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
-                  <label for="workPressureItemB-{{ i }}" class="form-label">Work p.
+                  <label for="workPressureItemB-{{ i }}" class="form-label">{{ 'tanksComplex.workPressure' | translate }}
                   [{{units.pressure}}]:</label>
                   <input formControlName="tankWorkPressure" class="form-control" type="number"
                     (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
@@ -48,12 +48,12 @@
                     [class.is-invalid]="workPressureInvalid(i)" />
                     @if (workPressureInvalid(i)) {
                       <div class="text-danger">
-                      Needs to be number {{ranges.tankPressureLabel}}</div>
+                      {{ 'validation.needsNumber' | translate }} {{ranges.tankPressureLabel}}</div>
                     }
                   </div>
                 }
                 <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
-                  <label for="pressureItemB-{{ i }}" class="form-label">Pressure
+                  <label for="pressureItemB-{{ i }}" class="form-label">{{ 'tanksComplex.pressure' | translate }}
                   [{{units.pressure}}]:</label>
                   <input formControlName="tankStartPressure" class="form-control" type="number"
                     (input)="tankChanged(i)" required [min]="ranges.tankPressure[0]"
@@ -61,7 +61,7 @@
                     [class.is-invalid]="startPressureInvalid(i)" />
                     @if (startPressureInvalid(i)) {
                       <div class="text-danger">
-                      Needs to be number {{ranges.tankPressureLabel}}</div>
+                      {{ 'validation.needsNumber' | translate }} {{ranges.tankPressureLabel}}</div>
                     }
                   </div>
                   @if (units.imperialUnits) {
@@ -74,12 +74,12 @@
                     [showTrimixGases]="true"></app-oxygen-dropdown>
                   </div>
                   <div class="col col-12 col-sm-6 m-0 pb-0 px-1 mt-2">
-                    <label for="heItemB-{{ i }}" class="form-label">He [%]:</label>
+                    <label for="heItemB-{{ i }}" class="form-label">{{ 'tanksComplex.he' | translate }} [%]:</label>
                     <input formControlName="tankHe" class="form-control" type="number"
                       (input)="tankChanged(i)" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
                       required [class.is-invalid]="gasHeInvalid(i)" id="heItemB-{{ i }}" />
                       @if (gasHeInvalid(i)) {
-                        <div class="text-danger">Needs to be number
+                        <div class="text-danger">{{ 'validation.needsNumber' | translate }}
                         {{ranges.tankHeLabel}}</div>
                       }
                     </div>
@@ -105,17 +105,17 @@
                 <div class="col col-1 p-0 m-0">
                 </div>
                 <div class="col ps-0">
-                  Size [{{units.volume}}]
+                  {{ 'tanksComplex.size' | translate }} [{{units.volume}}]
                 </div>
               </div>
             </div>
             @if (units.imperialUnits) {
-              <div class="col col-2 m-0 px-1">Work p.
+              <div class="col col-2 m-0 px-1">{{ 'tanksComplex.workPressure' | translate }}
               [{{units.pressure}}]</div>
             }
-            <div class="col col-2 m-0 px-1">Pressure [{{units.pressure}}]</div>
-            <div class="col col-2 m-0 px-1" [class.col-4]="!units.imperialUnits">O2 [%]</div>
-            <div class="col col-2 m-0 px-1">He [%]</div>
+            <div class="col col-2 m-0 px-1">{{ 'tanksComplex.pressure' | translate }} [{{units.pressure}}]</div>
+            <div class="col col-2 m-0 px-1" [class.col-4]="!units.imperialUnits">{{ 'tanksComplex.o2' | translate }} [%]</div>
+            <div class="col col-2 m-0 px-1">{{ 'tanksComplex.he' | translate }} [%]</div>
             <div class="col col-1 m-0 px-1">
               <button class="p-1 btn btn-secondary" type="button" (click)="addTank()">
                 <fa-icon [icon]="plusIcon" class="fa-xl"></fa-icon>
@@ -176,7 +176,7 @@
                           <div class="col col-1">
                           </div>
                           <div class="col m-0 px-1">
-                            <small class="form-text text-muted">SAC: {{gasSac(i) | number:'1.0-2'}}
+                            <small class="form-text text-muted">{{ 'tanksComplex.sac' | translate }} {{gasSac(i) | number:'1.0-2'}}
                             {{units.sac}}</small>
                             <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">
                             </app-gaslabel>
@@ -192,24 +192,24 @@
                           </div>
                           <div class="col m-0 px-0">
                             @if (tankSizeInvalid(i)) {
-                              <small class="text-danger">Size needs to be number
+                              <small class="text-danger">{{ 'tanksComplex.size' | translate }} {{ 'validation.needsNumber' | translate }}
                               {{ranges.tankSizeLabel}}. </small>
                             }
                             @if (workPressureInvalid(i)) {
                               <small class="text-danger">
-                              Working pressure needs to be number {{ranges.tankPressureLabel}}. </small>
+                              {{ 'tanksComplex.workingPressureLabel' | translate }} {{ 'validation.needsNumber' | translate }} {{ranges.tankPressureLabel}}. </small>
                             }
                             @if (startPressureInvalid(i)) {
                               <small class="text-danger">
-                              Start pressure needs to be number {{ranges.tankPressureLabel}}. </small>
+                              {{ 'tanksComplex.startPressureLabel' | translate }} {{ 'validation.needsNumber' | translate }} {{ranges.tankPressureLabel}}. </small>
                             }
                             @if (gasO2Invalid(i)) {
                               <small class="text-danger">
-                              O2 needs to be number {{ranges.trimixOxygenLabel}}. </small>
+                              {{ 'tanksComplex.o2' | translate }} {{ 'validation.needsNumber' | translate }} {{ranges.trimixOxygenLabel}}. </small>
                             }
                             @if (gasHeInvalid(i)) {
                               <small class="text-danger">
-                              He needs to be number {{ranges.tankHeLabel}}.</small>
+                              {{ 'tanksComplex.he' | translate }} {{ 'validation.needsNumber' | translate }} {{ranges.tankHeLabel}}.</small>
                             }
                           </div>
                         </div>

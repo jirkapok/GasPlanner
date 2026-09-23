@@ -1,24 +1,24 @@
 <div class="card" [formGroup]="simpleForm">
   <app-card-header
-    cardTitle="Depth"
+    [cardTitle]="'depthsSimple.cardTitle' | translate"
     helpDocument="depths"
     [headerIcon]="cardIcon">
   </app-card-header>
   <div class="card-body row">
     <div class="mb-4 col col-12 col-md-6 col-lg-12 col-xl-6">
-      <label for="duration" class="form-label" mdbLabel>Bottom time [min]:</label>
+      <label for="duration" class="form-label" mdbLabel>{{ 'depthsSimple.bottomTime' | translate }} [min]:</label>
       <input id="duration" formControlName="planDuration" class="form-control" (input)="valuesChanged()"
         type="number" required [min]="ranges.duration[0]" [max]="ranges.duration[1]" step="1"
         [class.is-invalid]="durationInvalid" />
-        <div class="invalid-feedback position-absolute">Needs to be number {{ ranges.durationLabel }}
+        <div class="invalid-feedback position-absolute">{{ 'validation.needsNumber' | translate }} {{ ranges.durationLabel }}
         </div>
-        <div class="text-muted form-text" [class.invisible]="durationInvalid">No deco limit {{ noDecoTime |
+        <div class="text-muted form-text" [class.invisible]="durationInvalid">{{ 'depthsSimple.noDecoLimit' | translate }} {{ noDecoTime |
         number:'1.0-0' }} min</div>
         <button type="button" class="btn btn-secondary mt-2 me-2 col col-auto"
           (click)="depths.applyMaxDuration()" [class.invisible]="!diveResult.showMaxDuration"
-        id="btnApplyDuration" title="Set dive time to maximum by consumed gas">Max</button>
+        id="btnApplyDuration" title="{{ 'depthsSimple.maxDurationTitle' | translate }}">{{ 'depthsSimple.maxButton' | translate }}</button>
         <button type="button" class="btn btn-secondary mt-2 col col-auto" (click)="depths.applyNdlDuration()"
-        [class.invisible]="!diveResult.ndlValid" id="btnApplyNdl" title="Set dive time to no deco limit">No deco</button>
+        [class.invisible]="!diveResult.ndlValid" id="btnApplyNdl" title="{{ 'depthsSimple.noDecoTitle' | translate }}">{{ 'depthsSimple.noDecoButton' | translate }}</button>
       </div>
       <div class="col col-12 col-md-6 col-lg-12 col-xl-6">
         <app-depth [plannedDepth]="depths.plannedDepth" [bestNitroxMix]="depths.bestNitroxMix"

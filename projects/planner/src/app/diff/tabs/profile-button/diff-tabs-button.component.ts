@@ -4,6 +4,7 @@ import {
 } from '@angular/animations';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 import { NgClass } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-tabs-button',
@@ -30,7 +31,7 @@ import { NgClass } from '@angular/common';
         ]),
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass]
+    imports: [NgClass, TranslatePipe]
 })
 export class DiffTabsButtonComponent {
     @Input({required: true}) index = 0;

@@ -5,6 +5,7 @@ import { DiveSchedules } from '../../../shared/dive.schedules';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
 import { GasesComparisonService } from '../../../shared/diff/gases-comparison.service';
+import { provideTestTranslate } from '../../../../testing/translate-testing.helpers';
 
 describe('DiffGasConsumedComponent', () => {
     let component: GasConsumedDifferenceComponent;
@@ -18,7 +19,8 @@ describe('DiffGasConsumedComponent', () => {
         ProfileComparatorService,
         DiveSchedules,
         UnitConversion,
-        ReloadDispatcher
+        ReloadDispatcher,
+        provideTestTranslate()
     ]
 })
             .compileComponents();

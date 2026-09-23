@@ -2,7 +2,7 @@
     <div class="col col-sm-8 col-md-6 col-lg-5 col-xl-4 col-xxl-3 mt-3">
         <div class="card">
             <app-card-header
-                cardTitle="Altitude calculator"
+                [cardTitle]="'altitudeCalc.cardTitle' | translate"
                 [headerIcon]="calcIcon"
                 helpDocument="altitude">
             </app-card-header>
@@ -10,13 +10,14 @@
                 <form [formGroup]="altitudeForm">
                     <div>
                         <div class="pt-2 mb-4">
-                            <label for="pressure" class="form-label" mdbLabel>Atmospheric pressure
+                            <label for="pressure" class="form-label" mdbLabel>{{ 'altitudeCalc.pressureLabel' | translate }}
                                 [{{units.pressure}}]:</label>
                             <input class="form-control" name="pressure" id="pressure" type="number"
                                 formControlName="pressure" (input)="pressureChanged()" [min]="ranges.altitudePressure[0]" [max]="ranges.altitudePressure[1]"
                                 step="0.01" [class.is-invalid]="pressureInvalid"
                                 [value]="calcPressure | number: '1.0-6'" />
-                            <div class="invalid-feedback position-absolute">Needs to be number {{ranges.altitudePressure[0]}} - {{ranges.altitudePressure[1]}} {{units.pressure}}
+                            <div class="invalid-feedback position-absolute">{{ 'validation.needsNumber' | translate }}
+                                {{ranges.altitudePressure[0]}} - {{ranges.altitudePressure[1]}} {{units.pressure}}
                             </div>
                         </div>
                     </div>
@@ -25,14 +26,15 @@
                             (inputChange)="altitudeChanged($event)" />
                     </div>
                     <div class="pt-2 mb-4">
-                        <label for="actualDepth" class="form-label" mdbLabel>Actual depth [{{units.length}}]:</label>
+                        <label for="actualDepth" class="form-label" mdbLabel>{{ 'altitudeCalc.actualDepthLabel' | translate }}
+                            [{{units.length}}]:</label>
                         <input class="form-control" name="actualDepth" id="actualDepth" type="number"
                             formControlName="actualDepth" (input)="inputChanged()" [min]="ranges.depth[0]"
                             [max]="ranges.depth[1]" step="1" [class.is-invalid]="actualDepthInvalid" />
                     </div>
 
                     <div class="pt-2 mb-4 form-outline">
-                        <label for="actualDepth" class="form-label" mdbLabel>Theoretical sea level depth
+                        <label for="actualDepth" class="form-label" mdbLabel>{{ 'altitudeCalc.theoreticalDepthLabel' | translate }}
                             [{{units.length}}]:</label>
                         <input class="form-control" name="theoreticalDepth" id="theoreticalDepth" type="number"
                             [value]="theoreticalDepth | number: '1.0-2'" readonly />
@@ -41,7 +43,8 @@
             </div>
         </div>
         <div class="form-group mt-3">
-            <button type="button" class="btn btn-primary me-2" (click)="location.back()">Back</button>
+            <button type="button" class="btn btn-primary me-2"
+                (click)="location.back()">{{ 'common.back' | translate }}</button>
         </div>
     </div>
 </div>

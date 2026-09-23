@@ -8,13 +8,14 @@ import { IGasContent } from '../../shared/models';
 
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
     styleUrls: ['./oxygen-dropdown.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule]
+    imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule, TranslatePipe]
 })
 export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AltitudeComponent } from './altitude.component';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('Altitude', () => {
     let component: AltitudeComponent;
@@ -7,6 +8,7 @@ describe('Altitude', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
+            providers: [provideTestTranslate()]
         }).compileComponents();
     });
 

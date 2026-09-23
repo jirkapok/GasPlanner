@@ -6,8 +6,8 @@
     <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
   </div>
   <div class="d-flex flex-row justify-content-between">
-    <small class="text-start text-muted">Gas remaining: {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}</small>
-    <small class="text-end text-muted">Rock bottom: <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
+    <small class="text-start text-muted">{{ 'tankChart.gasRemaining' | translate }} {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}</small>
+    <small class="text-end text-muted">{{ 'tankChart.rockBottom' | translate }} <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
   </div>
   <div class="progress gas-bar mt-1 mb-2">
     <div class="combined_wrapper">

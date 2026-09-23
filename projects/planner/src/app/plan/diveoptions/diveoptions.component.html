@@ -1,12 +1,12 @@
 <div class="card" [formGroup]="optionsForm">
   <app-card-header
-    cardTitle="Options"
+    [cardTitle]="'diveOptions.cardTitle' | translate"
     [headerIcon]="icon"
     helpDocument="plan_options">
     <div class="form-check form-switch ms-2">
       <input type="checkbox" class="form-check-input" id="isComplex" [checked]="isComplex"
         (change)="isComplex = !isComplex" mdbCheckbox />
-        <label class="custom-control-label" for="isComplex">Extended (Trimix)</label>
+        <label class="custom-control-label" for="isComplex">{{ 'diveOptions.extendedTrimix' | translate }}</label>
       </div>
     </app-card-header>
     <div class="card-body">
@@ -35,7 +35,7 @@
       @if (isComplex) {
         <div>
           <mdb-tabs>
-            <mdb-tab title="Environment">
+            <mdb-tab [title]="'diveOptions.environmentTab' | translate">
               <div class="pt-3 row">
                 <div class="mb-4 col col-12 col-sm-6">
                   <app-altitude [altitude]="options.getOptions().altitude" (inputChange)="altitudeChanged($event)"
@@ -48,7 +48,7 @@
                 </div>
               </div>
             </mdb-tab>
-            <mdb-tab title="Conservatism">
+            <mdb-tab [title]="'diveOptions.conservatismTab' | translate">
               <div class="pt-3">
                 <app-gradients [gfLow]="options.gfLow" [gfHigh]="options.gfHigh"
                   [gfForm]="optionsForm" (inputChange)="updateGradients($event)"
@@ -56,83 +56,82 @@
                 </app-gradients>
               </div>
             </mdb-tab>
-            <mdb-tab title="Gases">
+            <mdb-tab [title]="'diveOptions.gasesTab' | translate">
               <div class="pt-3 row">
                 <div class="mb-3 col col-12 col-sm-6">
-                  <label for="maxNarcoticDepth" class="form-label" mdbLabel>Max narcotic depth
+                  <label for="maxNarcoticDepth" class="form-label" mdbLabel>{{ 'diveOptions.maxNarcoticDepth' | translate }}
                   [{{units.length}}]:</label>
                   <input id="maxNarcoticDepth" class="form-control" type="number" formControlName="maxEND"
                     required [min]="ranges.narcoticDepth[0]" [max]="ranges.narcoticDepth[1]" step="1"
                     (input)="applyOptions()" [class.is-invalid]="narcoticDepthInvalid" />
                     <div class="invalid-feedback position-absolute">
-                      Needs to be number {{ranges.narcoticDepthLabel}}
+                      {{ 'validation.needsNumber' | translate }} {{ranges.narcoticDepthLabel}}
                     </div>
                   </div>
                   <div class="col col-12 col-sm-6">
                     <div class="form-check form-switch pb-1">
                       <input type="checkbox" class="form-check-input" id="oxygenNarcotic" mdbCheckbox
                         [checked]="options.oxygenNarcotic" (change)="switchOxygenNarcotic()" />
-                        <label class="form-check-label" for="roundStops">Oxygen is narcotic</label>
+                        <label class="form-check-label" for="roundStops">{{ 'diveOptions.oxygenIsNarcotic' | translate }}</label>
                       </div>
                     </div>
                   </div>
                 </mdb-tab>
-                <mdb-tab title="Air breaks">
+                <mdb-tab [title]="'diveOptions.airBreaksTab' | translate">
                   <div class="pt-3 row">
                     <div class="coll">
                       <div class="form-check form-switch pb-1">
                         <input type="checkbox" class="form-check-input" id="enableAirBreaks" mdbCheckbox
                           [checked]="options.airBreaks.enabled" (change)="switchAirBreaks()" />
-                          <label class="form-check-label" for="roundStops">Generate Air breaks</label>
+                          <label class="form-check-label" for="roundStops">{{ 'diveOptions.generateAirBreaks' | translate }}</label>
                         </div>
                       </div>
                     </div>
                     <div class="pt-3 row">
                       <div class="mb-4 col col-12 col-sm-6 col-lg-12">
-                        <label for="maxOxygenDuration" class="form-label" mdbLabel>Maximum Oxygen stop duration
+                        <label for="maxOxygenDuration" class="form-label" mdbLabel>{{ 'diveOptions.maxOxygenStopDuration' | translate }}
                         [min]:</label>
                         <input id="maxOxygenDuration" class="form-control" type="number"
                           formControlName="maxOxygenDuration" required min="1" max="100" step="1"
                           (input)="applyOptions()" [class.is-invalid]="maxOxygenDurationInvalid" />
                           <div class="invalid-feedback position-absolute">
-                            Needs to be number 1-100.
+                            {{ 'validation.needsNumber' | translate }} 1-100.
                           </div>
                         </div>
                         <div class="mb-4 col col-12 col-sm-6 col-lg-12">
-                          <label for="backGasDuration" class="form-label" mdbLabel>Back gas duration
+                          <label for="backGasDuration" class="form-label" mdbLabel>{{ 'diveOptions.backGasDuration' | translate }}
                           [min]:</label>
                           <input id="backGasDuration" class="form-control" type="number"
                             formControlName="backGasDuration" required min="1" max="100" step="1"
                             (input)="applyOptions()" [class.is-invalid]="backGasDurationInvalid" />
                             <div class="invalid-feedback position-absolute">
-                              Needs to be number 1-100.
+                              {{ 'validation.needsNumber' | translate }} 1-100.
                             </div>
                           </div>
                         </div>
                       </mdb-tab>
-                      <mdb-tab title="Stops">
+                      <mdb-tab [title]="'diveOptions.stopsTab' | translate">
                         <div class="row pt-3">
                           <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                            <label for="problem" class="form-label" mdbLabel>Solve problem [min]:</label>
+                            <label for="problem" class="form-label" mdbLabel>{{ 'diveOptions.solveProblem' | translate }} [min]:</label>
                             <input id="problem" formControlName="problem" class="form-control" type="number"
                               (input)="applyOptions()" required min="1" max="100" step="1"
                               [class.is-invalid]="problemInvalid" />
                               <div class="invalid-feedback position-absolute">
-                                Needs to be number 1 - 100 mim
+                                {{ 'validation.needsNumber' | translate }} 1 - 100 mim
                               </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                              <label for="switchDuration" class="form-label" mdbLabel>Gas switch [min]:</label>
+                              <label for="switchDuration" class="form-label" mdbLabel>{{ 'diveOptions.gasSwitch' | translate }} [min]:</label>
                               <input id="switchDuration" formControlName="gasSwitch" class="form-control"
                                 type="number" required min="1" max="100" step="1" (input)="applyOptions()"
                                 [class.is-invalid]="switchDurationInvalid" />
                                 <div class="invalid-feedback position-absolute">
-                                  Needs to be number 1 - 100 min
+                                  {{ 'validation.needsNumber' | translate }} 1 - 100 min
                                 </div>
                               </div>
                               <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                                <label for="safetyStop" class="form-label" mdbLabel>Add 3 min safety
-                                stop:</label>
+                                <label for="safetyStop" class="form-label" mdbLabel>{{ 'diveOptions.addSafetyStop' | translate }}</label>
                                 <div class="input-group dropdown form-outline" mdbDropdown>
                                   <input id="safetyStop" [value]="options.safetyStopKey | translate:options.safetyAutoParams" class="form-control"
                                     type="text" readonly/>
@@ -153,59 +152,58 @@
                             </div>
                           </div>
                           <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                            <label for="lastStop" class="form-label" mdbLabel>Last stop depth
+                            <label for="lastStop" class="form-label" mdbLabel>{{ 'diveOptions.lastStopDepth' | translate }}
                             [{{units.length}}]:</label>
                             <input id="lastStop" (input)="applyOptions()" formControlName="lastStopDepth"
                               class="form-control" type="number" required [min]="ranges.lastStopDepth[0]"
                               [max]="ranges.lastStopDepth[1]" step="1" [class.is-invalid]="lastStopInvalid" />
                               <div class="invalid-feedback position-absolute">
-                                Needs to be number {{ranges.lastStopDepthLabel}}
+                                {{ 'validation.needsNumber' | translate }} {{ranges.lastStopDepthLabel}}
                               </div>
                             </div>
                             <div class="mb-4 col col-12 col-sm-6 col-md-3 col-xxl-6">
-                              <label for="decoStopDistance" class="form-label" mdbLabel>Distance between deco stops [{{units.length}}]:</label>
+                              <label for="decoStopDistance" class="form-label" mdbLabel>{{ 'diveOptions.decoStopDistance' | translate }} [{{units.length}}]:</label>
                               <input id="decoStopDistance" formControlName="decoStopDistance" class="form-control" type="number"
                                 (input)="applyOptions()" required
                                 [min]="ranges.decoStopDistance[0]" [max]="ranges.decoStopDistance[1]" step="1"
                                 [class.is-invalid]="decoStopDistanceInvalid" />
                                 <div class="invalid-feedback position-absolute">
-                                  Needs to be number {{ ranges.decoStopDistanceLabel }}
+                                  {{ 'validation.needsNumber' | translate }} {{ ranges.decoStopDistanceLabel }}
                                 </div>
                               </div>
                               <div class="row ms-2">
                                 <div class="form-check form-switch">
                                   <input type="checkbox" class="form-check-input" id="roundStops" mdbCheckbox
                                     [checked]="options.roundStopsToMinutes" (change)="switchStopsRounding()" />
-                                    <label class="form-check-label" for="roundStops">Round deco stops to
-                                    minutes</label>
+                                    <label class="form-check-label" for="roundStops">{{ 'diveOptions.roundDecoStops' | translate }}</label>
                                   </div>
                                 </div>
                               </div>
                             </mdb-tab>
-                            <mdb-tab title="Speeds">
+                            <mdb-tab [title]="'diveOptions.speedsTab' | translate">
                               <div class="row pt-3">
                                 <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
-                                  <label for="descSpeed" class="form-label" mdbLabel>Descent
+                                  <label for="descSpeed" class="form-label" mdbLabel>{{ 'diveOptions.descent' | translate }}
                                   [{{units.speed}}]:</label>
                                   <input id="descSpeed" formControlName="descentSpeed" class="form-control" type="number"
                                     (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
                                     step="1" [class.is-invalid]="descSpeedInvalid" />
                                     <div class="invalid-feedback position-absolute">
-                                      Needs to be number {{ranges.speedLabel}}
+                                      {{ 'validation.needsNumber' | translate }} {{ranges.speedLabel}}
                                     </div>
                                   </div>
                                   <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
-                                    <label for="ascSpeed3" class="form-label" mdbLabel>Ascent to 50%
+                                    <label for="ascSpeed3" class="form-label" mdbLabel>{{ 'diveOptions.ascentTo50' | translate }}
                                     [{{units.speed}}]:</label>
                                     <input id="ascSpeed3" formControlName="ascentSpeed50perc" class="form-control"
                                       type="number" (input)="applyOptions()" required [min]="ranges.speed[0]"
                                       [max]="ranges.speed[1]" step="1" [class.is-invalid]="ascentSpeed50percInvalid" />
                                       <div class="invalid-feedback position-absolute">
-                                        Needs to be number {{ranges.speedLabel}}
+                                        {{ 'validation.needsNumber' | translate }} {{ranges.speedLabel}}
                                       </div>
                                     </div>
                                     <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
-                                      <label for="ascSpeed2" class="form-label" mdbLabel>Ascent to
+                                      <label for="ascSpeed2" class="form-label" mdbLabel>{{ 'diveOptions.ascentToX' | translate }}
                                         {{units.defaults.lastSpeedLevel}}
                                       {{units.length}} [{{units.speed}}]:</label>
                                       <input id="ascSpeed2" (input)="applyOptions()" formControlName="ascentSpeed50percTo6m"
@@ -213,23 +211,23 @@
                                         [max]="ranges.speed[1]" step="1"
                                         [class.is-invalid]="ascentSpeed50percTo6mInvalid" />
                                         <div class="invalid-feedback position-absolute">
-                                          Needs to be number {{ranges.speedLabel}}
+                                          {{ 'validation.needsNumber' | translate }} {{ranges.speedLabel}}
                                         </div>
                                       </div>
                                       <div class="mb-4 col col-12 col-sm-6 col-md-3 col-lg-6">
-                                        <label for="ascSpeed" class="form-label" mdbLabel>Ascent
+                                        <label for="ascSpeed" class="form-label" mdbLabel>{{ 'diveOptions.ascentPrefix' | translate }}
                                           {{units.defaults.lastSpeedLevel}}
-                                        {{units.length}} to surface [{{units.speed}}]:</label>
+                                        {{units.length}} {{ 'diveOptions.toSurface' | translate }} [{{units.speed}}]:</label>
                                         <input id="ascSpeed" formControlName="ascentSpeed6m" class="form-control" type="number"
                                           (input)="applyOptions()" required [min]="ranges.speed[0]" [max]="ranges.speed[1]"
                                           step="1" [class.is-invalid]="ascSpeedInvalid" />
                                           <div class="invalid-feedback position-absolute">
-                                            Needs to be number {{ranges.speedLabel}}
+                                            {{ 'validation.needsNumber' | translate }} {{ranges.speedLabel}}
                                           </div>
                                         </div>
                                       </div>
                                     </mdb-tab>
-                                    <mdb-tab title="Diver">
+                                    <mdb-tab [title]="'diveOptions.diverTab' | translate">
                                       <app-diver class="col col-12 col-sm-5 col-lg-4 col-xl-3 col-xxl-2" [diver]="options.diverOptions"
                                       [diverForm]="optionsForm" (changed)="fireChanged()"></app-diver>
                                     </mdb-tab>
@@ -238,8 +236,8 @@
                               }
                               <div>
                                 <button type="button" class="btn btn-secondary me-2 mt-3"
-                                (click)="useRecreational()">Recreational</button>
-                                <button type="button" class="btn btn-secondary mt-3" (click)="useRecommended()">Recommended</button>
+                                (click)="useRecreational()">{{ 'diveOptions.recreational' | translate }}</button>
+                                <button type="button" class="btn btn-secondary mt-3" (click)="useRecommended()">{{ 'diveOptions.recommended' | translate }}</button>
                               </div>
                             </div>
                           </div>

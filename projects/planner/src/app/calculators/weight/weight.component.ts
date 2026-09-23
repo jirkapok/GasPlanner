@@ -16,6 +16,7 @@ import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface WeightForm {
     workPressure?: FormControl<number>;
@@ -27,7 +28,7 @@ interface WeightForm {
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe, TranslatePipe]
 })
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faWeightHanging;

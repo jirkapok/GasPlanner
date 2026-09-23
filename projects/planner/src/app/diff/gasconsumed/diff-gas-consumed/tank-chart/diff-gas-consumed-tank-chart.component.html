@@ -4,7 +4,7 @@
   </div>
   <div style="position: relative">
     <div class="difference-text">
-      <small><strong>Difference</strong></small>
+      <small><strong>{{ 'diffGasConsumed.difference' | translate }}</strong></small>
     </div>
     <div class="d-flex flex-row justify-content-around">
       <small><strong class="text-start text-muted">{{ profileDiff.profileATitle }}</strong></small>
@@ -35,22 +35,22 @@
       <div class="d-flex flex-row justify-content-between w-100">
         @if (gasTotalProfileA != 0) {
           <small class="text-start text-muted">
-            Gas remaining:
+            {{ 'diffGasConsumed.gasRemaining' | translate }}
             {{ gasDiff.remainingProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
           </small>
         } @else {
           <small class="text-start text-muted">
-            Not available
+            {{ 'diffGasConsumed.notAvailable' | translate }}
           </small>
         }
         @if (gasTotalProfileB != 0) {
           <small class="text-end text-muted">
-            Gas remaining:
+            {{ 'diffGasConsumed.gasRemaining' | translate }}
             {{ gasDiff.remainingProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
           </small>
         } @else {
           <small class="text-start text-muted">
-            Not available
+            {{ 'diffGasConsumed.notAvailable' | translate }}
           </small>
         }
       </div>
@@ -80,7 +80,7 @@
       <div class="d-flex flex-row justify-content-between w-100">
         @if (gasTotalProfileA != 0) {
           <small class="text-start text-muted">
-            Reserve:
+            {{ 'diffGasConsumed.reserve' | translate }}
             {{ gasReserveProfileA | number:'1.0-0'  }}/{{ gasTotalProfileA | number:'1.0-0'  }} {{units.volume}}
           </small>
         } @else {
@@ -88,7 +88,7 @@
         }
         @if (gasTotalProfileB != 0) {
           <small class="text-end text-muted">
-            Reserve:
+            {{ 'diffGasConsumed.reserve' | translate }}
             {{ gasReserveProfileB | number:'1.0-0'  }}/{{ gasTotalProfileB | number:'1.0-0'  }} {{units.volume}}
           </small>
         }

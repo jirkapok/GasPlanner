@@ -7,6 +7,7 @@ import { PpO2Component } from '../../controls/pp-o2/pp-o2.component';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { InputControls } from '../../shared/inputcontrols';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 class DiverPage {
     constructor(private componentFixture: ComponentFixture<DiverComponent>) {}
@@ -41,7 +42,7 @@ describe('DiverComponent', () => {
         UnitConversion,
         ValidatorGroups,
         InputControls,
-        DecimalPipe
+        DecimalPipe, provideTestTranslate()
     ]
 }).compileComponents();
     });

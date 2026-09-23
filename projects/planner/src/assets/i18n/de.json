@@ -1,115 +1,165 @@
 {
   "menu": {
-    "calculators": "Rechner",
-    "planner": "Planer",
-    "rmvSac": "RMV/SAC",
-    "nitrox": "Nitrox",
-    "gasProperties": "Gaseigenschaften",
-    "altitude": "Höhe",
-    "weight": "Gewicht",
-    "ndlTable": "NDL-Tabelle",
-    "cylinderBalancing": "Flaschenbalance",
-    "gasBlender": "Gasmischer",
-    "dive": "Tauchgang",
-    "clone": "Duplizieren",
-    "saveAsDefault": "Als Standard speichern",
-    "loadDefault": "Standard laden",
-    "share": "Teilen",
-    "delete": "Löschen",
-    "settings": "Einstellungen",
-    "compareDives": "Tauchgänge vergleichen",
-    "standardGases": "Standardgase",
-    "help": "Hilfe",
-    "learn": "Lernen",
-    "about": "Über"
+    "calculators": "Rechner", "planner": "Planer", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
+    "gasProperties": "Gaseigenschaften", "altitude": "Höhe", "weight": "Gewicht", "ndlTable": "NDL-Tabelle",
+    "cylinderBalancing": "Flaschenbalance", "gasBlender": "Gasmischer", "dive": "Tauchgang", "clone": "Duplizieren",
+    "saveAsDefault": "Als Standard speichern", "loadDefault": "Standard laden", "share": "Teilen", "delete": "Löschen",
+    "settings": "Einstellungen", "compareDives": "Tauchgänge vergleichen", "standardGases": "Standardgase", "help": "Hilfe",
+    "learn": "Lernen", "about": "Über", "toggleNavigation": "Navigation umschalten"
   },
   "personalization": {
-    "cardTitle": "Personalisierung",
-    "metricUnits": "Metrische Einheiten (m, l, bar)",
-    "imperialUnits": "Imperiale Einheiten (ft, cuft, psi)",
-    "imperialExperimental": "(Experimentell, nicht empfohlen)",
+    "cardTitle": "Personalisierung", "metricUnits": "Metrische Einheiten (m, l, bar)",
+    "imperialUnits": "Imperiale Einheiten (ft, cuft, psi)", "imperialExperimental": "(Experimentell, nicht empfohlen)",
     "language": "Sprache"
   },
   "textConstants": {
     "depthConverterWarning": "Dieser Rechner verwendet eine einfache Tiefenumrechnung (1 ATM = 1 bar), daher sind die hier angezeigten Werte weniger genau als im Rest der Anwendung. Außerdem wird das ideale Gasgesetz verwendet, sodass der berechnete Rmv-Wert niedriger ist als in der Realität.",
     "cnsOverOneThousand": "> 1000"
   },
-  "salinity": {
-    "fresh": "Süßwasser",
-    "brackish": "Brackwasser (EN13319)",
-    "salt": "Salzwasser"
-  },
-  "diveOptions": {
-    "allUsable": "Vollständig nutzbar",
-    "halfUsable": "Zur Hälfte nutzbar",
-    "thirdUsable": "Zu einem Drittel nutzbar"
-  },
-  "options": {
-    "safetyOff": "Nie",
-    "safetyOn": "Immer",
-    "safetyAuto": "Automatisch (> {{level}} {{unit}})"
-  },
+  "salinity": { "label": "Wassersalinität:", "fresh": "Süßwasser", "brackish": "Brackwasser (EN13319)", "salt": "Salzwasser" },
+  "options": { "safetyOff": "Nie", "safetyOn": "Immer", "safetyAuto": "Automatisch (> {{level}} {{unit}})" },
   "gradients": {
-    "low": "Niedrig (45/95)",
-    "medium": "Mittel (40/85)",
-    "high": "Hoch (30/75)"
+    "title": "Konservatismus (Gradientenfaktoren):", "lowLabel": "Gradient niedrig [%]:", "highLabel": "Gradient hoch [%]:",
+    "lowerThanHigh": "niedriger als Gradient hoch", "higherThanLow": "höher als Gradient niedrig",
+    "low": "Niedrig (45/95)", "medium": "Mittel (40/85)", "high": "Hoch (30/75)"
   },
-  "waypoints": {
-    "ascent": "Aufstieg",
-    "descent": "Abstieg",
-    "switch": "Gaswechsel",
-    "hover": "Schweben"
-  },
-  "events": {
-    "deco": "Deko",
-    "safetyStop": "Sicherheitsstopp"
-  },
+  "waypoints": { "ascent": "Aufstieg", "descent": "Abstieg", "switch": "Gaswechsel", "hover": "Schweben" },
+  "events": { "deco": "Deko", "safetyStop": "Sicherheitsstopp" },
   "help": {
     "menu": {
-      "application": {
-        "title": "Anwendung",
-        "usage": "Verwendung der Anwendung",
-        "settings": "Anwendungseinstellungen"
-      },
-      "plan": {
-        "title": "Tauchplan",
-        "tanks": "Flaschen",
-        "standardGases": "Standardgase",
-        "depths": "Tiefen",
-        "surfaceInterval": "Oberflächenpause"
-      },
-      "options": {
-        "title": "Tauchoptionen",
-        "general": "Allgemein",
-        "environment": "Umgebung",
-        "conservatism": "Konservatismus",
-        "gases": "Gase",
-        "airBreaks": "Luftpausen",
-        "stops": "Stopps",
-        "speeds": "Geschwindigkeiten",
-        "diver": "Taucher"
-      },
-      "results": {
-        "title": "Tauchergebnisse",
-        "diveInfoTable": "Tauchinfo-Tabelle",
-        "oxygenToxicity": "Sauerstofftoxizität",
-        "events": "Ereignisse, die Fehler und Warnungen verursachen",
-        "consumedGasCharts": "Diagramme des Gasverbrauchs",
-        "wayPointsTable": "Wegpunkttabelle",
-        "profileChart": "Tauchprofildiagramm",
-        "tissuesHeatMap": "Gewebe-Heatmap"
-      },
-      "calculators": {
-        "title": "Rechner",
-        "sac": "RMV/SAC",
-        "nitrox": "Nitrox",
-        "ndl": "Nullzeitgrenzen (NDL)-Tabelle",
-        "altitude": "Höhe",
-        "weight": "Gewicht",
-        "gasProperties": "Gaseigenschaften",
-        "redundancies": "Flaschenbalance",
-        "gasBlender": "Gasmischer"
-      }
+      "application": { "title": "Anwendung", "usage": "Verwendung der Anwendung", "settings": "Anwendungseinstellungen" },
+      "plan": { "title": "Tauchplan", "tanks": "Flaschen", "standardGases": "Standardgase", "depths": "Tiefen", "surfaceInterval": "Oberflächenpause" },
+      "options": { "title": "Tauchoptionen", "general": "Allgemein", "environment": "Umgebung", "conservatism": "Konservatismus", "gases": "Gase", "airBreaks": "Luftpausen", "stops": "Stopps", "speeds": "Geschwindigkeiten", "diver": "Taucher" },
+      "results": { "title": "Tauchergebnisse", "diveInfoTable": "Tauchinfo-Tabelle", "oxygenToxicity": "Sauerstofftoxizität", "events": "Ereignisse, die Fehler und Warnungen verursachen", "consumedGasCharts": "Diagramme des Gasverbrauchs", "wayPointsTable": "Wegpunkttabelle", "profileChart": "Tauchprofildiagramm", "tissuesHeatMap": "Gewebe-Heatmap" },
+      "calculators": { "title": "Rechner", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Nullzeitgrenzen (NDL)-Tabelle", "altitude": "Höhe", "weight": "Gewicht", "gasProperties": "Gaseigenschaften", "redundancies": "Flaschenbalance", "gasBlender": "Gasmischer" }
     }
-  }
+  },
+  "validation": { "needsNumber": "Muss eine Zahl sein" },
+  "altitude": { "label": "Höhe", "seaLevel": "Meeresspiegel" },
+  "calculating": { "label": "Wird berechnet ..." },
+  "gaslabel": { "mod": "MOD", "switch": "Wechsel", "mnd": "MND" },
+  "oxygenDropdown": { "o2Label": "O2 [%]:", "bestMix": "Beste Mischung" },
+  "about": {
+    "title": "Über Gas Planner", "tagline1": "Open-Source-Tauchanwendung, die Taucher bei der Planung ihrer Tauchgänge unterstützt.",
+    "tagline2": "Plane deinen Tauchgang und tauche deinen Plan!", "disclaimerLabel": "Haftungsausschluss:",
+    "disclaimerText": "Keiner der Autoren, Mitwirkenden, Administratoren oder sonstigen mit diesem Projekt verbundenen Personen kann für die Nutzung der von dieser Anwendung bereitgestellten oder von diesen Webseiten verlinkten Informationen verantwortlich gemacht werden. Die Nutzung der Ergebnisse erfolgt auf eigene Gefahr.",
+    "githubProject": "GitHub-Projekt"
+  },
+  "cardHeader": { "showHelp": "Hilfe anzeigen" },
+  "helpModal": { "title": "Hilfe", "close": "Schließen" },
+  "appinfo": { "version": "Version" },
+  "ppo2": { "maxPpo2Label": "Maximale ppO2:", "maxDecoPpo2Label": "Maximale Deko-ppO2:" },
+  "diver": { "rmvLabel": "RMV", "stressRmvLabel": "Stress-RMV" },
+  "diff": { "onlyOneDive": "Es ist nur ein Tauchgang geplant. Um Tauchgänge zu vergleichen, definiere mindestens zwei.", "goToPlanner": "Zum Planer" },
+  "diffDiveResults": { "cardTitle": "Tauchergebnisse" },
+  "diffResultsTable": {
+    "profileA": "Profil A", "profileB": "Profil B", "difference": "Differenz", "totalDiveTime": "Gesamttauchzeit",
+    "timeToSurface": "Zeit zur Oberfläche", "averageDepth": "Durchschnittstiefe", "rockBottomAt": "Rock Bottom bei",
+    "noDecoTime": "Nullzeit", "maxBottomTime": "Maximale Grundzeit", "highestGasDensity": "Höchste Gasdichte",
+    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität"
+  },
+  "diffGasConsumed": { "cardTitle": "Gasverbrauch", "difference": "Differenz", "gasRemaining": "Verbleibendes Gas:", "notAvailable": "Nicht verfügbar", "reserve": "Reserve:" },
+  "diffProfileChart": { "cardTitle": "Profildiagramm" },
+  "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
+  "diffWaypoints": { "cardTitle": "Tauchgang-Wegpunkte", "profileA": "Profil A", "profileB": "Profil B", "run": "Laufzeit", "depth": "Tiefe", "duration": "Dauer" },
+  "common": { "back": "Zurück", "use": "Verwenden" },
+  "settings": {
+    "limitsCardTitle": "Grenzwerte", "maxGasDensityLabel": "Maximale Gasdichte", "primaryTankReserveLabel": "Minimale Reserve Hauptflasche",
+    "stageTankReserveLabel": "Minimale Reserve Stage-Flasche", "ignoredIssuesCardTitle": "Ignorierte Probleme (Warnungen/Fehler)",
+    "icdLabel": "Isobare Gegendiffusion (ICD)", "densityExceededLabel": "Maximale Gasdichte überschritten",
+    "noDecoReachedLabel": "Nullzeitgrenze erreicht", "missingAirBreakLabel": "Fehlende Luftpause", "resetToDefault": "Auf Standard zurücksetzen"
+  },
+  "altitudeCalc": { "cardTitle": "Höhenrechner", "pressureLabel": "Atmosphärischer Druck", "actualDepthLabel": "Tatsächliche Tiefe", "theoreticalDepthLabel": "Theoretische Tiefe auf Meereshöhe" },
+  "gasBlender": {
+    "cardTitle": "Gasmischer", "showPricingTitle": "Preise anzeigen", "sourceLabel": "Quelle", "heLabel": "He [%]:",
+    "pressureLabel": "Druck", "topMixLabel": "Auffüllmischung", "targetLabel": "Ziel", "resultsLabel": "Ergebnisse",
+    "removeFromSourceLabel": "Aus Quelle ablassen", "addO2Label": "O2 hinzufügen", "addHeLabel": "He hinzufügen", "addTopMixLabel": "Auffüllmischung hinzufügen",
+    "unableToCalculateMessage": "Die erforderliche Mischung kann nicht berechnet werden, da die Auffüllmischung mehr Sauerstoff oder Helium enthält als die Zielmischung.",
+    "unitPricesLabel": "Einzelpreise", "o2UnitPriceLabel": "Einzelpreis O2:", "heUnitPriceLabel": "Einzelpreis He:",
+    "topMixUnitPriceLabel": "Einzelpreis Auffüllmischung:", "mixPriceLabel": "Mischungspreis", "o2PriceLabel": "O2-Preis",
+    "hePriceLabel": "He-Preis", "topMixPriceLabel": "Preis Auffüllmischung", "totalPriceLabel": "Gesamtpreis"
+  },
+  "gasProps": {
+    "cardTitle": "Gasmischung", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Maximale narkotische Tiefe",
+    "oxygenNarcoticLabel": "Sauerstoff wirkt narkotisch", "propertiesAtDepthLabel": "Eigenschaften in der Tiefe", "gasPropertiesLabel": "Gaseigenschaften",
+    "oxygenPartialPressureLabel": "Sauerstoffpartialdruck", "heliumPartialPressureLabel": "Heliumpartialdruck",
+    "nitrogenPartialPressureLabel": "Stickstoffpartialdruck", "totalPartialPressureLabel": "Gesamtpartialdruck",
+    "minimumDepthLabel": "Mindesttiefe", "maximumDepthLabel": "Maximale Tiefe", "equivalentAirDepthLabel": "Äquivalente Lufttiefe",
+    "equivalentNarcoticDepthLabel": "Äquivalente narkotische Tiefe", "maximumNarcoticDepthLabel": "Maximale narkotische Tiefe",
+    "densityLabel": "Dichte", "warningsLabel": "Warnungen", "minimumDepthWarningTitle": "Mindesttiefe: ",
+    "minimumDepthWarningMessage": "Der Mindestwert des Sauerstoffpartialdrucks ({{minPpO2}}), der die Mindesttiefe definiert, wurde unterschritten. Erhöhe den Sauerstoffanteil oder verringere die erforderliche Tiefe.",
+    "maximumDepthWarningTitle": "Maximale Tiefe: ",
+    "maximumDepthWarningMessage": "Der Maximalwert des Sauerstoffpartialdrucks ({{maxPpO2}}) wurde überschritten. Erhöhe den maximalen ppO2-Wert, verringere den Sauerstoffanteil oder die erforderliche Tiefe.",
+    "mndWarningTitle": "Äquivalente narkotische Tiefe: ",
+    "mndWarningMessage": "Der Maximalwert der narkotischen Tiefe ({{mndLimit}} {{unit}}), bestimmt durch den Partialdruck der narkotisch wirkenden Bestandteile (Sauerstoff und Stickstoff), wurde überschritten. Verringere den Stickstoffanteil durch Zugabe von Helium oder Sauerstoff, oder verringere die erforderliche Tiefe.",
+    "densityWarningTitle": "Maximale Gasdichte: ",
+    "densityWarningMessage": "Der Maximalwert der Gasdichte ({{maxDensity}} {{unit}}) wurde überschritten. Verringere den Sauerstoffanteil oder füge mehr Helium hinzu."
+  },
+  "ndlLimits": { "optionsCardTitle": "Optionen", "cardTitle": "Nullzeitgrenzen", "depthColumnLabel": "Tiefe", "limitColumnLabel": "Grenze [min]", "noResultsMessageLine1": "Keine Nullzeitgrenzen im sinnvollen Tiefenbereich gefunden.", "noResultsMessageLine2": "Ändere den O2-Anteil des Gases." },
+  "nitrox": {
+    "cardTitle": "Nitrox-Rechner", "modTab": "MOD", "bestMixTab": "Beste Mischung", "ppo2Tab": "ppO2", "eadTab": "EAD",
+    "ppo2Label": "ppO2:", "modLabel": "MOD", "eadPrefix": "EAD:", "depthLabel": "Tiefe", "o2Label": "O2 [%]:", "eadLabel": "EAD",
+    "lowModMessage": "Einsatztiefe zu gering. Erhöhe den ppO2-Wert oder verringere den O2-Anteil."
+  },
+  "redundancies": { "cardTitle": "Flaschenbalance-Rechner", "firstTankLabel": "Erste Flasche", "sizeLabel": "Größe", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck", "secondTankLabel": "Zweite Flasche", "finalPressureLabel": "Enddruck" },
+  "sac": {
+    "cardTitle": "Atemminutenvolumen", "rmvTab": "RMV", "usedTab": "Verbraucht", "durationTab": "Dauer",
+    "averageDepthLabel": "Durchschnittstiefe", "tankSizeLabel": "Flaschengröße", "workingPressureLabel": "Betriebsdruck",
+    "diveTimeLabel": "Tauchzeit", "gasConsumedLabel": "Gasverbrauch", "rmvLabel": "RMV", "sacPrefix": "SAC:"
+  },
+  "weight": { "cardTitle": "Gewichtsrechner", "tankSizeLabel": "Flaschengröße", "workingPressureLabel": "Betriebsdruck", "consumedLabel": "Verbraucht", "lostWeightLabel": "Gewichtsverlust" },
+  "dashboard": {
+    "installMessage": "Um die Anwendung offline nutzen zu können, musst du sie zu deinem Startbildschirm hinzufügen (installieren).",
+    "installAppleMessage": "Tippe auf die Schaltfläche \"Teilen\" und dann auf \"Zum Home-Bildschirm\".", "addToHomeScreen": "Zum Startbildschirm hinzufügen",
+    "sharePlanTitle": "Plan teilen", "shareUrlCopied": "Die URL-Adresse dieses Tauchplans wurde in die Zwischenablage kopiert."
+  },
+  "depth": { "label": "Tiefe", "bestMixLabel": "Beste Mischung ist", "maxDepthTitle": "Maximale Tiefe anhand der narkotischen Gasgrenze setzen", "maxButton": "Max" },
+  "depthsComplex": { "cardTitle": "Tiefen", "from": "Von", "to": "Bis", "duration": "Dauer", "tank": "Flasche", "endDepthLabel": "Endtiefe" },
+  "depthsSimple": { "cardTitle": "Tiefe", "bottomTime": "Grundzeit", "noDecoLimit": "Nullzeitgrenze", "maxDurationTitle": "Tauchzeit anhand des Gasverbrauchs maximieren", "maxButton": "Max", "noDecoTitle": "Tauchzeit auf Nullzeitgrenze setzen", "noDecoButton": "Nullzeit" },
+  "diveIssues": {
+    "calculationError": "Bei der Berechnung des Profils ist ein Fehler aufgetreten.",
+    "notEnoughTimePrefix": "Nicht genug Zeit, um den Tauchgang durchzuführen (die Dauer muss mindestens", "notEnoughTimeSuffix": "min betragen)! Plane eine längere Tauchzeit.",
+    "notEnoughGasPrefix": "Nicht genug Gas, um den Tauchgang durchzuführen! Die maximale Grundzeit für die aktuelle Gasmenge beträgt",
+    "notEnoughGasSuffix": "min. Verwende eine größere Flasche, fülle mehr Gas ein, verkürze die Tauchzeit oder verringere die geplante Tiefe.",
+    "notEnoughGasShort": "Nicht genug Gas, um den Tauchgang durchzuführen! Die maximale Grundzeit für die aktuelle Gasmenge ist kürzer als der aktuell geplante Tauchgang. Verwende eine größere Flasche, fülle mehr Gas ein, verkürze die Tauchzeit oder verringere die geplante Tiefe.",
+    "brokenCeiling": "Die minimale sichere Tiefe (Ceiling) wurde überschritten! Ändere deinen Plan an dieser Stelle auf eine geringere Tiefe.",
+    "lowPpo2": "Niedriger Sauerstoffpartialdruck erreicht (Mindesttiefe unterschritten)! Es besteht die Gefahr einer Hypoxie. Verwende ein Gas mit höherem Sauerstoffanteil.",
+    "highPpo2": "Hoher Sauerstoffpartialdruck erreicht (maximale Tiefe überschritten)! Es besteht die Gefahr einer Sauerstofftoxizität. Verringere die Tiefe oder verwende ein Gas mit niedrigerem Sauerstoffanteil.",
+    "highDescentSpeed": "Hohe Abstiegsgeschwindigkeit! Steige über einen längeren Zeitraum oder zu einer geringeren Tiefe ab.",
+    "highAscentSpeed": "Hohe Aufstiegsgeschwindigkeit! Steige nur zu einer geringeren Tiefe auf oder verlängere die Aufstiegszeit.",
+    "highN2Switch": "Ein Gaswechsel zu einem Gas mit höherem Stickstoffanteil wird nicht empfohlen! Es besteht die Gefahr einer isobaren Gegendiffusion (IDC). Wechsle zu einem anderen Gas mit höherem Heliumanteil oder niedrigerem Stickstoffanteil.",
+    "mndExceeded": "Die maximale narkotische Tiefe für das gewählte Gas wurde überschritten! Verringere die Tiefe oder verwende ein Gas mit höherem Heliumanteil.",
+    "highDensity": "Die empfohlene maximale Gasdichte wurde überschritten! Verringere die Tiefe oder verwende ein Gas mit höherem Heliumanteil (d. h. geringerer Dichte).",
+    "minDepth": "Tauchgänge, die über einen langen Zeitraum in geringer Tiefe geplant sind, können zu Sättigungstauchgängen führen! Verkürze die Tauchzeit auf weniger als 5 Stunden.",
+    "maxDepth": "Die maximale Tiefe, für die der Algorithmus anhand realer Daten gut getestet wurde, wurde überschritten! Verringere die maximale Tiefe.",
+    "missingAirbreak": "Es wird empfohlen, nicht länger als 20 Minuten reinen Sauerstoff zu atmen. Verwende die Luftpausen-Option, um passende Gaswechsel zu erzeugen, oder füge manuell einen Wechsel zum Grundgas hinzu.",
+    "noDecoPrefix": "Die Nullzeit für die aktuelle Tiefe wurde überschritten (für einen Nullzeit-Tauchgang setze die Tauchzeit maximal auf", "noDecoSuffix": "min)!",
+    "otuExceededPrefix": "80 % der maximalen Sauerstofftoxizitätseinheiten (OTU) für eine Einzelexposition wurden überschritten", "otuExceededSuffix": "Es besteht ein hohes Risiko einer Lungenschädigung. Verringere den Sauerstoffanteil in deinen Gasen, die Tauchzeit oder die Zieltiefen.",
+    "cnsExceededPrefix": "80 % der maximalen Sauerstofftoxizität (CNS) für eine Einzelexposition wurden überschritten", "cnsExceededSuffix": "Es besteht ein hohes Risiko einer CNS-Schädigung (Zentralnervensystem). Verringere den Sauerstoffanteil in deinen Gasen, die Tauchzeit oder die Zieltiefen."
+  },
+  "diveInfo": {
+    "cardTitle": "Tauchinfo", "resultsTab": "Ergebnisse", "shareTitle": "Tauchgang-Adresse teilen", "share": "Teilen",
+    "totalDiveTime": "Gesamttauchzeit", "timeToSurface": "Zeit zur Oberfläche", "averageDepth": "Durchschnittstiefe",
+    "rockBottomAt": "Rock Bottom bei", "noDecoTime": "Nullzeit", "noDecoTimeTitle": "Tauchzeit auf Nullzeitgrenze setzen",
+    "use": "Verwenden", "maxBottomTime": "Maximale Grundzeit", "maxBottomTimeTitle": "Tauchzeit anhand des Gasverbrauchs maximieren",
+    "surfaceGradient": "Oberflächengradient", "offgasingStart": "Beginn der Entsättigung", "highestCeiling": "Höchstes Ceiling",
+    "highestGasDensity": "Höchste Gasdichte", "turnTime": "Umkehrzeit", "turnPressure": "Umkehrdruck",
+    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität", "consumedTab": "Verbraucht", "issuesTab": "Probleme"
+  },
+  "diveOptions": {
+    "allUsable": "Vollständig nutzbar", "halfUsable": "Zur Hälfte nutzbar", "thirdUsable": "Zu einem Drittel nutzbar", "cardTitle": "Optionen",
+    "extendedTrimix": "Erweitert (Trimix)", "environmentTab": "Umgebung", "conservatismTab": "Konservatismus", "gasesTab": "Gase",
+    "maxNarcoticDepth": "Maximale narkotische Tiefe", "oxygenIsNarcotic": "Sauerstoff wirkt narkotisch", "airBreaksTab": "Luftpausen",
+    "generateAirBreaks": "Luftpausen generieren", "maxOxygenStopDuration": "Maximale Dauer des Sauerstoffstopps", "backGasDuration": "Dauer Grundgas",
+    "stopsTab": "Stopps", "solveProblem": "Problem lösen", "gasSwitch": "Gaswechsel", "lastStopDepth": "Tiefe des letzten Stopps",
+    "decoStopDistance": "Abstand zwischen Dekostopps", "roundDecoStops": "Dekostopps auf Minuten runden", "speedsTab": "Geschwindigkeiten",
+    "descent": "Abstieg", "ascentTo50": "Aufstieg bis 50 %", "ascentToX": "Aufstieg bis", "ascentPrefix": "Aufstieg", "toSurface": "zur Oberfläche",
+    "diverTab": "Taucher", "recreational": "Freizeittauchen", "recommended": "Empfohlen", "addSafetyStop": "3-minütigen Sicherheitsstopp hinzufügen:"
+  },
+  "profileChart": { "cardTitle": "Tauchprofil", "heatmapTitle": "Gewebe-Heatmap anzeigen", "emergencyAscentTitle": "Notaufstieg anzeigen" },
+  "surfaceInterval": { "label": "Oberflächenpause", "firstDive": "Erster Tauchgang", "thirtyMinutes": "30 Minuten", "oneHour": "1 Stunde", "twoHours": "2 Stunden", "invalidFormat": "Muss im Format hh:mm angegeben werden" },
+  "tankChart": { "gasRemaining": "Verbleibendes Gas:", "rockBottom": "Rock Bottom:" },
+  "tanksComplex": { "cardTitle": "Flaschen", "size": "Größe", "workPressure": "Betriebsdr.", "pressure": "Druck", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck" },
+  "tanksSimple": { "cardTitle": "Grundgasflasche", "size": "Größe", "sac": "SAC:", "workingPressure": "Betriebsdruck", "startPressure": "Startdruck" },
+  "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" }
 }

@@ -6,6 +6,7 @@ import { DiveSchedules } from '../../../shared/dive.schedules';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideTestTranslate } from '../../../../testing/translate-testing.helpers';
 
 describe('DiffTabsButtonComponent', () => {
     let component: DiffTabsButtonComponent;
@@ -18,7 +19,8 @@ describe('DiffTabsButtonComponent', () => {
         ProfileComparatorService,
         DiveSchedules,
         UnitConversion,
-        ReloadDispatcher
+        ReloadDispatcher,
+        provideTestTranslate()
     ]
 });
         fixture = TestBed.createComponent(DiffTabsButtonComponent);

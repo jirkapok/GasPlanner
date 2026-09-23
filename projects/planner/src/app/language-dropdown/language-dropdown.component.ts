@@ -14,14 +14,14 @@ export class LanguageDropdownComponent {
     /** Renders the toggle as a navbar-style nav-link instead of a button, for placement in the main menu. */
     @Input() public navbar = false;
 
-    constructor(public language: LanguageService, private preferences: PreferencesStore) {}
-
-    public get current(): LanguageOption | undefined {
-        return this.language.languages.find(l => l.code === this.language.currentLanguage);
-    }
+    constructor(public languages: LanguageService, private preferences: PreferencesStore) {}
 
     public select(code: string): void {
-        this.language.setLanguage(code);
+        this.languages.setLanguage(code);
         this.preferences.save();
+    }
+
+    public iconFor(language: LanguageOption | undefined): string {
+        return `fi-${ language?.countryCode }`;
     }
 }

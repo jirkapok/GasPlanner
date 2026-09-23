@@ -4,16 +4,25 @@ import { firstValueFrom } from 'rxjs';
 import { PreferencesStore } from './preferencesStore';
 import { AppPreferences } from './serialization.model';
 
+
+// TODO localize:
+// * component templates
+// * tank sizes, altitude, stop types and other drop downs
+// * quiz questions
+// * number pipes
+// * plotly charts
+// * Add /assets/i18n/*.json to the app asset group in ngsw-config.json
+// * consider in the future: documentation in doc directory
 export interface LanguageOption {
     code: string;
     nativeName: string;
-    /** ISO 3166-1 alpha-2 country code used as the `flag-icons` CSS class suffix (`fi-<countryCode>`). */
+    /** ISO 3166-1 alpha-2 country code. */
     countryCode: string;
 }
 
 @Injectable()
 export class LanguageService {
-    public readonly languages: LanguageOption[] = [
+    public readonly supportedLanguages: LanguageOption[] = [
         { code: 'en', nativeName: 'English', countryCode: 'gb' },
         { code: 'de', nativeName: 'Deutsch', countryCode: 'de' },
         { code: 'cs', nativeName: 'Čeština', countryCode: 'cz' },
@@ -29,73 +38,34 @@ export class LanguageService {
         zh: 'zh-Hans'
     };
 
-    /**
-     * TranslateService.use() only updates its own currentLang signal once the target
-     * language's translations finish loading (asynchronous for the real HTTP loader), so
-     * callers that need the just-requested code synchronously (e.g. to persist it right
-     * after switching) can't rely on translate.currentLang() - track it here instead.
-     */
     private _currentLanguage = LanguageService.defaultCode;
 
     constructor(private translate: TranslateService) {
-        this.translate.addLangs(this.languages.map(l => l.code));
+        this.translate.addLangs(this.supportedLanguages.map(l => l.code));
     }
 
-    public get currentLanguage(): string {
+    public get currentCode(): string {
         return this._currentLanguage;
     }
 
-    public async ready(): Promise<void> {
-        const code = this.resolveInitialLanguage();
-        this._currentLanguage = code;
-        await firstValueFrom(this.translate.use(code));
-        this.applyDomAndManifest(code);
+    public get current(): LanguageOption | undefined {
+        return this.supportedLanguages.find(l => l.code === this.currentCode);
     }
 
-    /**
-     * Only updates translation/DOM state. Persisting the choice into AppOptionsDto.language
-     * happens via the normal Preferences.save() flow (see Preferences.toAppSettings()),
-     * triggered by the caller - this service can't depend on PreferencesStore/Preferences
-     * itself, since those depend back on this service to read/apply the stored language.
-     */
+    public async ready(): Promise<void> {
+        const loaded$ = this.translate.use(this.currentCode);
+        await firstValueFrom(loaded$);
+        this.applyDomAndManifest(this.currentCode);
+    }
+
     public setLanguage(code: string): void {
-        if (!this.languages.some(l => l.code === code)) {
+        if (!this.supportedLanguages.some(l => l.code === code)) {
             return;
         }
 
         this._currentLanguage = code;
         this.translate.use(code);
         this.applyDomAndManifest(code);
-    }
-
-    private resolveInitialLanguage(): string {
-        const stored = this.readStoredLanguage();
-        if (stored && this.languages.some(l => l.code === stored)) {
-            return stored;
-        }
-
-        const browserCode = (navigator.language || '').slice(0, 2).toLowerCase();
-        const matched = this.languages.find(l => l.code === browserCode);
-        return matched ? matched.code : LanguageService.defaultCode;
-    }
-
-    /**
-     * Reads AppOptionsDto.language directly out of the same 'preferences' storage PreferencesStore
-     * uses, since PreferencesStore.load() (which normally applies it) only runs later, once the
-     * rest of the app's dependency graph (ManagedDiveSchedules etc.) is constructed - after this
-     * service's ready() must already have resolved during app initialization.
-     */
-    private readStoredLanguage(): string | undefined {
-        const raw = localStorage.getItem(PreferencesStore.storageKey);
-        if (!raw) {
-            return undefined;
-        }
-
-        try {
-            return (JSON.parse(raw) as AppPreferences).options?.language;
-        } catch {
-            return undefined;
-        }
     }
 
     private applyDomAndManifest(code: string): void {

@@ -217,7 +217,7 @@ describe('PreferencesStore', () => {
                 language.setLanguage('en');
                 sut.load();
 
-                expect(language.currentLanguage).toEqual('de');
+                expect(language.currentCode).toEqual('de');
             }));
 
         it('Save and Load Defaults - First dive is updated from default', inject(

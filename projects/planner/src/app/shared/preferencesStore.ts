@@ -5,8 +5,7 @@ import { DiveSchedule } from './dive.schedules';
 
 @Injectable()
 export class PreferencesStore {
-    /** Also read directly by LanguageService for its initial pick, before Preferences.load() runs during app init. */
-    public static readonly storageKey = 'preferences';
+    private static readonly storageKey = 'preferences';
     private static readonly disclaimerValue = 'confirmed';
     private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
@@ -14,7 +13,7 @@ export class PreferencesStore {
     private static readonly quizShownKey = 'quizShown';
     private static readonly confirmedValue = 'confirmed';
 
-    constructor(private preferencesFactory: Preferences) {}
+    constructor(private preferences: Preferences) {}
 
     public load(): void {
         const toParse = localStorage.getItem(PreferencesStore.storageKey);
@@ -23,7 +22,7 @@ export class PreferencesStore {
         }
 
         const raw = JSON.parse(toParse) as AppPreferences;
-        this.preferencesFactory.applyApp(raw);
+        this.preferences.applyApp(raw);
     }
 
     public loadDefault(dive: DiveSchedule): void {
@@ -35,24 +34,24 @@ export class PreferencesStore {
         const loaded = JSON.parse(toParse) as DiveDto;
 
         if (loaded) {
-            this.preferencesFactory.loadDive(dive, loaded);
+            this.preferences.loadDive(dive, loaded);
         }
     }
 
     public loadFrom(from: DiveSchedule, to: DiveSchedule): void {
-        const source = this.preferencesFactory.toDiveFrom(from);
-        this.preferencesFactory.loadDive(to, source);
+        const source = this.preferences.toDiveFrom(from);
+        this.preferences.loadDive(to, source);
     }
 
     public save(): void {
-        const toSave = this.preferencesFactory.toPreferences();
+        const toSave = this.preferences.toPreferences();
 
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesStore.storageKey, serialized);
     }
 
     public saveDefault(): void {
-        const toSave = this.preferencesFactory.toDive();
+        const toSave = this.preferences.toDive();
         const serialized = JSON.stringify(toSave);
         localStorage.setItem(PreferencesStore.storageDefaultsKey, serialized);
     }

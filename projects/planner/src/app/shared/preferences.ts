@@ -24,7 +24,7 @@ export class Preferences {
         private appSettings: ApplicationSettingsService,
         private viewStates: ViewStates,
         private quizService: QuizService,
-        private language: LanguageService
+        private languages: LanguageService
     ) { }
 
     private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
@@ -84,7 +84,7 @@ export class Preferences {
     private applyLoaded(loaded: AppPreferencesDto): void {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
-        this.language.setLanguage(loaded.options.language);
+        this.languages.setLanguage(loaded.options.language);
         this.applyDives(loaded.dives);
         this.appSettings.loadFrom(loaded.options);
 
@@ -120,7 +120,7 @@ export class Preferences {
         return {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
-            language: this.language.currentLanguage,
+            language: this.languages.currentCode,
             maxDensity: settings.maxGasDensity,
             primaryTankReserve: settings.primaryTankReserve,
             stageTankReserve: settings.stageTankReserve,

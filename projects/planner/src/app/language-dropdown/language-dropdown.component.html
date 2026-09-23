@@ -1,18 +1,18 @@
 <div class="dropdown" mdbDropdown>
   @if (navbar) {
     <a class="nav-link dropdown-toggle" id="languageMenu" mdbDropdownToggle>
-      <span class="fi fi-{{ current?.countryCode }}" aria-hidden="true"></span>
+      <span class="fi {{ iconFor(languages.current) }}" aria-hidden="true"></span>
     </a>
   } @else {
     <button type="button" class="btn btn-default dropdown-toggle" id="languageMenuButton" mdbDropdownToggle>
-      <span class="fi fi-{{ current?.countryCode }}" aria-hidden="true"></span> {{ current?.nativeName }}
+      <span class="fi {{ iconFor(languages.current) }}" aria-hidden="true"></span> {{ languages.current?.nativeName }}
     </button>
   }
   <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageMenu" mdbDropdownMenu>
-    @for (lang of language.languages; track lang.code) {
+    @for (lang of languages.supportedLanguages; track lang.code) {
       <li (click)="select(lang.code)">
-        <a class="dropdown-item" [class.active]="lang.code === language.currentLanguage">
-          <span class="fi fi-{{ lang.countryCode }}" aria-hidden="true"></span> {{ lang.nativeName }}
+        <a class="dropdown-item" [class.active]="lang.code === languages.currentCode">
+          <span class="fi {{ iconFor(lang) }}" aria-hidden="true"></span> {{ lang.nativeName }}
         </a>
       </li>
     }

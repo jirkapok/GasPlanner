@@ -17,6 +17,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 class GasBlenderPage {
     constructor(private fixture: ComponentFixture<GasBlenderComponent>) { }
@@ -56,7 +58,7 @@ describe('GasBlenderComponent', () => {
         SubViewStorage, ViewStates, PreferencesStore,
         Preferences, ViewSwitchService, DiveSchedules,
         ReloadDispatcher, ApplicationSettingsService,
-        MdbModalService
+        MdbModalService, LanguageService, provideTestTranslate()
     ]
 }).compileComponents();
     });

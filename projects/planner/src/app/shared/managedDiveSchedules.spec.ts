@@ -18,6 +18,8 @@ import { ApplicationSettingsService } from './ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { LanguageService } from './language.service';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('Managed Schedules', () => {
     const expectedSecondTankSize = 24;
@@ -69,7 +71,7 @@ describe('Managed Schedules', () => {
                 Preferences, ViewSwitchService,
                 ViewStates, DelayedScheduleService,
                 SubViewStorage, ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ],
         }).compileComponents();
 

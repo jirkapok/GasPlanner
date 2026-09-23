@@ -15,6 +15,7 @@ import { UnitConversion } from "../shared/UnitConversion";
 import { ReloadDispatcher } from "../shared/reloadDispatcher";
 import { ApplicationSettingsService } from "../shared/ApplicationSettings";
 import { provideTestTranslate } from "../../testing/translate-testing.helpers";
+import { LanguageService } from "../shared/language.service";
 
 describe('Help component', () => {
     let component: HelpComponent;
@@ -32,7 +33,7 @@ describe('Help component', () => {
                 ViewSwitchService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
                 ApplicationSettingsService,
-                provideTestTranslate()
+                provideTestTranslate(), LanguageService
             ]
         }).compileComponents();
     });

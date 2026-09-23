@@ -19,6 +19,8 @@ import { DiveSchedules } from '../shared/dive.schedules';
 import { UnitConversion } from '../shared/UnitConversion';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { LanguageService } from '../shared/language.service';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('LearnComponent', () => {
     let component: LearnComponent;
@@ -44,7 +46,8 @@ describe('LearnComponent', () => {
                 SubViewStorage, ViewStates, Preferences, PreferencesStore,
                 ViewSwitchService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
-                ApplicationSettingsService
+                ApplicationSettingsService,
+                LanguageService, provideTestTranslate()
             ]
         }).compileComponents();
     });

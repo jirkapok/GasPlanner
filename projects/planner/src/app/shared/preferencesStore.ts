@@ -5,14 +5,14 @@ import { DiveSchedule } from './dive.schedules';
 
 @Injectable()
 export class PreferencesStore {
+    /** Also read directly by LanguageService for its initial pick, before Preferences.load() runs during app init. */
+    public static readonly storageKey = 'preferences';
     private static readonly disclaimerValue = 'confirmed';
-    private static readonly storageKey = 'preferences';
     private static readonly storageDefaultsKey = 'defaults';
     private static readonly disclaimerKey = 'disclaimer';
     private static readonly showInstallKey = 'showInstall';
     private static readonly quizShownKey = 'quizShown';
     private static readonly confirmedValue = 'confirmed';
-    private static readonly languageKey = 'language';
 
     constructor(private preferencesFactory: Preferences) {}
 
@@ -89,13 +89,5 @@ export class PreferencesStore {
     public installEnabled(): boolean {
         const saved = localStorage.getItem(PreferencesStore.showInstallKey);
         return saved !== PreferencesStore.disclaimerValue;
-    }
-
-    public getLanguage(): string | null {
-        return localStorage.getItem(PreferencesStore.languageKey);
-    }
-
-    public setLanguage(language: string): void {
-        localStorage.setItem(PreferencesStore.languageKey, language);
     }
 }

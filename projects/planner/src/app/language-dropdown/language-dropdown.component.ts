@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { LanguageOption, LanguageService } from '../shared/language.service';
+import { PreferencesStore } from '../shared/preferencesStore';
 
 @Component({
     selector: 'app-language-dropdown',
@@ -13,7 +14,7 @@ export class LanguageDropdownComponent {
     /** Renders the toggle as a navbar-style nav-link instead of a button, for placement in the main menu. */
     @Input() public navbar = false;
 
-    constructor(public language: LanguageService) {}
+    constructor(public language: LanguageService, private preferences: PreferencesStore) {}
 
     public get current(): LanguageOption | undefined {
         return this.language.languages.find(l => l.code === this.language.currentLanguage);
@@ -21,5 +22,6 @@ export class LanguageDropdownComponent {
 
     public select(code: string): void {
         this.language.setLanguage(code);
+        this.preferences.save();
     }
 }

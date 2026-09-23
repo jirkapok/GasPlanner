@@ -13,6 +13,8 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { LanguageService } from './language.service';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 const viewId = 'testView';
 interface TestView extends ViewState {
@@ -47,7 +49,7 @@ describe('SubView', () => {
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
                 ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ],
             imports: []
         }).compileComponents();

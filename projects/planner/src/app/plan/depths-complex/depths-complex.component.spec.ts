@@ -20,6 +20,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -73,7 +75,7 @@ describe('Depths Complex Component', () => {
                 PreferencesStore, Preferences,
                 DiveResults, ReloadDispatcher,
                 ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ]
         })
             .compileComponents();

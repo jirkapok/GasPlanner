@@ -24,6 +24,7 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 class SacPage {
     constructor(private fixture: ComponentFixture<SacComponent>) { }
@@ -59,7 +60,7 @@ describe('Sac component', () => {
                 Preferences, PreferencesStore, PlannerService,
                 ViewSwitchService, ReloadDispatcher, DiveSchedules,
                 ApplicationSettingsService, MdbModalService,
-                provideAnimations(), provideTestTranslate()
+                provideAnimations(), provideTestTranslate(), LanguageService
             ],
             imports: [
                 RouterModule.forRoot([]),

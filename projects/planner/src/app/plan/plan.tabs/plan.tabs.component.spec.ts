@@ -17,6 +17,8 @@ import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -35,7 +37,7 @@ describe('PlanTabsComponent', () => {
         DelayedScheduleService, PlannerService,
         WorkersFactoryCommon, SubViewStorage,
         ApplicationSettingsService,
-        MdbModalService
+        MdbModalService, LanguageService, provideTestTranslate()
     ]
 });
         fixture = TestBed.createComponent(PlanTabsComponent);

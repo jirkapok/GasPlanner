@@ -20,6 +20,8 @@ import { ApplicationSettingsService } from './ApplicationSettings';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { LanguageService } from './language.service';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('PreferencesStore', () => {
     beforeEach(() => {
@@ -34,7 +36,7 @@ describe('PreferencesStore', () => {
                 SettingsNormalizationService,
                 WayPointsService, DiveSchedules,
                 ReloadDispatcher, ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ]
         });
 
@@ -205,6 +207,17 @@ describe('PreferencesStore', () => {
                 expect(options.diverOptions.rmv).toBeCloseTo(29.998867, 6);
                 expect(tanksService.tanks[0].workingPressureBars).toBeCloseTo(237.317546, 6);
                 expect(units.imperialUnits).toBeTruthy();
+            }));
+
+        it('Language is loaded after save', inject([LanguageService],
+            (language: LanguageService) => {
+                language.setLanguage('de');
+                sut.save();
+
+                language.setLanguage('en');
+                sut.load();
+
+                expect(language.currentLanguage).toEqual('de');
             }));
 
         it('Save and Load Defaults - First dive is updated from default', inject(

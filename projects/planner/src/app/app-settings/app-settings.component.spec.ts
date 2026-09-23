@@ -10,14 +10,9 @@ import { SettingsNormalizationService } from '../shared/settings-normalization.s
 import { UnitConversion } from '../shared/UnitConversion';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { AppSettingsComponent } from './app-settings.component';
-import { ViewStates } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
-import { Preferences } from '../shared/preferences';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { ViewSwitchService } from '../shared/viewSwitchService';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { DiveSchedules } from '../shared/dive.schedules';
-import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { CardHeaderComponent } from '../card-header/card-header.component';
 import { ImperialUnits } from 'scuba-physics';
@@ -25,7 +20,6 @@ import { values } from 'lodash';
 import { AppSettings } from '../shared/models';
 import { LanguageService } from '../shared/language.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
-import { QuizService } from '../shared/learn/quiz.service';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -82,9 +76,6 @@ describe('App settings component', () => {
             providers: [
                 MdbModalService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
-                PreferencesStore, Preferences,
-                ViewSwitchService, ApplicationSettingsService,
-                ViewStates, QuizService,
                 LanguageService, provideTestTranslate()
             ]
         }).compileComponents();

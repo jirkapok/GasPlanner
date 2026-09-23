@@ -17,6 +17,7 @@ import { GasesComparisonService } from '../shared/diff/gases-comparison.service'
 import { ResultsComparison } from '../shared/diff/results-comparison.service';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
+import { LanguageService } from '../shared/language.service';
 
 describe('DiffComponent', () => {
     let component: DiffComponent;
@@ -34,7 +35,7 @@ describe('DiffComponent', () => {
                 ApplicationSettingsService, ResamplingService,
                 SelectedDiffWaypoint, GasesComparisonService,
                 ResultsComparison, MdbModalService,
-                provideNoopAnimations(), provideTestTranslate()
+                provideNoopAnimations(), provideTestTranslate(), LanguageService
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

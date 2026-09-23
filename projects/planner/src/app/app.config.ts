@@ -1,5 +1,5 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideServiceWorker } from '@angular/service-worker';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
@@ -194,6 +194,12 @@ const SERVICES = [
     }),
     provideAppInitializer(() => inject(LanguageService).ready()),
     LanguageService,
+    provideServiceWorker('ngsw-worker.js', {
+        enabled: environment.production,
+        // Register the ServiceWorker as soon as the application is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+    }),
     { provide: WorkersFactoryCommon, useClass: WorkersFactory },
     DatePipe,
     DecimalPipe,
@@ -244,12 +250,6 @@ export const CONFIG = {
         STANDALONE,
         NgxMdModule.forRoot(),
         ClipboardModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production,
-            // Register the ServiceWorker as soon as the application is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: 'registerWhenStable:30000'
-        }),
     ],
     exports: [],
     providers: [

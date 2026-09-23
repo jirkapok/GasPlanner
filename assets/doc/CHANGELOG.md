@@ -1,3 +1,11 @@
+# [0.3.0](https://github.com/jirkapok/GasPlanner/compare/v0.2.0...v0.3.0) (2026-09-22)
+
+
+### Features
+
+* upgrade Angular to v21 ([536d6b2](https://github.com/jirkapok/GasPlanner/commit/536d6b2d2d1945f6759194f483ae7800080a9b2b))
+* upgrade Angular to v22 ([9392f3a](https://github.com/jirkapok/GasPlanner/commit/9392f3a6063a1361bca15197ee1a9b16b1608f40))
+
 # [0.2.0](https://github.com/jirkapok/GasPlanner/compare/v0.1.38...v0.2.0) (2026-09-21)
 
 

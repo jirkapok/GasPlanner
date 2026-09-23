@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1790113629401,
+  "timestamp": 1790126071578,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -13,7 +13,7 @@
       "urls": [
         "/favicon.ico",
         "/index.html",
-        "/main-WU3E2KB2.js",
+        "/main-XTS52AJR.js",
         "/manifest.webmanifest",
         "/polyfills-LI6MVZF3.js",
         "/styles-2TWYVKLV.css",
@@ -116,7 +116,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/doc/CHANGELOG.md": "ecc35bb2be0937a09ae022361ac62d061c28b028",
+    "/assets/doc/CHANGELOG.md": "09b6955587efb9a5dc0a2d170a553b496d91dc89",
     "/assets/doc/altitude.md": "a0f80c9a7b3b8a6ab632623a446fe96285a90c76",
     "/assets/doc/application.md": "5d849bdd5fe89419bff5e6ad3a28b5c8d5a73cb2",
     "/assets/doc/consumed.md": "1a750976947ea6576cc3236ef412d6ba21ecc4a3",
@@ -158,7 +158,7 @@
     "/assets/doc/settings.md": "ff816d2b8a686ea0c6bbbdb059c49403e95210d6",
     "/assets/doc/speeds.md": "8793e967cfc5e03ece5fd69c02fff7ce0d521ceb",
     "/assets/doc/standard_gases.md": "ad022ffc5f7183228ed1932a52ed2b639b96e4b0",
-    "/assets/doc/stops.md": "d431bea28d614446fb1c2207ae1cb647039ff7e1",
+    "/assets/doc/stops.md": "3d13f586e623ec2adb0539f769f8a37736df3cd4",
     "/assets/doc/tank_consumption_reserve.png": "93fee8d0f3a61c80d71d43bb30faca0dd981bdb9",
     "/assets/doc/tank_properties.png": "a2b745284fb057a621cf82cc240f04ab7e2ad1e4",
     "/assets/doc/tanks.md": "d07333c63e2cd776ef3807cb1c17934d331931dd",
@@ -185,9 +185,9 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "dabb2a7e698569f550463d559297b9aade604e8a",
-    "/main-WU3E2KB2.js": "4f0cec9435781fa893409c6396c3be7a008a8c81",
-    "/manifest.webmanifest": "c2b8adba69bfb5573dea92be3feecc35455357ec",
+    "/index.html": "56768729d2b081a94af6d0daf3889162ac5656bf",
+    "/main-XTS52AJR.js": "8d84b8a0730b5691ed4519062fd160d07931a247",
+    "/manifest.webmanifest": "fc62abc7548a3cb2809279135f529010c7351e6d",
     "/polyfills-LI6MVZF3.js": "29f0c951f4c5e043d670392875f6336b88be2280",
     "/styles-2TWYVKLV.css": "ed84200ceaf8748ecf15f04f3619d11a0aa929b9",
     "/worker-GVRCX4D4.js": "ca8af8145045d00ee3cf745e1fb1164fdbca1b65",

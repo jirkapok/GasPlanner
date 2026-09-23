@@ -59,7 +59,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     }
 
     public get placeHolder(): string {
-        return this.surfaceReadOnly ? 'First dive' : 'HH:MM';
+        return this.surfaceReadOnly ? 'surfaceInterval.firstDive' : 'HH:MM';
     }
 
     private get surfaceInterval(): string | null {

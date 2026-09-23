@@ -4,15 +4,6 @@ import { firstValueFrom } from 'rxjs';
 import { PreferencesStore } from './preferencesStore';
 import { AppPreferences } from './serialization.model';
 
-
-// TODO localize:
-// * component templates
-// * tank sizes, altitude, stop types and other drop downs
-// * quiz questions
-// * number pipes
-// * plotly charts
-// * Add /assets/i18n/*.json to the app asset group in ngsw-config.json
-// * consider in the future: documentation in doc directory
 export interface LanguageOption {
     code: string;
     nativeName: string;
@@ -20,6 +11,13 @@ export interface LanguageOption {
     countryCode: string;
 }
 
+// TODO localize:
+// * quiz questions
+// * number pipes
+// * plotly charts
+// * consider in the future: documentation in doc directory
+// Not localized on purpose: tank sizes and standard gas names come from the
+// scuba-physics library, which must stay UI-agnostic (see CLAUDE.md).
 @Injectable()
 export class LanguageService {
     public readonly supportedLanguages: LanguageOption[] = [

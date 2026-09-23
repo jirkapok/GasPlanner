@@ -3,7 +3,7 @@
   <div class="input-group dropdown" mdbDropdown>
     <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control"
       type="text" [class.is-invalid]="surfaceIntervalInvalid" (input)="surfaceIntervalChanged()"
-      [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
+      [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder | translate" [readonly]="surfaceReadOnly" />
       <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="surfaceIntervalMenu"
       type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
       <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>

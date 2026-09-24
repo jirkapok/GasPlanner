@@ -1,7 +1,7 @@
 # Gas blender
 
-This calculator helps to create gas mixes using partial pressures method for source tank (even with remaining gas in it) using top mix, oxygen and helium.
-Results are show in separate table. This calculator uses ideal gas law.
+This calculator helps to create gas mixes using the partial pressures method for source tank (even with remaining gas in it) using top mix, oxygen and helium.
+Results are shown in a separate table. This calculator uses ideal gas law.
 The expected procedure is to empty, release or start with remaining gas.
 Then add helium and oxygen and finally top with top mix up to the required pressure.
 

@@ -16,6 +16,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('GasPropertiesCalcComponent', () => {
     let component: GasPropertiesCalcComponent;
@@ -31,7 +33,7 @@ describe('GasPropertiesCalcComponent', () => {
         Preferences, ViewSwitchService,
         ReloadDispatcher, DiveSchedules,
         ApplicationSettingsService,
-        MdbModalService
+        MdbModalService, provideTestTranslate(), LanguageService
     ]
 });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);

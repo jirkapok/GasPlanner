@@ -8,18 +8,23 @@ export class Question {
     public userAnswer?: string;
     public readonly roundTo: number;
     public readonly roundType: RoundType;
-    public readonly renderedQuestion: string;
+    public renderedQuestion: string;
     public readonly correctAnswer: number;
     private readonly variables: number[];
     private _isAnswered = false;
     private _isCorrect = false;
 
-    constructor(private template: QuestionTemplate) {
+    constructor(private template: QuestionTemplate, private questionText: string = template.question) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
         this.variables = this.randomizeQuizVariables();
         this.renderedQuestion = this.renderQuestion();
         this.correctAnswer = this.generateCorrectAnswer();
+    }
+
+    /** Translation key of the question template, so the UI can re-resolve it on language change. */
+    public get templateKey(): string {
+        return this.template.question;
     }
 
     public get isAnswered(): boolean {
@@ -28,6 +33,12 @@ export class Question {
 
     public get isCorrect(): boolean {
         return this._isCorrect;
+    }
+
+    /** Re-renders the question text in a newly resolved language, keeping the same randomized variables/answer. */
+    public retranslate(questionText: string): void {
+        this.questionText = questionText;
+        this.renderedQuestion = this.renderQuestion();
     }
 
     public validateAnswer(): void {
@@ -53,7 +64,7 @@ export class Question {
     }
 
     private renderQuestion(): string {
-        let rendered = this.template.question;
+        let rendered = this.questionText;
         this.template.variables.forEach((variable, index) => {
             rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
         });

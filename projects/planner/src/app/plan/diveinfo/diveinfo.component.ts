@@ -1,5 +1,4 @@
 import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
-import { formatNumber, DecimalPipe } from '@angular/common';
 import { takeUntil } from 'rxjs';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle
@@ -23,6 +22,9 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
 import { TankChartComponent } from '../tank-chart/tank-chart.component';
 import { DiveIssuesComponent } from '../dive-issues/dive-issues.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageService } from '../../shared/language.service';
 
 @Component({
     selector: 'app-diveinfo',
@@ -36,8 +38,9 @@ import { DurationPipe } from '../../pipes/duration.pipe';
         CalculatingComponent,
         TankChartComponent,
         DiveIssuesComponent,
-        DecimalPipe,
-        DurationPipe
+        LocaleNumberPipe,
+        DurationPipe,
+        TranslatePipe
     ]
 })
 export class DiveInfoComponent extends Streamed implements AfterViewInit {
@@ -53,7 +56,8 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private languages: LanguageService) {
         super();
 
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -98,7 +102,7 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
             return TextConstants.cnsOverOneThousand;
         }
 
-        return formatNumber(this.dive.cns, 'en', '1.0-0');
+        return this.languages.formatNumber(this.dive.cns, '1.0-0');
     }
 
     public get surfaceGradient(): number {

@@ -15,13 +15,15 @@ import { ProfileDifferenceChartComponent } from './profilechart/diff-profilechar
 import { WaypointsDifferenceComponent } from './waypoints/diff-waypoints.component';
 import { DiveResultsDifferenceComponent } from './diveresults/diff-diveresults.component';
 import { GasConsumedDifferenceComponent } from './gasconsumed/diff-gas-consumed/diff-gas-consumed.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff',
     templateUrl: './diff.component.html',
     styleUrls: ['./diff.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent, GasConsumedDifferenceComponent]
+    imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent,
+        GasConsumedDifferenceComponent, TranslatePipe]
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;

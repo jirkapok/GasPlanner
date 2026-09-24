@@ -13,6 +13,7 @@ import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { DashBoardViewState } from './views.model';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { QuizService } from './learn/quiz.service';
+import { LanguageService } from './language.service';
 
 @Injectable()
 export class Preferences {
@@ -22,7 +23,8 @@ export class Preferences {
         private schedules: DiveSchedules,
         private appSettings: ApplicationSettingsService,
         private viewStates: ViewStates,
-        private quizService: QuizService
+        private quizService: QuizService,
+        private languages: LanguageService
     ) { }
 
     private static loadWorkingPressure(source: TankDto[], target: ITankBound[]): void {
@@ -82,6 +84,7 @@ export class Preferences {
     private applyLoaded(loaded: AppPreferencesDto): void {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
+        this.languages.setLanguage(loaded.options.language);
         this.applyDives(loaded.dives);
         this.appSettings.loadFrom(loaded.options);
 
@@ -117,7 +120,7 @@ export class Preferences {
         return {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
-            language: 'en',
+            language: this.languages.currentCode,
             maxDensity: settings.maxGasDensity,
             primaryTankReserve: settings.primaryTankReserve,
             stageTankReserve: settings.stageTankReserve,

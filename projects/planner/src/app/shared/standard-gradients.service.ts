@@ -7,9 +7,9 @@ export class Gradients {
 
 @Injectable()
 export class StandardGradientsService {
-    public readonly lowName = 'Low (45/95)';
-    public readonly mediumName = 'Medium (40/85)';
-    public readonly highName = 'High (30/75)';
+    public readonly lowName = 'gradients.low';
+    public readonly mediumName = 'gradients.medium';
+    public readonly highName = 'gradients.high';
     private empty = new Gradients(1, 1);
 
     private gfMap = new Map<string, Gradients>();

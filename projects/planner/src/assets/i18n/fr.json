@@ -1,0 +1,223 @@
+{
+  "menu": {
+    "calculators": "Calculatrices", "planner": "Planificateur", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
+    "gasProperties": "Propriétés du gaz", "altitude": "Altitude", "weight": "Poids", "ndlTable": "Table NDL",
+    "cylinderBalancing": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz", "dive": "Plongée", "clone": "Cloner",
+    "saveAsDefault": "Enregistrer par défaut", "loadDefault": "Charger par défaut", "share": "Partager", "delete": "Supprimer",
+    "settings": "Paramètres", "compareDives": "Comparer les plongées", "standardGases": "Gaz standards", "help": "Aide",
+    "learn": "Apprendre", "about": "À propos", "toggleNavigation": "Afficher/masquer la navigation"
+  },
+  "personalization": {
+    "cardTitle": "Personnalisation", "metricUnits": "Unités métriques (m, l, bar)",
+    "imperialUnits": "Unités impériales (ft, cuft, psi)", "imperialExperimental": "(Expérimental, non recommandé)",
+    "language": "Langue"
+  },
+  "textConstants": {
+    "depthConverterWarning": "Cette calculatrice utilise une conversion de profondeur simplifiée (où 1 ATM = 1 bar), donc les valeurs affichées ici sont moins précises que dans le reste de l'application. Elle utilise également la loi des gaz parfaits, donc le RMV calculé est inférieur à la réalité.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": { "label": "Salinité de l'eau :", "fresh": "Douce", "brackish": "Saumâtre (EN13319)", "salt": "Salée" },
+  "options": { "safetyOff": "Jamais", "safetyOn": "Toujours", "safetyAuto": "Auto (> {{level}} {{unit}})" },
+  "gradients": {
+    "title": "Conservatisme (Facteurs de gradient) :", "lowLabel": "Gradient bas [%] :", "highLabel": "Gradient haut [%] :",
+    "lowerThanHigh": "inférieur au gradient haut", "higherThanLow": "supérieur au gradient bas",
+    "low": "Bas (45/95)", "medium": "Moyen (40/85)", "high": "Élevé (30/75)"
+  },
+  "waypoints": { "ascent": "remontée", "descent": "descente", "switch": "changement", "hover": "palier" },
+  "events": { "deco": "Déco", "safetyStop": "Palier de sécurité" },
+  "help": {
+    "menu": {
+      "application": { "title": "Application", "usage": "Utilisation de l'application", "settings": "Paramètres de l'application" },
+      "plan": { "title": "Plan de plongée", "tanks": "Blocs", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
+      "options": { "title": "Options de plongée", "general": "Général", "environment": "Environnement", "conservatism": "Conservatisme", "gases": "Gaz", "airBreaks": "Pauses O2", "stops": "Paliers", "speeds": "Vitesses", "diver": "Plongeur" },
+      "results": { "title": "Résultats de plongée", "diveInfoTable": "Tableau des informations de plongée", "oxygenToxicity": "Toxicité de l'oxygène", "events": "Événements causant des erreurs et avertissements", "consumedGasCharts": "Graphiques de gaz consommé", "wayPointsTable": "Tableau des points de passage", "profileChart": "Graphique du profil de plongée", "tissuesHeatMap": "Carte thermique des tissus" },
+      "calculators": { "title": "Calculatrices", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Table des limites de non-décompression (NDL)", "altitude": "Altitude", "weight": "Poids", "gasProperties": "Propriétés du gaz", "redundancies": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz" }
+    }
+  },
+  "validation": { "needsNumber": "Doit être un nombre" },
+  "altitude": { "label": "Altitude", "seaLevel": "Niveau de la mer" },
+  "calculating": { "label": "Calcul en cours..." },
+  "gaslabel": { "mod": "MOD", "switch": "changement", "mnd": "MND" },
+  "oxygenDropdown": { "o2Label": "O2 [%] :", "bestMix": "Meilleur mélange" },
+  "about": {
+    "title": "À propos de Gas Planner", "tagline1": "Application de plongée sous-marine open source pour aider les plongeurs à planifier leurs plongées.",
+    "tagline2": "Planifiez votre plongée et plongez votre plan !", "disclaimerLabel": "Avertissement :",
+    "disclaimerText": "Aucun des auteurs, contributeurs, administrateurs, ni quiconque associé à ce projet ne peut être tenu responsable de l'utilisation que vous faites des informations fournies par cette application ou liées depuis ces pages web. Utilisez les résultats à vos propres risques.",
+    "githubProject": "Projet Github"
+  },
+  "cardHeader": { "showHelp": "Afficher l'aide" },
+  "helpModal": { "title": "Aide", "close": "Fermer" },
+  "appinfo": { "version": "Version" },
+  "ppo2": { "maxPpo2Label": "ppO2 maximale :", "maxDecoPpo2Label": "ppO2 maximale en déco :" },
+  "diver": { "rmvLabel": "RMV", "stressRmvLabel": "RMV de stress" },
+  "diff": { "onlyOneDive": "Une seule plongée est planifiée. Pour comparer des plongées, définissez-en au moins deux.", "goToPlanner": "Aller au planificateur" },
+  "diffDiveResults": { "cardTitle": "Résultats de plongée" },
+  "diffResultsTable": {
+    "profileA": "Profil A", "profileB": "Profil B", "difference": "Différence", "totalDiveTime": "Durée totale de plongée",
+    "timeToSurface": "Temps de remontée à la surface", "averageDepth": "Profondeur moyenne", "rockBottomAt": "Réserve à",
+    "noDecoTime": "Temps sans décompression", "maxBottomTime": "Temps de fond maximum", "highestGasDensity": "Densité de gaz la plus élevée",
+    "otuToxicity": "Toxicité OTU", "cnsToxicity": "Toxicité CNS"
+  },
+  "diffGasConsumed": { "cardTitle": "Gaz consommé", "difference": "Différence", "gasRemaining": "Gaz restant :", "notAvailable": "Non disponible", "reserve": "Réserve :" },
+  "diffProfileChart": { "cardTitle": "Graphique du profil" },
+  "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
+  "diffWaypoints": { "cardTitle": "Points de passage de la plongée", "profileA": "Profil A", "profileB": "Profil B", "run": "Cumul", "depth": "Profondeur", "duration": "Durée" },
+  "common": { "back": "Retour", "use": "Utiliser" },
+  "settings": {
+    "limitsCardTitle": "Limites", "maxGasDensityLabel": "Densité de gaz maximale", "primaryTankReserveLabel": "Réserve minimale bloc principal",
+    "stageTankReserveLabel": "Réserve minimale bloc relais", "ignoredIssuesCardTitle": "Problèmes ignorés (avertissements/erreurs)",
+    "icdLabel": "Contre-diffusion isobare (ICD)", "densityExceededLabel": "Densité de gaz maximale dépassée",
+    "noDecoReachedLabel": "Limite de non-décompression atteinte", "missingAirBreakLabel": "Pause O2 manquante", "resetToDefault": "Réinitialiser par défaut"
+  },
+  "altitudeCalc": { "cardTitle": "Calculatrice d'altitude", "pressureLabel": "Pression atmosphérique", "actualDepthLabel": "Profondeur réelle", "theoreticalDepthLabel": "Profondeur théorique au niveau de la mer" },
+  "gasBlender": {
+    "cardTitle": "Mélangeur de gaz", "showPricingTitle": "Afficher les prix", "sourceLabel": "Source", "heLabel": "He [%] :",
+    "pressureLabel": "Pression", "topMixLabel": "Mélange de complément", "targetLabel": "Cible", "resultsLabel": "Résultats",
+    "removeFromSourceLabel": "Retirer de la source", "addO2Label": "Ajouter O2", "addHeLabel": "Ajouter He", "addTopMixLabel": "Ajouter mélange de complément",
+    "unableToCalculateMessage": "Impossible de calculer le mélange requis, car le mélange de complément contient plus d'oxygène ou d'hélium que le mélange cible.",
+    "unitPricesLabel": "Prix unitaires", "o2UnitPriceLabel": "Prix unitaire O2 :", "heUnitPriceLabel": "Prix unitaire He :",
+    "topMixUnitPriceLabel": "Prix unitaire mélange de complément :", "mixPriceLabel": "Prix du mélange", "o2PriceLabel": "Prix O2",
+    "hePriceLabel": "Prix He", "topMixPriceLabel": "Prix mélange de complément", "totalPriceLabel": "Prix total"
+  },
+  "gasProps": {
+    "cardTitle": "Mélange gazeux", "nitroxLabel": "Nitrox", "heLabel": "He [%] :", "maxNarcoticDepthLabel": "Profondeur narcotique maximale",
+    "oxygenNarcoticLabel": "L'oxygène est narcotique", "propertiesAtDepthLabel": "Propriétés à la profondeur", "gasPropertiesLabel": "Propriétés du gaz",
+    "oxygenPartialPressureLabel": "Pression partielle d'oxygène", "heliumPartialPressureLabel": "Pression partielle d'hélium",
+    "nitrogenPartialPressureLabel": "Pression partielle d'azote", "totalPartialPressureLabel": "Pression partielle totale",
+    "minimumDepthLabel": "Profondeur minimale", "maximumDepthLabel": "Profondeur maximale", "equivalentAirDepthLabel": "Profondeur équivalente air",
+    "equivalentNarcoticDepthLabel": "Profondeur narcotique équivalente", "maximumNarcoticDepthLabel": "Profondeur narcotique maximale",
+    "densityLabel": "Densité", "warningsLabel": "Avertissements", "minimumDepthWarningTitle": "Profondeur minimale : ",
+    "minimumDepthWarningMessage": "Valeur minimale de pression partielle d'oxygène dépassée ({{minPpO2}}), ce qui définit la profondeur minimale. Ajoutez plus d'oxygène ou réduisez la profondeur requise.",
+    "maximumDepthWarningTitle": "Profondeur maximale : ",
+    "maximumDepthWarningMessage": "Valeur maximale de pression partielle d'oxygène dépassée ({{maxPpO2}}). Augmentez la ppO2 maximale, réduisez la teneur en oxygène ou réduisez la profondeur requise.",
+    "mndWarningTitle": "Profondeur narcotique équivalente : ",
+    "mndWarningMessage": "Valeur maximale de profondeur narcotique dépassée ({{mndLimit}} {{unit}}), contrôlée par la pression partielle des composants toxiques (oxygène et azote). Réduisez la teneur en azote en ajoutant de l'hélium, en ajoutant de l'oxygène ou en réduisant la profondeur requise.",
+    "densityWarningTitle": "Densité de gaz maximale : ",
+    "densityWarningMessage": "Valeur maximale de densité de gaz dépassée ({{maxDensity}} {{unit}}). Réduisez la teneur en oxygène ou ajoutez plus d'hélium."
+  },
+  "ndlLimits": { "optionsCardTitle": "Options", "cardTitle": "Limites de non-décompression", "depthColumnLabel": "Profondeur", "limitColumnLabel": "Limite [min]", "noResultsMessageLine1": "Aucune limite NDL trouvée dans une plage de profondeur significative.", "noResultsMessageLine2": "Modifiez la teneur en O2 du gaz." },
+  "nitrox": {
+    "cardTitle": "Calculatrice Nitrox", "modTab": "MOD", "bestMixTab": "Meilleur mélange", "ppo2Tab": "ppO2", "eadTab": "EAD",
+    "ppo2Label": "ppO2 :", "modLabel": "MOD", "eadPrefix": "EAD :", "depthLabel": "Profondeur", "o2Label": "O2 [%] :", "eadLabel": "EAD",
+    "lowModMessage": "Profondeur d'exploitation finale trop faible. Augmentez la ppO2 ou réduisez le pourcentage d'O2."
+  },
+  "redundancies": { "cardTitle": "Calculatrice d'équilibrage des blocs", "firstTankLabel": "Premier bloc", "sizeLabel": "Taille", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ", "secondTankLabel": "Second bloc", "finalPressureLabel": "Pression finale" },
+  "sac": {
+    "cardTitle": "Volume respiratoire minute", "rmvTab": "RMV", "usedTab": "Utilisé", "durationTab": "Durée",
+    "averageDepthLabel": "Profondeur moyenne", "tankSizeLabel": "Taille du bloc", "workingPressureLabel": "Pression de service",
+    "diveTimeLabel": "Temps de plongée", "gasConsumedLabel": "Gaz consommé", "rmvLabel": "RMV", "sacPrefix": "SAC :"
+  },
+  "weight": { "cardTitle": "Calculatrice de lestage", "tankSizeLabel": "Taille du bloc", "workingPressureLabel": "Pression de service", "consumedLabel": "Consommé", "lostWeightLabel": "Poids perdu" },
+  "dashboard": {
+    "installMessage": "Pour pouvoir utiliser l'application en mode hors ligne, vous devez l'ajouter (installer) sur votre écran d'accueil.",
+    "installAppleMessage": "Appuyez sur le bouton \"Partager\" puis sur \"Sur l'écran d'accueil\".", "addToHomeScreen": "Ajouter à l'écran d'accueil",
+    "sharePlanTitle": "Partager le plan", "shareUrlCopied": "L'adresse URL de ce plan de plongée a été copiée dans le presse-papiers."
+  },
+  "depth": { "label": "Profondeur", "bestMixLabel": "Le meilleur mélange est", "maxDepthTitle": "Définir la profondeur maximale selon la limite narcotique du gaz", "maxButton": "Max" },
+  "depthsComplex": { "cardTitle": "Profondeurs", "from": "De", "to": "À", "duration": "Durée", "tank": "Bloc", "endDepthLabel": "Profondeur finale" },
+  "depthsSimple": { "cardTitle": "Profondeur", "bottomTime": "Temps de fond", "noDecoLimit": "Limite sans déco", "maxDurationTitle": "Définir le temps de plongée au maximum selon le gaz consommé", "maxButton": "Max", "noDecoTitle": "Définir le temps de plongée à la limite sans déco", "noDecoButton": "Sans déco" },
+  "diveIssues": {
+    "calculationError": "Une erreur s'est produite lors du calcul du profil.",
+    "notEnoughTimePrefix": "Temps insuffisant pour réaliser la plongée (la durée doit être d'au moins", "notEnoughTimeSuffix": "min) ! Définissez un temps de plongée plus long.",
+    "notEnoughGasPrefix": "Gaz insuffisant pour réaliser la plongée ! Le temps de fond maximum pour la quantité de gaz actuelle est de",
+    "notEnoughGasSuffix": "min. Utilisez un bloc plus grand, remplissez-le avec plus de gaz, réduisez la durée de plongée ou la profondeur planifiée.",
+    "notEnoughGasShort": "Gaz insuffisant pour réaliser la plongée ! Le temps de fond maximum pour la quantité de gaz actuelle est inférieur à la plongée actuellement planifiée. Utilisez un bloc plus grand, remplissez-le avec plus de gaz, réduisez la durée de plongée ou la profondeur planifiée.",
+    "brokenCeiling": "Profondeur de sécurité minimale (plafond) dépassée ! Modifiez votre plan pour une profondeur plus faible à ce moment.",
+    "lowPpo2": "Faible pression partielle d'oxygène atteinte (profondeur minimale dépassée) ! Il existe un risque d'hypoxie. Utilisez un gaz avec une teneur en oxygène plus élevée.",
+    "highPpo2": "Pression partielle d'oxygène élevée atteinte (profondeur maximale dépassée) ! Il existe un risque de toxicité à l'oxygène. Réduisez la profondeur ou utilisez un gaz avec une teneur en oxygène plus faible.",
+    "highDescentSpeed": "Vitesse de descente élevée ! Descendez plus longtemps ou descendez à une profondeur plus faible.",
+    "highAscentSpeed": "Vitesse de remontée élevée ! Remontez uniquement à une profondeur plus faible ou remontez plus lentement.",
+    "highN2Switch": "Le changement vers un gaz avec une teneur en azote plus élevée n'est pas recommandé ! Il existe un risque de contre-diffusion isobare (IDC). Changez pour un autre gaz avec une teneur en hélium plus élevée ou une teneur en azote plus faible.",
+    "mndExceeded": "Profondeur narcotique maximale dépassée pour le gaz sélectionné ! Réduisez la profondeur ou utilisez un gaz avec une teneur en hélium plus élevée.",
+    "highDensity": "Densité de gaz maximale recommandée dépassée ! Réduisez la profondeur ou utilisez un gaz avec une teneur en hélium plus élevée (donc une densité plus faible).",
+    "minDepth": "Les plongées planifiées à faible profondeur pendant une longue durée peuvent mener à une plongée en saturation ! Réduisez la durée de plongée à moins de 5 heures.",
+    "maxDepth": "Profondeur maximale dépassée, au-delà de laquelle l'algorithme n'a pas été bien testé sur des données réelles ! Réduisez la profondeur maximale.",
+    "missingAirbreak": "Il est recommandé de ne pas respirer d'oxygène pur pendant plus de 20 minutes. Utilisez l'option pause O2 pour générer les changements de gaz appropriés ou ajoutez manuellement un changement vers le gaz de fond.",
+    "noDecoPrefix": "Temps sans décompression pour la profondeur actuelle dépassé (pour une plongée sans décompression, définissez le temps de plongée au maximum à", "noDecoSuffix": "min) !",
+    "otuExceededPrefix": "Dépassement de 80 % des unités de toxicité à l'oxygène pour une exposition unique maximale", "otuExceededSuffix": "Il existe un risque élevé de lésion pulmonaire. Réduisez la quantité d'oxygène dans vos gaz, la durée de plongée ou les profondeurs visées.",
+    "cnsExceededPrefix": "Dépassement de 80 % de la toxicité à l'oxygène pour une exposition unique maximale", "cnsExceededSuffix": "Il existe un risque élevé de lésion du SNC. Réduisez la quantité d'oxygène dans vos gaz, la durée de plongée ou les profondeurs visées."
+  },
+  "diveInfo": {
+    "cardTitle": "Informations de plongée", "resultsTab": "Résultats", "shareTitle": "Partager l'adresse de la plongée", "share": "Partager",
+    "totalDiveTime": "Durée totale de plongée", "timeToSurface": "Temps de remontée à la surface", "averageDepth": "Profondeur moyenne",
+    "rockBottomAt": "Réserve à", "noDecoTime": "Temps sans décompression", "noDecoTimeTitle": "Définir le temps de plongée à la limite sans déco",
+    "use": "Utiliser", "maxBottomTime": "Temps de fond maximum", "maxBottomTimeTitle": "Définir le temps de plongée au maximum selon le gaz consommé",
+    "surfaceGradient": "Gradient en surface", "offgasingStart": "Début du dégazage", "highestCeiling": "Plafond le plus élevé",
+    "highestGasDensity": "Densité de gaz la plus élevée", "turnTime": "Temps de demi-tour", "turnPressure": "Pression de demi-tour",
+    "otuToxicity": "Toxicité OTU", "cnsToxicity": "Toxicité CNS", "consumedTab": "Consommé", "issuesTab": "Problèmes"
+  },
+  "diveOptions": {
+    "allUsable": "Tout utilisable", "halfUsable": "Moitié utilisable", "thirdUsable": "Tiers utilisables", "cardTitle": "Options",
+    "extendedTrimix": "Étendu (Trimix)", "environmentTab": "Environnement", "conservatismTab": "Conservatisme", "gasesTab": "Gaz",
+    "maxNarcoticDepth": "Profondeur narcotique maximale", "oxygenIsNarcotic": "L'oxygène est narcotique", "airBreaksTab": "Pauses O2",
+    "generateAirBreaks": "Générer les pauses O2", "maxOxygenStopDuration": "Durée maximale du palier à l'oxygène", "backGasDuration": "Durée du gaz de fond",
+    "stopsTab": "Paliers", "solveProblem": "Résoudre le problème", "gasSwitch": "Changement de gaz", "lastStopDepth": "Profondeur du dernier palier",
+    "decoStopDistance": "Distance entre les paliers de décompression", "roundDecoStops": "Arrondir les paliers de déco aux minutes", "speedsTab": "Vitesses",
+    "descent": "Descente", "ascentTo50": "Remontée à 50%", "ascentToX": "Remontée à", "ascentPrefix": "Remontée", "toSurface": "vers la surface",
+    "diverTab": "Plongeur", "recreational": "Loisir", "recommended": "Recommandé", "addSafetyStop": "Ajouter un palier de sécurité de 3 min :"
+  },
+  "profileChart": { "cardTitle": "Profil de plongée", "heatmapTitle": "Afficher la carte thermique des tissus", "emergencyAscentTitle": "Afficher la remontée d'urgence", "timeAxisLabel": "Temps", "depthAxisLabel": "Profondeur", "avgDepthTraceName": "Prof. moyenne", "depthTraceName": "Profondeur", "emergencyTraceName": "Urgence", "ceilingTraceName": "Plafond", "eventTraceName": "Événement" },
+  "surfaceInterval": { "label": "Intervalle de surface", "firstDive": "Première plongée", "thirtyMinutes": "30 minutes", "oneHour": "1 heure", "twoHours": "2 heures", "invalidFormat": "Doit être un texte au format hh:mm" },
+  "tankChart": { "gasRemaining": "Gaz restant :", "rockBottom": "Réserve :" },
+  "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ" },
+  "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
+  "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
+  "learn": {
+    "topics": {
+      "pressureAtDepth": "Pression à la profondeur",
+      "nitrox": "Nitrox",
+      "consumption": "Consommation",
+      "trimix": "Trimix"
+    },
+    "categories": {
+      "examples_depth": "Profondeur",
+      "examples_pressure": "Pression",
+      "examples_mod": "Profondeur maximale d'utilisation",
+      "examples_bestmix": "Meilleur mélange",
+      "examples_ppO2": "Pression partielle d'oxygène",
+      "examples_ead": "Profondeur équivalente air",
+      "examples_sac": "Consommation de surface (SAC)",
+      "examples_rmv": "Volume respiratoire par minute",
+      "examples_consumed": "Gaz consommé",
+      "examples_durationbyrmv": "Durée de plongée",
+      "examples_mindepth": "Profondeur minimale",
+      "examples_end": "Profondeur narcotique équivalente",
+      "examples_mnd": "Profondeur narcotique maximale"
+    },
+    "questions": {
+      "examples_depth": "Quelle est la profondeur (en mètres) à laquelle la pression ambiante est de {pressure} bar ?",
+      "examples_pressure": "Quelle est la pression ambiante en bars à la profondeur de {depth} mètres ?",
+      "examples_mod": "Quelle est la profondeur maximale d'utilisation pour un gaz à {o2_percent} % d'oxygène à une pression partielle de {pp} ?",
+      "examples_bestmix": "Quel est le meilleur mélange (en pourcentage) à une pression partielle de {pp} à une profondeur de {depth} m ?",
+      "examples_ppO2": "Quelle est la pression partielle de {o2_percent} % à {depth} m ?",
+      "examples_ead": "Quelle est la profondeur équivalente air d'un mélange nitrox à {o2_percent} % d'oxygène à {depth} m ?",
+      "examples_sac": "Mon volume respiratoire par minute (RMV en litres par minute) est de {rmv} L/min. Quelle est ma consommation de surface (SAC) en respirant à partir d'un bloc de {tank_size} L ?",
+      "examples_rmv": "Quel est le volume respiratoire par minute (RMV en litres par minute) d'une plongée à une profondeur moyenne de {depth} m, avec un bloc de {tank_size} L pendant {duration} minutes, sachant que le plongeur a consommé {consumed} b ?",
+      "examples_consumed": "Quelle quantité de gaz ai-je consommée (en bars) à une profondeur moyenne de {depth} m, avec un bloc de {tank_size} L pendant {duration} minutes, sachant que mon volume respiratoire par minute (RMV) était de {rmv} L/min ?",
+      "examples_durationbyrmv": "Combien de temps puis-je rester (en minutes) à une profondeur moyenne de {depth} m avec {consumed} b disponibles dans un bloc de {tank_size} L, sachant que mon volume respiratoire par minute (RMV) est de {rmv} L/min ?",
+      "examples_mindepth": "L'équipe choisit le Trimix {oxygen}/{helium} comme gaz pour une plongée. La pression partielle minimale d'oxygène (ppO2) est de 0,18 b. Quelle est la profondeur minimale pour ce gaz ?",
+      "examples_end": "Vous planifiez une plongée à {depth} mètres. L'oxygène est considéré comme narcotique. L'équipe choisit le Trimix {oxygen}/{helium} comme gaz pour la plongée. Quelle est la profondeur narcotique équivalente pour ce gaz ?",
+      "examples_mnd": "Vous planifiez une plongée et considérez l'air comme narcotique en dessous de {narc_depth} mètres. L'oxygène est considéré comme narcotique. L'équipe choisit le Trimix {oxygen}/{helium} comme gaz. Quelle est la profondeur narcotique maximale pour ce gaz ?"
+    },
+    "roundingExplanationDown": "Arrondissez votre réponse à {{decimals}} décimale(s) par défaut.",
+    "roundingExplanationUp": "Arrondissez votre réponse à {{decimals}} décimale(s) par excès.",
+    "roundingExplanationExact": "Arrondissez votre réponse à {{decimals}} décimale(s).",
+    "correct": "Correct !",
+    "incorrectPrefix": "Incorrect. Réponse correcte :",
+    "submitAnswer": "Valider la réponse",
+    "nextQuestion": "Question suivante",
+    "needHint": "Besoin d'un indice ?",
+    "completed": "Terminé !",
+    "pointsLabel": "Points :",
+    "pointsOutOf": "sur",
+    "correctAnswersLabel": "Réponses correctes :",
+    "someWithHints": "(certaines avec indices)",
+    "scoreLabel": "Score :",
+    "reset": "Réinitialiser",
+    "continuePracticing": "Continuer à s'entraîner",
+    "questionHelp": "Aide sur la question",
+    "showHelp": "Afficher l'aide",
+    "openHelpPanel": "Ouvrir le panneau d'aide",
+    "resetCategory": "Réinitialiser la catégorie"
+  }
+}

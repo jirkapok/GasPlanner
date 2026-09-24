@@ -175,4 +175,16 @@ test.describe('Dive planner smoke tests', () => {
         const nextButton = learnPage.getNextButton();
         await expect(nextButton).toBeVisible();
     });
+
+    test('should switch application language from the navbar and persist the choice', async () => {
+        await page.click('#languageMenu');
+        await page.getByText('Deutsch').click();
+
+        await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+        await expect(page.getByText('Rechner', { exact: true })).toBeVisible();
+        await expect(page.locator('#app-manifest')).toHaveAttribute('href', 'manifest.de.webmanifest');
+
+        await page.reload();
+        await expect(page.locator('html')).toHaveAttribute('lang', 'de');
+    });
 });

@@ -1,15 +1,17 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { NgClass, DecimalPipe } from '@angular/common';
+import { NgClass } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-tankchart',
     templateUrl: './tank-chart.component.html',
     styleUrls: ['./tank-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [GaslabelComponent, NgClass, DecimalPipe]
+    imports: [GaslabelComponent, NgClass, LocaleNumberPipe, TranslatePipe]
 })
 export class TankChartComponent {
     @Input()

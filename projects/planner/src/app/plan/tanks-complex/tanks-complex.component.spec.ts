@@ -23,6 +23,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -90,7 +92,7 @@ describe('Tanks Complex component', () => {
                 WayPointsService, SubViewStorage, ViewStates,
                 Preferences, PreferencesStore, DiveSchedules,
                 ReloadDispatcher, MdbModalService,
-                provideAnimations(),
+                provideAnimations(), LanguageService, provideTestTranslate(),
             ],
             imports: [
                 ReactiveFormsModule, TanksComplexComponent,

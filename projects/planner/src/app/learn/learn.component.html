@@ -8,7 +8,7 @@
               <h2 class="accordion-header">
                 <button class="accordion-button " [class.collapsed]="selectedTopic !== topic"
                   (click)="toggleTopic(topic)">
-                  {{ topic.name }}
+                  {{ topic.name | translate }}
                   @if (topicStatus(topic); as status) {
                     @if (!status.hasTrophy) {
                       <span class="badge text-light ms-2 bg-warning">
@@ -31,7 +31,7 @@
                                                 'bg-primary bg-opacity-10 text-primary fw-semibold':
                                                   isCategorySelected(topic, category)
                                               }" (click)="select(topic, category)">
-                          {{ category.name }}
+                          {{ category.name | translate }}
                           @if (categoryStatus(category); as stats) {
                             @if (!stats.finished) {
                               @if (stats.showScore) {
@@ -70,7 +70,7 @@
     <div class="row">
       <div class="card mb-3">
         <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-          <div>{{ selectedTopic.name }} / {{ selectedCategory.name }}</div>
+          <div>{{ selectedTopic.name | translate }} / {{ selectedCategory.name | translate }}</div>
           @if (!showScore) {
             <div>
               <span class="badge bg-primary text-light small m-1">
@@ -79,8 +79,8 @@
               <button type="button" class="btn btn-sm btn-secondary mx-1" (click)="switchToScore()">
                 <fa-icon [icon]="statsIcon" class="fa-lg"></fa-icon>
               </button>
-              <button type="button" class="btn btn-sm btn-secondary fa-lg" (click)="openHelp()" title="Show Help"
-                aria-label="Open help panel">
+              <button type="button" class="btn btn-sm btn-secondary fa-lg" (click)="openHelp()"
+                [title]="'learn.showHelp' | translate" [attr.aria-label]="'learn.openHelpPanel' | translate">
                 <fa-icon [icon]="helpIcon" class="fa-lg"></fa-icon>
               </button>
             </div>
@@ -94,8 +94,7 @@
                   {{ question.renderedQuestion }}
                 </div>
                 <div class="small pb-5">
-                  Round {{ getRoundingExplanation(question.roundType) }} your answer to <strong>{{ question.roundTo
-                }}</strong> decimal place(s).
+                  {{ getRoundingExplanation(question.roundType) | translate:{ decimals: question.roundTo } }}
               </div>
               <input id="answer-input" name="answer-input" type="text" class="form-control mb-2"
                 [(ngModel)]="question.userAnswer" [disabled]="question.isAnswered" />
@@ -104,13 +103,13 @@
                     @if (question.isCorrect) {
                       <div
                         class="alert alert-success border-0 bg-success bg-opacity-10 text-success small py-2 px-3">
-                        Correct!
+                        {{ 'learn.correct' | translate }}
                       </div>
                     }
                     @if (!question.isCorrect) {
                       <div
                         class="alert alert-danger border-0 bg-danger bg-opacity-10 text-danger small py-2 px-3">
-                        Incorrect. Correct answer: <strong>{{ question.correctAnswer }}</strong>
+                        {{ 'learn.incorrectPrefix' | translate }} <strong>{{ question.correctAnswer }}</strong>
                       </div>
                     }
                   </div>
@@ -120,18 +119,18 @@
                     @if (!question.isAnswered) {
                       <button id="submit-answer" type="submit"
                         class="btn btn-primary" (click)="validateCurrentAnswer()">
-                        Submit Answer
+                        {{ 'learn.submitAnswer' | translate }}
                       </button>
                     }
                     @if (question.isAnswered) {
                       <button id="next-question" type="submit"
                         class="btn btn-primary" (click)="goToNextQuestion()">
-                        Next Question
+                        {{ 'learn.nextQuestion' | translate }}
                       </button>
                     }
                     <button type="button" class="btn btn-secondary"
                       (click)="openQuestionHelp()">
-                      Need Hint?
+                      {{ 'learn.needHint' | translate }}
                     </button>
                   </div>
                 </div>
@@ -141,29 +140,29 @@
               <div class="card-body text-center p-4">
                 @if (session.trophyGained) {
                   <h4 class="fw-bold mb-3">
-                    <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> Completed!
+                    <fa-icon [icon]="trophyIcon" class="fa-lg text-success"></fa-icon> {{ 'learn.completed' | translate }}
                   </h4>
                 }
                 <p>
-                  <strong>Points:</strong> {{ session.totalScore }} out of {{ session.maxPoints }}
+                  <strong>{{ 'learn.pointsLabel' | translate }}</strong> {{ session.totalScore }} {{ 'learn.pointsOutOf' | translate }} {{ session.maxPoints }}
                 </p>
                 <p>
-                  <strong>Correct Answers:</strong> {{ session.correctAnswers }} / {{
+                  <strong>{{ 'learn.correctAnswersLabel' | translate }}</strong> {{ session.correctAnswers }} / {{
                   session.totalAnswered }}
                   @if (session.anyHintUsed) {
-                    <span class="text-warning">(some with hints)</span>
+                    <span class="text-warning">{{ 'learn.someWithHints' | translate }}</span>
                   }
                 </p>
                 <p>
-                  <strong>Score:</strong> {{ correctPercentage }}%
+                  <strong>{{ 'learn.scoreLabel' | translate }}</strong> {{ correctPercentage }}%
                 </p>
                 <button type="button" [disabled]="!session.canReset" class="btn btn-secondary m-1"
-                  (click)="resetSession()" aria-label="Reset Category">
-                  <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> Reset
+                  (click)="resetSession()" [attr.aria-label]="'learn.resetCategory' | translate">
+                  <fa-icon [icon]="resetIcon" class="fa-lg"></fa-icon> {{ 'learn.reset' | translate }}
                 </button>
                 <button class="btn btn-primary m-1" type="submit" (click)="continuePracticing()"
                   #completionBlock>
-                  Continue Practicing
+                  {{ 'learn.continuePracticing' | translate }}
                 </button>
               </div>
             }
@@ -174,7 +173,7 @@
       @if (showHelp) {
         <div class="card mb-3">
           <div class="card-header d-flex justify-content-between align-items-center flex-wrap">
-            Question Help
+            {{ 'learn.questionHelp' | translate }}
           </div>
           <div class="card-body">
             <ngx-md [path]="helpTopic" [sanitizeHtml]="false"></ngx-md>

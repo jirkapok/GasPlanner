@@ -360,9 +360,9 @@ export class BoundEvent {
                 return '';
             }
             case EventType.noDecoEnd:
-                return 'Deco';
+                return 'events.deco';
             case EventType.safetyStop:
-                return 'Safety stop';
+                return 'events.safetyStop';
             default: return '';
         }
     }

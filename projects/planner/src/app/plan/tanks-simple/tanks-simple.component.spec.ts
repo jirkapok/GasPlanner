@@ -22,6 +22,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { BrowserAnimationsModule, } from '@angular/platform-browser/animations';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -63,7 +65,7 @@ describe('Tanks Simple component', () => {
                 ValidatorGroups, PreferencesStore, Preferences,
                 DecimalPipe, ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, ReloadDispatcher,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ],
             imports: [
                 ReactiveFormsModule, TankSizeComponent,

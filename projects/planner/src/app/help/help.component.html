@@ -10,7 +10,7 @@
                   class="accordion-button"
                   [class.collapsed]="!isActiveSection(section)"
                   (click)="toggleSection(section.id)">
-                  {{ section.title }}
+                  {{ section.title | translate }}
                 </button>
               </h2>
               <div class="accordion-collapse collapse" [class.show]="isActiveSection(section)">
@@ -25,7 +25,7 @@
                             'bg-primary bg-opacity-10 text-primary fw-semibold': isActiveDocument(item)
                           }"
                           (click)="updatePath(item)">
-                          {{ item.label }}
+                          {{ item.label | translate }}
                         </div>
                       </li>
                     }

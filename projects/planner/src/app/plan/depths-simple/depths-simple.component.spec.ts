@@ -23,6 +23,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { DepthComponent } from '../depth/depth.component';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 
 export class SimpleDepthsPage {
@@ -64,7 +66,8 @@ describe('Depths Simple Component', () => {
                 OptionsService, ValidatorGroups,
                 DecimalPipe, ViewSwitchService, WayPointsService,
                 SubViewStorage, ViewStates, PreferencesStore,
-                Preferences, ReloadDispatcher, MdbModalService
+                Preferences, ReloadDispatcher, MdbModalService,
+                LanguageService, provideTestTranslate()
             ]
         }).compileComponents();
     });

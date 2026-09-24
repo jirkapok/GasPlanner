@@ -12,11 +12,13 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DepthsService } from '../../shared/depths.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { DecimalPipe } from '@angular/common';
+
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -33,7 +35,7 @@ interface DepthsForm {
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, LocaleNumberPipe, TranslatePipe]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

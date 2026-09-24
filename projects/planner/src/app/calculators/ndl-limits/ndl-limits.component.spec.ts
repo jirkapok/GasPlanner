@@ -20,6 +20,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { InputControls } from '../../shared/inputcontrols';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('NdlLimits component', () => {
     let component: NdlLimitsComponent;
@@ -37,7 +39,7 @@ describe('NdlLimits component', () => {
                 OptionsService, ValidatorGroups,
                 ApplicationSettingsService,
                 MdbModalService, InputControls,
-                DecimalPipe
+                DecimalPipe, provideTestTranslate(), LanguageService
             ],
             imports: [RouterModule.forRoot([]), NdlLimitsComponent]
         }).compileComponents();

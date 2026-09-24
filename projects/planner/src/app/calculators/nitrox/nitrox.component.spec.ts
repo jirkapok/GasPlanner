@@ -21,6 +21,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 
 export class NitroxPage {
@@ -50,7 +52,7 @@ describe('Nitrox component', () => {
         ViewSwitchService, SubViewStorage,
         ReloadDispatcher, DiveSchedules,
         OptionsService, ApplicationSettingsService,
-        MdbModalService
+        MdbModalService, provideTestTranslate(), LanguageService
     ],
     imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, NitroxComponent, OxygenDropDownComponent]
 }).compileComponents();

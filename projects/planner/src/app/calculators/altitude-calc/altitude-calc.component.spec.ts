@@ -15,6 +15,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('AltitudeCalcComponent', () => {
     let component: AltitudeCalcComponent;
@@ -30,7 +32,7 @@ describe('AltitudeCalcComponent', () => {
         Preferences, ViewSwitchService,
         ReloadDispatcher, DiveSchedules,
         ApplicationSettingsService,
-        MdbModalService
+        MdbModalService, LanguageService, provideTestTranslate()
     ]
 });
         fixture = TestBed.createComponent(AltitudeCalcComponent);

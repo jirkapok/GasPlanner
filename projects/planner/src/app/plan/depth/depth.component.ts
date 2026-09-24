@@ -5,13 +5,14 @@ import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-depth',
     templateUrl: './depth.component.html',
     styleUrls: ['./depth.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, MdbFormsModule]
+    imports: [ReactiveFormsModule, MdbFormsModule, TranslatePipe]
 })
 export class DepthComponent implements OnInit {
     @Input() public depthForm!: FormGroup;

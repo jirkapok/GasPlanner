@@ -18,6 +18,8 @@ import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { LanguageService } from '../../shared/language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('WeightCalcComponent', () => {
     let component: WeightCalcComponent;
@@ -32,7 +34,7 @@ describe('WeightCalcComponent', () => {
                 Preferences, ViewSwitchService,
                 ReloadDispatcher, DiveSchedules,
                 ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ],
             imports: [
                 RouterTestingModule.withRoutes([]),

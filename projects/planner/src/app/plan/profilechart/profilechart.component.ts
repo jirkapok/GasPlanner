@@ -19,13 +19,14 @@ import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
@@ -43,11 +44,12 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private translate: TranslateService) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        this.profileTraces = chartPlotterFactory.withNamePrefix('')
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .create(() => this.dive);
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
@@ -72,6 +74,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             .subscribe(() => this.plotAllCharts());
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
+        this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.plotAllCharts());
     }
 
     public get profileCalculated(): boolean {

@@ -14,13 +14,14 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass } from '@angular/common';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-profilechart',
     templateUrl: './diff-profilechart.component.html',
     styleUrls: ['./diff-profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, NgClass, CalculatingComponent]
+    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
@@ -35,14 +36,15 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService,
-        private reloadDispatcher: ReloadDispatcher) {
+        private reloadDispatcher: ReloadDispatcher,
+        private translate: TranslateService) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units);
-        const profileATraces = chartPlotterFactory.withNamePrefix('Profile A ')
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
-            .withNamePrefix('Profile B ')
+            .withNamePrefix('diffResultsTable.profileB')
             .wthAverageDepthColor('rgb(188,191,192)')
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
@@ -72,6 +74,13 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                 if (this.profilesCalculated) {
                     this.plotCharts();
                     this.plotlyHoverLeave();
+                }
+            });
+
+        this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.plotCharts();
                 }
             });
     }

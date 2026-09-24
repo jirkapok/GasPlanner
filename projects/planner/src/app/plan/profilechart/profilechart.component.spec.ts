@@ -8,6 +8,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -20,7 +21,8 @@ describe('ProfileChartComponent', () => {
                 WorkersFactoryCommon, ReloadDispatcher,
                 WayPointsService, SelectedWaypoint,
                 UnitConversion, DiveSchedules,
-                ResamplingService, MdbModalService
+                ResamplingService, MdbModalService,
+                provideTestTranslate()
             ]
         });
 

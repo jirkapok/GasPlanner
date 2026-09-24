@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Location, DecimalPipe } from '@angular/common';
+import { Location } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import {
@@ -16,6 +17,7 @@ import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface WeightForm {
     workPressure?: FormControl<number>;
@@ -27,7 +29,7 @@ interface WeightForm {
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, DecimalPipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class WeightCalcComponent implements OnInit {
     public calcIcon = faWeightHanging;

@@ -9,7 +9,7 @@
             }
             <div class="justifycontent-center">{{dive.title}}</div>
             @if (!schedules.empty) {
-              <button type="button" class="btn-close ms-2" aria-label="Close"
+              <button type="button" class="btn-close ms-2" aria-label="{{ 'helpModal.close' | translate }}"
               (click)="closeTab(dive)"></button>
             }
           </div>

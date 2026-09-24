@@ -1,0 +1,102 @@
+{
+    "name": "Dugong 气体计划器",
+    "short_name": "气体计划器",
+    "description": "简易潜水气体计划计算器。基于 Bühlmann ZHL-16 模型计算减压和上升过程。",
+    "categories": [
+        "utilities",
+        "sports",
+        "education",
+        "navigation"
+    ],
+    "theme_color": "#1976d2",
+    "background_color": "#fafafa",
+    "lang": "zh-Hans",
+    "dir": "ltr",
+    "display": "standalone",
+    "id": "0.3.0",
+    "scope": "./",
+    "start_url": "./",
+    "orientation": "portrait-primary",
+    "display_override": [
+        "window-controls-overlay",
+        "standalone",
+        "browser"
+    ],
+    "shortcuts": [
+        {
+            "name": "富氧空气计算器",
+            "url": "/nitrox"
+        },
+        {
+            "name": "Sac/RMV 计算器",
+            "url": "/sac"
+        },
+        {
+            "name": "免减压极限计算器",
+            "url": "/ndl"
+        }
+    ],
+    "file_handlers": [],
+    "edge_side_panel": {
+        "preferred_width": 400
+    },
+    "handle_links": "preferred",
+    "screenshots": [
+        {
+            "src": "assets/screenshot.jpg",
+            "sizes": "1280x720",
+            "type": "image/jpg",
+            "platform": "wide"
+        }
+    ],
+    "icons": [
+        {
+            "src": "assets/icons/icon-72x72.png",
+            "sizes": "72x72",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-96x96.png",
+            "sizes": "96x96",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-128x128.png",
+            "sizes": "128x128",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-152x152.png",
+            "sizes": "152x152",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png",
+            "purpose": "maskable any"
+        },
+        {
+            "src": "assets/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ]
+}

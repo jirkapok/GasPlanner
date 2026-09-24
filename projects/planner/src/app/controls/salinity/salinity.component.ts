@@ -4,6 +4,7 @@ import { Salinity } from 'scuba-physics';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-salinity',
@@ -13,7 +14,8 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     imports: [
     ReactiveFormsModule,
     MdbFormsModule,
-    MdbDropdownModule
+    MdbDropdownModule,
+    TranslatePipe
 ],
 })
 export class SalinityComponent {
@@ -23,9 +25,9 @@ export class SalinityComponent {
     @Output()
     public inputChange = new EventEmitter<Salinity>();
 
-    public readonly freshName = 'Fresh';
-    public readonly brackishName = 'Brackish (EN13319)';
-    public readonly saltName = 'Salt';
+    public readonly freshName = 'salinity.fresh';
+    public readonly brackishName = 'salinity.brackish';
+    public readonly saltName = 'salinity.salt';
 
     public get salinityOption(): string {
         switch (this.salinity) {

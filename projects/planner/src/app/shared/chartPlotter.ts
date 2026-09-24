@@ -12,14 +12,17 @@ import { BoundEvent } from "./models";
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
     public static readonly depthLineColorB = 'rgb(141, 143, 144)';
-    private namePrefix = '';
+    private namePrefixKey: string | null = null;
     private averageDepthLineColor = 'rgb(62, 157, 223)';
     private ceilingLineColor = 'rgb(255, 160, 73)';
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
 
-    constructor(private resampling: ResamplingService, private units: UnitConversion) {
+    constructor(
+        private resampling: ResamplingService,
+        private units: UnitConversion,
+        private translate: (key: string) => string = key => key) {
     }
 
     public createOptions(): Partial<Plotly.Config> {
@@ -60,14 +63,14 @@ export class ChartPlotterFactory {
             xaxis: {
                 fixedrange: true,
                 title: {
-                    text: 'Time [min]'
+                    text: `${this.translate('profileChart.timeAxisLabel')} [min]`
                 }
             },
             yaxis: {
                 fixedrange: true,
                 autorange: 'reversed',
                 title: {
-                    text: `Depth [${this.units.length}]`
+                    text: `${this.translate('profileChart.depthAxisLabel')} [${this.units.length}]`
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
@@ -80,8 +83,9 @@ export class ChartPlotterFactory {
         };
     }
 
-    public withNamePrefix(prefix: string): ChartPlotterFactory {
-        this.namePrefix = prefix;
+    /** Translation key (e.g. 'diffResultsTable.profileA') for the trace-name prefix, or null for no prefix. */
+    public withNamePrefix(prefixKey: string | null): ChartPlotterFactory {
+        this.namePrefixKey = prefixKey;
         return this;
     }
     public wthAverageDepthColor(color: string): ChartPlotterFactory {
@@ -114,7 +118,8 @@ export class ChartPlotterFactory {
             dive,
             this.resampling,
             this.units,
-            this.namePrefix,
+            this.translate,
+            this.namePrefixKey,
             this.averageDepthLineColor,
             this.depthLineColor,
             this.ceilingLineColor,
@@ -125,7 +130,7 @@ export class ChartPlotterFactory {
 }
 
 export class DiveTracesBuilder {
-    private readonly namePrefix: string = '';
+    private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
     private readonly depthLineColor: string = 'rgb(31, 119, 180)';
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
@@ -137,19 +142,25 @@ export class DiveTracesBuilder {
         private dive: () => DiveResults,
         private resampling: ResamplingService,
         private units: UnitConversion,
-        namePrefix: string,
+        private translate: (key: string) => string,
+        namePrefixKey: string | null,
         averageDepthLineColor: string,
         depthLineColor: string,
         ceilingLineColor: string,
         eventLineColor: string,
         eventFillColor: string
     ) {
-        this.namePrefix = namePrefix;
+        this.namePrefixKey = namePrefixKey;
         this.averageDepthLineColor = averageDepthLineColor;
         this.depthLineColor = depthLineColor;
         this.ceilingLineColor = ceilingLineColor;
         this.eventLineColor = eventLineColor;
         this.eventFillColor = eventFillColor;
+    }
+
+    /** Re-resolved on every trace build so a language switch updates it without recreating the builder. */
+    private get namePrefix(): string {
+        return this.namePrefixKey ? this.translate(this.namePrefixKey) + ' ' : '';
     }
 
     public allTraces(): Partial<Plotly.PlotData>[] {
@@ -184,7 +195,7 @@ export class DiveTracesBuilder {
             line: {
                 dash: <Plotly.Dash>'dot'
             },
-            name: this.namePrefix + 'Avg. depth',
+            name: this.namePrefix + this.translate('profileChart.avgDepthTraceName'),
             marker: {
                 color: this.averageDepthLineColor
             },
@@ -199,7 +210,7 @@ export class DiveTracesBuilder {
             x: resampled.xValues,
             y: resampled.yValues,
             type: <Plotly.PlotType>'scatter',
-            name: this.namePrefix + 'Depth',
+            name: this.namePrefix + this.translate('profileChart.depthTraceName'),
             marker: {
                 color: this.depthLineColor
             },
@@ -214,7 +225,7 @@ export class DiveTracesBuilder {
             x: resampled.xValues,
             y: resampled.yValues,
             type: <Plotly.PlotType>'scatter',
-            name: this.namePrefix + 'Emergency',
+            name: this.namePrefix + this.translate('profileChart.emergencyTraceName'),
             line: {
                 dash: <Plotly.Dash>'dash'
             },
@@ -233,7 +244,7 @@ export class DiveTracesBuilder {
             y: resampled.yValues,
             type: <Plotly.PlotType>'scatter',
             fill: 'tozeroy',
-            name: this.namePrefix + 'Ceiling',
+            name: this.namePrefix + this.translate('profileChart.ceilingTraceName'),
             marker: {
                 color: this.ceilingLineColor
             },
@@ -254,7 +265,7 @@ export class DiveTracesBuilder {
             type: <Plotly.PlotType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
-            name: this.namePrefix + 'Event',
+            name: this.namePrefix + this.translate('profileChart.eventTraceName'),
             hovertemplate: '%{text}',
             texttemplate: '%{text}',
             textposition: 'top center',
@@ -284,7 +295,7 @@ export class ChartPlotter {
     /** Provide traces in reverse order to keep the last on top */
     constructor(public elementName: string,
                 private totalDuration: () => number,
-                chartPlotterFactory: ChartPlotterFactory,
+                private chartPlotterFactory: ChartPlotterFactory,
                 ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
         this.cursor1 = chartPlotterFactory.createCursor();
@@ -315,6 +326,7 @@ export class ChartPlotter {
 
     public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.PlotData>[]): void {
         this.updateLayoutThickFormat();
+        this.updateLayoutAxisTitles();
         const traces: Plotly.Data[] = _(this.builders).map(b => getTraces(b))
             .flatten()
             .toArray().value();
@@ -325,6 +337,13 @@ export class ChartPlotter {
         // setting to string instead expected d3 formatting function causes warning in console = want fix
         const maxDuration = this.totalDuration();
         this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(maxDuration);
+    }
+
+    /** Axis titles are translated text, re-resolved on every redraw so a language switch is reflected immediately. */
+    private updateLayoutAxisTitles(): void {
+        const freshLayout = this.chartPlotterFactory.createLayout();
+        this.layout.xaxis!.title = freshLayout.xaxis!.title;
+        this.layout.yaxis!.title = freshLayout.yaxis!.title;
     }
 
     private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {

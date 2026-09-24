@@ -1,5 +1,6 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
-import { Location, DecimalPipe } from '@angular/common';
+import { Location } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TankTemplate, Precision } from 'scuba-physics';
@@ -14,6 +15,7 @@ import {SubViewStorage} from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
+import { TranslatePipe } from '@ngx-translate/core';
 
 interface RedundanciesForm {
     firstTankSize: FormControl<number>;
@@ -28,7 +30,7 @@ interface RedundanciesForm {
     templateUrl: './redundancies.component.html',
     styleUrls: ['./redundancies.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, DecimalPipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class RedundanciesComponent implements OnInit {
     public calcIcon = faCalculator;

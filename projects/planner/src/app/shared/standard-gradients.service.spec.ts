@@ -24,7 +24,7 @@ describe('StandardGradientsService', () => {
 
     it('Known Gf return expected label', () => {
         const found = service.labelFor(0.3, 0.75);
-        expect(found).toEqual('High (30/75)');
+        expect(found).toEqual('gradients.high');
     });
 
     it('Custom Gf return empty label', () => {

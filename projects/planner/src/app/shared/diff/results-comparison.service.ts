@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { UnitConversion } from '../UnitConversion';
 import { ProfileComparatorService } from './profileComparatorService';
 import { TextConstants } from '../TextConstants';
-import { formatNumber } from '@angular/common';
 import { DiveResults } from '../diveresults';
+import { LanguageService } from '../language.service';
 import {
     faArrowDown, faArrowUp, faMinus, IconDefinition
 } from '@fortawesome/free-solid-svg-icons';
@@ -87,7 +87,10 @@ export class ResultsComparison {
     private readonly maxCns = 1000;
     private readonly cnsDifferenceUnderMinusOneThousand = '< -1000';
 
-    public constructor(private units: UnitConversion, private profilesDiff: ProfileComparatorService) {
+    public constructor(
+        private units: UnitConversion,
+        private profilesDiff: ProfileComparatorService,
+        private languages: LanguageService) {
     }
 
     public get densityGasA(): string {
@@ -117,7 +120,7 @@ export class ResultsComparison {
             return this.cnsDifferenceUnderMinusOneThousand;
         }
 
-        return formatNumber(diff, 'en', '1.0-0');
+        return this.languages.formatNumber(diff, '1.0-0');
     }
 
     public get showMaxBottomTime(): boolean {
@@ -148,6 +151,6 @@ export class ResultsComparison {
             return TextConstants.cnsOverOneThousand;
         }
 
-        return formatNumber(profile.cns, 'en', '1.0-0');
+        return this.languages.formatNumber(profile.cns, '1.0-0');
     }
 }

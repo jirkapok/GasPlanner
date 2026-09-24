@@ -1,9 +1,12 @@
 import { Inject, Injectable, Optional } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { takeUntil } from 'rxjs';
 import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz.session';
 import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
 import { Question } from './quiz.question';
+import { Streamed } from '../streamed';
 
 export interface TopicStatus {
    finished: number;
@@ -22,7 +25,7 @@ export interface CategoryStatus {
 @Injectable({
     providedIn: 'root'
 })
-export class QuizService {
+export class QuizService extends Streamed {
     public readonly topics: Topic[];
     private _selectedTopic: Topic;
     private _selectedCategory: Category;
@@ -30,12 +33,18 @@ export class QuizService {
     private _question!: Question;
     private sessionsByCategory = new Map<string, QuizSession>();
 
-    constructor(@Optional() @Inject(topics) tops?: Topic[]) {
+    constructor(
+        @Optional() @Inject(topics) tops?: Topic[],
+        @Optional() private translate?: TranslateService) {
+        super();
         this.topics = tops || topics;
         this._selectedTopic = this.topics[0];
         this._selectedCategory = this.selectedTopic.categories[0];
         this._session = this.resolveSession(this.selectedCategory);
         this.goToNextQuestion();
+
+        this.translate?.onLangChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.retranslateCurrentQuestion());
     }
 
     public get selectedTopic(): Topic {
@@ -70,7 +79,7 @@ export class QuizService {
     }
 
     public goToNextQuestion(): void {
-        this._question = this.selectedCategory.createQuestion();
+        this._question = this.selectedCategory.createQuestion(key => this.translateQuestion(key));
         this.session.resetHinted();
     }
 
@@ -143,6 +152,14 @@ export class QuizService {
         return count;
     }
 
+    private translateQuestion(key: string): string {
+        return this.translate ? this.translate.instant(key) : key;
+    }
+
+    private retranslateCurrentQuestion(): void {
+        this._question?.retranslate(this.translateQuestion(this._question.templateKey));
+    }
+
     private restoreSessions(entries: QuizSessionDto[] | undefined): void {
         if (!entries) {
             return;
@@ -158,7 +175,7 @@ export class QuizService {
             }
 
             const session = QuizSession.fromDto(entry, category);
-            this.sessionsByCategory.set(entry.category, session);
+            this.sessionsByCategory.set(category.name, session);
         }
     }
 }

@@ -3,8 +3,8 @@
   @if (!diff.hasTwoProfiles) {
     <div class="alert alert-info fade show mt-4" role="alert">
       <fa-icon [icon]="exclamation" class="me-2 fa-lg"></fa-icon>
-      <span>There is only one dive planned. If you want to compare dives, define at least two.</span>
-      <button type="button" class="btn btn-sm btn-primary ms-2" data-bs-dismiss="alert" (click)="goToDashboard()">Go to planner</button>
+      <span>{{ 'diff.onlyOneDive' | translate }}</span>
+      <button type="button" class="btn btn-sm btn-primary ms-2" data-bs-dismiss="alert" (click)="goToDashboard()">{{ 'diff.goToPlanner' | translate }}</button>
     </div>
   }
   <div class="row">

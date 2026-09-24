@@ -21,6 +21,8 @@ import { ViewSwitchService } from '../shared/viewSwitchService';
 import { CardHeaderComponent } from '../card-header/card-header.component';
 import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageDropdownComponent } from '../language-dropdown/language-dropdown.component';
 
 @Component({
     selector: 'app-app-settings',
@@ -30,7 +32,9 @@ import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
     ReactiveFormsModule,
     CardHeaderComponent,
     MdbCheckboxModule,
-    MdbFormsModule
+    MdbFormsModule,
+    TranslatePipe,
+    LanguageDropdownComponent
 ],
     changeDetection: ChangeDetectionStrategy.Eager,
     providers: [

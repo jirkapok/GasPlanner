@@ -15,6 +15,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ShareDiveService } from '../../shared/ShareDiveService';
 import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('DiveInfoComponent', () => {
     let component: DiveInfoComponent;
@@ -30,7 +32,7 @@ describe('DiveInfoComponent', () => {
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, ReloadDispatcher,
                 DiveSchedules, ShareDiveService,
-                MdbModalService
+                MdbModalService, provideTestTranslate(), LanguageService
             ]
         });
         fixture = TestBed.createComponent(DiveInfoComponent);

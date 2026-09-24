@@ -14,8 +14,10 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { DepthComponent } from '../depth/depth.component';
-import { DecimalPipe } from '@angular/common';
+
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 
 interface SimpleDepthsForm {
     surfaceInterval: FormControl<string | null>;
@@ -28,7 +30,7 @@ interface SimpleDepthsForm {
     templateUrl: './depths-simple.component.html',
     styleUrls: ['./depths-simple.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, DecimalPipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

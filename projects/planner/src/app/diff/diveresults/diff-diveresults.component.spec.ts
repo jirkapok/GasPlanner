@@ -6,6 +6,8 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { ResultsComparison } from '../../shared/diff/results-comparison.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('DiveResultsDifferenceComponent', () => {
     let component: DiveResultsDifferenceComponent;
@@ -17,7 +19,8 @@ describe('DiveResultsDifferenceComponent', () => {
             providers: [
                 ViewSwitchService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
-                ProfileComparatorService, ResultsComparison
+                ProfileComparatorService, ResultsComparison,
+                provideTestTranslate(), LanguageService
             ]
         }).compileComponents();
         fixture = TestBed.createComponent(DiveResultsDifferenceComponent);

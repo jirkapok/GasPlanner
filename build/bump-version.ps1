@@ -1,7 +1,7 @@
 <#
     .SYNOPSIS
         Bumps the version in projects/scuba-physics/package.json and
-        projects/planner/src/manifest.webmanifest.
+        projects/planner/src/manifest*.webmanifest (default + all localized variants).
         Called by semantic-release via @semantic-release/exec during the prepare step.
 
     .PARAMETER Version
@@ -16,8 +16,9 @@ param(
 # Bump scuba-physics package.json
 npm pkg set version=$Version --prefix projects/scuba-physics
 
-# Bump manifest.webmanifest id field
-$manifestPath = "projects/planner/src/manifest.webmanifest"
-$manifest = Get-Content $manifestPath -Raw
-$manifest = $manifest -replace '"id": ".*"', "`"id`": `"$Version`""
-Set-Content $manifestPath $manifest -NoNewline
+# Bump id field in the default manifest and every localized variant
+Get-ChildItem "projects/planner/src" -Filter "manifest*.webmanifest" | ForEach-Object {
+    $manifest = Get-Content $_.FullName -Raw
+    $manifest = $manifest -replace '"id": ".*"', "`"id`": `"$Version`""
+    Set-Content $_.FullName $manifest -NoNewline
+}

@@ -1,27 +1,27 @@
 <ng-container [formGroup]="form">
-  <label for="surfaceInterval" class="form-label" mdbLabel>Surface interval [min]:</label>
+  <label for="surfaceInterval" class="form-label" mdbLabel>{{ 'surfaceInterval.label' | translate }} [min]:</label>
   <div class="input-group dropdown" mdbDropdown>
     <input id="surfaceInterval" [formControlName]="this.controlName" class="form-control"
       type="text" [class.is-invalid]="surfaceIntervalInvalid" (input)="surfaceIntervalChanged()"
-      [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder" [readonly]="surfaceReadOnly" />
+      [maskito]="maskitoTimeOptions"  [placeholder]="placeHolder | translate" [readonly]="surfaceReadOnly" />
       <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false" id="surfaceIntervalMenu"
       type="button" data-mdb-toggle="dropdown" mdbDropdownToggle></button>
       <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
         <li  (click)="applyPrimary()" id="btnApplyFirst">
-          <a class="dropdown-item">First dive</a>
+          <a class="dropdown-item">{{ 'surfaceInterval.firstDive' | translate }}</a>
         </li>
         <li (click)="apply30Minutes()" id="btnApply30Minutes">
-          <a class="dropdown-item">30 minutes</a>
+          <a class="dropdown-item">{{ 'surfaceInterval.thirtyMinutes' | translate }}</a>
         </li>
         <li  (click)="applyOneHour()" id="btnApplyOneHour">
-          <a class="dropdown-item">1 Hour</a>
+          <a class="dropdown-item">{{ 'surfaceInterval.oneHour' | translate }}</a>
         </li>
         <li (click)="apply2Hour()" id="btnApply2Hour">
-          <a class="dropdown-item">2 Hours</a>
+          <a class="dropdown-item">{{ 'surfaceInterval.twoHours' | translate }}</a>
         </li>
       </ul>
     </div>
     @if (surfaceIntervalInvalid) {
-      <div class="text-danger form-text position-absolute">Needs to be a text in form hh:mm</div>
+      <div class="text-danger form-text position-absolute">{{ 'surfaceInterval.invalidFormat' | translate }}</div>
     }
   </ng-container>

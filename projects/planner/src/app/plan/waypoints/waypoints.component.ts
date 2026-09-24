@@ -9,17 +9,19 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { WayPoint, SwimAction } from '../../shared/wayPoint';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgClass, DecimalPipe } from '@angular/common';
+import { NgClass } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
     styleUrls: ['./waypoints.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, DecimalPipe, DurationPipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class WayPointsComponent {
     public down = faArrowDown;
@@ -51,13 +53,13 @@ export class WayPointsComponent {
     public iconTitle(point: WayPoint): string {
         switch (point.swimAction) {
             case SwimAction.ascent:
-                return 'ascent';
+                return 'waypoints.ascent';
             case SwimAction.descent:
-                return 'descent';
+                return 'waypoints.descent';
             case SwimAction.switch:
-                return 'switch';
+                return 'waypoints.switch';
             default:
-                return 'hover';
+                return 'waypoints.hover';
         }
     }
 

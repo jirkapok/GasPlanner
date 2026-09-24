@@ -1,22 +1,22 @@
 <div class="card">
   <app-card-header
-    cardTitle="Dive Info"
+    [cardTitle]="'diveInfo.cardTitle' | translate"
     helpDocument="diveinfo"
     [headerIcon]="icon">
-    <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="Share the dive address">
-      <fa-icon [icon]="iconShare" class="me-2"></fa-icon>Share
+    <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="{{ 'diveInfo.shareTitle' | translate }}">
+      <fa-icon [icon]="iconShare" class="me-2"></fa-icon>{{ 'diveInfo.share' | translate }}
     </button>
   </app-card-header>
 
   <div class="card-body card-minheight">
     <mdb-tabs #tabs>
-      <mdb-tab title="Results">
+      <mdb-tab [title]="'diveInfo.resultsTab' | translate">
         <app-calculating [show]="!dive.calculated"></app-calculating>
         <div class="pb-3">
           <table class="table table-sm">
             <tbody>
               <tr>
-                <td>Total dive time [min]:</td>
+                <td>{{ 'diveInfo.totalDiveTime' | translate }} [min]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong id="total-dive-time-value">{{ dive.totalDuration | duration:dive.totalDuration
@@ -25,7 +25,7 @@
                 </td>
               </tr>
               <tr>
-                <td>Time to surface [min]:</td>
+                <td>{{ 'diveInfo.timeToSurface' | translate }} [min]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong>{{ dive.timeToSurface | number:'1.0-0' }}</strong>
@@ -33,7 +33,7 @@
                 </td>
               </tr>
               <tr>
-                <td>Average depth [{{units.length}}]:</td>
+                <td>{{ 'diveInfo.averageDepth' | translate }} [{{units.length}}]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong>{{ averageDepth | number:'1.0-1' }}</strong>
@@ -41,7 +41,7 @@
                 </td>
               </tr>
               <tr>
-                <td>Rock bottom at [min]:</td>
+                <td>{{ 'diveInfo.rockBottomAt' | translate }} [min]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong>{{ dive.emergencyAscentStart |
@@ -50,11 +50,11 @@
                 </td>
               </tr>
               <tr>
-                <td>No decompression time [min]:
+                <td>{{ 'diveInfo.noDecoTime' | translate }} [min]:
                   @if (showApply) {
                     <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyNdlDuration()"
-                      title="Set dive time to no deco limit"
-                    >Use</button>
+                      title="{{ 'diveInfo.noDecoTimeTitle' | translate }}"
+                    >{{ 'diveInfo.use' | translate }}</button>
                   }
                 </td>
                 <td class="table-active">
@@ -65,11 +65,11 @@
               </tr>
               @if (dive.showMaxBottomTime) {
                 <tr>
-                  <td>Maximum bottom time [min]:
+                  <td>{{ 'diveInfo.maxBottomTime' | translate }} [min]:
                     @if (showApply) {
                       <button type="button" class="btn btn-secondary btn-sm ml-2" (click)="applyMaxDuration()"
-                        title="Set dive time to maximum by consumed gas"
-                      >Use</button>
+                        title="{{ 'diveInfo.maxBottomTimeTitle' | translate }}"
+                      >{{ 'diveInfo.use' | translate }}</button>
                     }
                   </td>
                   <td class="table-active">
@@ -80,7 +80,7 @@
                 </tr>
               }
               <tr>
-                <td>Surface gradient [%]:</td>
+                <td>{{ 'diveInfo.surfaceGradient' | translate }} [%]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong>{{ surfaceGradient  | number:'1.0-0' }}</strong>
@@ -88,7 +88,7 @@
                 </td>
               </tr>
               <tr>
-                <td>Offgasing start [min]:</td>
+                <td>{{ 'diveInfo.offgasingStart' | translate }} [min]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <span>
@@ -100,7 +100,7 @@
               </tr>
               @if (showHighestCeiling) {
                   <tr>
-                      <td>Highest ceiling [{{ units.length }}]:</td>
+                      <td>{{ 'diveInfo.highestCeiling' | translate }} [{{ units.length }}]:</td>
                       <td class="table-active">
                           @if (dive.calculated) {
                         <span>
@@ -114,7 +114,7 @@
               @if (isComplex) {
                 <tr>
                   <td>
-                    Highest gas density [{{units.density}}]:<br>
+                    {{ 'diveInfo.highestGasDensity' | translate }} [{{units.density}}]:<br>
                   </td>
                   <td class="table-active">
                     @if (dive.calculated) {
@@ -128,7 +128,7 @@
               }
               @if (dive.needsReturn) {
                 <tr>
-                  <td>Turn time [min]:</td>
+                  <td>{{ 'diveInfo.turnTime' | translate }} [min]:</td>
                   <td class="table-active">
                     @if (dive.calculated) {
                       <strong>{{ dive.turnTime | number:'1.0-0' }}</strong>
@@ -138,7 +138,7 @@
               }
               @if (dive.needsReturn) {
                 <tr>
-                  <td>Turn pressure [{{units.pressure}}]:</td>
+                  <td>{{ 'diveInfo.turnPressure' | translate }} [{{units.pressure}}]:</td>
                   <td class="table-active">
                     @if (dive.calculated) {
                       <strong>{{ dive.turnPressure | number:'1.0-0' }}</strong>
@@ -147,7 +147,7 @@
                 </tr>
               }
               <tr>
-                <td>OTU toxicity [OTU]:</td>
+                <td>{{ 'diveInfo.otuToxicity' | translate }} [OTU]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
                     <strong>{{ dive.otu | number:'1.0-0' }}</strong>
@@ -155,10 +155,10 @@
                 </td>
               </tr>
               <tr>
-                <td>CNS toxicity [%]:</td>
+                <td>{{ 'diveInfo.cnsToxicity' | translate }} [%]:</td>
                 <td class="table-active">
                   @if (dive.calculated) {
-                    <strong>{{cnsText}}</strong>
+                    <strong>{{cnsText | translate}}</strong>
                   }
                 </td>
               </tr>
@@ -168,7 +168,7 @@
       </mdb-tab>
       <mdb-tab>
         <ng-template mdbTabTitle>
-          <span>Consumed</span>
+          <span>{{ 'diveInfo.consumedTab' | translate }}</span>
           @if (dive.notEnoughGas) {
             <fa-icon [icon]="warnIcon" class="ms-2 fa-xl text-danger"></fa-icon>
           }
@@ -183,7 +183,7 @@
       </mdb-tab>
       <mdb-tab>
         <ng-template mdbTabTitle>
-          <span>Issues</span>
+          <span>{{ 'diveInfo.issuesTab' | translate }}</span>
           @if (dive.hasErrorEvent || dive.hasWarningEvent) {
             <fa-icon [class.text-danger]="dive.hasErrorEvent"
               [class.text-warning]="!dive.hasErrorEvent && dive.hasWarningEvent"

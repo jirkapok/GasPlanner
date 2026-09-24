@@ -19,6 +19,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { TranslatePipe } from '@ngx-translate/core';
+import { LanguageDropdownComponent } from '../language-dropdown/language-dropdown.component';
 
 @Component({
     selector: 'app-mainmenu',
@@ -29,7 +31,9 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     RouterLink,
     FaIconComponent,
     MdbCollapseModule,
-    MdbDropdownModule
+    MdbDropdownModule,
+    TranslatePipe,
+    LanguageDropdownComponent
 ]
 })
 export class MainMenuComponent extends Streamed {

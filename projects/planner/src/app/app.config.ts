@@ -1,9 +1,12 @@
 import { ReactiveFormsModule } from '@angular/forms';
-import { ServiceWorkerModule } from '@angular/service-worker';
+import { provideServiceWorker } from '@angular/service-worker';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { CommonModule, DatePipe, DecimalPipe } from '@angular/common';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { inject, provideAppInitializer } from '@angular/core';
+import { provideTranslateService } from '@ngx-translate/core';
+import { provideTranslateHttpLoader } from '@ngx-translate/http-loader';
 
 import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
@@ -66,6 +69,7 @@ import { ProfileDifferenceChartComponent } from './diff/profilechart/diff-profil
 import { DiveResultsTableDifferenceComponent } from './diff/diveresults/table/diff-diveresults-table.component';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
 import { DurationPipe } from './pipes/duration.pipe';
+import { LocaleNumberPipe } from './pipes/locale-number.pipe';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesStore } from './shared/preferencesStore';
 import { UnitConversion } from './shared/UnitConversion';
@@ -111,6 +115,8 @@ import { CardHeaderComponent } from './card-header/card-header.component';
 import { AppFooterComponent } from './footer/footer.component';
 import { AppSettingsComponent } from './app-settings/app-settings.component';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
+import { LanguageService } from './shared/language.service';
+import { LanguageDropdownComponent } from './language-dropdown/language-dropdown.component';
 
 const ANGULAR_MODULES = [
     CommonModule,
@@ -172,16 +178,30 @@ const STANDALONE = [
     AppSettingsComponent,
     MainMenuComponent,
     DurationPipe,
+    LocaleNumberPipe,
     CalculatingComponent,
     AltitudeComponent,
     GaslabelComponent,
     SalinityComponent,
     TankSizeComponent,
+    LanguageDropdownComponent,
 ];
 
 const SERVICES = [
     MdbModalService,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideTranslateService({
+        loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
+        fallbackLang: 'en',
+    }),
+    provideAppInitializer(() => inject(LanguageService).ready()),
+    LanguageService,
+    provideServiceWorker('ngsw-worker.js', {
+        enabled: environment.production,
+        // Register the ServiceWorker as soon as the application is stable
+        // or after 30 seconds (whichever comes first).
+        registrationStrategy: 'registerWhenStable:30000'
+    }),
     { provide: WorkersFactoryCommon, useClass: WorkersFactory },
     DatePipe,
     DecimalPipe,
@@ -232,12 +252,6 @@ export const CONFIG = {
         STANDALONE,
         NgxMdModule.forRoot(),
         ClipboardModule,
-        ServiceWorkerModule.register('ngsw-worker.js', {
-            enabled: environment.production,
-            // Register the ServiceWorker as soon as the application is stable
-            // or after 30 seconds (whichever comes first).
-            registrationStrategy: 'registerWhenStable:30000'
-        }),
     ],
     exports: [],
     providers: [

@@ -14,6 +14,8 @@ import Spy = jasmine.Spy;
 import { Time } from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { LanguageService } from './language.service';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('Delayed Schedule', () => {
     const delayHigherThanScheduler = 110;
@@ -37,7 +39,7 @@ describe('Delayed Schedule', () => {
                 WorkersFactoryCommon, SubViewStorage,
                 ViewStates, PreferencesStore, Preferences,
                 ViewSwitchService, ApplicationSettingsService,
-                MdbModalService
+                MdbModalService, LanguageService, provideTestTranslate()
             ]
         }).compileComponents();
 

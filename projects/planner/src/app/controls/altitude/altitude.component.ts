@@ -6,6 +6,7 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { DecimalPipe } from '@angular/common';
+import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-altitude',
@@ -19,7 +20,8 @@ import { DecimalPipe } from '@angular/common';
     imports: [
     ReactiveFormsModule,
     MdbFormsModule,
-    MdbDropdownModule
+    MdbDropdownModule,
+    TranslatePipe
 ],
 })
 export class AltitudeComponent implements OnInit {

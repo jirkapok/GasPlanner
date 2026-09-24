@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { Precision, Ceiling } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
@@ -16,7 +17,7 @@ export interface EventValues extends AxisValues {
 
 @Injectable()
 export class ResamplingService {
-    constructor(private units: UnitConversion) {
+    constructor(private units: UnitConversion, private translate: TranslateService) {
     }
 
     public resampleAverageDepth(wayPoints: WayPoint[]): AxisValues {
@@ -44,7 +45,7 @@ export class ResamplingService {
                 const convertedDepth = event.depth;
                 yValues.push(convertedDepth);
                 const text = event.chartEventText;
-                labels.push(text);
+                labels.push(this.translate.instant(text));
             }
         });
 

@@ -8,7 +8,7 @@
         <td class="bg-primary text-light">
           <div class="d-flex justify-content-center align-items-center">
             <strong>
-              <div class="profile-title">Profile A</div>
+              <div class="profile-title">{{ 'diffResultsTable.profileA' | translate }}</div>
               <div>{{profilesDiff.profileATitle}}</div>
             </strong>
           </div>
@@ -16,7 +16,7 @@
         <td class="bg-success text-light">
           <div class="d-flex justify-content-center align-items-center">
             <strong>
-              <div class="profile-title">Profile B</div>
+              <div class="profile-title">{{ 'diffResultsTable.profileB' | translate }}</div>
               <div>{{profilesDiff.profileBTitle}}</div>
             </strong>
           </div>
@@ -25,13 +25,13 @@
           <div class="d-flex justify-content-center align-items-center">
             <strong>
               <div class="profile-title"><br/></div>
-              <div>Difference</div>
+              <div>{{ 'diffResultsTable.difference' | translate }}</div>
             </strong>
           </div>
         </td>
       </tr>
       <tr>
-        <td>Total dive time [min]:</td>
+        <td>{{ 'diffResultsTable.totalDiveTime' | translate }} [min]:</td>
         <td class="border-start">
           <div>
             {{ resultsDiff.totalDuration.valueA | duration:profileA.totalDuration}}
@@ -52,7 +52,7 @@
         </td>
       </tr>
       <tr>
-        <td>Time to surface [min]:</td>
+        <td>{{ 'diffResultsTable.timeToSurface' | translate }} [min]:</td>
         <td class="border-start">
           <div>
             {{ resultsDiff.timeToSurface.valueA | number:'1.0-0' }}
@@ -73,7 +73,7 @@
         </td>
       </tr>
       <tr>
-        <td>Average depth [{{units.length}}]:</td>
+        <td>{{ 'diffResultsTable.averageDepth' | translate }} [{{units.length}}]:</td>
         <td class="border-start">
           <div>
             {{ resultsDiff.averageDepth.valueA | number:'1.0-1' }}
@@ -94,7 +94,7 @@
         </td>
       </tr>
       <tr>
-        <td>Rock bottom at [min]:</td>
+        <td>{{ 'diffResultsTable.rockBottomAt' | translate }} [min]:</td>
         <td class="border-start">
           <div>
             {{ resultsDiff.emergencyAscentStart.valueA | duration:profileA.emergencyAscentStart }}
@@ -116,7 +116,7 @@
       </tr>
       @if (diveInfosCalculated) {
         <tr>
-          <td>No decompression time [min]:</td>
+          <td>{{ 'diffResultsTable.noDecoTime' | translate }} [min]:</td>
           <td class="border-start">
             <div>
               {{ resultsDiff.noDeco.valueA | number:'1.0-0' }}
@@ -139,7 +139,7 @@
       }
       @if (resultsDiff.showMaxBottomTime) {
         <tr>
-          <td>Maximum bottom time [min]:</td>
+          <td>{{ 'diffResultsTable.maxBottomTime' | translate }} [min]:</td>
           <td class="border-start">
             <div>
               {{ resultsDiff.maxTime.valueA | number:'1.0-0' }}
@@ -162,7 +162,7 @@
       }
       @if (viewSwitch.isComplex) {
         <tr>
-          <td>Highest gas density [{{units.density}}]:</td>
+          <td>{{ 'diffResultsTable.highestGasDensity' | translate }} [{{units.density}}]:</td>
           <td class="border-start">
             <div>
               {{ resultsDiff.highestDensity.valueA | number:'1.0-2' }}
@@ -189,7 +189,7 @@
           }
           @if (areProfilesCalculated) {
             <tr>
-              <td>OTU toxicity [OTU]:</td>
+              <td>{{ 'diffResultsTable.otuToxicity' | translate }} [OTU]:</td>
               <td class="border-start">
                 <div>
                   {{ resultsDiff.otu.valueA | number:'1.0-0' }}
@@ -212,21 +212,21 @@
           }
           @if (areProfilesCalculated) {
             <tr>
-              <td>CNS toxicity [%]:</td>
+              <td>{{ 'diffResultsTable.cnsToxicity' | translate }} [%]:</td>
               <td class="border-start">
                 <div>
-                  {{resultsDiff.cnsA}}
+                  {{resultsDiff.cnsA | translate}}
                 </div>
               </td>
               <td class="border-start">
                 <div>
-                  {{resultsDiff.cnsB}}
+                  {{resultsDiff.cnsB | translate}}
                 </div>
               </td>
               <td class="{{resultsDiff.cns.bgColor}} border-start border-end">
                 <div class="delta d-flex justify-content-between align-items-center">
                   <strong>
-                    {{ resultsDiff.cnsDifference | number:'1.0-0' }}
+                    {{ resultsDiff.cnsDifference | translate }}
                   </strong>
                   <fa-icon [icon] ="resultsDiff.cns.arrow"/>
                 </div>

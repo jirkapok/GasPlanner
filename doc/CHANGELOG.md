@@ -1,3 +1,11 @@
+## [0.4.1](https://github.com/jirkapok/GasPlanner/compare/v0.4.0...v0.4.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* [#20](https://github.com/jirkapok/GasPlanner/issues/20) tabs overlap with menu at 780px viewport width ([99a10d7](https://github.com/jirkapok/GasPlanner/commit/99a10d7bcce5b18ca428e7f303278b4c1fa930e6))
+* [#23](https://github.com/jirkapok/GasPlanner/issues/23) heatmap chart doesn't expand to full width on first load ([34686cf](https://github.com/jirkapok/GasPlanner/commit/34686cfe64eaed8626f3e9afecf4f0e98ceb370d))
+
 # [0.4.0](https://github.com/jirkapok/GasPlanner/compare/v0.3.1...v0.4.0) (2026-09-24)
 
 

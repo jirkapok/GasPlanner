@@ -2,8 +2,6 @@ import { Injectable } from '@angular/core';
 import { formatNumber } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
-import { PreferencesStore } from './preferencesStore';
-import { AppPreferences } from './serialization.model';
 
 export interface LanguageOption {
     code: string;
@@ -12,11 +10,13 @@ export interface LanguageOption {
     countryCode: string;
 }
 
-// TODO localize:
-// * localize input fields to support decimal separators and digit grouping (e.g. 1,000.00 vs 1.000,00)
-// * consider in the future: documentation in doc directory
-// Not localized on purpose: tank sizes and standard gas names come from the
-// scuba-physics library, which must stay UI-agnostic (see CLAUDE.md).
+/**
+ * TO consider:
+ * * localize input fields to support decimal separators and digit grouping (e.g. 1,000.00 vs 1.000,00)
+ * * consider in the future: documentation in doc directory
+ * * Not localized on purpose: tank sizes and standard gas names come from the
+ * scuba-physics library, which must stay UI-agnostic (see CLAUDE.md).
+ */
 @Injectable()
 export class LanguageService {
     public readonly supportedLanguages: LanguageOption[] = [

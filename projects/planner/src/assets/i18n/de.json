@@ -156,7 +156,7 @@
     "descent": "Abstieg", "ascentTo50": "Aufstieg bis 50 %", "ascentToX": "Aufstieg bis", "ascentPrefix": "Aufstieg", "toSurface": "zur Oberfläche",
     "diverTab": "Taucher", "recreational": "Freizeittauchen", "recommended": "Empfohlen", "addSafetyStop": "3-minütigen Sicherheitsstopp hinzufügen:"
   },
-  "profileChart": { "cardTitle": "Tauchprofil", "heatmapTitle": "Gewebe-Heatmap anzeigen", "emergencyAscentTitle": "Notaufstieg anzeigen" },
+  "profileChart": { "cardTitle": "Tauchprofil", "heatmapTitle": "Gewebe-Heatmap anzeigen", "emergencyAscentTitle": "Notaufstieg anzeigen", "timeAxisLabel": "Zeit", "depthAxisLabel": "Tiefe", "avgDepthTraceName": "Ø Tiefe", "depthTraceName": "Tiefe", "emergencyTraceName": "Notfall", "ceilingTraceName": "Ceiling", "eventTraceName": "Ereignis" },
   "surfaceInterval": { "label": "Oberflächenpause", "firstDive": "Erster Tauchgang", "thirtyMinutes": "30 Minuten", "oneHour": "1 Stunde", "twoHours": "2 Stunden", "invalidFormat": "Muss im Format hh:mm angegeben werden" },
   "tankChart": { "gasRemaining": "Verbleibendes Gas:", "rockBottom": "Rock Bottom:" },
   "tanksComplex": { "cardTitle": "Flaschen", "size": "Größe", "workPressure": "Betriebsdr.", "pressure": "Druck", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck" },

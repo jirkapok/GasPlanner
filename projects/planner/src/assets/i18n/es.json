@@ -156,7 +156,7 @@
     "descent": "Descenso", "ascentTo50": "Ascenso al 50%", "ascentToX": "Ascenso a", "ascentPrefix": "Ascenso", "toSurface": "a superficie",
     "diverTab": "Buceador", "recreational": "Recreativo", "recommended": "Recomendado", "addSafetyStop": "Añadir parada de seguridad de 3 min:"
   },
-  "profileChart": { "cardTitle": "Perfil de la inmersión", "heatmapTitle": "Mostrar mapa de calor de tejidos", "emergencyAscentTitle": "Mostrar ascenso de emergencia" },
+  "profileChart": { "cardTitle": "Perfil de la inmersión", "heatmapTitle": "Mostrar mapa de calor de tejidos", "emergencyAscentTitle": "Mostrar ascenso de emergencia", "timeAxisLabel": "Tiempo", "depthAxisLabel": "Profundidad", "avgDepthTraceName": "Prof. media", "depthTraceName": "Profundidad", "emergencyTraceName": "Emergencia", "ceilingTraceName": "Techo", "eventTraceName": "Evento" },
   "surfaceInterval": { "label": "Intervalo de superficie", "firstDive": "Primera inmersión", "thirtyMinutes": "30 minutos", "oneHour": "1 hora", "twoHours": "2 horas", "invalidFormat": "Debe ser un texto con el formato hh:mm" },
   "tankChart": { "gasRemaining": "Gas restante:", "rockBottom": "Reserva de emergencia:" },
   "tanksComplex": { "cardTitle": "Botellas", "size": "Tamaño", "workPressure": "P. trabajo", "pressure": "Presión", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Presión de trabajo", "startPressureLabel": "Presión inicial" },

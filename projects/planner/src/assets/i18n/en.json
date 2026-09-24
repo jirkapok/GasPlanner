@@ -442,7 +442,14 @@
   "profileChart": {
     "cardTitle": "Dive profile",
     "heatmapTitle": "Show tissues heatmap",
-    "emergencyAscentTitle": "Show emergency ascent"
+    "emergencyAscentTitle": "Show emergency ascent",
+    "timeAxisLabel": "Time",
+    "depthAxisLabel": "Depth",
+    "avgDepthTraceName": "Avg. depth",
+    "depthTraceName": "Depth",
+    "emergencyTraceName": "Emergency",
+    "ceilingTraceName": "Ceiling",
+    "eventTraceName": "Event"
   },
   "surfaceInterval": {
     "label": "Surface interval",

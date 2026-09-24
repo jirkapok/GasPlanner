@@ -156,7 +156,7 @@
     "descent": "下降", "ascentTo50": "上升至50%", "ascentToX": "上升至", "ascentPrefix": "上升", "toSurface": "至水面",
     "diverTab": "潜水员", "recreational": "休闲潜水", "recommended": "推荐", "addSafetyStop": "添加3分钟安全停留："
   },
-  "profileChart": { "cardTitle": "潜水剖面", "heatmapTitle": "显示组织热力图", "emergencyAscentTitle": "显示紧急上升" },
+  "profileChart": { "cardTitle": "潜水剖面", "heatmapTitle": "显示组织热力图", "emergencyAscentTitle": "显示紧急上升", "timeAxisLabel": "时间", "depthAxisLabel": "深度", "avgDepthTraceName": "平均深度", "depthTraceName": "深度", "emergencyTraceName": "紧急", "ceilingTraceName": "天花板", "eventTraceName": "事件" },
   "surfaceInterval": { "label": "水面间隔时间", "firstDive": "首次潜水", "thirtyMinutes": "30分钟", "oneHour": "1小时", "twoHours": "2小时", "invalidFormat": "必须为hh:mm格式的文本" },
   "tankChart": { "gasRemaining": "剩余气体：", "rockBottom": "最低安全气量：" },
   "tanksComplex": { "cardTitle": "气瓶", "size": "容量", "workPressure": "工作压力", "pressure": "压力", "he": "He", "o2": "O2", "sac": "SAC：", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力" },

@@ -156,7 +156,7 @@
     "descent": "Descente", "ascentTo50": "Remontée à 50%", "ascentToX": "Remontée à", "ascentPrefix": "Remontée", "toSurface": "vers la surface",
     "diverTab": "Plongeur", "recreational": "Loisir", "recommended": "Recommandé", "addSafetyStop": "Ajouter un palier de sécurité de 3 min :"
   },
-  "profileChart": { "cardTitle": "Profil de plongée", "heatmapTitle": "Afficher la carte thermique des tissus", "emergencyAscentTitle": "Afficher la remontée d'urgence" },
+  "profileChart": { "cardTitle": "Profil de plongée", "heatmapTitle": "Afficher la carte thermique des tissus", "emergencyAscentTitle": "Afficher la remontée d'urgence", "timeAxisLabel": "Temps", "depthAxisLabel": "Profondeur", "avgDepthTraceName": "Prof. moyenne", "depthTraceName": "Profondeur", "emergencyTraceName": "Urgence", "ceilingTraceName": "Plafond", "eventTraceName": "Événement" },
   "surfaceInterval": { "label": "Intervalle de surface", "firstDive": "Première plongée", "thirtyMinutes": "30 minutes", "oneHour": "1 heure", "twoHours": "2 heures", "invalidFormat": "Doit être un texte au format hh:mm" },
   "tankChart": { "gasRemaining": "Gaz restant :", "rockBottom": "Réserve :" },
   "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ" },

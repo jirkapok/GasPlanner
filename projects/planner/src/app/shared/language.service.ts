@@ -14,7 +14,6 @@ export interface LanguageOption {
 
 // TODO localize:
 // * localize input fields to support decimal separators and digit grouping (e.g. 1,000.00 vs 1.000,00)
-// * plotly charts
 // * consider in the future: documentation in doc directory
 // Not localized on purpose: tank sizes and standard gas names come from the
 // scuba-physics library, which must stay UI-agnostic (see CLAUDE.md).

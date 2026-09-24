@@ -156,7 +156,7 @@
     "descent": "Sestup", "ascentTo50": "Výstup do 50 %", "ascentToX": "Výstup do", "ascentPrefix": "Výstup", "toSurface": "na hladinu",
     "diverTab": "Potápěč", "recreational": "Rekreační", "recommended": "Doporučeno", "addSafetyStop": "Přidat 3min bezpečnostní zastávku:"
   },
-  "profileChart": { "cardTitle": "Profil ponoru", "heatmapTitle": "Zobrazit tepelnou mapu tkání", "emergencyAscentTitle": "Zobrazit nouzový výstup" },
+  "profileChart": { "cardTitle": "Profil ponoru", "heatmapTitle": "Zobrazit tepelnou mapu tkání", "emergencyAscentTitle": "Zobrazit nouzový výstup", "timeAxisLabel": "Čas", "depthAxisLabel": "Hloubka", "avgDepthTraceName": "Prům. hloubka", "depthTraceName": "Hloubka", "emergencyTraceName": "Nouzový výstup", "ceilingTraceName": "Strop", "eventTraceName": "Událost" },
   "surfaceInterval": { "label": "Povrchová pauza", "firstDive": "První ponor", "thirtyMinutes": "30 minut", "oneHour": "1 hodina", "twoHours": "2 hodiny", "invalidFormat": "Musí být text ve formátu hh:mm" },
   "tankChart": { "gasRemaining": "Zbývající plyn:", "rockBottom": "Rock bottom:" },
   "tanksComplex": { "cardTitle": "Lahve", "size": "Objem", "workPressure": "Prac. tlak", "pressure": "Tlak", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Pracovní tlak", "startPressureLabel": "Počáteční tlak" },

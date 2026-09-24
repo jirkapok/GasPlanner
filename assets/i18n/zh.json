@@ -1,0 +1,223 @@
+{
+  "menu": {
+    "calculators": "计算器", "planner": "计划", "rmvSac": "RMV/SAC", "nitrox": "氮氧",
+    "gasProperties": "气体属性", "altitude": "海拔", "weight": "配重", "ndlTable": "NDL表",
+    "cylinderBalancing": "气瓶平衡", "gasBlender": "气体混合", "dive": "潜水", "clone": "克隆",
+    "saveAsDefault": "保存为默认", "loadDefault": "加载默认", "share": "分享", "delete": "删除",
+    "settings": "设置", "compareDives": "比较潜水", "standardGases": "标准气体", "help": "帮助",
+    "learn": "学习", "about": "关于", "toggleNavigation": "切换导航"
+  },
+  "personalization": {
+    "cardTitle": "个性化设置", "metricUnits": "公制单位（米、升、巴）",
+    "imperialUnits": "英制单位（英尺、立方英尺、psi）", "imperialExperimental": "（实验性，不推荐）",
+    "language": "语言"
+  },
+  "textConstants": {
+    "depthConverterWarning": "此计算器使用简单的深度换算（1 ATM = 1 bar），因此显示的数值精度低于应用程序其他部分。同时它使用理想气体定律，因此计算出的RMV会比实际值偏低。",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": { "label": "水的盐度：", "fresh": "淡水", "brackish": "半咸水（EN13319）", "salt": "海水" },
+  "options": { "safetyOff": "从不", "safetyOn": "始终", "safetyAuto": "自动（> {{level}} {{unit}}）" },
+  "gradients": {
+    "title": "保守度（梯度因子）：", "lowLabel": "低梯度值 [%]：", "highLabel": "高梯度值 [%]：",
+    "lowerThanHigh": "低于高梯度值", "higherThanLow": "高于低梯度值",
+    "low": "低 (45/95)", "medium": "中 (40/85)", "high": "高 (30/75)"
+  },
+  "waypoints": { "ascent": "上升", "descent": "下降", "switch": "切换", "hover": "悬停" },
+  "events": { "deco": "减压", "safetyStop": "安全停留" },
+  "help": {
+    "menu": {
+      "application": { "title": "应用程序", "usage": "应用程序使用说明", "settings": "应用程序设置" },
+      "plan": { "title": "潜水计划", "tanks": "气瓶", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
+      "options": { "title": "潜水选项", "general": "常规", "environment": "环境", "conservatism": "保守度", "gases": "气体", "airBreaks": "纯氧间歇", "stops": "停留点", "speeds": "速度", "diver": "潜水员" },
+      "results": { "title": "潜水结果", "diveInfoTable": "潜水信息表", "oxygenToxicity": "氧气毒性", "events": "导致错误和警告的事件", "consumedGasCharts": "气体消耗图表", "wayPointsTable": "潜水航点表", "profileChart": "潜水剖面图", "tissuesHeatMap": "组织热力图" },
+      "calculators": { "title": "计算器", "sac": "RMV/SAC", "nitrox": "氮氧", "ndl": "免减压极限 (NDL) 表", "altitude": "海拔", "weight": "配重", "gasProperties": "气体属性", "redundancies": "气瓶平衡", "gasBlender": "气体混合" }
+    }
+  },
+  "validation": { "needsNumber": "必须为数字" },
+  "altitude": { "label": "海拔", "seaLevel": "海平面" },
+  "calculating": { "label": "计算中……" },
+  "gaslabel": { "mod": "MOD", "switch": "切换", "mnd": "MND" },
+  "oxygenDropdown": { "o2Label": "O2 [%]：", "bestMix": "最佳配比" },
+  "about": {
+    "title": "关于气体计划器", "tagline1": "开源潜水应用程序，帮助潜水员规划他们的潜水活动。",
+    "tagline2": "计划你的潜水，潜好你的计划！", "disclaimerLabel": "免责声明：",
+    "disclaimerText": "本项目的任何作者、贡献者、管理员或与本项目有关联的任何人，均不对您使用本应用程序提供或链接的信息承担责任。使用相关结果风险自负。",
+    "githubProject": "Github 项目"
+  },
+  "cardHeader": { "showHelp": "显示帮助" },
+  "helpModal": { "title": "帮助", "close": "关闭" },
+  "appinfo": { "version": "版本" },
+  "ppo2": { "maxPpo2Label": "最大ppO2：", "maxDecoPpo2Label": "最大减压ppO2：" },
+  "diver": { "rmvLabel": "RMV", "stressRmvLabel": "压力RMV" },
+  "diff": { "onlyOneDive": "目前只计划了一次潜水。如果要比较潜水，请至少定义两次。", "goToPlanner": "前往计划器" },
+  "diffDiveResults": { "cardTitle": "潜水结果" },
+  "diffResultsTable": {
+    "profileA": "剖面 A", "profileB": "剖面 B", "difference": "差异", "totalDiveTime": "潜水总时间",
+    "timeToSurface": "上升至水面时间", "averageDepth": "平均深度", "rockBottomAt": "最低安全气量深度",
+    "noDecoTime": "免减压时间", "maxBottomTime": "最大水底时间", "highestGasDensity": "最高气体密度",
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性"
+  },
+  "diffGasConsumed": { "cardTitle": "气体消耗", "difference": "差异", "gasRemaining": "剩余气体：", "notAvailable": "不可用", "reserve": "储备：" },
+  "diffProfileChart": { "cardTitle": "剖面图" },
+  "diffTabs": { "profileA": "剖面 A", "profileB": "剖面 B" },
+  "diffWaypoints": { "cardTitle": "潜水航点", "profileA": "剖面 A", "profileB": "剖面 B", "run": "累计时间", "depth": "深度", "duration": "持续时间" },
+  "common": { "back": "返回", "use": "使用" },
+  "settings": {
+    "limitsCardTitle": "限制", "maxGasDensityLabel": "最大气体密度", "primaryTankReserveLabel": "主气瓶最低储备",
+    "stageTankReserveLabel": "副气瓶最低储备", "ignoredIssuesCardTitle": "忽略的问题（警告/错误）",
+    "icdLabel": "等压逆向扩散 (ICD)", "densityExceededLabel": "超过最大气体密度",
+    "noDecoReachedLabel": "已达到免减压极限", "missingAirBreakLabel": "缺少纯氧间歇", "resetToDefault": "恢复默认设置"
+  },
+  "altitudeCalc": { "cardTitle": "海拔计算器", "pressureLabel": "大气压力", "actualDepthLabel": "实际深度", "theoreticalDepthLabel": "理论海平面深度" },
+  "gasBlender": {
+    "cardTitle": "气体混合", "showPricingTitle": "显示价格", "sourceLabel": "源气体", "heLabel": "He [%]：",
+    "pressureLabel": "压力", "topMixLabel": "加满气体", "targetLabel": "目标气体", "resultsLabel": "结果",
+    "removeFromSourceLabel": "从源气体中放出", "addO2Label": "添加 O2", "addHeLabel": "添加 He", "addTopMixLabel": "添加加满气体",
+    "unableToCalculateMessage": "无法计算所需的混合气体，因为加满气体中的氧气或氦气含量高于目标气体。",
+    "unitPricesLabel": "单价", "o2UnitPriceLabel": "O2 单价：", "heUnitPriceLabel": "He 单价：",
+    "topMixUnitPriceLabel": "加满气体单价：", "mixPriceLabel": "混合气体价格", "o2PriceLabel": "O2 价格",
+    "hePriceLabel": "He 价格", "topMixPriceLabel": "加满气体价格", "totalPriceLabel": "总价"
+  },
+  "gasProps": {
+    "cardTitle": "混合气体", "nitroxLabel": "氮氧", "heLabel": "He [%]：", "maxNarcoticDepthLabel": "最大氮醉深度",
+    "oxygenNarcoticLabel": "氧气具有麻醉性", "propertiesAtDepthLabel": "该深度下的属性", "gasPropertiesLabel": "气体属性",
+    "oxygenPartialPressureLabel": "氧分压", "heliumPartialPressureLabel": "氦分压",
+    "nitrogenPartialPressureLabel": "氮分压", "totalPartialPressureLabel": "总分压",
+    "minimumDepthLabel": "最小深度", "maximumDepthLabel": "最大深度", "equivalentAirDepthLabel": "等效空气深度",
+    "equivalentNarcoticDepthLabel": "等效氮醉深度", "maximumNarcoticDepthLabel": "最大氮醉深度",
+    "densityLabel": "密度", "warningsLabel": "警告", "minimumDepthWarningTitle": "最小深度：",
+    "minimumDepthWarningMessage": "超过了氧分压的最小值（{{minPpO2}}），该值决定了最小深度。请增加氧气含量或减小所需深度。",
+    "maximumDepthWarningTitle": "最大深度：",
+    "maximumDepthWarningMessage": "超过了氧分压的最大值（{{maxPpO2}}）。请提高最大ppO2、降低氧气含量或减小所需深度。",
+    "mndWarningTitle": "等效氮醉深度：",
+    "mndWarningMessage": "超过了由有毒成分（氧气和氮气）分压所控制的氮醉深度最大值（{{mndLimit}} {{unit}}）。请通过添加氦气、增加氧气含量或减小所需深度来降低氮气含量。",
+    "densityWarningTitle": "最大气体密度：",
+    "densityWarningMessage": "超过了气体密度的最大值（{{maxDensity}} {{unit}}）。请降低氧气含量或增加氦气含量。"
+  },
+  "ndlLimits": { "optionsCardTitle": "选项", "cardTitle": "免减压极限", "depthColumnLabel": "深度", "limitColumnLabel": "极限 [分钟]", "noResultsMessageLine1": "在有意义的深度范围内未找到NDL极限值。", "noResultsMessageLine2": "请更改气体的O2含量。" },
+  "nitrox": {
+    "cardTitle": "氮氧计算器", "modTab": "MOD", "bestMixTab": "最佳配比", "ppo2Tab": "ppO2", "eadTab": "EAD",
+    "ppo2Label": "ppO2：", "modLabel": "MOD", "eadPrefix": "EAD：", "depthLabel": "深度", "o2Label": "O2 [%]：", "eadLabel": "EAD",
+    "lowModMessage": "最终作业深度过小。请提高ppO2或降低O2百分比。"
+  },
+  "redundancies": { "cardTitle": "气瓶平衡计算器", "firstTankLabel": "第一个气瓶", "sizeLabel": "容量", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力", "secondTankLabel": "第二个气瓶", "finalPressureLabel": "最终压力" },
+  "sac": {
+    "cardTitle": "呼吸分钟通气量", "rmvTab": "RMV", "usedTab": "已消耗", "durationTab": "持续时间",
+    "averageDepthLabel": "平均深度", "tankSizeLabel": "气瓶容量", "workingPressureLabel": "工作压力",
+    "diveTimeLabel": "潜水时间", "gasConsumedLabel": "消耗气体量", "rmvLabel": "RMV", "sacPrefix": "SAC："
+  },
+  "weight": { "cardTitle": "配重计算器", "tankSizeLabel": "气瓶容量", "workingPressureLabel": "工作压力", "consumedLabel": "已消耗", "lostWeightLabel": "减少的配重" },
+  "dashboard": {
+    "installMessage": "要在离线模式下使用本应用程序，您需要将其添加（安装）到主屏幕。",
+    "installAppleMessage": "点击“分享”按钮，然后选择“添加到主屏幕”。", "addToHomeScreen": "添加到主屏幕",
+    "sharePlanTitle": "分享计划", "shareUrlCopied": "此潜水计划的URL地址已复制到剪贴板。"
+  },
+  "depth": { "label": "深度", "bestMixLabel": "最佳配比为", "maxDepthTitle": "根据气体氮醉极限设置最大深度", "maxButton": "最大" },
+  "depthsComplex": { "cardTitle": "深度", "from": "从", "to": "到", "duration": "持续时间", "tank": "气瓶", "endDepthLabel": "结束深度" },
+  "depthsSimple": { "cardTitle": "深度", "bottomTime": "水底时间", "noDecoLimit": "免减压极限", "maxDurationTitle": "根据消耗的气体将潜水时间设置为最大值", "maxButton": "最大", "noDecoTitle": "将潜水时间设置为免减压极限", "noDecoButton": "免减压" },
+  "diveIssues": {
+    "calculationError": "计算剖面时发生错误。",
+    "notEnoughTimePrefix": "没有足够的时间完成此次潜水（持续时间至少需要", "notEnoughTimeSuffix": "分钟）！请设置更长的计划潜水时间。",
+    "notEnoughGasPrefix": "没有足够的气体完成此次潜水！当前气体量下的最大水底时间为",
+    "notEnoughGasSuffix": "分钟。请使用更大的气瓶、充入更多气体、缩短潜水时间或减小计划深度。",
+    "notEnoughGasShort": "没有足够的气体完成此次潜水！当前气体量下的最大水底时间短于当前计划的潜水时间。请使用更大的气瓶、充入更多气体、缩短潜水时间或减小计划深度。",
+    "brokenCeiling": "超过了最小安全（天花板）深度！请在此处将计划调整为更深的深度。",
+    "lowPpo2": "达到了较低的氧分压（超过最小深度限制）！存在缺氧风险。请使用氧气含量更高的气体。",
+    "highPpo2": "达到了较高的氧分压（超过最大深度限制）！存在氧中毒风险。请减小深度或使用氧气含量更低的气体。",
+    "highDescentSpeed": "下降速度过快！请延长下降时间或下降至较浅的深度。",
+    "highAscentSpeed": "上升速度过快！请仅上升至较浅的深度，或延长上升时间。",
+    "highN2Switch": "不建议切换到氮气含量更高的气体！存在等压逆向扩散（IDC）风险。请切换到氦气含量更高或氮气含量更低的另一种气体。",
+    "mndExceeded": "超过了所选气体的最大氮醉深度！请减小深度或使用氦气含量更高的气体。",
+    "highDensity": "超过了建议的最大气体密度！请减小深度或使用氦气含量更高（即密度更低）的气体。",
+    "minDepth": "长时间计划在浅深度潜水可能导致饱和潜水！请将潜水时间缩短至5小时以内。",
+    "maxDepth": "超过了该算法在真实数据中经过充分验证的最大深度！请减小最大深度。",
+    "missingAirbreak": "建议不要连续呼吸纯氧超过20分钟。请使用纯氧间歇选项生成适当的气体切换，或手动添加切换回水底气体的操作。",
+    "noDecoPrefix": "当前深度下的免减压时间已超出（如需进行免减压潜水，请将潜水时间最大设置为", "noDecoSuffix": "分钟）！",
+    "otuExceededPrefix": "已超过单次暴露氧气毒性单位最大值的80%", "otuExceededSuffix": "存在肺部损伤的高风险。请减少气体中的氧气含量、缩短潜水时间或减小目标深度。",
+    "cnsExceededPrefix": "已超过单次暴露氧气毒性最大值的80%", "cnsExceededSuffix": "存在中枢神经系统（CNS）损伤的高风险。请减少气体中的氧气含量、缩短潜水时间或减小目标深度。"
+  },
+  "diveInfo": {
+    "cardTitle": "潜水信息", "resultsTab": "结果", "shareTitle": "分享潜水地址", "share": "分享",
+    "totalDiveTime": "潜水总时间", "timeToSurface": "上升至水面时间", "averageDepth": "平均深度",
+    "rockBottomAt": "最低安全气量深度", "noDecoTime": "免减压时间", "noDecoTimeTitle": "将潜水时间设置为免减压极限",
+    "use": "使用", "maxBottomTime": "最大水底时间", "maxBottomTimeTitle": "根据消耗的气体将潜水时间设置为最大值",
+    "surfaceGradient": "水面梯度", "offgasingStart": "排氮开始", "highestCeiling": "最高天花板深度",
+    "highestGasDensity": "最高气体密度", "turnTime": "折返时间", "turnPressure": "折返压力",
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题"
+  },
+  "diveOptions": {
+    "allUsable": "全部可用", "halfUsable": "一半可用", "thirdUsable": "三分之一可用", "cardTitle": "选项",
+    "extendedTrimix": "扩展（三元气）", "environmentTab": "环境", "conservatismTab": "保守度", "gasesTab": "气体",
+    "maxNarcoticDepth": "最大氮醉深度", "oxygenIsNarcotic": "氧气具有麻醉性", "airBreaksTab": "纯氧间歇",
+    "generateAirBreaks": "生成纯氧间歇", "maxOxygenStopDuration": "最大纯氧停留时长", "backGasDuration": "水底气体持续时间",
+    "stopsTab": "停留点", "solveProblem": "解决问题", "gasSwitch": "气体切换", "lastStopDepth": "最后停留深度",
+    "decoStopDistance": "减压停留点间距", "roundDecoStops": "将减压停留点四舍五入到整分钟", "speedsTab": "速度",
+    "descent": "下降", "ascentTo50": "上升至50%", "ascentToX": "上升至", "ascentPrefix": "上升", "toSurface": "至水面",
+    "diverTab": "潜水员", "recreational": "休闲潜水", "recommended": "推荐", "addSafetyStop": "添加3分钟安全停留："
+  },
+  "profileChart": { "cardTitle": "潜水剖面", "heatmapTitle": "显示组织热力图", "emergencyAscentTitle": "显示紧急上升", "timeAxisLabel": "时间", "depthAxisLabel": "深度", "avgDepthTraceName": "平均深度", "depthTraceName": "深度", "emergencyTraceName": "紧急", "ceilingTraceName": "天花板", "eventTraceName": "事件" },
+  "surfaceInterval": { "label": "水面间隔时间", "firstDive": "首次潜水", "thirtyMinutes": "30分钟", "oneHour": "1小时", "twoHours": "2小时", "invalidFormat": "必须为hh:mm格式的文本" },
+  "tankChart": { "gasRemaining": "剩余气体：", "rockBottom": "最低安全气量：" },
+  "tanksComplex": { "cardTitle": "气瓶", "size": "容量", "workPressure": "工作压力", "pressure": "压力", "he": "He", "o2": "O2", "sac": "SAC：", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力" },
+  "tanksSimple": { "cardTitle": "水底气瓶", "size": "容量", "sac": "SAC：", "workingPressure": "工作压力", "startPressure": "起始压力" },
+  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
+  "learn": {
+    "topics": {
+      "pressureAtDepth": "深度处的压力",
+      "nitrox": "富氧空气",
+      "consumption": "气体消耗",
+      "trimix": "三混气"
+    },
+    "categories": {
+      "examples_depth": "深度",
+      "examples_pressure": "压力",
+      "examples_mod": "最大使用深度",
+      "examples_bestmix": "最佳配比",
+      "examples_ppO2": "氧分压",
+      "examples_ead": "等效空气深度",
+      "examples_sac": "水面气体消耗率",
+      "examples_rmv": "呼吸分钟通气量",
+      "examples_consumed": "已用气量",
+      "examples_durationbyrmv": "潜水时长",
+      "examples_mindepth": "最小深度",
+      "examples_end": "等效麻醉深度",
+      "examples_mnd": "最大麻醉深度"
+    },
+    "questions": {
+      "examples_depth": "环境压力为 {pressure} bar 时,深度(以米为单位)是多少?",
+      "examples_pressure": "深度为 {depth} 米时,环境压力(以 bar 为单位)是多少?",
+      "examples_mod": "含氧 {o2_percent} % 的气体在氧分压为 {pp} 时,最大使用深度是多少?",
+      "examples_bestmix": "在深度 {depth} 米、氧分压为 {pp} 时,最佳配比(以百分比表示)是多少?",
+      "examples_ppO2": "含氧 {o2_percent} % 的气体在深度 {depth} 米时的分压是多少?",
+      "examples_ead": "含氧 {o2_percent} % 的富氧空气混合气在深度 {depth} 米时的等效空气深度是多少?",
+      "examples_sac": "我的呼吸分钟通气量(RMV,以升/分钟计)为 {rmv} L/min。使用 {tank_size} L 气瓶呼吸时,我的水面气体消耗率(SAC)是多少?",
+      "examples_rmv": "潜水平均深度为 {depth} 米,使用 {tank_size} L 气瓶潜水 {duration} 分钟,消耗了 {consumed} b 的气体,潜水员的呼吸分钟通气量(RMV,以升/分钟计)是多少?",
+      "examples_consumed": "在平均深度 {depth} 米,使用 {tank_size} L 气瓶潜水 {duration} 分钟,呼吸分钟通气量(RMV)为 {rmv} L/min 时,我消耗了多少气体(以 bar 为单位)?",
+      "examples_durationbyrmv": "在平均深度 {depth} 米,{tank_size} L 气瓶中可用气量为 {consumed} b,呼吸分钟通气量(RMV)为 {rmv} L/min 时,我能停留多长时间(以分钟为单位)?",
+      "examples_mindepth": "团队选择三混气 {oxygen}/{helium} 作为潜水气体。氧气的最小分压(ppO2)为 0.18 b。该气体的最小深度是多少?",
+      "examples_end": "你计划潜水至 {depth} 米。氧气被视为具有麻醉作用。团队选择三混气 {oxygen}/{helium} 作为潜水气体。该气体的等效麻醉深度是多少?",
+      "examples_mnd": "你计划一次潜水,并认为在 {narc_depth} 米以下空气具有麻醉作用。氧气也被视为具有麻醉作用。团队选择三混气 {oxygen}/{helium} 作为气体。该气体的最大麻醉深度是多少?"
+    },
+    "roundingExplanationDown": "将答案向下舍入到 {{decimals}} 位小数。",
+    "roundingExplanationUp": "将答案向上舍入到 {{decimals}} 位小数。",
+    "roundingExplanationExact": "将答案舍入到 {{decimals}} 位小数。",
+    "correct": "回答正确！",
+    "incorrectPrefix": "回答错误。正确答案：",
+    "submitAnswer": "提交答案",
+    "nextQuestion": "下一题",
+    "needHint": "需要提示吗？",
+    "completed": "已完成！",
+    "pointsLabel": "得分：",
+    "pointsOutOf": "满分",
+    "correctAnswersLabel": "正确答案数：",
+    "someWithHints": "（部分使用了提示）",
+    "scoreLabel": "分数：",
+    "reset": "重置",
+    "continuePracticing": "继续练习",
+    "questionHelp": "题目帮助",
+    "showHelp": "显示帮助",
+    "openHelpPanel": "打开帮助面板",
+    "resetCategory": "重置类别"
+  }
+}

@@ -1,14 +1,14 @@
 {
-    "name": "Dugong Gas planner",
-    "short_name": "Gas planner",
-    "description": "Simple scuba diving gas planning calculator. Calculates decompression and dive ascent based on Bühlmann ZHL-16 model.",
+    "name": "Dugong Gas Planer",
+    "short_name": "Gas Planer",
+    "description": "Einfacher Tauchgas-Rechner. Berechnet Dekompression und Auftauchprofile basierend auf dem Bühlmann-ZHL-16-Modell.",
     "categories": ["utilities", "sports", "education", "navigation"],
     "theme_color": "#1976d2",
     "background_color": "#fafafa",
-    "lang": "en",
+    "lang": "de",
     "dir": "ltr",
     "display": "standalone",
-    "id": "0.3.1",
+    "id": "0.3.0",
     "scope": "./",
     "start_url": "./",
     "orientation": "portrait-primary",
@@ -19,15 +19,15 @@
     ],
     "shortcuts": [
         {
-            "name": "Nitrox calculator",
+            "name": "Nitrox-Rechner",
             "url": "/nitrox"
         },
         {
-            "name": "Sac/RMV calculator",
+            "name": "Sac/RMV-Rechner",
             "url": "/sac"
         },
         {
-            "name": "No deco limits calculator",
+            "name": "Nullzeitgrenzen-Rechner",
             "url": "/ndl"
         }
     ],

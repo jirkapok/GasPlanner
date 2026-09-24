@@ -1,0 +1,550 @@
+{
+  "menu": {
+    "calculators": "Calculators",
+    "planner": "Planner",
+    "rmvSac": "RMV/SAC",
+    "nitrox": "Nitrox",
+    "gasProperties": "Gas properties",
+    "altitude": "Altitude",
+    "weight": "Weight",
+    "ndlTable": "NDL table",
+    "cylinderBalancing": "Cylinder Balancing",
+    "gasBlender": "Gas blender",
+    "dive": "Dive",
+    "clone": "Clone",
+    "saveAsDefault": "Save as default",
+    "loadDefault": "Load default",
+    "share": "Share",
+    "delete": "Delete",
+    "settings": "Settings",
+    "compareDives": "Compare dives",
+    "standardGases": "Standard gases",
+    "help": "Help",
+    "learn": "Learn",
+    "about": "About",
+    "toggleNavigation": "Toggle navigation"
+  },
+  "personalization": {
+    "cardTitle": "Personalization",
+    "metricUnits": "Metric units (m, l, bar)",
+    "imperialUnits": "Imperial units (ft, cuft, psi)",
+    "imperialExperimental": "(Experimental, not recommended)",
+    "language": "Language"
+  },
+  "textConstants": {
+    "depthConverterWarning": "This calculator uses simple depth conversion (where 1 ATM = 1 bar), so the values shown here are less precise, than in rest of the application. Also it uses ideal gas law, so the calculated Rmv is lower then in reality.",
+    "cnsOverOneThousand": "> 1000"
+  },
+  "salinity": {
+    "label": "Water salinity:",
+    "fresh": "Fresh",
+    "brackish": "Brackish (EN13319)",
+    "salt": "Salt"
+  },
+  "options": {
+    "safetyOff": "Never",
+    "safetyOn": "Always",
+    "safetyAuto": "Auto (> {{level}} {{unit}})"
+  },
+  "gradients": {
+    "title": "Conservatism (Gradient factors):",
+    "lowLabel": "Gradient low [%]:",
+    "highLabel": "Gradient high [%]:",
+    "lowerThanHigh": "lower than gradient high",
+    "higherThanLow": "higher than gradient low",
+    "low": "Low (45/95)",
+    "medium": "Medium (40/85)",
+    "high": "High (30/75)"
+  },
+  "waypoints": {
+    "ascent": "ascent",
+    "descent": "descent",
+    "switch": "switch",
+    "hover": "hover"
+  },
+  "events": {
+    "deco": "Deco",
+    "safetyStop": "Safety stop"
+  },
+  "help": {
+    "menu": {
+      "application": {
+        "title": "Application",
+        "usage": "Application usage",
+        "settings": "Application settings"
+      },
+      "plan": {
+        "title": "Dive Plan",
+        "tanks": "Tanks",
+        "standardGases": "Standard gases",
+        "depths": "Depths",
+        "surfaceInterval": "Surface interval"
+      },
+      "options": {
+        "title": "Dive Options",
+        "general": "General",
+        "environment": "Environment",
+        "conservatism": "Conservatism",
+        "gases": "Gases",
+        "airBreaks": "Air breaks",
+        "stops": "Stops",
+        "speeds": "Speeds",
+        "diver": "Diver"
+      },
+      "results": {
+        "title": "Dive Results",
+        "diveInfoTable": "Dive info table",
+        "oxygenToxicity": "Oxygen toxicity",
+        "events": "Events causing errors and warnings",
+        "consumedGasCharts": "Consumed gas charts",
+        "wayPointsTable": "Dive way points table",
+        "profileChart": "Dive profile chart",
+        "tissuesHeatMap": "Tissues heat map"
+      },
+      "calculators": {
+        "title": "Calculators",
+        "sac": "RMV/SAC",
+        "nitrox": "Nitrox",
+        "ndl": "No decompression limits (NDL) table",
+        "altitude": "Altitude",
+        "weight": "Weight",
+        "gasProperties": "Gas properties",
+        "redundancies": "Cylinder Balancing",
+        "gasBlender": "Gas blender"
+      }
+    }
+  },
+  "validation": {
+    "needsNumber": "Needs to be number"
+  },
+  "altitude": {
+    "label": "Altitude",
+    "seaLevel": "Sea level"
+  },
+  "calculating": {
+    "label": "Calculating ..."
+  },
+  "gaslabel": {
+    "mod": "MOD",
+    "switch": "switch",
+    "mnd": "MND"
+  },
+  "oxygenDropdown": {
+    "o2Label": "O2 [%]:",
+    "bestMix": "Best mix"
+  },
+  "about": {
+    "title": "About Gas Planner",
+    "tagline1": "Open source Scuba diving application to help divers plan their dives.",
+    "tagline2": "Plan your dive and dive your plan!",
+    "disclaimerLabel": "Disclaimer:",
+    "disclaimerText": "None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.",
+    "githubProject": "Github project"
+  },
+  "cardHeader": {
+    "showHelp": "Show Help"
+  },
+  "helpModal": {
+    "title": "Help",
+    "close": "Close"
+  },
+  "appinfo": {
+    "version": "Version"
+  },
+  "ppo2": {
+    "maxPpo2Label": "Maximum ppO2:",
+    "maxDecoPpo2Label": "Maximum deco ppO2:"
+  },
+  "diver": {
+    "rmvLabel": "RMV",
+    "stressRmvLabel": "Stress RMV"
+  },
+  "diff": {
+    "onlyOneDive": "There is only one dive planned. If you want to compare dives, define at least two.",
+    "goToPlanner": "Go to planner"
+  },
+  "diffDiveResults": {
+    "cardTitle": "Dive Results"
+  },
+  "diffResultsTable": {
+    "profileA": "Profile A",
+    "profileB": "Profile B",
+    "difference": "Difference",
+    "totalDiveTime": "Total dive time",
+    "timeToSurface": "Time to surface",
+    "averageDepth": "Average depth",
+    "rockBottomAt": "Rock bottom at",
+    "noDecoTime": "No decompression time",
+    "maxBottomTime": "Maximum bottom time",
+    "highestGasDensity": "Highest gas density",
+    "otuToxicity": "OTU toxicity",
+    "cnsToxicity": "CNS toxicity"
+  },
+  "diffGasConsumed": {
+    "cardTitle": "Gas Consumed",
+    "difference": "Difference",
+    "gasRemaining": "Gas remaining:",
+    "notAvailable": "Not available",
+    "reserve": "Reserve:"
+  },
+  "diffProfileChart": {
+    "cardTitle": "Profile chart"
+  },
+  "diffTabs": {
+    "profileA": "PROFILE A",
+    "profileB": "PROFILE B"
+  },
+  "diffWaypoints": {
+    "cardTitle": "Dive way points",
+    "profileA": "Profile A",
+    "profileB": "Profile B",
+    "run": "Run",
+    "depth": "Depth",
+    "duration": "Duration"
+  },
+  "common": {
+    "back": "Back",
+    "use": "Use"
+  },
+  "settings": {
+    "limitsCardTitle": "Limits",
+    "maxGasDensityLabel": "Max gas density",
+    "primaryTankReserveLabel": "Minimum Primary tank reserve",
+    "stageTankReserveLabel": "Minimum Stage tank reserve",
+    "ignoredIssuesCardTitle": "Ignored Issues (warnings/errors)",
+    "icdLabel": "Isobaric counter diffusion (ICD)",
+    "densityExceededLabel": "Maximum gas density Exceeded",
+    "noDecoReachedLabel": "No decompression limit reached",
+    "missingAirBreakLabel": "Missing air break",
+    "resetToDefault": "Reset to Default"
+  },
+  "altitudeCalc": {
+    "cardTitle": "Altitude calculator",
+    "pressureLabel": "Atmospheric pressure",
+    "actualDepthLabel": "Actual depth",
+    "theoreticalDepthLabel": "Theoretical sea level depth"
+  },
+  "gasBlender": {
+    "cardTitle": "Gas blender",
+    "showPricingTitle": "Show pricing",
+    "sourceLabel": "Source",
+    "heLabel": "He [%]:",
+    "pressureLabel": "Pressure",
+    "topMixLabel": "Top mix",
+    "targetLabel": "Target",
+    "resultsLabel": "Results",
+    "removeFromSourceLabel": "Remove from source",
+    "addO2Label": "Add O2",
+    "addHeLabel": "Add He",
+    "addTopMixLabel": "Add Top mix",
+    "unableToCalculateMessage": "Unable to calculate the required mix, because the Top mix contains more oxygen or helium, than target mix.",
+    "unitPricesLabel": "Unit prices",
+    "o2UnitPriceLabel": "Unit price O2:",
+    "heUnitPriceLabel": "Unit price He:",
+    "topMixUnitPriceLabel": "Unit price Top mix:",
+    "mixPriceLabel": "Mix price",
+    "o2PriceLabel": "O2 price",
+    "hePriceLabel": "He price",
+    "topMixPriceLabel": "Top mix price",
+    "totalPriceLabel": "Total price"
+  },
+  "gasProps": {
+    "cardTitle": "Gas mixture",
+    "nitroxLabel": "Nitrox",
+    "heLabel": "He [%]:",
+    "maxNarcoticDepthLabel": "Max narcotic depth",
+    "oxygenNarcoticLabel": "Oxygen is narcotic",
+    "propertiesAtDepthLabel": "Properties at depth",
+    "gasPropertiesLabel": "Gas properties",
+    "oxygenPartialPressureLabel": "Oxygen partial pressure",
+    "heliumPartialPressureLabel": "Helium partial pressure",
+    "nitrogenPartialPressureLabel": "Nitrogen partial pressure",
+    "totalPartialPressureLabel": "Total partial pressure",
+    "minimumDepthLabel": "Minimum depth",
+    "maximumDepthLabel": "Maximum depth",
+    "equivalentAirDepthLabel": "Equivalent air depth",
+    "equivalentNarcoticDepthLabel": "Equivalent narcotic depth",
+    "maximumNarcoticDepthLabel": "Maximum narcotic depth",
+    "densityLabel": "Density",
+    "warningsLabel": "Warnings",
+    "minimumDepthWarningTitle": "Minimum depth: ",
+    "minimumDepthWarningMessage": "Exceeded minimum value of Oxygen partial pressure ({{minPpO2}}), which defines minimum depth. Add more oxygen content or reduce required depth.",
+    "maximumDepthWarningTitle": "Maximum depth: ",
+    "maximumDepthWarningMessage": "Exceeded maximum value of Oxygen partial pressure ({{maxPpO2}}). Increase the maximum ppO2, reduce oxygen content or reduce required depth.",
+    "mndWarningTitle": "Equivalent narcotic depth: ",
+    "mndWarningMessage": "Exceeded maximum value of narcotic depth ({{mndLimit}} {{unit}}) controlled by partial pressure of toxic parts (oxygen and nitrogen). Reduce nitrogen content by adding helium, adding oxygen or reduce required depth.",
+    "densityWarningTitle": "Maximum gas density: ",
+    "densityWarningMessage": "Exceeded maximum value of gas density ({{maxDensity}} {{unit}}). Reduce oxygen content or add more helium."
+  },
+  "ndlLimits": {
+    "optionsCardTitle": "Options",
+    "cardTitle": "No decompression limits",
+    "depthColumnLabel": "Depth",
+    "limitColumnLabel": "Limit [min]",
+    "noResultsMessageLine1": "No NDL limits found in meaningful depth range.",
+    "noResultsMessageLine2": "Change gas O2 content."
+  },
+  "nitrox": {
+    "cardTitle": "Nitrox calculator",
+    "modTab": "MOD",
+    "bestMixTab": "Best mix",
+    "ppo2Tab": "ppO2",
+    "eadTab": "EAD",
+    "ppo2Label": "ppO2:",
+    "modLabel": "MOD",
+    "eadPrefix": "EAD:",
+    "depthLabel": "Depth",
+    "o2Label": "O2 [%]:",
+    "eadLabel": "EAD",
+    "lowModMessage": "Too small final operation depth. Increase ppO2 or reduce Percent O2."
+  },
+  "redundancies": {
+    "cardTitle": "Cylinder Balancing Calculator",
+    "firstTankLabel": "First tank",
+    "sizeLabel": "Size",
+    "workingPressureLabel": "Working pressure",
+    "startPressureLabel": "Start pressure",
+    "secondTankLabel": "Second tank",
+    "finalPressureLabel": "Final pressure"
+  },
+  "sac": {
+    "cardTitle": "Respiratory minute volume",
+    "rmvTab": "RMV",
+    "usedTab": "Used",
+    "durationTab": "Duration",
+    "averageDepthLabel": "Average depth",
+    "tankSizeLabel": "Tank size",
+    "workingPressureLabel": "Working pressure",
+    "diveTimeLabel": "Dive time",
+    "gasConsumedLabel": "Gas consumed",
+    "rmvLabel": "RMV",
+    "sacPrefix": "SAC:"
+  },
+  "weight": {
+    "cardTitle": "Weight calculator",
+    "tankSizeLabel": "Tank size",
+    "workingPressureLabel": "Working pressure",
+    "consumedLabel": "Consumed",
+    "lostWeightLabel": "Lost weight"
+  },
+  "dashboard": {
+    "installMessage": "To be able to use the application in offline mode, you need to add it (install) to your Home screen.",
+    "installAppleMessage": "Tap \"Share\" button and than \"Add to home screen\".",
+    "addToHomeScreen": "Add to Home screen",
+    "sharePlanTitle": "Share plan",
+    "shareUrlCopied": "URL address of this dive plan was copied to the clipboard."
+  },
+  "depth": {
+    "label": "Depth",
+    "bestMixLabel": "Best mix is",
+    "maxDepthTitle": "Set maximum depth by gas narcotic limit",
+    "maxButton": "Max"
+  },
+  "depthsComplex": {
+    "cardTitle": "Depths",
+    "from": "From",
+    "to": "To",
+    "duration": "Duration",
+    "tank": "Tank",
+    "endDepthLabel": "End depth"
+  },
+  "depthsSimple": {
+    "cardTitle": "Depth",
+    "bottomTime": "Bottom time",
+    "noDecoLimit": "No deco limit",
+    "maxDurationTitle": "Set dive time to maximum by consumed gas",
+    "maxButton": "Max",
+    "noDecoTitle": "Set dive time to no deco limit",
+    "noDecoButton": "No deco"
+  },
+  "diveIssues": {
+    "calculationError": "There was an error while calculating profile.",
+    "notEnoughTimePrefix": "Not enough time to realize the dive (duration needs to be at least",
+    "notEnoughTimeSuffix": "min)! Set longer planed dive time.",
+    "notEnoughGasPrefix": "Not enough gas to realize the dive! Maximum bottom time for current amount of gas is",
+    "notEnoughGasSuffix": "min. Use larger tank, fill it with more gas, reduce dive duration or planned depth.",
+    "notEnoughGasShort": "Not enough gas to realize the dive! Maximum bottom time for current amount of gas is shorter than currently planned dive. Use larger tank, fill it with more gas, reduce dive duration or planned depth.",
+    "brokenCeiling": "Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.",
+    "lowPpo2": "Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia. Use gas with higher oxygen content.",
+    "highPpo2": "Reached high partial pressure of oxygen (maximum depth exceeded)! There is a risk of oxygen toxicity. Reduce the depth or use gas with lower oxygen content.",
+    "highDescentSpeed": "High descent speed! Descent longer time or descent to lower depth.",
+    "highAscentSpeed": "High ascent speed! Ascent to higher depth only or ascent longer time.",
+    "highN2Switch": "Gas switch to gas with higher nitrogen content is not recommended! There is a risk od isobaric counter diffusion (IDC). Switch to another gas with higher helium content or lower nitrogen content.",
+    "mndExceeded": "Exceeded maximum narcotic depth for selected gas! Reduce the depth or use gas with higher helium content.",
+    "highDensity": "Exceeded maximum recommended gas density! Reduce the depth or use gas with higher helium content (i.e. lower density).",
+    "minDepth": "Dives planned to shallow depth for long time may lead to saturation diving! Reduce the dive duration shorter than 5 hours.",
+    "maxDepth": "Exceeded maximum depth where the algorithm was well tested on real life data! Reduce the maximum depth.",
+    "missingAirbreak": "It is recommended to don't breath pure oxygen longer than 20 minutes. Use air break option to generate proper gas switches or manually add switch to bottom gas.",
+    "noDecoPrefix": "No decompression time for current depth exceeded (For no decompression dive set dive time maximum to",
+    "noDecoSuffix": "min)!",
+    "otuExceededPrefix": "Exceeded 80 % of maximum single exposure oxygen toxicity units",
+    "otuExceededSuffix": "There is a high risk of lungs injury. Reduce amount of oxygen in your gases, dive duration or target depths.",
+    "cnsExceededPrefix": "Exceeded 80 % of maximum single exposure oxygen toxicity",
+    "cnsExceededSuffix": "There is a high risk of CNS injury. Reduce amount of oxygen in your gases, dive duration or target depths."
+  },
+  "diveInfo": {
+    "cardTitle": "Dive Info",
+    "resultsTab": "Results",
+    "shareTitle": "Share the dive address",
+    "share": "Share",
+    "totalDiveTime": "Total dive time",
+    "timeToSurface": "Time to surface",
+    "averageDepth": "Average depth",
+    "rockBottomAt": "Rock bottom at",
+    "noDecoTime": "No decompression time",
+    "noDecoTimeTitle": "Set dive time to no deco limit",
+    "use": "Use",
+    "maxBottomTime": "Maximum bottom time",
+    "maxBottomTimeTitle": "Set dive time to maximum by consumed gas",
+    "surfaceGradient": "Surface gradient",
+    "offgasingStart": "Offgasing start",
+    "highestCeiling": "Highest ceiling",
+    "highestGasDensity": "Highest gas density",
+    "turnTime": "Turn time",
+    "turnPressure": "Turn pressure",
+    "otuToxicity": "OTU toxicity",
+    "cnsToxicity": "CNS toxicity",
+    "consumedTab": "Consumed",
+    "issuesTab": "Issues"
+  },
+  "diveOptions": {
+    "allUsable": "All usable",
+    "halfUsable": "Half usable",
+    "thirdUsable": "Thirds usable",
+    "cardTitle": "Options",
+    "extendedTrimix": "Extended (Trimix)",
+    "environmentTab": "Environment",
+    "conservatismTab": "Conservatism",
+    "gasesTab": "Gases",
+    "maxNarcoticDepth": "Max narcotic depth",
+    "oxygenIsNarcotic": "Oxygen is narcotic",
+    "airBreaksTab": "Air breaks",
+    "generateAirBreaks": "Generate Air breaks",
+    "maxOxygenStopDuration": "Maximum Oxygen stop duration",
+    "backGasDuration": "Back gas duration",
+    "stopsTab": "Stops",
+    "solveProblem": "Solve problem",
+    "gasSwitch": "Gas switch",
+    "lastStopDepth": "Last stop depth",
+    "decoStopDistance": "Distance between deco stops",
+    "roundDecoStops": "Round deco stops to minutes",
+    "speedsTab": "Speeds",
+    "descent": "Descent",
+    "ascentTo50": "Ascent to 50%",
+    "ascentToX": "Ascent to",
+    "ascentPrefix": "Ascent",
+    "toSurface": "to surface",
+    "diverTab": "Diver",
+    "recreational": "Recreational",
+    "recommended": "Recommended",
+    "addSafetyStop": "Add 3 min safety stop:"
+  },
+  "profileChart": {
+    "cardTitle": "Dive profile",
+    "heatmapTitle": "Show tissues heatmap",
+    "emergencyAscentTitle": "Show emergency ascent",
+    "timeAxisLabel": "Time",
+    "depthAxisLabel": "Depth",
+    "avgDepthTraceName": "Avg. depth",
+    "depthTraceName": "Depth",
+    "emergencyTraceName": "Emergency",
+    "ceilingTraceName": "Ceiling",
+    "eventTraceName": "Event"
+  },
+  "surfaceInterval": {
+    "label": "Surface interval",
+    "firstDive": "First dive",
+    "thirtyMinutes": "30 minutes",
+    "oneHour": "1 Hour",
+    "twoHours": "2 Hours",
+    "invalidFormat": "Needs to be a text in form hh:mm"
+  },
+  "tankChart": {
+    "gasRemaining": "Gas remaining:",
+    "rockBottom": "Rock bottom:"
+  },
+  "tanksComplex": {
+    "cardTitle": "Tanks",
+    "size": "Size",
+    "workPressure": "Work p.",
+    "pressure": "Pressure",
+    "he": "He",
+    "o2": "O2",
+    "sac": "SAC:",
+    "workingPressureLabel": "Working pressure",
+    "startPressureLabel": "Start pressure"
+  },
+  "tanksSimple": {
+    "cardTitle": "Bottom gas tank",
+    "size": "Size",
+    "sac": "SAC:",
+    "workingPressure": "Working pressure",
+    "startPressure": "Start pressure"
+  },
+  "waypointsTable": {
+    "cardTitle": "Dive way points",
+    "filterTitle": "Filter to show stops only",
+    "depth": "Depth",
+    "duration": "Duration",
+    "run": "Run",
+    "gas": "Gas"
+  },
+  "learn": {
+    "topics": {
+      "pressureAtDepth": "Pressure at depth",
+      "nitrox": "Nitrox",
+      "consumption": "Consumption",
+      "trimix": "Trimix"
+    },
+    "categories": {
+      "examples_depth": "Depth",
+      "examples_pressure": "Pressure",
+      "examples_mod": "Maximum operational depth",
+      "examples_bestmix": "Best mix",
+      "examples_ppO2": "Oxygen partial pressure",
+      "examples_ead": "Equivalent air depth",
+      "examples_sac": "Surface air consumption",
+      "examples_rmv": "Respiratory minute volume",
+      "examples_consumed": "Used gas",
+      "examples_durationbyrmv": "Dive duration",
+      "examples_mindepth": "Minimum depth",
+      "examples_end": "Equivalent narcotic depth",
+      "examples_mnd": "Maximum narcotic depth"
+    },
+    "questions": {
+      "examples_depth": "What is the depth (in meters) at which the ambient pressure is {pressure} bar?",
+      "examples_pressure": "What is the ambient pressure in bars at depth {depth} meters?",
+      "examples_mod": "What is maximum operational depth for gas with {o2_percent} % oxygen at partial pressure {pp} ?",
+      "examples_bestmix": "What is best mix (in percents) at partial pressure {pp} at depth {depth} m?",
+      "examples_ppO2": "What is partial pressure of {o2_percent} % at {depth} m?",
+      "examples_ead": "What is the equivalent air depth of nitrox mix with {o2_percent} % oxygen at {depth} m?",
+      "examples_sac": "My respiratory minute volume (RMV in liters per minute) is {rmv} L/min. What is my surface air consumption (SAC) when breathing from {tank_size} L tank?",
+      "examples_rmv": "What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, with tank {tank_size} L for {duration} minutes where diver consumed {consumed} b?",
+      "examples_consumed": "How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {duration} minutes where my respiratory minute volume (RMV) was {rmv} L/min?",
+      "examples_durationbyrmv": "How long can i stay (in minutes) at average depth {depth} m with available {consumed} b in {tank_size} L tank, where my respiratory minute volume (RMV) is {rmv} L/min?",
+      "examples_mindepth": "Team selects Trimix {oxygen}/{helium} as a gas for a dive. Minimum partial pressure of oxygen (ppO2) is 0.18 b. What is the minimum depth for this gas?",
+      "examples_end": "You plan a dive to {depth} meters. Oxygen is considered as narcotic. Team selects Trimix {oxygen}/{helium} as a gas for the dive. What is the equivalent narcotic depth for this gas?",
+      "examples_mnd": "You plan a dive and consider Air narcotic for depths below {narc_depth} meters. Oxygen is considered as narcotic. Team selects Trimix {oxygen}/{helium} as a gas. What is the maximum narcotic depth for this gas?"
+    },
+    "roundingExplanationDown": "Round down your answer to {{decimals}} decimal place(s).",
+    "roundingExplanationUp": "Round up your answer to {{decimals}} decimal place(s).",
+    "roundingExplanationExact": "Round your answer to {{decimals}} decimal place(s).",
+    "correct": "Correct!",
+    "incorrectPrefix": "Incorrect. Correct answer:",
+    "submitAnswer": "Submit Answer",
+    "nextQuestion": "Next Question",
+    "needHint": "Need Hint?",
+    "completed": "Completed!",
+    "pointsLabel": "Points:",
+    "pointsOutOf": "out of",
+    "correctAnswersLabel": "Correct Answers:",
+    "someWithHints": "(some with hints)",
+    "scoreLabel": "Score:",
+    "reset": "Reset",
+    "continuePracticing": "Continue Practicing",
+    "questionHelp": "Question Help",
+    "showHelp": "Show Help",
+    "openHelpPanel": "Open help panel",
+    "resetCategory": "Reset Category"
+  }
+}

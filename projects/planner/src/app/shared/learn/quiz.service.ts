@@ -39,6 +39,8 @@ export class QuizService {
         this._selectedCategory = this.selectedTopic.categories[0];
         this._session = this.resolveSession(this.selectedCategory);
         this.goToNextQuestion();
+
+        this.translate?.onLangChange.subscribe(() => this.retranslateCurrentQuestion());
     }
 
     public get selectedTopic(): Topic {
@@ -148,6 +150,10 @@ export class QuizService {
 
     private translateQuestion(key: string): string {
         return this.translate ? this.translate.instant(key) : key;
+    }
+
+    private retranslateCurrentQuestion(): void {
+        this._question?.retranslate(this.translateQuestion(this._question.templateKey));
     }
 
     private restoreSessions(entries: QuizSessionDto[] | undefined): void {

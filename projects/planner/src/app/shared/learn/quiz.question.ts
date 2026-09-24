@@ -8,7 +8,7 @@ export class Question {
     public userAnswer?: string;
     public readonly roundTo: number;
     public readonly roundType: RoundType;
-    public readonly renderedQuestion: string;
+    public renderedQuestion: string;
     public readonly correctAnswer: number;
     private readonly variables: number[];
     private _isAnswered = false;
@@ -22,12 +22,23 @@ export class Question {
         this.correctAnswer = this.generateCorrectAnswer();
     }
 
+    /** Translation key of the question template, so the UI can re-resolve it on language change. */
+    public get templateKey(): string {
+        return this.template.question;
+    }
+
     public get isAnswered(): boolean {
         return this._isAnswered;
     }
 
     public get isCorrect(): boolean {
         return this._isCorrect;
+    }
+
+    /** Re-renders the question text in a newly resolved language, keeping the same randomized variables/answer. */
+    public retranslate(questionText: string): void {
+        this.questionText = questionText;
+        this.renderedQuestion = this.renderQuestion();
     }
 
     public validateAnswer(): void {

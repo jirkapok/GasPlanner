@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { GaslabelComponent } from './gaslabel.component';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('Gas label component', () => {
     let component: GaslabelComponent;
@@ -9,7 +10,7 @@ describe('Gas label component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [ UnitConversion, provideTestTranslate() ]
+            providers: [ UnitConversion, provideTestTranslate(), LanguageService ]
         }).compileComponents();
     });
 

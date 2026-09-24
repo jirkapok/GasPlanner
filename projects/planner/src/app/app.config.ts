@@ -69,6 +69,7 @@ import { ProfileDifferenceChartComponent } from './diff/profilechart/diff-profil
 import { DiveResultsTableDifferenceComponent } from './diff/diveresults/table/diff-diveresults-table.component';
 import { MainMenuComponent } from './mainmenu/mainmenu.component';
 import { DurationPipe } from './pipes/duration.pipe';
+import { LocaleNumberPipe } from './pipes/locale-number.pipe';
 import { PlannerService } from './shared/planner.service';
 import { PreferencesStore } from './shared/preferencesStore';
 import { UnitConversion } from './shared/UnitConversion';
@@ -177,6 +178,7 @@ const STANDALONE = [
     AppSettingsComponent,
     MainMenuComponent,
     DurationPipe,
+    LocaleNumberPipe,
     CalculatingComponent,
     AltitudeComponent,
     GaslabelComponent,

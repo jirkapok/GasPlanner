@@ -1,7 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { CommonModule, DecimalPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 
@@ -12,7 +13,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [
     CommonModule,
     ReactiveFormsModule,
-    DecimalPipe,
+    LocaleNumberPipe,
     TranslatePipe
 ],
     changeDetection: ChangeDetectionStrategy.Eager,

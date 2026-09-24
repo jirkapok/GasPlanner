@@ -13,11 +13,12 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
-import { DecimalPipe } from '@angular/common';
+
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
 import { GaslabelComponent } from '../../controls/gaslabel/gaslabel.component';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
 
 interface TankRow {
@@ -45,7 +46,7 @@ interface TanksForm {
     TankSizeComponent,
     OxygenDropDownComponent,
     GaslabelComponent,
-    DecimalPipe,
+    LocaleNumberPipe,
     TranslatePipe
 ],
 })

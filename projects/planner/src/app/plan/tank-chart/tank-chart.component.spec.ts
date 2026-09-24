@@ -3,6 +3,7 @@ import { Tank } from 'scuba-physics';
 import { TankChartComponent } from './tank-chart.component';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('TankChartComponent', () => {
     let component: TankChartComponent;
@@ -12,7 +13,7 @@ describe('TankChartComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
     imports: [TankChartComponent],
-    providers: [UnitConversion, provideTestTranslate()]
+    providers: [UnitConversion, provideTestTranslate(), LanguageService]
 })
             .compileComponents();
     });

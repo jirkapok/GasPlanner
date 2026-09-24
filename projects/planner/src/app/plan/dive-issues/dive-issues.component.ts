@@ -8,9 +8,10 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
 import { BoundEvent } from "../../shared/models";
-import { DecimalPipe } from '@angular/common';
+
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DurationPipe } from '../../pipes/duration.pipe';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -18,7 +19,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './dive-issues.component.html',
     styleUrls: ['./dive-issues.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, DecimalPipe, DurationPipe, TranslatePipe]
+    imports: [FaIconComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class DiveIssuesComponent {
     public exclamation = faExclamationCircle;

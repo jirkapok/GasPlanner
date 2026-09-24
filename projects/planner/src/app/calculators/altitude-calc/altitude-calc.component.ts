@@ -1,5 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Location, DecimalPipe } from '@angular/common';
+import { Location } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Precision, AltitudeCalculator } from 'scuba-physics';
@@ -25,7 +26,7 @@ interface AltitudeDepthForm {
     templateUrl: './altitude-calc.component.html',
     styleUrls: ['./altitude-calc.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, DecimalPipe, TranslatePipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class AltitudeCalcComponent implements OnInit {
     public calcIcon = faMountainSun;

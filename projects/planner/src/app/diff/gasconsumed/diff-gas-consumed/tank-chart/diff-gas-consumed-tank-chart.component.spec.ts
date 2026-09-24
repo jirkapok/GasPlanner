@@ -5,6 +5,7 @@ import { ProfileComparatorService } from '../../../../shared/diff/profileCompara
 import { DiveSchedules } from '../../../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../../../shared/reloadDispatcher';
 import { provideTestTranslate } from '../../../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../../../shared/language.service';
 
 describe('GasConsumedDifferenceTankComponent', () => {
     let component: GasConsumedDifferenceTankComponent;
@@ -13,7 +14,7 @@ describe('GasConsumedDifferenceTankComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
     imports: [GasConsumedDifferenceTankComponent],
-    providers: [UnitConversion, ProfileComparatorService, DiveSchedules, ReloadDispatcher, provideTestTranslate()]
+    providers: [UnitConversion, ProfileComparatorService, DiveSchedules, ReloadDispatcher, provideTestTranslate(), LanguageService]
 })
             .compileComponents();
 

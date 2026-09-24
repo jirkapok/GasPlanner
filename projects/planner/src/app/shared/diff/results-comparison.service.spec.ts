@@ -6,6 +6,8 @@ import { UnitConversion } from '../UnitConversion';
 import { ResultDiff, ResultsComparison } from './results-comparison.service';
 import { DiveResults } from '../diveresults';
 import { HighestDensity } from "scuba-physics";
+import { LanguageService } from '../language.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ResultsComparison service current values', () => {
     let sut: ResultsComparison;
@@ -19,7 +21,7 @@ describe('ResultsComparison service current values', () => {
             providers: [
                 ProfileComparatorService, UnitConversion,
                 ReloadDispatcher, DiveSchedules,
-                ResultsComparison
+                ResultsComparison, LanguageService, provideTestTranslate()
             ]
         }).compileComponents();
     });

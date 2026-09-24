@@ -9,6 +9,7 @@ import { UnitConversion } from '../../../shared/UnitConversion';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 import { provideTestTranslate } from '../../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../../shared/language.service';
 
 describe('DiveResultsTableDifferenceComponent', () => {
     let component: DiveResultsTableDifferenceComponent;
@@ -24,7 +25,8 @@ describe('DiveResultsTableDifferenceComponent', () => {
         UnitConversion,
         ProfileComparatorService,
         ResultsComparison,
-        provideTestTranslate()
+        provideTestTranslate(),
+        LanguageService
     ]
 });
         fixture = TestBed.createComponent(DiveResultsTableDifferenceComponent);

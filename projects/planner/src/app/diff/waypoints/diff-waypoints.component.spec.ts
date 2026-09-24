@@ -6,6 +6,7 @@ import {DiveSchedules} from '../../shared/dive.schedules';
 import {ReloadDispatcher} from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { LanguageService } from '../../shared/language.service';
 
 describe('WaypointsDifferenceComponent', () => {
     let component: WaypointsDifferenceComponent;
@@ -20,7 +21,8 @@ describe('WaypointsDifferenceComponent', () => {
         DiveSchedules,
         ReloadDispatcher,
         SelectedDiffWaypoint,
-        provideTestTranslate()
+        provideTestTranslate(),
+        LanguageService
     ]
 });
         fixture = TestBed.createComponent(WaypointsDifferenceComponent);

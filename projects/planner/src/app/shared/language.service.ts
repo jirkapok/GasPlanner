@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { formatNumber } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 import { PreferencesStore } from './preferencesStore';
@@ -13,7 +14,6 @@ export interface LanguageOption {
 
 // TODO localize:
 // * quiz questions
-// * number pipes
 // * plotly charts
 // * consider in the future: documentation in doc directory
 // Not localized on purpose: tank sizes and standard gas names come from the
@@ -32,7 +32,8 @@ export class LanguageService {
 
     private static readonly defaultCode = 'en';
     private static readonly manifestLinkId = 'app-manifest';
-    private static readonly htmlLangByCode: Record<string, string> = {
+    /** Maps our short app language codes to the BCP-47 locale ids registered via registerLocaleData. */
+    private static readonly localeIdByCode: Record<string, string> = {
         zh: 'zh-Hans'
     };
 
@@ -48,6 +49,14 @@ export class LanguageService {
 
     public get current(): LanguageOption | undefined {
         return this.supportedLanguages.find(l => l.code === this.currentCode);
+    }
+
+    public get localeId(): string {
+        return LanguageService.localeIdByCode[this.currentCode] || this.currentCode;
+    }
+
+    public formatNumber(value: number, digitsInfo?: string): string {
+        return formatNumber(value, this.localeId, digitsInfo);
     }
 
     public async ready(): Promise<void> {
@@ -67,7 +76,7 @@ export class LanguageService {
     }
 
     private applyDomAndManifest(code: string): void {
-        document.documentElement.lang = LanguageService.htmlLangByCode[code] || code;
+        document.documentElement.lang = LanguageService.localeIdByCode[code] || code;
 
         const manifestLink = document.getElementById(LanguageService.manifestLinkId) as HTMLLinkElement | null;
         if (manifestLink) {

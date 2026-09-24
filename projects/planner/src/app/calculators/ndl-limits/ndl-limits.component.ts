@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
-import { Location, DecimalPipe } from '@angular/common';
+import { Location } from '@angular/common';
+import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faTable } from '@fortawesome/free-solid-svg-icons';
 import {
     Options, Salinity, Tank, GasToxicity, Precision
@@ -27,7 +28,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, DecimalPipe,
+    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, LocaleNumberPipe,
         TranslatePipe]
 })
 export class NdlLimitsComponent implements OnInit {

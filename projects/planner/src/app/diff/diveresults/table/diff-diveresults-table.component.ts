@@ -5,9 +5,10 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
 import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 import { DiveResults } from '../../../shared/diveresults';
 import { CalculatingComponent } from '../../../controls/calculating/calculating.component';
-import { DecimalPipe } from '@angular/common';
+
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DurationPipe } from '../../../pipes/duration.pipe';
+import { LocaleNumberPipe } from '../../../pipes/locale-number.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
@@ -15,7 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './diff-diveresults-table.component.html',
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CalculatingComponent, FaIconComponent, DecimalPipe, DurationPipe, TranslatePipe]
+    imports: [CalculatingComponent, FaIconComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class DiveResultsTableDifferenceComponent {
     public constructor(

@@ -18,7 +18,8 @@ npm pkg set version=$Version --prefix projects/scuba-physics
 
 # Bump id field in the default manifest and every localized variant
 Get-ChildItem "projects/planner/src" -Filter "manifest*.webmanifest" | ForEach-Object {
-    $manifest = Get-Content $_.FullName -Raw
-    $manifest = $manifest -replace '"id": ".*"', "`"id`": `"$Version`""
-    Set-Content $_.FullName $manifest -NoNewline
+    $manifestContent = Get-Content $_.FullName -Raw | ConvertFrom-Json
+    $manifestContent.id = $Version
+    $manifestContent | ConvertTo-Json -Depth 10 | Set-Content $_.FullName -NoNewline
+    Write-Host "Updated id to '$Version' in $($_.Name)"
 }

@@ -1,10 +1,12 @@
 import { Inject, Injectable, Optional } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { takeUntil } from 'rxjs';
 import { Category, Topic } from './learn.models';
 import { QuizSession } from './quiz.session';
 import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
 import { Question } from './quiz.question';
+import { Streamed } from '../streamed';
 
 export interface TopicStatus {
    finished: number;
@@ -23,7 +25,7 @@ export interface CategoryStatus {
 @Injectable({
     providedIn: 'root'
 })
-export class QuizService {
+export class QuizService extends Streamed {
     public readonly topics: Topic[];
     private _selectedTopic: Topic;
     private _selectedCategory: Category;
@@ -34,13 +36,15 @@ export class QuizService {
     constructor(
         @Optional() @Inject(topics) tops?: Topic[],
         @Optional() private translate?: TranslateService) {
+        super();
         this.topics = tops || topics;
         this._selectedTopic = this.topics[0];
         this._selectedCategory = this.selectedTopic.categories[0];
         this._session = this.resolveSession(this.selectedCategory);
         this.goToNextQuestion();
 
-        this.translate?.onLangChange.subscribe(() => this.retranslateCurrentQuestion());
+        this.translate?.onLangChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.retranslateCurrentQuestion());
     }
 
     public get selectedTopic(): Topic {

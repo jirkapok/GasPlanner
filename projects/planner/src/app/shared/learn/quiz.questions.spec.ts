@@ -1,6 +1,10 @@
 import { topics } from './quiz.questions';
 import { Topic, Category, QuestionTemplate} from './learn.models';
 import { Question } from './quiz.question';
+import en from '../../../assets/i18n/en.json';
+
+/** QuestionTemplate.question holds a key like 'learn.questions.examples_mod'; resolve it to its English text. */
+const englishTextFor = (key: string): string => key.split('.').reduce((value: any, part) => value?.[part], en) as string;
 
 describe('Quiz questions definition', () => {
     it('All topics have at least one category with one question', () => {
@@ -33,9 +37,14 @@ describe('Quiz questions definition', () => {
         topics.forEach((topic: Topic) => {
             topic.categories.forEach((category: Category) => {
                 category.questions.forEach((q: QuestionTemplate) => {
+                    const questionText = englishTextFor(q.question);
+                    expect(questionText)
+                        .withContext(`Missing en.json translation for key '${q.question}'`)
+                        .toBeTruthy();
+
                     const placeholders = new Set<string>();
                     let matchResult: RegExpExecArray | null;
-                    while ((matchResult = placeholderRe.exec(q.question)) !== null) {
+                    while ((matchResult = placeholderRe.exec(questionText)) !== null) {
                         placeholders.add(matchResult[1]);
                     }
 

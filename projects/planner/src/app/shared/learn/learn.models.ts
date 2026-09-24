@@ -54,6 +54,7 @@ export class OptionsVariable implements Variable {
 
 export class QuestionTemplate {
     constructor(
+        /** Translation key (e.g. 'learn.questions.examples_mod'), not raw display text. */
         public question: string,
         public roundTo: number,
         public roundType: RoundType,
@@ -64,20 +65,23 @@ export class QuestionTemplate {
 
 export class Category {
     constructor(
+        /** Translation key (e.g. 'learn.categories.examples_mod'); also the stable persistence/lookup id. */
         public name: string,
         public help: string,
         public questions: QuestionTemplate[]
     ) {}
 
-    public createQuestion(): Question {
+    public createQuestion(translate: (key: string) => string = key => key): Question {
         const randomIndex = Math.floor(Math.random() * this.questions.length);
         const selectedTemplate = this.questions[randomIndex];
-        return new Question(selectedTemplate);
+        const questionText = translate(selectedTemplate.question);
+        return new Question(selectedTemplate, questionText);
     }
 }
 
 export class Topic {
     constructor(
+        /** Translation key (e.g. 'learn.topics.nitrox'); also the stable persistence/lookup id. */
         public name: string,
         public categories: Category[]
     ) {}

@@ -14,10 +14,10 @@ const sacCalculator = new SacCalculator(depthConverter);
 const gasProperties = new GasProperties();
 
 export const topics: Topic[] = [
-    new Topic('Pressure at depth', [
-        new Category('Depth', 'examples_depth', [
+    new Topic('learn.topics.pressureAtDepth', [
+        new Category('learn.categories.examples_depth', 'examples_depth', [
             new QuestionTemplate(
-                'What is the depth (in meters) at which the ambient pressure is {pressure} bar?',
+                'learn.questions.examples_depth',
                 1,
                 RoundType.round,
                 [
@@ -26,9 +26,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => depthConverter.fromBar(vars[0])
             )
         ]),
-        new Category('Pressure', 'examples_pressure', [
+        new Category('learn.categories.examples_pressure', 'examples_pressure', [
             new QuestionTemplate(
-                'What is the ambient pressure in bars at depth {depth} meters?',
+                'learn.questions.examples_pressure',
                 1,
                 RoundType.round,
                 [
@@ -39,10 +39,10 @@ export const topics: Topic[] = [
         ]),
     ]),
 
-    new Topic('Nitrox', [
-        new Category('Maximum operational depth', 'examples_mod', [
+    new Topic('learn.topics.nitrox', [
+        new Category('learn.categories.examples_mod', 'examples_mod', [
             new QuestionTemplate(
-                'What is maximum operational depth for gas with {o2_percent} % oxygen at partial pressure {pp} ?',
+                'learn.questions.examples_mod',
                 0,
                 RoundType.floor,
                 [
@@ -52,9 +52,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => nitroxCalculator.mod(vars[0], vars[1])
             )
         ]),
-        new Category('Best mix', 'examples_bestmix', [
+        new Category('learn.categories.examples_bestmix', 'examples_bestmix', [
             new QuestionTemplate(
-                'What is best mix (in percents) at partial pressure {pp} at depth {depth} m?',
+                'learn.questions.examples_bestmix',
                 0,
                 RoundType.floor,
                 [
@@ -64,9 +64,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => nitroxCalculator.bestMix(vars[0], vars[1])
             )
         ]),
-        new Category('Oxygen partial pressure', 'examples_ppO2', [
+        new Category('learn.categories.examples_ppO2', 'examples_ppO2', [
             new QuestionTemplate(
-                'What is partial pressure of {o2_percent} % at {depth} m?',
+                'learn.questions.examples_ppO2',
                 2,
                 RoundType.round,
                 [
@@ -76,9 +76,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => nitroxCalculator.partialPressure(vars[0], vars[1])
             )
         ]),
-        new Category('Equivalent air depth', 'examples_ead', [
+        new Category('learn.categories.examples_ead', 'examples_ead', [
             new QuestionTemplate(
-                'What is the equivalent air depth of nitrox mix with {o2_percent} % oxygen at {depth} m?',
+                'learn.questions.examples_ead',
                 0,
                 RoundType.ceil,
                 [
@@ -90,11 +90,10 @@ export const topics: Topic[] = [
         ]),
     ]),
 
-    new Topic('Consumption', [
-        new Category('Surface air consumption', 'examples_sac', [
+    new Topic('learn.topics.consumption', [
+        new Category('learn.categories.examples_sac', 'examples_sac', [
             new QuestionTemplate(
-                'My respiratory minute volume (RMV in liters per minute) is {rmv} L/min. ' +
-                'What is my surface air consumption (SAC) when breathing from {tank_size} L tank?',
+                'learn.questions.examples_sac',
                 1,
                 RoundType.ceil,
                 [
@@ -104,10 +103,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => vars[0]/ vars[1]
             )
         ]),
-        new Category('Respiratory minute volume', 'examples_rmv', [
+        new Category('learn.categories.examples_rmv', 'examples_rmv', [
             new QuestionTemplate(
-                'What is respiratory minute volume (RMV in liters per minute) of dive to average depth {depth} m, ' +
-                'with tank {tank_size} L for {duration} minutes where diver consumed {consumed} b?',
+                'learn.questions.examples_rmv',
                 1,
                 RoundType.ceil,
                 [
@@ -119,10 +117,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => sacCalculator.calculateRmv(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
-        new Category('Used gas', 'examples_consumed', [
+        new Category('learn.categories.examples_consumed', 'examples_consumed', [
             new QuestionTemplate(
-                'How much gas did i use (in bars) at average depth {depth} m, with tank {tank_size} L for {duration} ' +
-                'minutes where my respiratory minute volume (RMV) was {rmv} L/min?',
+                'learn.questions.examples_consumed',
                 0,
                 RoundType.ceil,
                 [
@@ -134,10 +131,9 @@ export const topics: Topic[] = [
                 (vars: number[]) => sacCalculator.calculateUsed(vars[0], vars[1], vars[2], vars[3])
             )
         ]),
-        new Category('Dive duration', 'examples_durationbyrmv', [
+        new Category('learn.categories.examples_durationbyrmv', 'examples_durationbyrmv', [
             new QuestionTemplate(
-                'How long can i stay (in minutes) at average depth {depth} m with available {consumed} b in {tank_size} L tank, ' +
-                'where my respiratory minute volume (RMV) is {rmv} L/min?',
+                'learn.questions.examples_durationbyrmv',
                 0,
                 RoundType.floor,
                 [
@@ -151,11 +147,10 @@ export const topics: Topic[] = [
         ])
     ]),
 
-    new Topic('Trimix', [
-        new Category('Minimum depth', 'examples_mindepth', [
+    new Topic('learn.topics.trimix', [
+        new Category('learn.categories.examples_mindepth', 'examples_mindepth', [
             new QuestionTemplate(
-                'Team selects Trimix {oxygen}/{helium} as a gas for a dive. ' +
-                'Minimum partial pressure of oxygen (ppO2) is 0.18 b. What is the minimum depth for this gas?',
+                'learn.questions.examples_mindepth',
                 0,
                 RoundType.ceil,
                 [
@@ -170,11 +165,9 @@ export const topics: Topic[] = [
                 }
             )
         ]),
-        new Category('Equivalent narcotic depth', 'examples_end', [
+        new Category('learn.categories.examples_end', 'examples_end', [
             new QuestionTemplate(
-                'You plan a dive to {depth} meters. ' +
-                'Oxygen is considered as narcotic. ' +
-                'Team selects Trimix {oxygen}/{helium} as a gas for the dive. What is the equivalent narcotic depth for this gas?',
+                'learn.questions.examples_end',
                 0,
                 RoundType.ceil,
                 [
@@ -190,11 +183,9 @@ export const topics: Topic[] = [
                 }
             )
         ]),
-        new Category('Maximum narcotic depth', 'examples_mnd', [
+        new Category('learn.categories.examples_mnd', 'examples_mnd', [
             new QuestionTemplate(
-                'You plan a dive and consider Air narcotic for depths below {narc_depth} meters. ' +
-                'Oxygen is considered as narcotic. ' +
-                'Team selects Trimix {oxygen}/{helium} as a gas. What is the maximum narcotic depth for this gas?',
+                'learn.questions.examples_mnd',
                 0,
                 RoundType.floor,
                 [

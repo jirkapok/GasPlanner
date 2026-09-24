@@ -64,8 +64,8 @@ describe('LearnComponent', () => {
     });
 
     it('Creates learn with default topic', () => {
-        expect(component.selectedTopic.name).toBe('Pressure at depth');
-        expect(component.selectedCategory.name).toBe('Depth');
+        expect(component.selectedTopic.name).toBe('learn.topics.pressureAtDepth');
+        expect(component.selectedCategory.name).toBe('learn.categories.examples_depth');
     });
 
     it('Select category changes quiz question', () => {

@@ -14,7 +14,7 @@ export class Question {
     private _isAnswered = false;
     private _isCorrect = false;
 
-    constructor(private template: QuestionTemplate) {
+    constructor(private template: QuestionTemplate, private questionText: string = template.question) {
         this.roundTo = template.roundTo;
         this.roundType = template.roundType;
         this.variables = this.randomizeQuizVariables();
@@ -53,7 +53,7 @@ export class Question {
     }
 
     private renderQuestion(): string {
-        let rendered = this.template.question;
+        let rendered = this.questionText;
         this.template.variables.forEach((variable, index) => {
             rendered = rendered.replace(new RegExp(`{${variable.name}}`, 'g'), this.variables[index].toString());
         });

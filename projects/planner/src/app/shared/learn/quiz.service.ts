@@ -6,35 +6,6 @@ import { topics } from './quiz.questions';
 import { QuizSessionDto } from '../serialization.model';
 import { Question } from './quiz.question';
 
-/**
- * Topic/Category names used to be plain English display text and doubled as the persistence
- * key for saved quiz progress and last-viewed state. They were switched to translation keys
- * (see quiz.questions.ts) so the names can be localized; this maps the old English values to
- * the new keys so progress/state saved before that change still restores correctly.
- */
-const legacyTopicNames: Record<string, string> = {
-    'Pressure at depth': 'learn.topics.pressureAtDepth',
-    'Nitrox': 'learn.topics.nitrox',
-    'Consumption': 'learn.topics.consumption',
-    'Trimix': 'learn.topics.trimix'
-};
-
-const legacyCategoryNames: Record<string, string> = {
-    'Depth': 'learn.categories.examples_depth',
-    'Pressure': 'learn.categories.examples_pressure',
-    'Maximum operational depth': 'learn.categories.examples_mod',
-    'Best mix': 'learn.categories.examples_bestmix',
-    'Oxygen partial pressure': 'learn.categories.examples_ppO2',
-    'Equivalent air depth': 'learn.categories.examples_ead',
-    'Surface air consumption': 'learn.categories.examples_sac',
-    'Respiratory minute volume': 'learn.categories.examples_rmv',
-    'Used gas': 'learn.categories.examples_consumed',
-    'Dive duration': 'learn.categories.examples_durationbyrmv',
-    'Minimum depth': 'learn.categories.examples_mindepth',
-    'Equivalent narcotic depth': 'learn.categories.examples_end',
-    'Maximum narcotic depth': 'learn.categories.examples_mnd'
-};
-
 export interface TopicStatus {
    finished: number;
    total: number;
@@ -87,11 +58,9 @@ export class QuizService {
     }
 
     public selectByName(topic: string, category: string): void {
-        const topicName = legacyTopicNames[topic] || topic;
-        const categoryName = legacyCategoryNames[category] || category;
-        const foundTopic = this.topics.find(t => t.name === topicName);
+        const foundTopic = this.topics.find(t => t.name === topic);
         const loadedTopic = foundTopic || this.topics[0];
-        const foundCategory = loadedTopic.categories.find(c => c.name === categoryName);
+        const foundCategory = loadedTopic.categories.find(c => c.name === category);
         const loadedCategory = foundCategory || loadedTopic.categories[0];
         this.select(loadedTopic, loadedCategory);
     }
@@ -187,10 +156,9 @@ export class QuizService {
         }
 
         for (const entry of entries) {
-            const categoryName = legacyCategoryNames[entry.category] || entry.category;
             const category = this.topics
                 .flatMap(topic => topic.categories)
-                .find(c => c.name === categoryName);
+                .find(c => c.name === entry.category);
 
             if (!category) {
                 continue;

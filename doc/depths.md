@@ -3,11 +3,11 @@
 ![Target depth](./target_depth_properties.png)
 
 In simple view you can define only one target depth, which fits only to easy or open water profiles.
-* `Bottom time` [minutes]: The time diver stays under water until he starts to scent. This includes also decent.
+* `Bottom time` [minutes]: The time the diver stays under water until they start to descend. This includes also descent.
     * `Max`: Applies the maximum estimated bottom time to the plan
     * `No deco`: Applies the maximum no decompression limit time to the plan
 * `Depth` [meters] (ft): The deepest depth reached during the dive.
-    * `Max`: Based on selected options applies maxim depth based on narcotic depth selected gas (for nitrox mixes always 30 meters / 100 ft)
+    * `Max`: Based on selected options applies maximum depth based on narcotic depth selected gas (for nitrox mixes always 30 meters / 100 ft)
     * `Best mix`: Shows best content of nitrox mix for selected depth based on maximum partial pressure of oxygen (ppO2)
 
 ## Extended view

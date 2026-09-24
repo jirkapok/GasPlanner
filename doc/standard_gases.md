@@ -1,6 +1,6 @@
 # Standard gases
 
-Because you can choose from lot of combinations, we provide list of common gases. Some agencies (GUE, UTD) limit  number of used gases and promote their list of mixes called Standard gases. Standardization of gases simplifies logistic, team planning and prevents mistakes during dive. Even you are able to define your custom mixture, because of practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
+Because you can choose from many combinations, we provide a list of common gases. Some agencies (GUE, UTD) limit the number of used gases and promote their list of mixes called Standard gases. Standardization of gases simplifies logistics, team planning and prevents mistakes during dives. Even though you are able to define your custom mixture, for practical reasons it is preferred to use the same gases within the team over custom gases or different gases for each diver.
 
 * GUE and UTD both use:
   * 1.4 max PpO2

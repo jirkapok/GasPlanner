@@ -15,6 +15,6 @@ How reserve is calculated? Currently only all usable strategy is implemented.
 In case of multiple tanks
 
 * Consumed gas is extracted in reverse order from last tank up to the first tank
-* Reserve for first tak remains always at least 30 bars (435 psi)
+* Reserve for first tank remains always at least 30 bars (435 psi)
 * For all other tanks, there is no reserve required as technical minimum, until the reserve isn't larger than capacity of the first tank.
-* In case of multiple tanks with the same bottom gas, to consume from both tanks and distribute the reserve, you need manually create segments and assing the tanks in Extended view.
+* In case of multiple tanks with the same bottom gas, to consume from both tanks and distribute the reserve, you need to manually create segments and assign the tanks in Extended view.

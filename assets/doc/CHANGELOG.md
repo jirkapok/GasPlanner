@@ -1,3 +1,23 @@
+# [0.4.0](https://github.com/jirkapok/GasPlanner/compare/v0.3.1...v0.4.0) (2026-09-24)
+
+
+### Bug Fixes
+
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) localize surface interval placeholder text ([1be7b6e](https://github.com/jirkapok/GasPlanner/commit/1be7b6e6a75d01fdfb87567aac0b45f865a79dc7))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) register the service worker so all languages work offline ([112fed6](https://github.com/jirkapok/GasPlanner/commit/112fed6640452d641dbfed28ee750363bdfe1d6b))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) show colored country flags in language dropdown ([232afac](https://github.com/jirkapok/GasPlanner/commit/232afac0552f82ba15ad0333386455970549a288))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) unsubscribe QuizService from onLangChange on destroy ([3bc41c1](https://github.com/jirkapok/GasPlanner/commit/3bc41c1bf039c8c640bafa019b807da2ba695961))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) update current quiz question text on language switch ([21fa560](https://github.com/jirkapok/GasPlanner/commit/21fa560419de42d94a411246bc6e3276058180d8))
+
+
+### Features
+
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) add runtime localization with language switcher ([a9954df](https://github.com/jirkapok/GasPlanner/commit/a9954df70c0f1c9e8f638948985644422c9bf709))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) localize all component templates for all languages ([d1a2bda](https://github.com/jirkapok/GasPlanner/commit/d1a2bda9c6d89ef9cbb0edba324df1626051642d))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) localize Plotly dive-profile charts ([cb2fe2e](https://github.com/jirkapok/GasPlanner/commit/cb2fe2e38c7dbbd19046216f77bd1d3069135ecd))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) localize the learn page and quiz questions ([76e62f3](https://github.com/jirkapok/GasPlanner/commit/76e62f34ff32990b9a5f67461992aceb7a666760))
+* [#30](https://github.com/jirkapok/GasPlanner/issues/30) make number pipes locale-aware ([a352318](https://github.com/jirkapok/GasPlanner/commit/a352318339a414d17afe2328923163560710fda7))
+
 ## [0.3.1](https://github.com/jirkapok/GasPlanner/compare/v0.3.0...v0.3.1) (2026-09-23)
 
 # [0.3.0](https://github.com/jirkapok/GasPlanner/compare/v0.2.0...v0.3.0) (2026-09-22)

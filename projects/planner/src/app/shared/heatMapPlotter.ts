@@ -74,5 +74,7 @@ export class HeatMapPlotter {
 
         Plotly.newPlot(this.elementName, data, this.layout, this.config);
         Plotly.relayout(this.elementName, this.layout);
+        // fixes initial sizing issues when the plot is hidden on init
+        Plotly.Plots.resize(this.elementName);
     }
 }

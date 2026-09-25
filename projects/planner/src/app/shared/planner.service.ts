@@ -104,6 +104,9 @@ export class PlannerService extends Streamed {
         infoRequest.calculatedProfile = calculatedProfile.segments;
         infoRequest.calculatedTissues = calculatedProfile.finalTissues;
         infoRequest.eventOptions = this.createEventOptions();
+        const previousResult = this.schedules.previousDiveResult(dive.id);
+        infoRequest.previousCns = previousResult?.cns ?? 0;
+        infoRequest.previousCnsExposures = previousResult?.cnsExposures ?? [];
         this.diveInfoTask.calculate(infoRequest);
 
         const previousTissues = this.schedules.previousDiveTissues(dive.id);
@@ -179,7 +182,9 @@ export class PlannerService extends Streamed {
             // ceilings and overpressures have simple data, no custom conversion needed
             diveInfoResult.ceilings,
             diveInfoResult.tissueOverPressures,
-            filteredEvents
+            filteredEvents,
+            diveInfoResult.dailyCns,
+            diveInfoResult.cnsExposures
         );
         this.fireFinishedEvents(dive);
     }

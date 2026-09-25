@@ -3,7 +3,7 @@ import {
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
-    Tank, ProfileTissues
+    Tank, ProfileTissues, CnsDailyCalculator
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -46,7 +46,11 @@ export class PlanningTasks {
         const depthConverter = new DepthConverterFactory(task.options).create();
         const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);
         const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
-        const cns = new CnsCalculator(depthConverter).calculateForProfile(originalProfile);
+        const cns = new CnsCalculator(depthConverter)
+            .calculateForRepetitiveDive(originalProfile, task.previousCns, task.surfaceInterval);
+        const dailyCnsCalculator = new CnsDailyCalculator(depthConverter);
+        const diveExposures = dailyCnsCalculator.exposuresForProfile(originalProfile);
+        const cnsExposures = CnsDailyCalculator.appendDive(task.previousCnsExposures, task.surfaceInterval, diveExposures);
         const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
         const averageDepth = Segments.averageDepth(originalProfile);
 
@@ -71,6 +75,8 @@ export class PlanningTasks {
             noDeco: noDecoLimit,
             otu: otu,
             cns: cns,
+            dailyCns: CnsDailyCalculator.total(cnsExposures),
+            cnsExposures: cnsExposures,
             density: DtoSerialization.fromDensity(density),
             averageDepth: averageDepth,
             events: eventsDto,

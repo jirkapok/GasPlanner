@@ -1,6 +1,6 @@
 import {
     CalculatedProfile, CalculatedProfileStatistics,
-    Event, StandardGases, Time
+    CnsCalculator, Event, StandardGases, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
@@ -100,11 +100,67 @@ describe('PlannerService', () => {
             expect(cnsLimit).toBeCloseTo(2.928569, 6);
         });
 
+        it('Daily CNS is calculated', () => {
+            expect(dive.dailyCns).toBeCloseTo(3.048016, 6);
+            expect(dive.cnsExposures.length).toBeCloseTo(5, 6);
+        });
+
         it('Highest density is calculated', () => {
             const highestDensity = dive.highestDensity;
             expect(highestDensity.gas).toEqual(StandardGases.air);
             expect(highestDensity.depth).toEqual(30);
             expect(highestDensity.density).toBeCloseTo(5.094, 3);
+        });
+    });
+
+    describe('CNS of repetitive dives', () => {
+        const surfaceInterval = Time.oneMinute * 30;
+        let schedules: DiveSchedules;
+
+        beforeEach(() => {
+            schedules = TestBed.inject(DiveSchedules);
+            schedules.add();
+            schedules.add();
+        });
+
+        const calculateAll = () => {
+            planner.calculate(1);
+            planner.calculate(2);
+            planner.calculate(3);
+        };
+
+        // added dives have the same default profile, so they only differ by the previous dives
+        it('First dive of the day ignores previous dive', () => {
+            schedules.dives[1].surfaceInterval = Number.POSITIVE_INFINITY;
+            schedules.dives[2].surfaceInterval = Number.POSITIVE_INFINITY;
+            calculateAll();
+            const results = schedules.dives.map(d => d.diveResult);
+            expect(results[1].cns).toBeCloseTo(2.867261, 6);
+            expect(results[1].dailyCns).toBeCloseTo(2.958388, 6);
+            expect(results[2].cns).toBeCloseTo(2.867261, 6);
+            expect(results[2].dailyCns).toBeCloseTo(2.958388, 6);
+        });
+
+        it('Adds residual CNS of previous dive', () => {
+            calculateAll();
+            schedules.dives[1].surfaceInterval = surfaceInterval;
+            schedules.dives[2].surfaceInterval = surfaceInterval;
+            calculateAll();
+
+            const results = schedules.dives.map(d => d.diveResult);
+            expect(results[1].cns).toBeCloseTo(5.191668, 6);
+            expect(results[2].cns).toBeCloseTo(6.987890, 6);
+        });
+
+        it('Sums daily CNS of 3 dives within 24 hours', () => {
+            calculateAll();
+            schedules.dives[1].surfaceInterval = surfaceInterval;
+            schedules.dives[2].surfaceInterval = surfaceInterval;
+            calculateAll();
+
+            const lastDive = schedules.dives[2].diveResult;
+            expect(lastDive.dailyCns).toBeCloseTo(8.964792, 6);
+            expect(lastDive.cnsWarningLevel).toBeCloseTo(8.964792, 6);
         });
     });
 
@@ -407,6 +463,8 @@ describe('PlannerService', () => {
                         noDeco: 0,
                         otu: 0,
                         cns: 0,
+                        dailyCns: 0,
+                        cnsExposures: [],
                         density: {
                             gas: {
                                 fO2: 0,
@@ -465,7 +523,7 @@ describe('PlannerService', () => {
         });
     });
 
-describe('Deco stop distance is applied', () => {
+    describe('Deco stop distance is applied', () => {
 
         it('applies 5 m stop interval when decoStopDistance = 5 m', () => {
             depthsService.planDuration = 40;

@@ -1,5 +1,6 @@
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
+import { Time } from '../physics/Time';
 
 /**
  * Reference: https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf
@@ -9,9 +10,27 @@ import { Segment } from '../depths/Segments';
  *   fO2 = oxygen fraction
  */
 export class CnsCalculator {
+    /** Surface elimination half time of CNS toxicity used by most dive computers */
+    public static readonly halfTime = Time.oneMinute * 90;
+    /** Maximum CNS toxicity in % */
+    public static readonly limit = 100;
     private readonly minimumPpO2 = 0.5;
 
     constructor(private depthConverter: DepthConverter) { }
+
+    /**
+     * Calculates remaining CNS toxicity in % after the surface interval.
+     * The CNS is eliminated exponentially with 90 minutes half time.
+     * @param cns CNS toxicity in % at end of previous dive
+     * @param surfaceInterval duration of the surface interval in seconds, Infinity for first dive
+     */
+    public static residual(cns: number, surfaceInterval: number): number {
+        if (cns <= 0 || surfaceInterval === Number.POSITIVE_INFINITY) {
+            return 0;
+        }
+
+        return cns * Math.pow(0.5, surfaceInterval / CnsCalculator.halfTime);
+    }
 
     /** Calculates total CNS % for provided profile */
     public calculateForProfile(profile: Segment[]): number {
@@ -24,6 +43,18 @@ export class CnsCalculator {
         });
 
         return total;
+    }
+
+    /**
+     * Calculates total CNS % at end of provided dive profile,
+     * including remaining CNS from previous dive after the surface interval.
+     * @param profile the dive profile
+     * @param previousCns CNS % at end of previous dive
+     * @param surfaceInterval duration of the surface interval in seconds, Infinity for first dive
+     */
+    public calculateForRepetitiveDive(profile: Segment[], previousCns: number, surfaceInterval: number): number {
+        const residual = CnsCalculator.residual(previousCns, surfaceInterval);
+        return residual + this.calculateForProfile(profile);
     }
 
     /**

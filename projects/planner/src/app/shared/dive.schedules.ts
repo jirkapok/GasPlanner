@@ -235,13 +235,26 @@ export class DiveSchedules {
             .first();
     }
 
-    public previousDiveTissues(diveId: number): LoadedTissues {
+    /** Results of the previous dive, only if the dive is repetitive, otherwise undefined. */
+    public previousDiveResult(diveId: number): DiveResults | undefined {
         const previousDive = this.byId(diveId - 1);
         const dive = this.byId(diveId);
 
         if(previousDive && dive && dive.isRepetitive) {
-            return previousDive.diveResult.finalTissues;
+            return previousDive.diveResult;
         }
+
+        return undefined;
+    }
+
+    public previousDiveTissues(diveId: number): LoadedTissues {
+        const previousResult = this.previousDiveResult(diveId);
+
+        if(previousResult) {
+            return previousResult.finalTissues;
+        }
+
+        const dive = this.byId(diveId);
 
         if(dive) {
             const currentDiveAltitude = dive.optionsService.altitude || 0;

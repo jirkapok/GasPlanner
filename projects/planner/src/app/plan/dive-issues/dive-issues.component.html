@@ -134,7 +134,7 @@
     <div class="alert alert-warning">
       <fa-icon [icon]="warning" class="me-2"></fa-icon>
       <span>{{ 'diveIssues.cnsExceededPrefix' | translate }}
-        ({{ dive.cns | number:'1.0-0'}} %)! {{ 'diveIssues.cnsExceededSuffix' | translate }}</span>
+        ({{ dive.cnsWarningLevel | number:'1.0-0'}} %)! {{ 'diveIssues.cnsExceededSuffix' | translate }}</span>
     </div>
   }
 }

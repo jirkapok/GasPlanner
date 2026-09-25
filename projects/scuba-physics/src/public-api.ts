@@ -9,6 +9,7 @@ export * from './lib/consumption/consumption';
 export * from './lib/consumption/consumptionByMix';
 export * from './lib/algorithm/Compartments';
 export * from './lib/calculators/cnsCalculator';
+export * from './lib/calculators/cnsDailyCalculator';
 export * from './lib/algorithm/DefaultValues';
 export * from './lib/physics/depth-converter';
 export * from './lib/depths/DepthLevels';

@@ -1,7 +1,8 @@
 import {
     Ceiling, HighestDensity,
     TissueOverPressures, LoadedTissues,
-    OtuCalculator, ProfileTissues
+    OtuCalculator, ProfileTissues, CnsExposure,
+    CnsCalculator, CnsDailyCalculator
 } from 'scuba-physics';
 import _ from 'lodash';
 import { Injectable } from '@angular/core';
@@ -54,6 +55,8 @@ export class DiveResults {
     private _offgasingStartDepth = 0;
     private _otu = 0;
     private _cns = 0;
+    private _dailyCns = 0;
+    private _cnsExposures: CnsExposure[] = [];
     private _highestDensity = HighestDensity.createDefault();
     private _ceilings: Ceiling[] = [];
     private _maxCeiling?: Ceiling;
@@ -121,8 +124,19 @@ export class DiveResults {
         return this._otu;
     }
 
+    /** CNS % at end of the dive including residual CNS from previous dive */
     public get cns(): number {
         return this._cns;
+    }
+
+    /** CNS % of the daily limit consumed by all dives within last 24 hours */
+    public get dailyCns(): number {
+        return this._dailyCns;
+    }
+
+    /** Daily CNS exposures within last 24 hours at end of the dive */
+    public get cnsExposures(): CnsExposure[] {
+        return this._cnsExposures;
     }
 
     public get highestDensity(): HighestDensity {
@@ -228,7 +242,13 @@ export class DiveResults {
     }
 
     public get cnsExceeded(): boolean {
-        return this._cns > 80;
+        return this._cns > (.8 * CnsCalculator.limit) ||
+            this._dailyCns > (.8 * CnsDailyCalculator.dailyLimit);
+    }
+
+    /** The higher of the dive CNS and daily CNS in % */
+    public get cnsWarningLevel(): number {
+        return Math.max(this._cns, this._dailyCns);
     }
 
     public get showMaxDuration(): boolean {
@@ -314,9 +334,13 @@ export class DiveResults {
         highestDensity: HighestDensity,
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
-        events: BoundEvent[]): void {
+        events: BoundEvent[],
+        dailyCns = 0,
+        cnsExposures: CnsExposure[] = []): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
+        this._dailyCns = dailyCns;
+        this._cnsExposures = cnsExposures;
         this.diveInfoCalculation.Finished();
     }
 
@@ -341,6 +365,8 @@ export class DiveResults {
 
     private emptyDiveInfo(): void {
         this.updateDiveInfoInternal(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+        this._dailyCns = 0;
+        this._cnsExposures = [];
     }
 
     private emptyConsumption(): void {

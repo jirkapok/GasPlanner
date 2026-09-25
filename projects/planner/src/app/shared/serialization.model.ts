@@ -77,6 +77,15 @@ export interface DiveInfoRequestDto extends PlanRequestDto{
     calculatedProfile: SegmentDto[];
     /** At end of the calculated profile, not previous one */
     calculatedTissues: LoadedTissueDto[];
+    /** CNS % at end of previous dive, 0 for first dive */
+    previousCns: number;
+    /** Daily CNS exposures at end of previous dive, empty for first dive */
+    previousCnsExposures: CnsExposureDto[];
+}
+
+export interface CnsExposureDto {
+    duration: number;
+    cns: number;
 }
 
 export interface EventOptionsDto {
@@ -87,7 +96,11 @@ export interface DiveInfoResultDto {
     diveId: number;
     noDeco: number;
     otu: number;
+    /** CNS % at end of the dive including residual CNS from previous dive */
     cns: number;
+    /** CNS % of the daily limit consumed by all dives within last 24 hours */
+    dailyCns: number;
+    cnsExposures: CnsExposureDto[];
     density: DensityDto;
     averageDepth: number;
     events: EventDto[];

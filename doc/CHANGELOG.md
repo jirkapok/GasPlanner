@@ -1,3 +1,10 @@
+# [0.5.0](https://github.com/jirkapok/GasPlanner/compare/v0.4.2...v0.5.0) (2026-09-25)
+
+
+### Features
+
+* [#90](https://github.com/jirkapok/GasPlanner/issues/90) CNS residual between dives and 24 hour limit ([2229fc1](https://github.com/jirkapok/GasPlanner/commit/2229fc1e8b588aefccb737b8adfff8d8fc14cc19))
+
 ## [0.4.2](https://github.com/jirkapok/GasPlanner/compare/v0.4.1...v0.4.2) (2026-09-24)
 
 ## [0.4.1](https://github.com/jirkapok/GasPlanner/compare/v0.4.0...v0.4.1) (2026-09-24)

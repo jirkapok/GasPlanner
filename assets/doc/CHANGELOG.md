@@ -1,3 +1,17 @@
+## [0.6.2](https://github.com/jirkapok/GasPlanner/compare/v0.6.1...v0.6.2) (2026-09-26)
+
+
+### Bug Fixes
+
+* fixed build pipeline resolved previous version ([2f5d6d5](https://github.com/jirkapok/GasPlanner/commit/2f5d6d5721c31aa3160d1c61ca83dfed9c43554d))
+
+## [0.6.1](https://github.com/jirkapok/GasPlanner/compare/v0.6.0...v0.6.1) (2026-09-26)
+
+
+### Bug Fixes
+
+* Fixed deployment of pwa inconsistent version numbers ([46524a5](https://github.com/jirkapok/GasPlanner/commit/46524a58d552b7b0d9e0db5165974db934b90e10))
+
 # [0.6.0](https://github.com/jirkapok/GasPlanner/compare/v0.5.0...v0.6.0) (2026-09-26)
 
 

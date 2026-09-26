@@ -1,3 +1,10 @@
+# [0.6.0](https://github.com/jirkapok/GasPlanner/compare/v0.5.0...v0.6.0) (2026-09-26)
+
+
+### Features
+
+* [#45](https://github.com/jirkapok/GasPlanner/issues/45) round runtime at end of stops to minutes ([f2d415a](https://github.com/jirkapok/GasPlanner/commit/f2d415a48f137f6a2e59f09fb7757d2df0bf7fe1))
+
 # [0.5.0](https://github.com/jirkapok/GasPlanner/compare/v0.4.2...v0.5.0) (2026-09-25)
 
 

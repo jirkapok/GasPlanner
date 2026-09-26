@@ -33,7 +33,7 @@
                     "package-lock.json",
                     "doc/CHANGELOG.md",
                     "projects/scuba-physics/package.json",
-                    "projects/planner/src/manifest.webmanifest"
+                    "projects/planner/src/manifest*.webmanifest"
                 ],
                 "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
             }

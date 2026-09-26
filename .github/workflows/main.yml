@@ -125,8 +125,10 @@ jobs:
     env:
       SITE_URL: https://dugong.online
     steps:
+      # Check out the branch tip, not github.sha, so the build includes the chore(release) commit made by semantic-release.
       - uses: actions/checkout@v6
         with:
+          ref: ${{ github.ref }}
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 

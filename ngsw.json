@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1790382636871,
+  "timestamp": 1790426612233,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -20,7 +20,7 @@
         "/assets/i18n/zh.json",
         "/favicon.ico",
         "/index.html",
-        "/main-6WKOIHBY.js",
+        "/main-SY27IENE.js",
         "/manifest.cs.webmanifest",
         "/manifest.de.webmanifest",
         "/manifest.es.webmanifest",
@@ -136,7 +136,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/doc/CHANGELOG.md": "0127d7c9cccf506c9a0937d8b1cf1ded6a80f638",
+    "/assets/doc/CHANGELOG.md": "0ca0424f4f775d7e1a7736020c4bd103b7d9126b",
     "/assets/doc/altitude.md": "d6c6cf0770b212a26fe506bdd9a5350d1dbb056c",
     "/assets/doc/application.md": "58df88a2eeccffbe1e04f1f8ef828c314a5dbb16",
     "/assets/doc/consumed.md": "7ffb41cc504ab2db35a71663642b6ee3e72b6416",
@@ -212,14 +212,14 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "5c9bbcd9904574cb00d34f9a6d24670aa526527d",
-    "/main-6WKOIHBY.js": "b0cc7766d1e2dce7faaef99077d4f9fc44b83d96",
+    "/index.html": "90eacbfe64112f91f900cb4b3e7496e1d95933fb",
+    "/main-SY27IENE.js": "ca4247206f30401658e85326ade59ce47faffacd",
     "/manifest.cs.webmanifest": "e90fce0baa60ead2e9edc28af7a0501e1ad755df",
     "/manifest.de.webmanifest": "3f0a90e5e12f19247b84e0430b11f92abb506ff3",
     "/manifest.es.webmanifest": "4bb450bb724c5956a8baba8c30c7c89352c1bbc8",
     "/manifest.fr.webmanifest": "e84e97bdb04f9382b01ac84b4108578396d64f25",
     "/manifest.ru.webmanifest": "3af86c3e44d56c7af15e176e9bf5651542a678f8",
-    "/manifest.webmanifest": "9ae8b12e82c9a371e9253786615021b0e60db539",
+    "/manifest.webmanifest": "55aa12a8ed0e0b690601e3d50776bfebcdc9c0c0",
     "/manifest.zh.webmanifest": "adae3c124e54137544e07d58079f930c72f4a418",
     "/media/cn-P7M3XOME.svg": "6a132cb7d0c5fb1fd90fc5857a15057dad164fcf",
     "/media/cz-PSDLWGGB.svg": "4b0135f6aeeea3f5d3cf75a388928f2da6d40dfd",

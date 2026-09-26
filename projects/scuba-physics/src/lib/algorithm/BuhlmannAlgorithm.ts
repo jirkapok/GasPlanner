@@ -213,8 +213,9 @@ export class BuhlmannAlgorithm {
             const interval = new BinaryIntervalSearch();
             // the algorithm returns lowest value, so the last second where the deco isn't enough
             // so we need to add one more second to be safe and adjust it to the required rounding
+            // of the runtime at end of the stop.
             const stopDuration = interval.search(searchContext) + Time.oneSecond;
-            const rounded = Precision.ceilDistance(stopDuration, context.decoStopDuration);
+            const rounded = context.roundStopDuration(memento.runTime, stopDuration);
             this.swimDecoStop(context, memento, rounded);
         }
     }
@@ -228,7 +229,8 @@ export class BuhlmannAlgorithm {
 
     private stayAtSafetyStop(context: AlgorithmContext): void {
         if (context.addSafetyStop) {
-            this.stayAtStop(context, Time.safetyStopDuration);
+            const rounded = context.roundStopDuration(context.runTime, Time.safetyStopDuration);
+            this.stayAtStop(context, rounded);
         }
     }
 

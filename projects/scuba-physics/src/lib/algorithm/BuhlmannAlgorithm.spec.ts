@@ -103,7 +103,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         segments.add(30, StandardGases.air, 3 * Time.oneMinute);
         segments.addFlat(StandardGases.air, 30 * Time.oneMinute);
         const planText = calculatePlan(gases, segments);
-        const expectedPlan = '0,30,180; 30,30,1800; 30,10,120; 10,10,300; 10,5,30; 5,5,240; 5,3,12; 3,3,840; 3,0,18;';
+        const expectedPlan = '0,30,180; 30,30,1800; 30,10,120; 10,10,300; 10,5,30; 5,5,210; 5,3,12; 3,3,888; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -143,7 +143,7 @@ describe('Buhlmann Algorithm - Plan', () => {
         it('5m for 30 minutes using ean32 - added safety stop', () => {
             options.safetyStop = SafetyStop.always;
             const planText = createPlan5meters30minutes();
-            const expectedPlan = '0,5,15; 5,5,1785; 5,3,12; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,5,15; 5,5,1785; 5,3,12; 3,3,228; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -168,7 +168,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.safetyStop = SafetyStop.always;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,10,30; 10,10,2370; 10,3,42; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,10,30; 10,10,2370; 10,3,42; 3,3,198; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -182,14 +182,14 @@ describe('Buhlmann Algorithm - Plan', () => {
         it('30m no deco - add safety stop', () => {
             options.safetyStop = SafetyStop.always;
             const planText = createPlan30m12minutes();
-            const expectedPlan = '0,30,120; 30,30,600; 30,3,162; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,30,120; 30,30,600; 30,3,162; 3,3,198; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
         it('30m no deco - automatically added safety stop', () => {
             options.safetyStop = SafetyStop.auto;
             const planText = createPlan30m12minutes();
-            const expectedPlan = '0,30,120; 30,30,600; 30,3,162; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,30,120; 30,30,600; 30,3,162; 3,3,198; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -231,8 +231,8 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const planText = calculatePlan(gases, segments);
 
-        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,60; ' +
-            '9,6,18; 6,6,180; 6,3,18; 3,3,420; 3,0,18;';
+        const expectedPlan = '0,30,90; 30,30,1410; 30,9,126; 9,9,54; ' +
+            '9,6,18; 6,6,162; 6,3,18; 3,3,462; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -247,8 +247,8 @@ describe('Buhlmann Algorithm - Plan', () => {
 
         const planText = calculatePlan(gases, segments);
 
-        const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,60; 21,15,36; 15,15,60; 15,12,18; ' +
-            '12,12,120; 12,9,18; 9,9,180; 9,6,18; 6,6,360; 6,3,18; 3,3,900; 3,0,18;';
+        const expectedPlan = '0,40,120; 40,40,1680; 40,21,114; 21,21,66; 21,15,36; 15,15,24; 15,12,18; ' +
+            '12,12,162; 12,9,18; 9,9,222; 9,6,18; 6,6,282; 6,3,18; 3,3,882; 3,0,18;';
         expect(planText).toBe(expectedPlan);
     });
 
@@ -265,9 +265,9 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,60; 21,18,18; ' +
-                '18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; 12,9,18; ' +
-                '9,9,240; 9,6,18; 6,6,360; 6,3,18; 3,3,960; 3,0,18;';
+            const expectedPlan = '0,50,150; 50,50,1350; 50,21,174; 21,21,66; 21,18,18; ' +
+                '18,18,42; 18,15,18; 15,15,102; 15,12,18; 12,12,102; 12,9,18; ' +
+                '9,9,222; 9,6,18; 6,6,402; 6,3,18; 3,3,942; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -289,6 +289,78 @@ describe('Buhlmann Algorithm - Plan', () => {
                 '9,9,221; 9,6,18; 6,6,267; 6,3,18; 3,3,697; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
+
+        describe('Runtime at end of stops is rounded to minutes', () => {
+            const stopEndRunTimes = (gases: Gases, segments: Segments): number[] => {
+                const userSegmentsCount = segments.length;
+                const decoPlan = calculatePlanFor(gases, segments, options);
+                const endTimes: number[] = [];
+                let runTime = 0;
+
+                const isFlat = (segment?: Segment) => !!segment && segment.startDepth === segment.endDepth;
+
+                decoPlan.forEach((segment, index) => {
+                    runTime += segment.duration;
+                    const isGeneratedStop = index >= userSegmentsCount && isFlat(segment);
+                    // air breaks split the stop to multiple segments at the same depth
+                    const stopContinues = isFlat(decoPlan[index + 1]);
+                    if (isGeneratedStop && !stopContinues) {
+                        endTimes.push(runTime);
+                    }
+                });
+
+                return endTimes;
+            };
+
+            const expectWholeMinutes = (runTimes: number[]): void => {
+                expect(runTimes.length).toBeGreaterThan(0);
+                runTimes.forEach(runTime => expect(runTime % Time.oneMinute).toBe(0));
+            };
+
+            it('Deco stops and gas switches with trimix and multiple deco gases', () => {
+                const gases = new Gases();
+                gases.add(StandardGases.trimix2135);
+                gases.add(StandardGases.ean50);
+                gases.add(StandardGases.oxygen);
+
+                const segments = new Segments();
+                segments.add(50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+                segments.addFlat(StandardGases.trimix2135, 22.5 * Time.oneMinute);
+
+                options.roundStopsToMinutes = true;
+                expectWholeMinutes(stopEndRunTimes(gases, segments));
+            });
+
+            it('Safety stop and gas switch without deco', () => {
+                const gases = new Gases();
+                gases.add(StandardGases.air);
+                gases.add(StandardGases.ean50);
+
+                const segments = new Segments();
+                segments.add(30, StandardGases.air, 1.5 * Time.oneMinute);
+                segments.addFlat(StandardGases.air, 8.5 * Time.oneMinute);
+
+                options.roundStopsToMinutes = true;
+                options.safetyStop = SafetyStop.always;
+                expectWholeMinutes(stopEndRunTimes(gases, segments));
+            });
+
+            it('Oxygen stop with air breaks', () => {
+                const gases = new Gases();
+                gases.add(StandardGases.trimix2135);
+                gases.add(StandardGases.oxygen);
+
+                const segments = new Segments();
+                segments.add(50, StandardGases.trimix2135, 2.5 * Time.oneMinute);
+                segments.addFlat(StandardGases.trimix2135, 30 * Time.oneMinute);
+
+                options.roundStopsToMinutes = true;
+                options.airBreaks.enabled = true;
+                const endTimes = stopEndRunTimes(gases, segments);
+                options.airBreaks.enabled = false;
+                expectWholeMinutes(endTimes);
+            });
+        });
     });
 
     describe('Gas switches - 30m for 10 minutes', () => {
@@ -308,7 +380,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             const segments = createSegments();
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,60; 21,6,90; 6,6,60; 6,3,18; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,66; 21,6,90; 6,6,90; 6,3,18; 3,3,222; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -320,7 +392,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             const segments = createSegments();
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,30,90; 30,30,510; 30,30,60; 30,3,162; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,30,90; 30,30,510; 30,30,60; 30,3,162; 3,3,198; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -334,7 +406,7 @@ describe('Buhlmann Algorithm - Plan', () => {
             const segments = createSegments();
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,60; 21,3,108; 3,3,180; 3,0,18;';
+            const expectedPlan = '0,30,90; 30,30,510; 30,21,54; 21,21,66; 21,3,108; 3,3,192; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
     });
@@ -351,9 +423,9 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,75,300; 75,75,300; 75,27,288; 27,27,60; 27,24,18; 24,24,60; 24,21,18; ' +
-                '21,21,60; 21,18,18; 18,18,180; 18,15,18; 15,15,180; 15,12,18; 12,12,300; ' +
-                '12,9,18; 9,9,540; 9,6,18; 6,6,1200; 6,3,18; 3,3,3240; 3,0,18;';
+            const expectedPlan = '0,75,300; 75,75,300; 75,27,288; 27,27,12; 27,24,18; 24,24,102; 24,21,18; ' +
+                '21,21,102; 21,18,18; 18,18,162; 18,15,18; 15,15,162; 15,12,18; 12,12,282; ' +
+                '12,9,18; 9,9,582; 9,6,18; 6,6,1182; 6,3,18; 3,3,3222; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 
@@ -372,9 +444,9 @@ describe('Buhlmann Algorithm - Plan', () => {
             options.roundStopsToMinutes = true;
             const planText = calculatePlan(gases, segments);
 
-            const expectedPlan = '0,10,60; 10,75,300; 75,75,300; 75,36,234; 36,36,60; 36,21,90; 21,21,60; ' +
-                '21,18,18; 18,18,60; 18,15,18; 15,15,60; 15,12,18; 12,12,120; ' +
-                '12,9,18; 9,9,180; 9,6,18; 6,6,240; 6,3,18; 3,3,600; 3,0,18;';
+            const expectedPlan = '0,10,60; 10,75,300; 75,75,300; 75,36,234; 36,36,66; 36,21,90; 21,21,90; ' +
+                '21,15,36; 15,15,84; 15,12,18; 12,12,102; ' +
+                '12,9,18; 9,9,222; 9,6,18; 6,6,222; 6,3,18; 3,3,582; 3,0,18;';
             expect(planText).toBe(expectedPlan);
         });
 

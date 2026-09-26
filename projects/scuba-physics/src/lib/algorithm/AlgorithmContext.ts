@@ -11,6 +11,7 @@ import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
 import { FeatureFlags } from '../common/featureFlags';
 import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
+import { Precision } from '../common/precision';
 
 export interface ContextMemento {
     lastTissues: LoadedTissues;
@@ -247,11 +248,28 @@ export class AlgorithmContext {
 
     public addGasSwitchSegment(): Segment {
         const duration = this.options.gasSwitchDuration * Time.oneMinute;
-        return this.addStopSegment(duration);
+        const rounded = this.roundStopDuration(this.runTime, duration);
+        return this.addStopSegment(rounded);
     }
 
     public addStopSegment(duration: number): Segment {
         return this.segments.addFlat(this.currentGas, duration);
+    }
+
+    /**
+     * Prolongs the stop duration so, that the stop ends at runtime rounded to the deco stop duration.
+     * E.g. when rounding stops to minutes, the stop ends at whole minute runtime.
+     * @param stopStart runtime in seconds at which the stop starts
+     * @param stopDuration minimum required stop duration in seconds
+     * @returns adjusted stop duration in seconds, not shorter than the required duration
+     */
+    public roundStopDuration(stopStart: number, stopDuration: number): number {
+        if (stopDuration <= 0) {
+            return stopDuration;
+        }
+
+        const stopEnd = Precision.ceilDistance(stopStart + stopDuration, this.decoStopDuration);
+        return stopEnd - stopStart;
     }
 
     public airBreakGas(): Gas {

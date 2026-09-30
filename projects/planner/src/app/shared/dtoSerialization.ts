@@ -2,11 +2,11 @@ import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
     HighestDensity, Options, Segment, Tank, Tanks,
-    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics
+    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics, ConsumedGas
 } from 'scuba-physics';
 import {
     AirBreaksDto,
-    CalculatedProfileDto, ConsumedDto, DensityDto,
+    CalculatedProfileDto, ConsumedDto, ConsumedGasDto, DensityDto,
     DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
     OptionsDto, SegmentDto, TankDto
 } from './serialization.model';
@@ -58,6 +58,22 @@ export class DtoSerialization {
         }
 
         return result;
+    }
+
+    public static fromConsumedGases(gases: ConsumedGas[]): ConsumedGasDto[] {
+        return gases.map(g => ({
+            gas: DtoSerialization.fromGas(g.gas),
+            total: g.total,
+            consumed: g.consumed,
+            reserve: g.reserve
+        }));
+    }
+
+    public static toConsumedGases(gases: ConsumedGasDto[]): ConsumedGas[] {
+        return gases.map(g => {
+            const gas = DtoSerialization.toGas(g.gas);
+            return new ConsumedGas(gas, g.total, g.consumed, g.reserve);
+        });
     }
 
     public static toSegments(source: SegmentDto[], tanks: Tank[]): Segment[] {

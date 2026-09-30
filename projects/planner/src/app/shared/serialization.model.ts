@@ -38,6 +38,7 @@ export interface DiveDto {
 export interface AppOptionsDto {
     imperialUnits: boolean;
     isComplex: boolean;
+    consumptionInLiters: boolean;
     language: string;
     maxDensity: number;
     primaryTankReserve: number;
@@ -169,11 +170,23 @@ export interface ConsumedDto {
     reserve: number;
 }
 
+export interface ConsumedGasDto {
+    gas: GasDto;
+    /** Available gas in liters */
+    total: number;
+    /** Consumed gas in liters */
+    consumed: number;
+    /** Reserve in liters */
+    reserve: number;
+}
+
 export interface ConsumptionResultDto {
     diveId: number;
     maxTime: number;
     timeToSurface: number;
     tanks: ConsumedDto[];
+    /** Consumption grouped by gas, calculated together with tanks consumption */
+    gases: ConsumedGasDto[];
     emergencyAscent: SegmentDto[];
 }
 

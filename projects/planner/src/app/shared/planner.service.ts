@@ -205,6 +205,7 @@ export class PlannerService extends Streamed {
         const emergencyAscentSegments = DtoSerialization.toSegments(result.emergencyAscent, tanks.tankData);
         const ascentStart = dive.depths.startAscentTime;
         const emergencyAscent = this.waypoints.calculateWayPoints(emergencyAscentSegments, ascentStart);
+        const consumedGases = DtoSerialization.toConsumedGases(result.gases);
 
         diveResult.updateConsumption(
             result.maxTime,
@@ -215,6 +216,7 @@ export class PlannerService extends Streamed {
             needsReturn,
             !tanks.enoughGas,
             emergencyAscent,
+            consumedGases
         );
 
         this.fireFinishedEvents(dive);

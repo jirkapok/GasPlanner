@@ -2,7 +2,7 @@ import {
     Ceiling, HighestDensity,
     TissueOverPressures, LoadedTissues,
     OtuCalculator, ProfileTissues, CnsExposure,
-    CnsCalculator, CnsDailyCalculator
+    CnsCalculator, CnsDailyCalculator, ConsumedGas, ConsumptionByGas
 } from 'scuba-physics';
 import _ from 'lodash';
 import { Injectable } from '@angular/core';
@@ -73,6 +73,7 @@ export class DiveResults {
     private _turnTime = 0;
     private _needsReturn = false;
     private _notEnoughGas = false;
+    private _consumedGases: ConsumedGas[] = [];
 
     private profileCalculation = new CalculationState();
     private consumptionCalculation = new CalculationState();
@@ -185,6 +186,16 @@ export class DiveResults {
 
     public get notEnoughGas(): boolean {
         return this._notEnoughGas;
+    }
+
+    /** Consumption grouped by gas in liters, ignoring tanks */
+    public get consumedGases(): ConsumedGas[] {
+        return this._consumedGases;
+    }
+
+    /** Not enough gas evaluated from consumption grouped by gas */
+    public get notEnoughGasByGas(): boolean {
+        return !ConsumptionByGas.haveReserve(this._consumedGases);
     }
 
     /**
@@ -352,9 +363,10 @@ export class DiveResults {
         turnTime: number,
         needsReturn: boolean,
         notEnoughGas: boolean,
-        emergencyAscent: WayPoint[]): void {
+        emergencyAscent: WayPoint[],
+        consumedGases: ConsumedGas[] = []): void {
         this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart,
-            turnPressure, turnTime, needsReturn, notEnoughGas);
+            turnPressure, turnTime, needsReturn, notEnoughGas, consumedGases);
         this.consumptionCalculation.Finished();
         this._emergencyAscent = emergencyAscent;
     }
@@ -370,7 +382,7 @@ export class DiveResults {
     }
 
     private emptyConsumption(): void {
-        this.updateConsumptionInternal(0, 0, 0, 0, 0, false, false);
+        this.updateConsumptionInternal(0, 0, 0, 0, 0, false, false, []);
     }
 
     private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues): void {
@@ -415,7 +427,8 @@ export class DiveResults {
         turnPressure: number,
         turnTime: number,
         needsReturn: boolean,
-        notEnoughGas: boolean): void {
+        notEnoughGas: boolean,
+        consumedGases: ConsumedGas[]): void {
         this._maxTime = maxTime;
         this._timeToSurface = timeToSurface;
         this._emergencyAscentStart = emergencyAscentStart;
@@ -423,5 +436,6 @@ export class DiveResults {
         this._turnTime = turnTime;
         this._needsReturn = needsReturn;
         this._notEnoughGas = notEnoughGas;
+        this._consumedGases = consumedGases;
     }
 }

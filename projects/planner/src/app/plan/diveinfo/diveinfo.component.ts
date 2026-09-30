@@ -25,6 +25,9 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageService } from '../../shared/language.service';
+import { PreferencesStore } from '../../shared/preferencesStore';
+import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { GasChartComponent } from '../gas-chart/gas-chart.component';
 
 @Component({
     selector: 'app-diveinfo',
@@ -35,8 +38,10 @@ import { LanguageService } from '../../shared/language.service';
         CardHeaderComponent,
         FaIconComponent,
         MdbTabsModule,
+        MdbFormsModule,
         CalculatingComponent,
         TankChartComponent,
+        GasChartComponent,
         DiveIssuesComponent,
         LocaleNumberPipe,
         DurationPipe,
@@ -57,7 +62,8 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
-        private languages: LanguageService) {
+        private languages: LanguageService,
+        private preferences: PreferencesStore) {
         super();
 
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -68,6 +74,14 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
+    }
+
+    public get inLiters(): boolean {
+        return this.viewSwitch.consumptionInLiters;
+    }
+
+    public get showNotEnoughGas(): boolean {
+        return this.inLiters ? this.dive.notEnoughGasByGas : this.dive.notEnoughGas;
     }
 
     public get tanks(): Tank[] {
@@ -155,6 +169,12 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public sharePlan(): void {
         this.shareDive.sharePlan();
+    }
+
+    public switchInLiters(): void {
+        // both consumptions are already calculated, no need to trigger calculation
+        this.viewSwitch.switchConsumption();
+        this.preferences.save();
     }
 
     private selectedChanged(e: MdbTabChange): void {

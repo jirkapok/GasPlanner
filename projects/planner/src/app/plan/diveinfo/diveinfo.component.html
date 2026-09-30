@@ -169,15 +169,26 @@
       <mdb-tab>
         <ng-template mdbTabTitle>
           <span>{{ 'diveInfo.consumedTab' | translate }}</span>
-          @if (dive.notEnoughGas) {
+          @if (showNotEnoughGas) {
             <fa-icon [icon]="warnIcon" class="ms-2 fa-xl text-danger"></fa-icon>
           }
         </ng-template>
+        <div class="form-check form-switch mt-3">
+          <input type="checkbox" class="form-check-input" id="consumptionInLiters" [checked]="inLiters"
+            (change)="switchInLiters()" mdbCheckbox />
+          <label class="custom-control-label" for="consumptionInLiters">{{ 'diveInfo.inLiters' | translate }}</label>
+        </div>
         <app-calculating [show]="!dive.calculated"></app-calculating>
         @if (dive.showResults) {
-          @for (tank of tanks; track tank) {
-            <app-tankchart [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
-            </app-tankchart>
+          @if (inLiters) {
+            @for (consumed of dive.consumedGases; track consumed) {
+              <app-gaschart [consumed]="consumed"></app-gaschart>
+            }
+          } @else {
+            @for (tank of tanks; track tank) {
+              <app-tankchart [tank]="tank" [showId]="isComplex" [toxicity]="toxicity">
+              </app-tankchart>
+            }
           }
         }
       </mdb-tab>

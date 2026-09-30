@@ -7,6 +7,7 @@ export * from './lib/algorithm/BuhlmannAlgorithm';
 export * from './lib/algorithm/BuhlmannAlgorithmParameters';
 export * from './lib/consumption/consumption';
 export * from './lib/consumption/consumptionByMix';
+export * from './lib/consumption/consumptionByGas';
 export * from './lib/algorithm/Compartments';
 export * from './lib/calculators/cnsCalculator';
 export * from './lib/calculators/cnsDailyCalculator';

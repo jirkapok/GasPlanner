@@ -3,7 +3,7 @@ import {
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
-    Tank, ProfileTissues, CnsDailyCalculator
+    Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -120,12 +120,15 @@ export class PlanningTasks {
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, consumptionOptions);
+        // calculated both in one go, so the UI is able to switch between them without recalculation
+        const gases = new ConsumptionByGas(depthConverter).consume(originProfile, emergencyAscent, tanks, consumptionOptions);
 
         return {
             diveId: task.diveId,
             maxTime: maxTime,
             timeToSurface: timeToSurface,
             tanks: DtoSerialization.toConsumed(tanks),
+            gases: DtoSerialization.fromConsumedGases(gases),
             emergencyAscent: DtoSerialization.fromSegments(emergencyAscent),
         };
     }

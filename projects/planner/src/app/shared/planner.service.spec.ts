@@ -199,6 +199,16 @@ describe('PlannerService', () => {
         it('125 bar remaining gas', () => {
             expect(tanksService.firstTank.tank.endPressure).toEqual(125);
         });
+
+        it('Consumption by gas is calculated together with tanks', () => {
+            const consumedGases = dive.consumedGases;
+            expect(consumedGases.length).toEqual(1);
+            const air = consumedGases[0];
+            const tank = tanksService.firstTank.tank;
+            expect(air.total).toBeCloseTo(tank.volume, 6);
+            expect(air.reserve).toBeGreaterThan(0);
+            expect(dive.notEnoughGasByGas).toBeFalse();
+        });
     });
 
     describe('Shows Warnings', () => {
@@ -449,6 +459,7 @@ describe('PlannerService', () => {
                         maxTime: 0,
                         timeToSurface: 0,
                         tanks: [],
+                        gases: [],
                         emergencyAscent: []
                     }));
 

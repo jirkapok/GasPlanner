@@ -53,6 +53,7 @@ import { ProfileChartComponent } from './plan/profilechart/profilechart.componen
 import { DepthsSimpleComponent } from './plan/depths-simple/depths-simple.component';
 import { DepthsComplexComponent } from './plan/depths-complex/depths-complex.component';
 import { TankChartComponent } from './plan/tank-chart/tank-chart.component';
+import { GasChartComponent } from './plan/gas-chart/gas-chart.component';
 import { DepthComponent } from './plan/depth/depth.component';
 import { DiveIssuesComponent } from './plan/dive-issues/dive-issues.component';
 
@@ -158,6 +159,7 @@ const STANDALONE = [
     RedundanciesComponent,
     SacComponent,
     TankChartComponent,
+    GasChartComponent,
     TanksComplexComponent,
     TanksSimpleComponent,
     WayPointsComponent,

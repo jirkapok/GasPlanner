@@ -5,6 +5,9 @@ import { DiveSchedules } from './dive.schedules';
 export class ViewSwitchService {
     private _isComplex = false;
 
+    /** Consumed gas is shown grouped by gas in liters instead of per tank in bars */
+    public consumptionInLiters = false;
+
     constructor(private schedules: DiveSchedules) {
     }
 
@@ -18,5 +21,9 @@ export class ViewSwitchService {
         if (!newValue) {
             this.schedules.setSimple();
         }
+    }
+
+    public switchConsumption(): void {
+        this.consumptionInLiters = !this.consumptionInLiters;
     }
 }

@@ -1,7 +1,6 @@
 import { Precision } from '../common/precision';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { DepthConverter } from '../physics/depth-converter';
-import { Diver } from './Diver';
 import { Options } from '../algorithm/Options';
 import { CalculatedProfile } from '../algorithm/CalculatedProfile';
 import { Segment, Segments } from '../depths/Segments';
@@ -10,72 +9,9 @@ import { Time } from '../physics/Time';
 import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSearch';
 import { PlanFactory } from '../depths/PlanFactory';
 import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
 
-class GasVolumes {
-    private remaining: Map<number, number> = new Map<number, number>();
-
-    public get(gasCode: number): number {
-        return this.remaining.get(gasCode) || 0;
-    }
-
-    public add(gasCode: number, toAdd: number): void {
-        toAdd = toAdd > 0 ? toAdd : 0;
-        const newValue = this.get(gasCode) + toAdd;
-        this.remaining.set(gasCode, newValue);
-    }
-
-    public subtract(gasCode: number, tosSubtract: number): void {
-        const current = this.get(gasCode);
-        tosSubtract = tosSubtract > 0 ? tosSubtract : 0;
-        let remaining = current - tosSubtract;
-        remaining = remaining < 0 ? 0 : remaining;
-        this.remaining.set(gasCode, remaining);
-    }
-}
-
-class RmvContext {
-    public readonly rmvPerSecond: number;
-    private readonly _stressRmvPerSecond: number;
-    private readonly _teamStressRmvPerSecond: number;
-
-    constructor(private options: ConsumptionOptions, public readonly bottomTank: Tank) {
-        this.rmvPerSecond = Time.toMinutes(options.diver.rmv);
-        this._teamStressRmvPerSecond = Time.toMinutes(options.diver.teamStressRmv);
-        this._stressRmvPerSecond = Time.toMinutes(options.diver.stressRmv);
-    }
-
-    public stressRmvPerSecond(segment: Segment): number {
-        // Bottom gas = team stress rmv, deco gas = diver stress rmv,
-        // Consider separate stage tank RMV
-        // User is on bottom tank, or calculated ascent using bottom gas.
-        // The only issue is breathing bottom gas as travel and in such case it is user defined segment with tank assigned.
-        if (segment.tank === this.bottomTank || segment.gas.compositionEquals(this.bottomTank.gas)) {
-            return this._teamStressRmvPerSecond;
-        }
-
-        return this._stressRmvPerSecond;
-    }
-
-    public ensureMinimalReserve(tank: Tank, reserveVolume: number): number {
-        const isBottomTank = tank === this.bottomTank;
-        const minimalReserve = isBottomTank ? this.options.primaryTankReserve : this.options.stageTankReserve;
-        const minimalReserveVolume = Tank.realVolume2(tank.size, minimalReserve, tank.gas);
-
-        if(reserveVolume < minimalReserveVolume) {
-            return minimalReserveVolume;
-        }
-
-        return reserveVolume;
-    }
-}
-
-export interface ConsumptionOptions {
-    diver: Diver;
-    /** Minimum tank reserve for bottom gas tank in bars */
-    primaryTankReserve: number;
-    /** Minimum tank reserve for all other stage/deco tanks in bars */
-    stageTankReserve: number;
-}
+export type { ConsumptionOptions } from './consumptionCommon';
 
 /**
  * Calculates tank consumptions during the dive and related variables
@@ -87,7 +23,11 @@ export class Consumption {
     /** Minimum bars to keep in stage tank, even for shallow dives */
     public static readonly defaultStageReserve = 20;
 
-    constructor(private depthConverter: DepthConverter) { }
+    private segmentsConsumption: SegmentsConsumption;
+
+    constructor(depthConverter: DepthConverter) {
+        this.segmentsConsumption = new SegmentsConsumption(depthConverter);
+    }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[],
         options: Options, surfaceInterval?: RestingParameters): CalculatedProfile {
@@ -131,36 +71,26 @@ export class Consumption {
      * @param consumptionOptions Not null consumption definition.
      */
     public consumeFromTanks2(segments: Segment[], emergencyAscent: Segment[], tanks: Tank[], consumptionOptions: ConsumptionOptions): void {
-        if (segments.length < 2) {
-            throw new Error('Profile needs to contain at least 2 segments.');
-        }
-
-        if (emergencyAscent.length < 1) {
-            throw new Error('Emergency ascent needs to contain at least 1 segment.');
-        }
-
+        SegmentsConsumption.validate(segments, emergencyAscent);
         Tanks.resetConsumption(tanks);
-
-        // Not all segments have tank assigned, but the emergency ascent is calculated
-        // from last user defined segment, so there should be a tank, otherwise we have no other option.
-        const bottomTank = emergencyAscent[0]?.tank ?? tanks[0];
-        const rmvContext = new RmvContext(consumptionOptions, bottomTank);
+        const rmvContext = RmvContext.create(consumptionOptions, emergencyAscent, tanks);
 
         // Reserve needs to be first to be able to preserve it, when possible.
         this.updateReserve(emergencyAscent, tanks, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
         const getRmvPerSecond = (_: Segment) => rmvContext.rmvPerSecond;
-        const consumedBySegmentRmv = (s: Segment, _: number) => this.consumedBySegment(s, rmvContext.rmvPerSecond);
+        const consumedBySegmentRmv = (s: Segment, _: number) => this.segmentsConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
 
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        let remainToConsume: GasVolumes = this.toBeConsumedYet(segments, new GasVolumes(), getRmvPerSecond, (s) => !!s.tank);
+        let remainToConsume: GasVolumes = this.segmentsConsumption.toBeConsumedYet(segments, new GasVolumes(),
+            getRmvPerSecond, (s) => !!s.tank);
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, consumedBySegmentRmv);
         // if more consumed, drain the tanks
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, () => 0, (_: Segment, remaining: number) => remaining);
 
         // and only now we can consume the remaining gas from all other segments
-        remainToConsume = this.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
+        remainToConsume = this.segmentsConsumption.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         // if more consumed, drain the tanks
         this.consumeByGases(tanks, remainToConsume, () => 0);
@@ -224,7 +154,8 @@ export class Consumption {
         const getRmvPerSecond = (s: Segment) => rmvContext.stressRmvPerSecond(s);
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: GasVolumes = this.toBeConsumedYet(emergencyAscent, new GasVolumes(), getRmvPerSecond, () => true);
+        const gasesConsumed: GasVolumes = this.segmentsConsumption.toBeConsumedYet(emergencyAscent, new GasVolumes(),
+            getRmvPerSecond, () => true);
 
         // add the reserve from opposite order than consumed gas
         for (let index = 0; index <= tanks.length - 1; index++) {
@@ -273,38 +204,5 @@ export class Consumption {
         const reallyConsumedLiters = consumedLiters > availableLiters ? availableLiters : consumedLiters;
         tank.consumedVolume += reallyConsumedLiters;
         return reallyConsumedLiters;
-    }
-
-    /** The only method which adds gas to GasVolumes */
-    private toBeConsumedYet(
-        segments: Segment[],
-        remainToConsume: GasVolumes,
-        getRmvPerSecond: (segment: Segment) => number,
-        includeSegment: (segment: Segment) => boolean,
-    ): GasVolumes {
-        for (let index = 0; index < segments.length; index++) {
-            const segment = segments[index];
-
-            if (includeSegment(segment)) {
-                const gas = segment.gas;
-                const gasCode = gas.contentCode;
-                const rmvPerSecond = getRmvPerSecond(segment);
-                const consumedLiters = this.consumedBySegment(segment, rmvPerSecond);
-                remainToConsume.add(gasCode, consumedLiters);
-            }
-        }
-
-        return remainToConsume;
-    }
-
-    /**
-     * Returns consumption in Liters at given segment average depth
-     * @param rmvPerSecond Liter/second
-     */
-    private consumedBySegment(segment: Segment, rmvPerSecond: number): number {
-        const averagePressure = this.depthConverter.toBar(segment.averageDepth);
-        const duration = Precision.roundTwoDecimals(segment.duration);
-        const consumed = duration * averagePressure * rmvPerSecond;
-        return consumed;
     }
 }

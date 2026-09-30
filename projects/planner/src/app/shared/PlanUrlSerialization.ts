@@ -394,7 +394,8 @@ export class PlanUrlSerialization {
             icdIgnored: this.appSettings.settings.icdIgnored,
             densityIgnored: this.appSettings.settings.densityIgnored,
             noDecoIgnored: this.appSettings.settings.noDecoIgnored,
-            missingAirBreakIgnored: this.appSettings.settings.missingAirBreakIgnored
+            missingAirBreakIgnored: this.appSettings.settings.missingAirBreakIgnored,
+            consumptionInLiters: this.viewSwitch.consumptionInLiters
         };
     }
 }

@@ -1,3 +1,10 @@
+## [0.7.1](https://github.com/jirkapok/GasPlanner/compare/v0.7.0...v0.7.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* typo in compartment 4 and 5 ([#109](https://github.com/jirkapok/GasPlanner/issues/109)) ([4e1442d](https://github.com/jirkapok/GasPlanner/commit/4e1442d344b328cc1adf2197baa9d595b153236b))
+
 # [0.7.0](https://github.com/jirkapok/GasPlanner/compare/v0.6.2...v0.7.0) (2026-09-30)
 
 

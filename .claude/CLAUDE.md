@@ -72,7 +72,7 @@ Tiered, each tier gated on the previous, later tiers restricted to `master`:
 - Push logic into `scuba-physics` wherever it's pure computation/domain logic — keep `planner` focused on UI, routing, and orchestration.
 - Test coverage: write component tests for app code; write unit tests only for library (`scuba-physics`) code.
 - Add E2E coverage only for the happy path of a key scenario when introducing a new page — not for every case.
-- Prefer Angular Material-provided styles over custom CSS/SCSS where possible (note: current UI still relies on `mdb-angular-ui-kit`; don't expand that surface, prefer Material for new UI).
+- Prefer Angular MDbootstrap library classes over custom CSS/SCSS where possible (note: current UI relies on `mdb-angular-ui-kit`).
 - Don't edit generated output in `dist/`, `.angular/`, or `coverage/`.
 - ESLint enforces 4-space indent, single quotes, required semicolons, 140-char line length, and Angular-specific rules (`app` element/attribute prefix, kebab-case component selectors, camelCase directive selectors); run `npm run lint` before considering a change done.
 - Implement layouts for both desktop and mobile using the existing `col-12 col-sm-* col-md-*...` Bootstrap/MDB grid pattern (see `diveoptions.component.html`) — mobile is the `sm` breakpoint and below (<768px, i.e. no `col-md`-or-larger override applies). Don't introduce custom media queries for this.

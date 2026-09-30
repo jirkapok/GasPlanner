@@ -1,4 +1,5 @@
 {
+    "repositoryUrl": "https://github.com/jirkapok/GasPlanner.git",
     "branches": ["master"],
     "plugins": [
         ["@semantic-release/commit-analyzer", {

@@ -144,7 +144,7 @@
     "use": "Использовать", "maxBottomTime": "Максимальное время на глубине", "maxBottomTimeTitle": "Установить максимальное время погружения по расходу газа",
     "surfaceGradient": "Градиент на поверхности", "offgasingStart": "Начало выведения газа", "highestCeiling": "Наибольший потолок",
     "highestGasDensity": "Наибольшая плотность газа", "turnTime": "Время разворота", "turnPressure": "Давление разворота",
-    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "issuesTab": "Проблемы"
+    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "issuesTab": "Проблемы", "inLiters": "В литрах"
   },
   "diveOptions": {
     "allUsable": "Полностью используемый", "halfUsable": "Наполовину используемый", "thirdUsable": "На треть используемый", "cardTitle": "Параметры",
@@ -159,6 +159,7 @@
   "profileChart": { "cardTitle": "Профиль погружения", "heatmapTitle": "Показать тепловую карту тканей", "emergencyAscentTitle": "Показать аварийное всплытие", "timeAxisLabel": "Время", "depthAxisLabel": "Глубина", "avgDepthTraceName": "Ср. глубина", "depthTraceName": "Глубина", "emergencyTraceName": "Авария", "ceilingTraceName": "Потолок", "eventTraceName": "Событие" },
   "surfaceInterval": { "label": "Поверхностный интервал", "firstDive": "Первое погружение", "thirtyMinutes": "30 минут", "oneHour": "1 час", "twoHours": "2 часа", "invalidFormat": "Должно быть в формате чч:мм" },
   "tankChart": { "gasRemaining": "Остаток газа:", "rockBottom": "Резерв:" },
+  "gasChart": { "reserve": "Резерв:", "consumed": "Израсходовано:", "available": "Доступно:" },
   "tanksComplex": { "cardTitle": "Баллоны", "size": "Объём", "workPressure": "Раб. давл.", "pressure": "Давление", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Рабочее давление", "startPressureLabel": "Начальное давление" },
   "tanksSimple": { "cardTitle": "Баллон с донным газом", "size": "Объём", "sac": "SAC:", "workingPressure": "Рабочее давление", "startPressure": "Начальное давление" },
   "waypointsTable": { "cardTitle": "Точки погружения", "filterTitle": "Показать только остановки", "depth": "Глубина", "duration": "Длительность", "run": "Время", "gas": "Газ" },

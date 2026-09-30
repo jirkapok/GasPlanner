@@ -144,7 +144,7 @@
     "use": "使用", "maxBottomTime": "最大水底时间", "maxBottomTimeTitle": "根据消耗的气体将潜水时间设置为最大值",
     "surfaceGradient": "水面梯度", "offgasingStart": "排氮开始", "highestCeiling": "最高天花板深度",
     "highestGasDensity": "最高气体密度", "turnTime": "折返时间", "turnPressure": "折返压力",
-    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题"
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题", "inLiters": "以升为单位"
   },
   "diveOptions": {
     "allUsable": "全部可用", "halfUsable": "一半可用", "thirdUsable": "三分之一可用", "cardTitle": "选项",
@@ -159,6 +159,7 @@
   "profileChart": { "cardTitle": "潜水剖面", "heatmapTitle": "显示组织热力图", "emergencyAscentTitle": "显示紧急上升", "timeAxisLabel": "时间", "depthAxisLabel": "深度", "avgDepthTraceName": "平均深度", "depthTraceName": "深度", "emergencyTraceName": "紧急", "ceilingTraceName": "天花板", "eventTraceName": "事件" },
   "surfaceInterval": { "label": "水面间隔时间", "firstDive": "首次潜水", "thirtyMinutes": "30分钟", "oneHour": "1小时", "twoHours": "2小时", "invalidFormat": "必须为hh:mm格式的文本" },
   "tankChart": { "gasRemaining": "剩余气体：", "rockBottom": "最低安全气量：" },
+  "gasChart": { "reserve": "储备：", "consumed": "已消耗：", "available": "可用：" },
   "tanksComplex": { "cardTitle": "气瓶", "size": "容量", "workPressure": "工作压力", "pressure": "压力", "he": "He", "o2": "O2", "sac": "SAC：", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力" },
   "tanksSimple": { "cardTitle": "水底气瓶", "size": "容量", "sac": "SAC：", "workingPressure": "工作压力", "startPressure": "起始压力" },
   "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },

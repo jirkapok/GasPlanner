@@ -1,3 +1,10 @@
+# [0.7.0](https://github.com/jirkapok/GasPlanner/compare/v0.6.2...v0.7.0) (2026-09-30)
+
+
+### Features
+
+* [#25](https://github.com/jirkapok/GasPlanner/issues/25) consumed gas in liters per gas ([97afb8e](https://github.com/jirkapok/GasPlanner/commit/97afb8e52066fb4b84454448de9db7c1980a29f8))
+
 ## [0.6.2](https://github.com/jirkapok/GasPlanner/compare/v0.6.1...v0.6.2) (2026-09-26)
 
 

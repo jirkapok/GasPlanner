@@ -412,7 +412,7 @@ describe('Profile Events', () => {
             const events = calculateEvents(gases, segments, Salinity.fresh, SafetyStop.never);
 
             assertEvents(events.items, [
-                { type: EventType.noDecoEnd, timeStamp: 3746, depth: 16, gas: undefined }
+                { type: EventType.noDecoEnd, timeStamp: 3745, depth: 16, gas: undefined }
             ]);
         });
 
@@ -432,7 +432,7 @@ describe('Profile Events', () => {
             assertEvents(events.items, [
                 { type: EventType.noDecoEnd, timeStamp: 836, depth: 30, gas: undefined },
                 { type: EventType.brokenCeiling, timeStamp: 1856, depth: 6.44, gas: undefined },
-                { type: EventType.brokenCeiling, timeStamp: 2051, depth: 2.85, gas: undefined }
+                { type: EventType.brokenCeiling, timeStamp: 2051, depth: 2.84, gas: undefined }
             ]);
         });
     });

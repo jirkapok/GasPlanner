@@ -1,6 +1,7 @@
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /**
  * Reference: https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf
@@ -15,8 +16,11 @@ export class CnsCalculator {
     /** Maximum CNS toxicity in % */
     public static readonly limit = 100;
     private readonly minimumPpO2 = 0.5;
+    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    }
 
     /**
      * Calculates remaining CNS toxicity in % after the surface interval.
@@ -32,14 +36,17 @@ export class CnsCalculator {
         return cns * Math.pow(0.5, surfaceInterval / CnsCalculator.halfTime);
     }
 
-    /** Calculates total CNS % for provided profile */
-    public calculateForProfile(profile: Segment[]): number {
+    /**
+     * Calculates total CNS % for provided profile
+     * @param startAscentIndex index of first segment of calculated ascent, Infinity if not known
+     */
+    public calculateForProfile(profile: Segment[], startAscentIndex: number = Number.POSITIVE_INFINITY): number {
         let total = 0;
 
-        profile.forEach(segment => {
-            const o2 = segment.gas.fO2;
-            const partCns = this.calculate(o2, segment.startDepth, segment.endDepth, segment.duration);
-            total += partCns;
+        profile.forEach((segment, index) => {
+            const avgDepth = (segment.startDepth + segment.endDepth) / 2;
+            const ppO2 = this.breathing.ppO2(segment.gas, avgDepth, index >= startAscentIndex);
+            total += this.calculateByPpO2(ppO2, segment.duration);
         });
 
         return total;
@@ -51,10 +58,12 @@ export class CnsCalculator {
      * @param profile the dive profile
      * @param previousCns CNS % at end of previous dive
      * @param surfaceInterval duration of the surface interval in seconds, Infinity for first dive
+     * @param startAscentIndex index of first segment of calculated ascent, Infinity if not known
      */
-    public calculateForRepetitiveDive(profile: Segment[], previousCns: number, surfaceInterval: number): number {
+    public calculateForRepetitiveDive(profile: Segment[], previousCns: number, surfaceInterval: number,
+        startAscentIndex: number = Number.POSITIVE_INFINITY): number {
         const residual = CnsCalculator.residual(previousCns, surfaceInterval);
-        return residual + this.calculateForProfile(profile);
+        return residual + this.calculateForProfile(profile, startAscentIndex);
     }
 
     /**
@@ -68,7 +77,15 @@ export class CnsCalculator {
         const avgDepth = (startDepth + endDepth) / 2;
         const aap = this.depthConverter.toBar(avgDepth);
         const ppO2 = fO2 * aap;
+        return this.calculateByPpO2(ppO2, duration);
+    }
 
+    /**
+     * Calculates CNS in % for constant oxygen partial pressure
+     * @param ppO2 oxygen partial pressure in bars
+     * @param duration duration in seconds
+     */
+    public calculateByPpO2(ppO2: number, duration: number): number {
         if(ppO2 <= this.minimumPpO2) {
             return 0;
         }

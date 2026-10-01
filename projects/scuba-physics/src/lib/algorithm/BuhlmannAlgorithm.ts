@@ -21,10 +21,11 @@ import {
     SurfaceIntervalAppliedStatistics,
     SurfaceIntervalParameters
 } from './BuhlmannAlgorithmParameters';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 type CreateAlgorithmContext = (
     gases: Gases, segments: Segments, options: Options,
-    depthConverter: DepthConverter, previousTissues: LoadedTissues
+    depthConverter: DepthConverter, breathing: BreathingModel, previousTissues: LoadedTissues
 ) => AlgorithmContext;
 
 export class BuhlmannAlgorithm {
@@ -33,10 +34,12 @@ export class BuhlmannAlgorithm {
      * Returns positive number or Infinity, in case there is no more tissues loading
      * usually at small depths (bellow 10 meters).
      */
-    public noDecoLimit({ segments, gases, options, surfaceInterval }: AlgorithmParams): number {
+    public noDecoLimit(algorithmParams: AlgorithmParams): number {
+        const { segments, gases, options, surfaceInterval } = algorithmParams;
         const depthConverter = new DepthConverterFactory(options).create();
+        const breathing = this.breathingFor(algorithmParams, depthConverter);
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, rested.finalTissues);
+        const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, breathing, rested.finalTissues);
         return this.swimNoDecoLimit(segments, gases, context);
     }
 
@@ -98,7 +101,8 @@ export class BuhlmannAlgorithm {
         const newSegments = segments.copy();
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
+        const breathing = this.breathingFor(algorithmParams, depthConverter);
+        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, breathing, rested.finalTissues);
         this.swimPlan(context);
         return this.toFullProfile(context, algorithmParams);
     }
@@ -120,9 +124,11 @@ export class BuhlmannAlgorithm {
 
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, rested.finalTissues);
+        const breathing = this.breathingFor(algorithmParams, depthConverter);
+        const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, breathing, rested.finalTissues);
         this.swimPlan(context);
         context.markAverageDepth();
+        context.isAscent = true;
         let nextStop = context.nextStop(context.currentDepth);
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.
@@ -136,6 +142,10 @@ export class BuhlmannAlgorithm {
         }
 
         return this.toSimpleProfile(context, algorithmParams);
+    }
+
+    private breathingFor(algorithmParams: AlgorithmParams, depthConverter: DepthConverter): BreathingModel {
+        return algorithmParams.breathing ?? new OpenCircuitBreathing(depthConverter);
     }
 
     private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
@@ -180,13 +190,18 @@ export class BuhlmannAlgorithm {
         const options = new Options(1, 1, 1.6, 1.6, Salinity.salt);
         options.altitude = altitude;
         const depthConverter = new DepthConverterFactory(options).create();
-        const context = createContext(gases, segments, options, depthConverter, previousTissues);
+        const breathing = new OpenCircuitBreathing(depthConverter); // at surface always breathing air
+        const context = createContext(gases, segments, options, depthConverter, breathing, previousTissues);
         this.swim(context, restingSegment);
         // we don't have here the saturation from the dive, so we can return only the surface changes
         return toValidResult(context);
     }
 
     private tryGasSwitch(context: AlgorithmContext) {
+        if (!context.usesGasSwitching) {
+            return;
+        }
+
         const newGas: Gas = context.bestDecoGas();
 
         if (context.shouldSwitchTo(newGas)) {
@@ -327,7 +342,7 @@ export class BuhlmannAlgorithm {
 
     private swimPart(context: AlgorithmContext, segment: Segment) {
         const loadSegment = this.toLoadSegment(context.depthConverter, segment);
-        context.loadTissues(loadSegment, segment.gas);
+        context.loadTissues(loadSegment, context.inspiredGas(segment));
         context.runTime += segment.duration;
         context.addStatistics(segment.averageDepth);
     }
@@ -359,10 +374,11 @@ export class BuhlmannAlgorithm {
         const depth = last.endDepth;
         const hover = new Segment(depth, depth, last.gas, Time.oneMinute);
         const hoverLoad = this.toLoadSegment(context.depthConverter, hover);
+        const gas = context.inspiredGas(hover);
         let change = 1;
 
         while (context.ceiling() <= 0 && change > 0) {
-            change = context.loadTissues(hoverLoad, last.gas);
+            change = context.loadTissues(hoverLoad, gas);
             context.runTime += Time.oneMinute;
         }
 

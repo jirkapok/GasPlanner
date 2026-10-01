@@ -11,6 +11,7 @@ import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
 import { Precision } from '../common/precision';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 export interface ContextMemento {
     lastTissues: LoadedTissues;
@@ -29,6 +30,8 @@ export class AlgorithmContext {
     public tissuesHistory: LoadedTissues[] = [];
     /** in seconds */
     public runTime = 0;
+    /** True after user defined segments were swum, i.e. the algorithm generates the ascent */
+    public isAscent = false;
 
     private tissues: Tissues;
     private _oxygenStarted = 0;
@@ -46,6 +49,7 @@ export class AlgorithmContext {
         public segments: Segments,
         public options: Options,
         public depthConverter: DepthConverter,
+        public readonly breathing: BreathingModel,
         currentTissues: LoadedTissues) {
         this.tissues = Tissues.createLoaded(currentTissues);
         this.gradients = new SubSurfaceGradientFactors(depthConverter, options, this.tissues);
@@ -70,8 +74,9 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
+        breathing: BreathingModel,
         currentTissues: LoadedTissues): AlgorithmContext {
-        return new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+        return new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
     }
 
     public static createForCeilings(
@@ -79,8 +84,9 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
+        breathing: BreathingModel,
         currentTissues: LoadedTissues): AlgorithmContext {
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
         context.collectStatistics = context.addCeilingStatistics;
         return context;
     }
@@ -90,14 +96,19 @@ export class AlgorithmContext {
         segments: Segments,
         options: Options,
         depthConverter: DepthConverter,
+        breathing: BreathingModel,
         currentTissues: LoadedTissues): AlgorithmContext {
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, currentTissues);
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
         context.collectStatistics = context.addFullStatistics;
         return context;
     }
 
     public get currentGas(): Gas {
         return this._currentGas;
+    }
+
+    public get usesGasSwitching(): boolean {
+        return this.breathing.usesGasSwitching;
     }
 
     public get ascentSpeed(): number {
@@ -122,7 +133,7 @@ export class AlgorithmContext {
     }
 
     public get shouldAddAirBreaks(): boolean {
-        return this.isBreathingOxygen && this.options.airBreaks.enabled;
+        return this.breathing.usesAirBreaks && this.isBreathingOxygen && this.options.airBreaks.enabled;
     }
 
     public get runTimeOnOxygen(): number {
@@ -200,6 +211,11 @@ export class AlgorithmContext {
         const ambientPressure = this.depthConverter.toBar(currentDepth);
         const currentOverPressures = this.tissues.saturationRatio(ambientPressure);
         this.tissueOverPressures.push(currentOverPressures);
+    }
+
+    /** Gas loaded into tissues for the segment */
+    public inspiredGas(segment: Segment): Gas {
+        return this.breathing.inspiredGas(segment.gas, segment.startDepth, this.isAscent);
     }
 
     public loadTissues(segment: LoadSegment, gas: Gas): number {

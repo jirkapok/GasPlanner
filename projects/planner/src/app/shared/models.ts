@@ -7,9 +7,9 @@ import {
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
-    ALL = 1,
-    HALF = 2,
-    THIRD = 3
+    all = 1,
+    half = 2,
+    third = 3
 }
 
 export interface DiveSetup {
@@ -244,9 +244,9 @@ export class TankBound implements IGasContent, ITankSize {
 }
 
 export enum EventSeverity {
-    None = 0,
-    Warning = 1,
-    Error = 2
+    none = 0,
+    warning = 1,
+    error = 2
 }
 
 export class BoundEvent {
@@ -323,7 +323,7 @@ export class BoundEvent {
             case EventType.error:
             case EventType.brokenCeiling:
             case EventType.lowPpO2:
-                return EventSeverity.Error;
+                return EventSeverity.error;
 
             case EventType.highPpO2:
             case EventType.highAscentSpeed:
@@ -334,18 +334,18 @@ export class BoundEvent {
             case EventType.minDepth:
             case EventType.maxDepth:
             case EventType.missingAirBreak:
-                return EventSeverity.Warning;
+                return EventSeverity.warning;
             default:
-                return EventSeverity.None;
+                return EventSeverity.none;
         }
     }
 
     public get isWarning(): boolean {
-        return this.severity === EventSeverity.Warning;
+        return this.severity === EventSeverity.warning;
     }
 
     public get isError(): boolean {
-        return this.severity === EventSeverity.Error;
+        return this.severity === EventSeverity.error;
     }
 
     public get chartEventText(): string {

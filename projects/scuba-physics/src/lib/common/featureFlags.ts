@@ -5,7 +5,7 @@ export class FeatureFlags {
     private constructor() {
     }
 
-    public static get Instance() {
+    public static get instance() {
         return FeatureFlags._instance || (FeatureFlags._instance = new FeatureFlags());
     }
 }

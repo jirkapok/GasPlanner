@@ -277,12 +277,10 @@ export class Tissues {
      * Returns current state/snapshot of the tissues.
      */
     public finalState(): LoadedTissues {
-        return _(this._compartments).map(t => {
-            return {
-                pN2: t.pN2,
-                pHe: t.pHe
-            };
-        }).value() as LoadedTissues;
+        return _(this._compartments).map(t => ({
+            pN2: t.pN2,
+            pHe: t.pHe
+        })).value() as LoadedTissues;
     }
 
     /**

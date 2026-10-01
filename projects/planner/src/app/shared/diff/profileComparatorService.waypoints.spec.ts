@@ -56,26 +56,26 @@ describe('WayPoints Difference Service', () => {
         result.start();
     };
 
-    const segments3_minutes6: Segment[] = [
+    const segments3Minutes6: Segment[] = [
         new Segment(0, 20, StandardGases.air, 60),
         new Segment(20, 20, StandardGases.air, 120),
         new Segment(20, 0, StandardGases.air, 180)
     ];
 
-    const segments3_minutes9: Segment[] = [
+    const segments3Minutes9: Segment[] = [
         new Segment(0, 20, StandardGases.air, 60),
         new Segment(20, 20, StandardGases.air, 300),
         new Segment(20, 0, StandardGases.air, 180)
     ];
 
-    const segments4_minutes11: Segment[] = [
+    const segments4Minutes11: Segment[] = [
         new Segment(0, 20, StandardGases.air, 60),
         new Segment(20, 20, StandardGases.air, 120),
         new Segment(20, 10, StandardGases.air, 300),
         new Segment(10, 0, StandardGases.air, 180)
     ];
 
-    const segments6_minutes11: Segment[] = [
+    const segments6Minutes11: Segment[] = [
         new Segment(0, 20, StandardGases.air, 60),
         new Segment(20, 15, StandardGases.air, 30),
         new Segment(15, 15, StandardGases.air, 60),
@@ -108,7 +108,7 @@ describe('WayPoints Difference Service', () => {
         setCalculationRunning(0);
 
         setTimeout(() => {
-            assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+            assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
             done();
         }, 500);
     });
@@ -117,19 +117,19 @@ describe('WayPoints Difference Service', () => {
         setCalculationRunning(1);
 
         setTimeout(() => {
-            assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, []);
+            assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
             done();
         }, 500);
     });
 
     it('Failed profile A with valid profile B', () => {
         schedules.dives[0].diveResult.endFailed();
-        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3Minutes6), irrelevantTissues);
         expect(sut.difference).toEqual([]);
     });
 
     it('Failed profile B with valid profile A', () => {
-        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3Minutes6), irrelevantTissues);
         schedules.dives[1].diveResult.endFailed();
         expect(sut.difference).toEqual([]);
     });
@@ -140,7 +140,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 180, depthA: 20, durationA: 120, depthB: 20, durationB: 120 },
             { runTime: 360, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
         ];
-        assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes6, expected);
+        assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, expected);
     });
 
     it('Profile B takes longer', () => {
@@ -150,7 +150,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 360, depthA: 0, durationA: 180, depthB: 20, durationB: 300 },
             { runTime: 540, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
         ];
-        assertDivesWayPointsCompare(segments3_minutes6, segments3_minutes9, expected);
+        assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes9, expected);
     });
 
     it('Profile A takes longer', () => {
@@ -160,7 +160,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 360, depthA: 20, durationA: 300, depthB: 0, durationB: 180 },
             { runTime: 540, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
         ];
-        assertDivesWayPointsCompare(segments3_minutes9, segments3_minutes6, expected);
+        assertDivesWayPointsCompare(segments3Minutes9, segments3Minutes6, expected);
     });
 
     it('Profile B has more segments', () => {
@@ -171,7 +171,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 480, depthA: undefined, durationA: undefined, depthB: 10, durationB: 300 },
             { runTime: 660, depthA: undefined, durationA: undefined, depthB: 0, durationB: 180 },
         ];
-        assertDivesWayPointsCompare(segments3_minutes6, segments4_minutes11, expected);
+        assertDivesWayPointsCompare(segments3Minutes6, segments4Minutes11, expected);
     });
 
     it('Profile A has more segments', () => {
@@ -182,7 +182,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 480, depthA: 10, durationA: 300, depthB: undefined, durationB: undefined },
             { runTime: 660, depthA: 0, durationA: 180, depthB: undefined, durationB: undefined },
         ];
-        assertDivesWayPointsCompare(segments4_minutes11, segments3_minutes6, expected);
+        assertDivesWayPointsCompare(segments4Minutes11, segments3Minutes6, expected);
     });
 
     it('Profile B has levels missing in profile A', () => {
@@ -194,7 +194,7 @@ describe('WayPoints Difference Service', () => {
             { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
             { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
         ];
-        assertDivesWayPointsCompare(segments4_minutes11, segments6_minutes11, expected);
+        assertDivesWayPointsCompare(segments4Minutes11, segments6Minutes11, expected);
     });
 
     it('Profile A has levels missing in profile B', () => {
@@ -206,13 +206,13 @@ describe('WayPoints Difference Service', () => {
             { runTime: 480, depthA: 10, durationA: 300, depthB: 10, durationB: 300 },
             { runTime: 660, depthA: 0, durationA: 180, depthB: 0, durationB: 180 },
         ];
-        assertDivesWayPointsCompare(segments6_minutes11, segments4_minutes11, expected);
+        assertDivesWayPointsCompare(segments6Minutes11, segments4Minutes11, expected);
     });
 
     it('Comparison returns cached diff', () => {
         // irrelevant profiles
-        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
-        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6_minutes11), irrelevantTissues);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3Minutes6), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6Minutes11), irrelevantTissues);
         dispatcher.sendInfoCalculated(1);
         dispatcher.sendInfoCalculated(2);
         expect(sut.difference).toBe(sut.difference);
@@ -220,8 +220,8 @@ describe('WayPoints Difference Service', () => {
 
     it('Recalculated even same profile refreshes diff', () => {
         // irrelevant profiles
-        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3_minutes6), irrelevantTissues);
-        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6_minutes11), irrelevantTissues);
+        schedules.dives[0].diveResult.updateProfile(wayPoints.calculateWayPoints(segments3Minutes6), irrelevantTissues);
+        schedules.dives[1].diveResult.updateProfile(wayPoints.calculateWayPoints(segments6Minutes11), irrelevantTissues);
         dispatcher.sendInfoCalculated(1);
         dispatcher.sendInfoCalculated(2);
         const first = sut.difference;

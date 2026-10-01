@@ -204,11 +204,11 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     // public reset(): void {
     //     switch (this.plan.strategy) {
-    //         case Strategies.HALF: {
+    //         case Strategies.half: {
     //             this.halfUsable();
     //             break;
     //         }
-    //         case Strategies.THIRD: {
+    //         case Strategies.third: {
     //             this.thirdUsable();
     //             break;
     //         }
@@ -225,18 +225,18 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     // }
 
     public setAllUsable(): void {
-        // this.plan.strategy = Strategies.ALL;
+        // this.plan.strategy = Strategies.all;
         this.strategy = this.allUsableName;
     }
 
     // public halfUsable(): void {
-    //     this.plan.strategy = Strategies.HALF;
+    //     this.plan.strategy = Strategies.half;
     //     this.strategy = this.halfUsableName;
     //     this.applyOptions();
     // }
 
     // public thirdUsable(): void {
-    //     this.plan.strategy = Strategies.THIRD;
+    //     this.plan.strategy = Strategies.third;
     //     this.strategy = this.thirdUsableName;
     //     this.applyOptions();
     // }

@@ -83,6 +83,8 @@ export default defineConfig([{
             { selector: 'import', format: ['camelCase', 'PascalCase'] },
             { selector: 'variable', format: ['camelCase', 'UPPER_CASE'], leadingUnderscore: 'allow', trailingUnderscore: 'allow' },
             { selector: 'typeLike', format: ['PascalCase'] },
+            // names which need quotes (e.g. css class names for ngClass) can't follow any format
+            { selector: ['objectLiteralProperty', 'objectLiteralMethod'], modifiers: ['requiresQuotes'], format: null },
             // lodash is imported as `_`
             { selector: 'import', filter: { regex: '^_$', match: true }, format: null },
         ],

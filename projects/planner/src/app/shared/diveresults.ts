@@ -31,7 +31,7 @@ class CalculationState {
         }
     }
 
-    public Finished(): void {
+    public finished(): void {
         this._calculated = true;
         this._calculating = false;
     }
@@ -318,9 +318,9 @@ export class DiveResults {
     }
 
     public endFailed(): void {
-        this.profileCalculation.Finished();
-        this.consumptionCalculation.Finished();
-        this.diveInfoCalculation.Finished();
+        this.profileCalculation.finished();
+        this.consumptionCalculation.finished();
+        this.diveInfoCalculation.finished();
         this.emptyProfile();
         this.emptyDiveInfo();
         this.emptyConsumption();
@@ -329,7 +329,7 @@ export class DiveResults {
 
     public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues): void {
         this.updateProfileInternal(wayPoints, finalTissues);
-        this.profileCalculation.Finished();
+        this.profileCalculation.finished();
     }
 
     public updateDiveInfo(
@@ -352,7 +352,7 @@ export class DiveResults {
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;
         this._cnsExposures = cnsExposures;
-        this.diveInfoCalculation.Finished();
+        this.diveInfoCalculation.finished();
     }
 
     public updateConsumption(
@@ -367,7 +367,7 @@ export class DiveResults {
         consumedGases: ConsumedGas[] = []): void {
         this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart,
             turnPressure, turnTime, needsReturn, notEnoughGas, consumedGases);
-        this.consumptionCalculation.Finished();
+        this.consumptionCalculation.finished();
         this._emergencyAscent = emergencyAscent;
     }
 

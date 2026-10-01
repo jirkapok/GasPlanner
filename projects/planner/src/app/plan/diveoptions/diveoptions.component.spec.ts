@@ -98,7 +98,7 @@ describe('Dive options component', () => {
         const dispatcherSpy = spyOn(reloadDispatcher, 'sendOptionsChanged');
 
         const form = component.optionsForm;
-        form.get('decoStopDistance')!.setValue(5);
+        form.controls.decoStopDistance.setValue(5);
         component.applyOptions();
 
         expect(schedules.selectedOptions.decoStopDistance).toBe(5);

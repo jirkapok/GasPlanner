@@ -98,7 +98,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {
         // first data is the dive profile chart, x value is the timestamp as string
-        const timeStampValue: string = data.points[0].x!.toString();
+        const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
     }
 

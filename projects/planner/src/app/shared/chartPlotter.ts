@@ -8,6 +8,9 @@ import { Ceiling } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 
+/** Layout which always defines both axes, so they can be updated without null checks */
+type ChartLayout = Partial<Plotly.Layout> & Pick<Plotly.Layout, 'xaxis' | 'yaxis'>;
+
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
@@ -56,7 +59,7 @@ export class ChartPlotterFactory {
         };
     }
 
-    public createLayout(): Partial<Plotly.Layout> {
+    public createLayout(): ChartLayout {
         return {
             autosize: true,
             showlegend: false,
@@ -191,7 +194,7 @@ export class DiveTracesBuilder {
         return {
             x: resampleAverageDepth.xValues,
             y: resampleAverageDepth.yValues,
-            type: <Plotly.PlotType>'scatter',
+            type: 'scatter',
             line: {
                 dash: <Plotly.Dash>'dot'
             },
@@ -209,7 +212,7 @@ export class DiveTracesBuilder {
         return {
             x: resampled.xValues,
             y: resampled.yValues,
-            type: <Plotly.PlotType>'scatter',
+            type: 'scatter',
             name: this.namePrefix + this.translate('profileChart.depthTraceName'),
             marker: {
                 color: this.depthLineColor
@@ -224,7 +227,7 @@ export class DiveTracesBuilder {
         return {
             x: resampled.xValues,
             y: resampled.yValues,
-            type: <Plotly.PlotType>'scatter',
+            type: 'scatter',
             name: this.namePrefix + this.translate('profileChart.emergencyTraceName'),
             line: {
                 dash: <Plotly.Dash>'dash'
@@ -290,7 +293,7 @@ export class ChartPlotter {
     private builders: DiveTracesBuilder[];
     private options: Partial<Plotly.Config>;
     private cursor1: Partial<Plotly.Shape>;
-    private layout: Partial<Plotly.Layout>;
+    private layout: ChartLayout;
 
     /** Provide traces in reverse order to keep the last on top */
     constructor(public elementName: string,
@@ -312,15 +315,14 @@ export class ChartPlotter {
     }
 
     public plotCursor(wayPoint: WayPoint | undefined): void {
-        const update: Partial<Plotly.Layout> = {
-            shapes: []
-        };
+        const shapes: Partial<Plotly.Shape>[] = [];
 
         if(wayPoint) {
             this.updateCursor(wayPoint, this.cursor1);
-            update.shapes!.push(this.cursor1);
+            shapes.push(this.cursor1);
         }
 
+        const update: Partial<Plotly.Layout> = { shapes };
         void Plotly.relayout(this.elementName, update);
     }
 
@@ -336,14 +338,14 @@ export class ChartPlotter {
     private updateLayoutThickFormat(): void {
         // setting to string instead expected d3 formatting function causes warning in console = want fix
         const maxDuration = this.totalDuration();
-        this.layout.xaxis!.tickformat = DateFormats.selectChartTimeFormat(maxDuration);
+        this.layout.xaxis.tickformat = DateFormats.selectChartTimeFormat(maxDuration);
     }
 
     /** Axis titles are translated text, re-resolved on every redraw so a language switch is reflected immediately. */
     private updateLayoutAxisTitles(): void {
         const freshLayout = this.chartPlotterFactory.createLayout();
-        this.layout.xaxis!.title = freshLayout.xaxis!.title;
-        this.layout.yaxis!.title = freshLayout.yaxis!.title;
+        this.layout.xaxis.title = freshLayout.xaxis.title;
+        this.layout.yaxis.title = freshLayout.yaxis.title;
     }
 
     private updateCursor(wayPoint: WayPoint, cursor: Partial<Plotly.Shape>): void {

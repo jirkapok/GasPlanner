@@ -138,7 +138,7 @@ export class Preferences {
         return {
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
             diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
-            tanks: DtoSerialization.fromTanks(dive.tanksService.tanks as ITankBound[]),
+            tanks: DtoSerialization.fromTanks(dive.tanksService.tanks),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             surfaceInterval: surfaceInterval
         };

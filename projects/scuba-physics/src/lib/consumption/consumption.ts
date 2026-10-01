@@ -173,8 +173,8 @@ export class Consumption {
         for (let index = tanks.length - 1; index >= 0; index--) {
             const tank = tanks[index];
             const gasCode = tank.gas.contentCode;
-            let remaining = remainToConsume.get(gasCode);
-            let reallyConsumed = this.consumeFromTank(tank, remaining, minimumVolume);
+            const remaining = remainToConsume.get(gasCode);
+            const reallyConsumed = this.consumeFromTank(tank, remaining, minimumVolume);
             remainToConsume.subtract(gasCode, reallyConsumed);
         }
 
@@ -187,9 +187,9 @@ export class Consumption {
         segments.forEach((segment: Segment) => {
             if (segment.tank) {
                 const gasCode = segment.gas.contentCode;
-                let remaining: number = remainToConsume.get(gasCode);
+                const remaining: number = remainToConsume.get(gasCode);
                 const consumeLiters = getConsumed(segment, remaining);
-                let reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimumVolume);
+                const reallyConsumed = this.consumeFromTank(segment.tank, consumeLiters, minimumVolume);
                 remainToConsume.subtract(gasCode, reallyConsumed);
             }
         });

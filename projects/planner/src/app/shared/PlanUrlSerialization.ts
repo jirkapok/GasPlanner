@@ -14,7 +14,7 @@ import {
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';
-import { DiveSchedules } from './dive.schedules';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { Logger } from './Logger';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
@@ -270,7 +270,8 @@ export class PlanUrlSerialization {
     }
 
     public toUrlFor(diveId: number): string {
-        const diveUrl = this.toDiveUrl(diveId);
+        const dive = this.schedules.byId(diveId) ?? this.schedules.selected;
+        const diveUrl = this.toDiveUrl(dive);
         const appOptions = this.toAppOptions();
         return `${diveUrl}&ao=${appOptions}`;
     }
@@ -300,7 +301,7 @@ export class PlanUrlSerialization {
     private applyDiveUrl(url: string, parsed: AppPreferencesDto): void {
         const diveUrl = this.subtractDiveUrl(url);
         const foundByUrl = _(this.schedules.dives).find(d => {
-            const currentUrl = this.toDiveUrl(d.id);
+            const currentUrl = this.toDiveUrl(d);
             // url is always in metric, so it is ok compare different units
             // But never finds similar dive in different units, since the values arent rounded or normalized yet
             return diveUrl === currentUrl;
@@ -338,9 +339,8 @@ export class PlanUrlSerialization {
         return `${isComplex},${imperial}`;
     }
 
-    private toDiveUrl(diveId: number): string {
-        // always use selected dive, in case of multiple dives, we are unable to show the complete all dives url
-        const dive = this.schedules.byId(diveId)!;
+    // always use selected dive, in case of multiple dives, we are unable to show the complete all dives url
+    private toDiveUrl(dive: DiveSchedule): string {
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());

@@ -59,7 +59,7 @@ export class BuhlmannAlgorithm {
             })
         );
 
-        return result as SurfaceIntervalApplied;
+        return result;
     }
 
     /**
@@ -83,7 +83,7 @@ export class BuhlmannAlgorithm {
             })
         );
 
-        return result as SurfaceIntervalAppliedStatistics;
+        return result;
     }
 
     /**

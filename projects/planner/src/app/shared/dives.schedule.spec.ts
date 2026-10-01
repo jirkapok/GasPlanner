@@ -124,7 +124,7 @@ describe('Scheduled dives', () => {
     describe('Previous dive tissues', () => {
         const sut: DiveSchedules = createSut();
         const loadedTissues = ProfileTissues.createAtSurface();
-        sut.byId(1)!.diveResult.updateProfile([], loadedTissues);
+        sut.dives[0].diveResult.updateProfile([], loadedTissues);
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;

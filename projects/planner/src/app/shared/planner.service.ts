@@ -64,25 +64,25 @@ export class PlannerService extends Streamed {
 
     /** Not called by default, needs to be called manually */
     public calculate(diveId: number): void {
-        if(!this.schedules.validId(diveId)) {
+        const dive = this.schedules.byId(diveId);
+        if(!dive) {
             return;
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
         this.schedules.markStart(diveId);
-        const dive = this.schedules.byId(diveId)!;
-        const profileRequest = this.createPlanRequest(dive) as ProfileRequestDto;
+        const profileRequest = this.createPlanRequest(dive);
         this.profileTask.calculate(profileRequest);
     }
 
     private continueCalculation(result: ProfileResultDto): void {
         // still we may assign result to wrong dive after a dive is removed and Ids are rearranged
         // but there should be following schedule to fix it
-        if(!this.schedules.validId(result.diveId)) {
+        const dive = this.schedules.byId(result.diveId);
+        if(!dive) {
             return;
         }
 
-        const dive = this.schedules.byId(result.diveId)!;
         const tankData = dive.tanksService.tankData;
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const diveResult = dive.diveResult;
@@ -157,11 +157,11 @@ export class PlannerService extends Streamed {
     }
 
     private finishDiveInfo(diveInfoResult: DiveInfoResultDto): void {
-        if(!this.schedules.validId(diveInfoResult.diveId)) {
+        const dive = this.schedules.byId(diveInfoResult.diveId);
+        if(!dive) {
             return;
         }
 
-        const dive = this.schedules.byId(diveInfoResult.diveId)!;
         const diveResult = dive.diveResult;
         const events = DtoSerialization.toEvents(diveInfoResult.events);
         const filteredEvents = this.ignoredIssues.filterIgnored(events.items)
@@ -189,11 +189,11 @@ export class PlannerService extends Streamed {
     }
 
     private finishConsumption(result: ConsumptionResultDto): void {
-        if(!this.schedules.validId(result.diveId)) {
+        const dive = this.schedules.byId(result.diveId);
+        if(!dive) {
             return;
         }
 
-        const dive = this.schedules.byId(result.diveId)!;
         const tanks = dive.tanksService;
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;

@@ -7,7 +7,7 @@ import { Strategies } from './models';
 export class Plan {
     private static readonly defaultDuration = Time.oneMinute * 10;
     // TODO move strategy to Consumption algorithm selection
-    public strategy: Strategies = Strategies.ALL;
+    public strategy: Strategies = Strategies.all;
     private _segments: Segments = new Segments();
 
     constructor() {
@@ -48,11 +48,11 @@ export class Plan {
     }
 
     public get availablePressureRatio(): number {
-        return this.strategy === Strategies.THIRD ? 2 / 3 : 1;
+        return this.strategy === Strategies.third ? 2 / 3 : 1;
     }
 
     public get needsReturn(): boolean {
-        return this.strategy !== Strategies.ALL;
+        return this.strategy !== Strategies.all;
     }
 
     public setSimple(depth: number, duration: number, tank: Tank, options: Options): void {

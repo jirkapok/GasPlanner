@@ -14,9 +14,7 @@ describe('Quiz Session', () => {
         expect(sut.maxPoints).toBe(0);
     };
 
-    const createSession = () => {
-        return new QuizSession(category);
-    };
+    const createSession = () => new QuizSession(category);
 
     describe('Not answered', () => {
         it('Has empty default state', () => {

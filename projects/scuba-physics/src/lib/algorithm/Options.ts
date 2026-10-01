@@ -4,6 +4,7 @@ import { GasOptions } from '../gases/Gases';
 import { Salinity } from '../physics/pressure-converter';
 import { SpeedOptions } from '../depths/speeds';
 import { GasMixtures } from '../gases/GasMixtures';
+import { RebreatherOptions } from '../ccr/RebreatherOptions';
 
 export enum SafetyStop {
     never = 1,
@@ -146,6 +147,7 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
     public problemSolvingDuration = OptionDefaults.problemSolvingDuration;
 
     private readonly _airBreaks = new AirBreakOptions();
+    private readonly _rebreather = new RebreatherOptions();
 
     constructor(
         // Gradient factors in Shearwater
@@ -189,6 +191,10 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         return this._airBreaks;
     }
 
+    public get rebreather(): RebreatherOptions {
+        return this._rebreather;
+    }
+
     public loadFrom(other: Options): void {
         // gases
         this.gfLow = other.gfLow || this.gfLow;
@@ -219,5 +225,6 @@ export class Options implements GasOptions, DepthOptions, DepthLevelOptions, Spe
         this.descentSpeed = other.descentSpeed || this.descentSpeed;
 
         this.airBreaks.loadFrom(other.airBreaks);
+        this.rebreather.loadFrom(other.rebreather);
     }
 }

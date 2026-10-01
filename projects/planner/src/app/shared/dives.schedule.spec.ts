@@ -79,10 +79,14 @@ describe('Scheduled dives', () => {
             expect(sut.dives[1].id).toEqual(2);
         });
 
-        it('Rounds to whole meters', () => {
+        it('Rounds depth to one decimal', () => {
             sut.dives[1].depths.plannedDepth = 31.287;
-            const expectedDepth = 31;
-            expect(sut.dives[1].title).toEqual(`2. ${expectedDepth} m, 12 min`);
+            expect(sut.dives[1].title).toEqual('2. 31.3 m, 12 min');
+        });
+
+        it('Rounds duration to one decimal', () => {
+            sut.dives[1].depths.planDuration = 12.3456;
+            expect(sut.dives[1].title).toEqual('2. 30 m, 12.3 min');
         });
     });
 

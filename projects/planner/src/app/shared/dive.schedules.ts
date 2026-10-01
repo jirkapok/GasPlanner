@@ -79,9 +79,9 @@ export class DiveSchedule {
     }
 
     public get title(): string {
-        const depth = Precision.round(this.depths.plannedDepth);
+        const depth = Precision.round(this.depths.plannedDepth, 1);
         const depthUnits = this.units.length;
-        const duration = this.depths.planDuration;
+        const duration = Precision.round(this.depths.planDuration, 1);
         return `${this.id}. ${depth} ${depthUnits}, ${duration} min`;
     }
 

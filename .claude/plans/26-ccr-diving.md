@@ -48,10 +48,10 @@ All paths below are relative to `projects/scuba-physics/src/lib/` unless they st
 ---
 
 ## Stage 1: Preparation (detailed plan)
-- [ ] Status
+- [x] Status
 
 ### Task 1: Generic rebreather formulas (`Rebreathers.ts`)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `ccr/Rebreathers.ts`
@@ -61,7 +61,7 @@ All paths below are relative to `projects/scuba-physics/src/lib/` unless they st
 **Interfaces:**
 - Produces: `Rebreathers.pscrSupplyRate(ambientPressure: number, rmv: number, injectionRatio: number): number`, `Rebreathers.mccrO2Rate(o2Flow: number, metabolicO2: number): number`, `Rebreathers.eccrO2Rate(metabolicO2: number, o2Loss: number): number`, `Rebreathers.diluentForDescent(loopVolume: number, startPressure: number, endPressure: number): number`. All rates are in surface-equivalent L/min and pressures in bar.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // ccr/Rebreathers.spec.ts
@@ -110,12 +110,12 @@ describe('Rebreathers', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/ccr/Rebreathers.spec.ts'`
 Expected: compilation FAIL, `Cannot find module './Rebreathers'`.
 
-- [ ] **Step 3: Write the implementation and delete the POC file**
+- [x] **Step 3: Write the implementation and delete the POC file**
 
 ```ts
 // ccr/Rebreathers.ts
@@ -169,11 +169,11 @@ export class Rebreathers {
 
 Then delete `projects/scuba-physics/src/lib/ccr/ccrConsumption.ts`.
 
-- [ ] **Step 4: Run the test and confirm it passes**
+- [x] **Step 4: Run the test and confirm it passes**
 
 Run the Step 2 command. Expected: 8 specs, 0 failures.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/ccr/Rebreathers.ts projects/scuba-physics/src/lib/ccr/Rebreathers.spec.ts
@@ -182,7 +182,7 @@ git commit -m "feat(scuba-physics): #26 generic rebreather formulas" -m "Co-Auth
 ```
 
 ### Task 2: `CircuitType` and `RebreatherOptions` in `Options`
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `ccr/RebreatherOptions.ts`
@@ -192,7 +192,7 @@ git commit -m "feat(scuba-physics): #26 generic rebreather formulas" -m "Co-Auth
 **Interfaces:**
 - Produces: `enum CircuitType { OC = 1, PSCR = 2, MCCR = 3, ECCR = 4 }` (it starts at 1 because `Options.loadFrom` treats 0 as "missing", see `safetyStop`). `class RebreatherOptions { circuit: CircuitType; metabolicO2: number; loopVolume: number; loadFrom(source: RebreatherOptions): void }`. `RebreatherDefaults.metabolicO2 = 1.0`, `RebreatherDefaults.loopVolume = 6`. `Options.rebreather: RebreatherOptions` (getter).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // ccr/RebreatherOptions.spec.ts
@@ -226,12 +226,12 @@ describe('Rebreather options', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/ccr/RebreatherOptions.spec.ts'`
 Expected: FAIL, `Cannot find module './RebreatherOptions'`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```ts
 // ccr/RebreatherOptions.ts
@@ -285,12 +285,12 @@ In `algorithm/Options.ts`:
 
 - at the end of `loadFrom`, after `this.airBreaks.loadFrom(other.airBreaks);`, add `this.rebreather.loadFrom(other.rebreather);`
 
-- [ ] **Step 4: Run the new spec and the existing Options spec**
+- [x] **Step 4: Run the new spec and the existing Options spec**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/{ccr/RebreatherOptions,algorithm/Options}.spec.ts'`
 Expected: all pass (the existing `expect(sut).toEqual(modified)` still passes because both sides have default rebreather options).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/ccr/RebreatherOptions.ts projects/scuba-physics/src/lib/ccr/RebreatherOptions.spec.ts projects/scuba-physics/src/lib/algorithm/Options.ts
@@ -298,7 +298,7 @@ git commit -m "feat(scuba-physics): #26 rebreather options" -m "Co-Authored-By: 
 ```
 
 ### Task 3: Loop gas fractions (`LoopGas.ts`)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `ccr/LoopGas.ts`
@@ -308,7 +308,7 @@ git commit -m "feat(scuba-physics): #26 rebreather options" -m "Co-Authored-By: 
 **Interfaces:**
 - Produces: `LoopGas.constantPpO2(ambientPressure: number, diluent: Gas, setPoint: number): Gas` and `LoopGas.pscrSteadyState(ambientPressure: number, supply: Gas, rmv: number, injectionRatio: number, metabolicO2: number): Gas`. Fractions are relative to **ambient** pressure, which is slightly conservative for tissue loading (more inert gas than the lung-pressure variant). The diluent/supply He:N2 ratio is preserved.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // ccr/LoopGas.spec.ts
@@ -382,12 +382,12 @@ describe('Loop gas', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/ccr/LoopGas.spec.ts'`
 Expected: FAIL, `Cannot find module './LoopGas'`.
 
-- [ ] **Step 3: Write the implementation and delete the POC file**
+- [x] **Step 3: Write the implementation and delete the POC file**
 
 ```ts
 // ccr/LoopGas.ts
@@ -442,11 +442,11 @@ export class LoopGas {
 
 Then delete `projects/scuba-physics/src/lib/ccr/ccrGases.ts`.
 
-- [ ] **Step 4: Run the test and confirm it passes**
+- [x] **Step 4: Run the test and confirm it passes**
 
 Run the Step 2 command. Expected: 10 specs, 0 failures.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/ccr/LoopGas.ts projects/scuba-physics/src/lib/ccr/LoopGas.spec.ts
@@ -455,7 +455,7 @@ git commit -m "feat(scuba-physics): #26 rebreather loop gas" -m "Co-Authored-By:
 ```
 
 ### Task 4: `BreathingModel` and `OpenCircuitBreathing`
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `ccr/BreathingModel.ts`
@@ -481,7 +481,7 @@ export interface BreathingModel {
 
   `new OpenCircuitBreathing(depthConverter: DepthConverter)`, which is also used for every emergency (bailout) ascent. No test doubles: every Stage 1 spec uses `OpenCircuitBreathing` passed explicitly, and checks that it gives the same results as passing no model.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // ccr/BreathingModel.spec.ts
@@ -525,12 +525,12 @@ describe('Breathing model', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/ccr/BreathingModel.spec.ts'`
 Expected: FAIL, `Cannot find module './BreathingModel'`.
 
-- [ ] **Step 3: Write the implementation**
+- [x] **Step 3: Write the implementation**
 
 ```ts
 // ccr/BreathingModel.ts
@@ -595,11 +595,11 @@ export class OpenCircuitBreathing implements BreathingModel {
 
 The `OpenCircuitBreathing.consumedLiters` body is copied verbatim from `SegmentsConsumption.consumedBySegment` (`consumption/consumptionCommon.ts:125-130`). Keep it identical; Task 7 makes that method delegate here.
 
-- [ ] **Step 4: Run the test and confirm it passes**
+- [x] **Step 4: Run the test and confirm it passes**
 
 Run the Step 2 command. Expected: 5 specs, 0 failures.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/ccr/BreathingModel.ts projects/scuba-physics/src/lib/ccr/BreathingModel.spec.ts
@@ -607,7 +607,7 @@ git commit -m "feat(scuba-physics): #26 breathing model abstraction" -m "Co-Auth
 ```
 
 ### Task 5: Inject the breathing model into the Bühlmann algorithm
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `algorithm/BuhlmannAlgorithmParameters.ts` (class `AlgorithmParams` L52-121)
@@ -622,7 +622,7 @@ git commit -m "feat(scuba-physics): #26 breathing model abstraction" -m "Co-Auth
   - `AlgorithmParams.forSimpleDive(depth, gas, options, surface?, breathing?: BreathingModel)` and `AlgorithmParams.forMultilevelDive(segments, gases, options, surface?, breathing?: BreathingModel)`. Getter `AlgorithmParams.breathing: BreathingModel | undefined`. Undefined means open circuit.
   - `AlgorithmContext.isAscent: boolean`, `AlgorithmContext.inspiredGas(segment: Segment): Gas`, `AlgorithmContext.usesGasSwitching: boolean`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // algorithm/BuhlmannAlgorithm.breathing.spec.ts
@@ -699,12 +699,12 @@ describe('Buhlmann Algorithm - Breathing model', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/algorithm/BuhlmannAlgorithm.breathing.spec.ts'`
 Expected: compilation FAIL, `Expected 3-4 arguments, but got 5` on `forMultilevelDive`/`forSimpleDive`.
 
-- [ ] **Step 3: Extend `AlgorithmParams`**
+- [x] **Step 3: Extend `AlgorithmParams`**
 
 In `algorithm/BuhlmannAlgorithmParameters.ts` add `import { BreathingModel } from '../ccr/BreathingModel';` and change the class to:
 
@@ -730,7 +730,7 @@ In `algorithm/BuhlmannAlgorithmParameters.ts` add `import { BreathingModel } fro
 
 Add a trailing `breathing?: BreathingModel` parameter to both factories (document it as `@param breathing Optional breathing model, open circuit if not provided.`) and pass it through: `return new AlgorithmParams(segments, gases, options, surface, breathing);`.
 
-- [ ] **Step 4: Extend `AlgorithmContext`**
+- [x] **Step 4: Extend `AlgorithmContext`**
 
 In `algorithm/AlgorithmContext.ts`:
 - `import { BreathingModel } from '../ccr/BreathingModel';`
@@ -762,7 +762,7 @@ In `algorithm/AlgorithmContext.ts`:
         return this.breathing.usesAirBreaks && this.isBreathingOxygen && this.options.airBreaks.enabled;
 ```
 
-- [ ] **Step 5: Use the model in `BuhlmannAlgorithm`**
+- [x] **Step 5: Use the model in `BuhlmannAlgorithm`**
 
 In `algorithm/BuhlmannAlgorithm.ts`:
 - `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';`
@@ -802,12 +802,12 @@ In `algorithm/BuhlmannAlgorithm.ts`:
 - `swimPart`: replace `context.loadTissues(loadSegment, segment.gas);` with `context.loadTissues(loadSegment, context.inspiredGas(segment));`
 - `predictNoDecoLimit`: after `const hoverLoad = ...` add `const gas = context.inspiredGas(hover);` and change the loop line to `change = context.loadTissues(hoverLoad, gas);`
 
-- [ ] **Step 6: Run the new spec and the whole algorithm folder**
+- [x] **Step 6: Run the new spec and the whole algorithm folder**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/algorithm/*.spec.ts'`
 Expected: all pass, including all pre-existing algorithm specs (OC identity).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/algorithm
@@ -815,7 +815,7 @@ git commit -m "refactor(scuba-physics): #26 inject breathing model into algorith
 ```
 
 ### Task 6: Inject the breathing model into consumption (emergency ascent stays open circuit)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `consumption/consumptionCommon.ts` (`SegmentsConsumption` L86-131)
@@ -826,7 +826,7 @@ git commit -m "refactor(scuba-physics): #26 inject breathing model into algorith
 - Consumes: `BreathingModel`, `OpenCircuitBreathing` (Task 4); `AlgorithmParams.forMultilevelDive(..., breathing?)` (Task 5). `PlanFactory.emergencyAscent` is **not** changed: it calls the algorithm without a breathing model, so the emergency (bailout) ascent is always `OpenCircuitBreathing` on the tank gases.
 - Produces: `new SegmentsConsumption(depthConverter: DepthConverter, breathing?: BreathingModel)` and `new Consumption(depthConverter: DepthConverter, breathing?: BreathingModel)`. Plan segments are consumed via `breathing.consumedLiters`. The reserve (emergency ascent) is always consumed as open circuit.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // consumption/consumption.breathing.spec.ts
@@ -896,12 +896,12 @@ describe('Consumption - Breathing model', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/consumption/consumption.breathing.spec.ts'`
 Expected: compilation FAIL, `Expected 1 arguments, but got 2` on `new Consumption(...)`.
 
-- [ ] **Step 3: `SegmentsConsumption` delegates to the model**
+- [x] **Step 3: `SegmentsConsumption` delegates to the model**
 
 In `consumption/consumptionCommon.ts` add `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';`, remove the now unused `Precision` import, and replace the constructor and `consumedBySegment`:
 
@@ -924,7 +924,7 @@ export class SegmentsConsumption {
     }
 ```
 
-- [ ] **Step 4: `Consumption` uses plan and reserve calculators**
+- [x] **Step 4: `Consumption` uses plan and reserve calculators**
 
 In `consumption/consumption.ts` add `import { BreathingModel } from '../ccr/BreathingModel';` and replace the field and constructor:
 
@@ -948,12 +948,12 @@ In `consumption/consumption.ts` add `import { BreathingModel } from '../ccr/Brea
 - `consumeFromTanks2`: replace `this.segmentsConsumption` with `this.planConsumption` in the three plan lines (`consumedBySegmentRmv` and both `toBeConsumedYet` calls).
 - `updateReserve`: replace `this.segmentsConsumption` with `this.reserveConsumption`.
 
-- [ ] **Step 5: Run the new spec and all consumption specs**
+- [x] **Step 5: Run the new spec and all consumption specs**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/consumption/*.spec.ts'`
 Expected: all pass (existing specs prove the OC identity).
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/consumption
@@ -961,7 +961,7 @@ git commit -m "refactor(scuba-physics): #26 inject breathing model into consumpt
 ```
 
 ### Task 7: Toxicity by the breathing model (CNS, OTU, daily CNS)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `calculators/cnsCalculator.ts`, `calculators/OtuCalculator.ts`, `calculators/cnsDailyCalculator.ts`
@@ -975,7 +975,7 @@ git commit -m "refactor(scuba-physics): #26 inject breathing model into consumpt
   - `new CnsDailyCalculator(depthConverter, breathing?)`, `CnsDailyCalculator.exposuresForProfile(profile, startAscentIndex = Number.POSITIVE_INFINITY)`, `CnsDailyCalculator.calculateByPpO2(ppO2: number, duration: number): number`, `CnsDive.startAscentIndex?: number`.
   - Segments with index ≥ `startAscentIndex` are evaluated with `isAscent = true`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // calculators/toxicity.breathing.spec.ts
@@ -1040,12 +1040,12 @@ describe('Toxicity - Breathing model', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/calculators/toxicity.breathing.spec.ts'`
 Expected: compilation FAIL, `Expected 1 arguments, but got 2`.
 
-- [ ] **Step 3: `CnsCalculator`**
+- [x] **Step 3: `CnsCalculator`**
 
 Add `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';` and change it as follows. Keep `halfTime`, `limit`, `residual` and `exponentByPpO2` as they are.
 
@@ -1106,7 +1106,7 @@ Add `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel
 
 Keep the existing JSDoc on `calculateForRepetitiveDive` and `calculate`, and add `@param startAscentIndex` where it is new.
 
-- [ ] **Step 4: `OtuCalculator`**
+- [x] **Step 4: `OtuCalculator`**
 
 Add the same import and change:
 
@@ -1159,7 +1159,7 @@ Add the same import and change:
 
 `pO2Start`/`pO2End` are reassigned inside the moved body, so declare them as parameters and reassign them as today (no `const`).
 
-- [ ] **Step 5: `CnsDailyCalculator`**
+- [x] **Step 5: `CnsDailyCalculator`**
 
 Add the same import. Add `startAscentIndex?: number;` (doc: `/** Index of first segment of calculated ascent, Infinity if not known */`) to `CnsDive`, then change:
 
@@ -1214,12 +1214,12 @@ In `calculateForDives` use `this.exposuresForProfile(dive.profile, dive.startAsc
     }
 ```
 
-- [ ] **Step 6: Run the new spec and all calculator specs**
+- [x] **Step 6: Run the new spec and all calculator specs**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/calculators/*.spec.ts'`
 Expected: all pass (existing CNS/OTU/daily specs prove the OC identity).
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add projects/scuba-physics/src/lib/calculators
@@ -1227,7 +1227,7 @@ git commit -m "refactor(scuba-physics): #26 oxygen toxicity by breathing model" 
 ```
 
 ### Task 8: Density and profile events by inspired gas, public API, full verification
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `gases/GasDensity.ts` (`DensityAtDepth` L63-106)
@@ -1239,7 +1239,7 @@ git commit -m "refactor(scuba-physics): #26 oxygen toxicity by breathing model" 
 - Consumes: `BreathingModel`, `OpenCircuitBreathing`.
 - Produces: `new DensityAtDepth(depthConverter, breathing?)`, `DensityAtDepth.forProfile(profile, startAscentIndex = Number.POSITIVE_INFINITY)`, `EventOptions.breathing?: BreathingModel`. Public API exports `ccr/BreathingModel`, `ccr/LoopGas`, `ccr/RebreatherOptions`, `ccr/Rebreathers`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 // algorithm/ProfileEvents.breathing.spec.ts
@@ -1310,12 +1310,12 @@ describe('Profile events - Breathing model', () => {
 });
 ```
 
-- [ ] **Step 2: Run the test and confirm it fails**
+- [x] **Step 2: Run the test and confirm it fails**
 
 Run: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include='**/algorithm/ProfileEvents.breathing.spec.ts'`
 Expected: compilation FAIL, `'breathing' does not exist in type 'EventOptions'`.
 
-- [ ] **Step 3: `DensityAtDepth`**
+- [x] **Step 3: `DensityAtDepth`**
 
 In `gases/GasDensity.ts` add `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';` and change `DensityAtDepth` (keep `atDepth` and `fromAtaDensity` unchanged):
 
@@ -1353,7 +1353,7 @@ export class DensityAtDepth {
     }
 ```
 
-- [ ] **Step 4: `ProfileEvents`**
+- [x] **Step 4: `ProfileEvents`**
 
 In `algorithm/ProfileEvents.ts` add `import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';` and `Gas` to the existing gases import if it isn't there.
 - `EventOptions`: add
@@ -1382,7 +1382,7 @@ In `algorithm/ProfileEvents.ts` add `import { BreathingModel, OpenCircuitBreathi
 
   The events keep reporting `current.gas` (the source gas), which is what the user assigned.
 
-- [ ] **Step 5: Public API**
+- [x] **Step 5: Public API**
 
 In `projects/scuba-physics/src/public-api.ts`, after `export * from './lib/algorithm/BuhlmannAlgorithmParameters';`, add:
 
@@ -1393,11 +1393,11 @@ export * from './lib/ccr/RebreatherOptions';
 export * from './lib/ccr/Rebreathers';
 ```
 
-- [ ] **Step 6: Run the new spec**
+- [x] **Step 6: Run the new spec**
 
 Run the Step 2 command. Expected: 5 specs, 0 failures.
 
-- [ ] **Step 7: Full verification (OC identity, lint, build, planner)**
+- [x] **Step 7: Full verification (OC identity, lint, build, planner)**
 
 Run each command and confirm its output before claiming success:
 
@@ -1410,7 +1410,7 @@ npm run test-ci
 
 Expected: every scuba-physics spec passes with **no existing spec modified** (`git diff master --stat -- '*.spec.ts'` lists only new `*.spec.ts` files); lint is clean; the library builds; planner specs pass (the planner still compiles against the changed optional signatures).
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add projects/scuba-physics/src
@@ -1468,6 +1468,8 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
     - `consumedLiters` = `Rebreathers.pscrSupplyRate(toBar(averageDepth), rmv, ratio)` × minutes.
     - `usesGasSwitching = true`, `usesAirBreaks = false`.
   - `BreathingModelFactory.create(options, diver, depthConverter)`.
+  - `ConsumptionByGas` (`consumption/consumptionByGas.ts`): accept an optional `BreathingModel` like `Consumption` (plan consumption via the model, reserve always OC). Otherwise the by-gas chart and the "not enough gas" check would use `RMV × P` for pSCR (Stage 1 final review finding).
+  - Decide before enabling pSCR: the emergency ascent loads the bottom phase as open circuit on the supply gas, not as loop gas. That under-loads inert gas for pSCR (non-conservative reserve). See the Stage 1 final review.
 - **Planner**:
   - `OptionsService` for `circuit`, `injectionRatio`, `metabolicO2`.
   - `RebreatherDto` (optional on `OptionsDto`), converters next to `fromAirBreaks`/`toAirBreaks`.

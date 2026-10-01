@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "Calculatrices", "planner": "Planificateur", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
     "gasProperties": "Propriétés du gaz", "altitude": "Altitude", "weight": "Poids", "ndlTable": "Table NDL",
-    "cylinderBalancing": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz", "dive": "Plongée", "clone": "Cloner",
+    "cylinderBalancing": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz", "dive": "Plongée", "clone": "Cloner", "deeper": "+5 m/15ft", "deeperTitle": "Ajouter +5 m au segment le plus profond", "longer": "+5 min", "longerTitle": "Prolonger le temps au fond de +5 minutes", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Ajouter +5 min et +5 m au segment le plus profond",
     "saveAsDefault": "Enregistrer par défaut", "loadDefault": "Charger par défaut", "share": "Partager", "delete": "Supprimer",
     "settings": "Paramètres", "compareDives": "Comparer les plongées", "standardGases": "Gaz standards", "help": "Aide",
     "learn": "Apprendre", "about": "À propos", "toggleNavigation": "Afficher/masquer la navigation"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "Partager le plan", "shareUrlCopied": "L'adresse URL de ce plan de plongée a été copiée dans le presse-papiers."
   },
   "depth": { "label": "Profondeur", "bestMixLabel": "Le meilleur mélange est", "maxDepthTitle": "Définir la profondeur maximale selon la limite narcotique du gaz", "maxButton": "Max" },
-  "depthsComplex": { "cardTitle": "Profondeurs", "from": "De", "to": "À", "duration": "Durée", "tank": "Bloc", "endDepthLabel": "Profondeur finale" },
+  "depthsComplex": { "cardTitle": "Profondeurs", "modify": "Modifier", "from": "De", "to": "À", "duration": "Durée", "tank": "Bloc", "endDepthLabel": "Profondeur finale" },
   "depthsSimple": { "cardTitle": "Profondeur", "bottomTime": "Temps de fond", "noDecoLimit": "Limite sans déco", "maxDurationTitle": "Définir le temps de plongée au maximum selon le gaz consommé", "maxButton": "Max", "noDecoTitle": "Définir le temps de plongée à la limite sans déco", "noDecoButton": "Sans déco" },
   "diveIssues": {
     "calculationError": "Une erreur s'est produite lors du calcul du profil.",

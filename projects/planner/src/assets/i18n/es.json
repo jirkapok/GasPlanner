@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "Calculadoras", "planner": "Planificador", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
     "gasProperties": "Propiedades del gas", "altitude": "Altitud", "weight": "Peso", "ndlTable": "Tabla NDL",
-    "cylinderBalancing": "Balance de botellas", "gasBlender": "Mezclador de gases", "dive": "Inmersión", "clone": "Duplicar",
+    "cylinderBalancing": "Balance de botellas", "gasBlender": "Mezclador de gases", "dive": "Inmersión", "clone": "Duplicar", "deeper": "+5 m/15ft", "deeperTitle": "Añadir +5 m al tramo más profundo", "longer": "+5 min", "longerTitle": "Ampliar el tiempo en profundidad en +5 minutos", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Añadir +5 min y +5 m al tramo más profundo",
     "saveAsDefault": "Guardar como predeterminado", "loadDefault": "Cargar predeterminado", "share": "Compartir", "delete": "Eliminar",
     "settings": "Configuración", "compareDives": "Comparar inmersiones", "standardGases": "Gases estándar", "help": "Ayuda",
     "learn": "Aprender", "about": "Acerca de", "toggleNavigation": "Alternar navegación"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "Compartir plan", "shareUrlCopied": "La dirección URL de este plan de inmersión se copió al portapapeles."
   },
   "depth": { "label": "Profundidad", "bestMixLabel": "La mejor mezcla es", "maxDepthTitle": "Establecer la profundidad máxima según el límite narcótico del gas", "maxButton": "Máx" },
-  "depthsComplex": { "cardTitle": "Profundidades", "from": "Desde", "to": "Hasta", "duration": "Duración", "tank": "Botella", "endDepthLabel": "Profundidad final" },
+  "depthsComplex": { "cardTitle": "Profundidades", "modify": "Modificar", "from": "Desde", "to": "Hasta", "duration": "Duración", "tank": "Botella", "endDepthLabel": "Profundidad final" },
   "depthsSimple": { "cardTitle": "Profundidad", "bottomTime": "Tiempo de fondo", "noDecoLimit": "Límite sin descompresión", "maxDurationTitle": "Establecer el tiempo de inmersión al máximo según el gas consumido", "maxButton": "Máx", "noDecoTitle": "Establecer el tiempo de inmersión al límite sin descompresión", "noDecoButton": "Sin deco" },
   "diveIssues": {
     "calculationError": "Se produjo un error al calcular el perfil.",

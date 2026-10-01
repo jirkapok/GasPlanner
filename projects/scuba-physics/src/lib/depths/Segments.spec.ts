@@ -379,4 +379,115 @@ describe('Segments', () => {
             expect(depth).toEqual(0);
         });
     });
+
+    describe('Extend deepest', () => {
+        const air = StandardGases.air;
+
+        // 0-30 m descent in 100 s, 30 m flat 620 s
+        const createSimple = (): Segments => {
+            const segments = new Segments();
+            segments.add(30, air, 100);
+            segments.addFlat(air, 620);
+            return segments;
+        };
+
+        it('Empty segments are not changed', () => {
+            const segments = new Segments();
+            segments.extendDeepest(5, 300);
+            expect(segments.length).toBe(0);
+        });
+
+        describe('Simple plan', () => {
+            let segments: Segments;
+
+            beforeEach(() => {
+                segments = createSimple();
+            });
+
+            it('Adds duration to flat deepest segment only', () => {
+                segments.extendDeepest(0, 300);
+                const items = segments.items;
+                expect(items[0].duration).toBe(100);
+                expect(items[1].duration).toBe(920);
+                expect(segments.maxDepth).toBe(30);
+            });
+
+            it('Adds depth to flat deepest segment and its descent', () => {
+                segments.extendDeepest(5, 0);
+                const items = segments.items;
+                expect(items[0].endDepth).toBe(35);
+                expect(items[1].startDepth).toBe(35);
+                expect(items[1].endDepth).toBe(35);
+                expect(segments.maxDepth).toBe(35);
+            });
+
+            it('Keeps descent speed', () => {
+                segments.extendDeepest(5, 0);
+                const items = segments.items;
+                expect(items[0].duration).toBe(117); // 116.67 s rounded up
+                expect(items[1].duration).toBe(620);
+            });
+
+            it('Adds both depth and duration', () => {
+                segments.extendDeepest(5, 300);
+                const items = segments.items;
+                expect(segments.maxDepth).toBe(35);
+                expect(items[1].endDepth).toBe(35);
+                expect(items[1].duration).toBe(920);
+            });
+        });
+
+        describe('Multilevel plan', () => {
+            let items: Segment[];
+            let segments: Segments;
+
+            beforeEach(() => {
+                segments = new Segments();
+                segments.add(20, air, 60);
+                segments.addFlat(air, 300);
+                segments.add(40, air, 60);
+                segments.addFlat(air, 600);
+                segments.add(10, air, 180);
+                segments.addFlat(air, 600);
+                segments.extendDeepest(5, 300);
+                items = segments.items;
+            });
+
+            it('Extends the deepest flat segment', () => {
+                expect(items[3].startDepth).toBe(45);
+                expect(items[3].endDepth).toBe(45);
+                expect(items[3].duration).toBe(900);
+            });
+
+            it('Deepens the segment leading to the deepest', () => {
+                expect(items[2].startDepth).toBe(20);
+                expect(items[2].endDepth).toBe(45);
+                expect(items[2].duration).toBe(75);
+            });
+
+            it('Following segment starts at new depth', () => {
+                expect(items[4].startDepth).toBe(45);
+                expect(items[4].endDepth).toBe(10);
+            });
+
+            it('Does not change other levels', () => {
+                expect(items[0].endDepth).toBe(20);
+                expect(items[1].duration).toBe(300);
+                expect(items[5].endDepth).toBe(10);
+                expect(items[5].duration).toBe(600);
+            });
+        });
+
+        it('Deepens not flat deepest segment keeping its speed', () => {
+            const segments = new Segments();
+            segments.add(30, air, 120);
+            segments.add(10, air, 120);
+            segments.extendDeepest(6, 60);
+            const items = segments.items;
+            expect(items[0].endDepth).toBe(36);
+            expect(items[0].duration).toBe(216); // (120 + 60) * 36 / 30
+            expect(items[1].startDepth).toBe(36);
+            expect(segments.maxDepth).toBe(36);
+        });
+    });
 });

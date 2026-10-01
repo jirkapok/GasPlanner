@@ -26,6 +26,13 @@
             <a class="nav-link dropdown-toggle" id="dive" mdbDropdownToggle>{{ 'menu.dive' | translate }}</a>
             <ul class="dropdown-menu" aria-labelledby="dive" mdbDropdownMenu>
               <li><a class="dropdown-item" (click)="cloneDive()"><fa-icon [icon]="iconClone" class="me-2"></fa-icon>{{ 'menu.clone' | translate }}</a></li>
+              <li><a class="dropdown-item" id="menuCloneDeeper" (click)="cloneDeeper()" title="{{ 'menu.deeperTitle' | translate }}">
+                <fa-icon [icon]="iconClone" class="me-2"></fa-icon>{{ 'menu.clone' | translate }} {{ 'menu.deeper' | translate }}</a></li>
+              <li><a class="dropdown-item" id="menuCloneLonger" (click)="cloneLonger()" title="{{ 'menu.longerTitle' | translate }}">
+                <fa-icon [icon]="iconClone" class="me-2"></fa-icon>{{ 'menu.clone' | translate }} {{ 'menu.longer' | translate }}</a></li>
+              <li><a class="dropdown-item" id="menuCloneDeeperAndLonger" (click)="cloneDeeperAndLonger()"
+                  title="{{ 'menu.deeperAndLongerTitle' | translate }}">
+                <fa-icon [icon]="iconClone" class="me-2"></fa-icon>{{ 'menu.clone' | translate }} {{ 'menu.deeperAndLonger' | translate }}</a></li>
               <li><a class="dropdown-item" (click)="saveDefaults()">{{ 'menu.saveAsDefault' | translate }}</a></li>
               <li><a class="dropdown-item" (click)="loadDefaults()">{{ 'menu.loadDefault' | translate }}</a></li>
               <li><a class="dropdown-item" (click)="shareDive()"><fa-icon [icon]="iconShare" class="me-2"></fa-icon>{{ 'menu.share' | translate }}</a></li>

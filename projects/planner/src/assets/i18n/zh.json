@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "计算器", "planner": "计划", "rmvSac": "RMV/SAC", "nitrox": "氮氧",
     "gasProperties": "气体属性", "altitude": "海拔", "weight": "配重", "ndlTable": "NDL表",
-    "cylinderBalancing": "气瓶平衡", "gasBlender": "气体混合", "dive": "潜水", "clone": "克隆",
+    "cylinderBalancing": "气瓶平衡", "gasBlender": "气体混合", "dive": "潜水", "clone": "克隆", "deeper": "+5 米/15 英尺", "deeperTitle": "将最深段增加 5 米", "longer": "+5 分钟", "longerTitle": "将水底时间延长 5 分钟", "deeperAndLonger": "+5 分钟, +5 米/15 英尺", "deeperAndLongerTitle": "将最深段增加 5 分钟和 5 米",
     "saveAsDefault": "保存为默认", "loadDefault": "加载默认", "share": "分享", "delete": "删除",
     "settings": "设置", "compareDives": "比较潜水", "standardGases": "标准气体", "help": "帮助",
     "learn": "学习", "about": "关于", "toggleNavigation": "切换导航"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "分享计划", "shareUrlCopied": "此潜水计划的URL地址已复制到剪贴板。"
   },
   "depth": { "label": "深度", "bestMixLabel": "最佳配比为", "maxDepthTitle": "根据气体氮醉极限设置最大深度", "maxButton": "最大" },
-  "depthsComplex": { "cardTitle": "深度", "from": "从", "to": "到", "duration": "持续时间", "tank": "气瓶", "endDepthLabel": "结束深度" },
+  "depthsComplex": { "cardTitle": "深度", "modify": "修改", "from": "从", "to": "到", "duration": "持续时间", "tank": "气瓶", "endDepthLabel": "结束深度" },
   "depthsSimple": { "cardTitle": "深度", "bottomTime": "水底时间", "noDecoLimit": "免减压极限", "maxDurationTitle": "根据消耗的气体将潜水时间设置为最大值", "maxButton": "最大", "noDecoTitle": "将潜水时间设置为免减压极限", "noDecoButton": "免减压" },
   "diveIssues": {
     "calculationError": "计算剖面时发生错误。",

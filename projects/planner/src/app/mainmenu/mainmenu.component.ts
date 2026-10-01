@@ -85,6 +85,18 @@ export class MainMenuComponent extends Streamed {
         this.schedules.cloneSelected();
     }
 
+    public cloneDeeper(): void {
+        this.schedules.cloneSelectedDeeper();
+    }
+
+    public cloneLonger(): void {
+        this.schedules.cloneSelectedLonger();
+    }
+
+    public cloneDeeperAndLonger(): void {
+        this.schedules.cloneSelectedDeeperAndLonger();
+    }
+
     public shareDive(): void {
         this.share.sharePlan();
     }

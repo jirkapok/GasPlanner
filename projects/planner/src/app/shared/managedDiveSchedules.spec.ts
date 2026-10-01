@@ -160,6 +160,87 @@ describe('Managed Schedules', () => {
         });
     });
 
+    describe('Clone dive and extend deepest segment', () => {
+        const fiveMinutes = 300;
+        let source: DiveSchedule;
+        let sourceDepth: number;
+        let sourceBottomTime: number;
+
+        const added = (): DiveSchedule => schedules.dives[1];
+        const bottomTime = (dive: DiveSchedule): number => dive.depths.segments[1].duration;
+
+        beforeEach(() => {
+            localStorage.clear();
+            source = schedules.selected;
+            sourceDepth = source.depths.plannedDepthMeters;
+            sourceBottomTime = bottomTime(source);
+            savePreferencesSpy.calls.reset();
+        });
+
+        const assertSourceNotChanged = () => {
+            expect(source.depths.plannedDepthMeters).toBe(sourceDepth);
+            expect(bottomTime(source)).toBe(sourceBottomTime);
+        };
+
+        const assertAddedAndSelected = () => {
+            expect(schedules.length).toBe(2);
+            expect(schedules.selected).toBe(added());
+        };
+
+        describe('Deeper', () => {
+            beforeEach(() => sut.cloneSelectedDeeper());
+
+            it('Adds new selected dive', () => assertAddedAndSelected());
+
+            it('Does not change source dive', () => assertSourceNotChanged());
+
+            it('Adds 5 m to the new dive only', () => {
+                expect(added().depths.plannedDepthMeters).toBe(sourceDepth + 5);
+                expect(bottomTime(added())).toBe(sourceBottomTime);
+            });
+
+            it('Saves preferences', () => {
+                expect(savePreferencesSpy).toHaveBeenCalled();
+            });
+        });
+
+        describe('Longer', () => {
+            beforeEach(() => sut.cloneSelectedLonger());
+
+            it('Adds new selected dive', () => assertAddedAndSelected());
+
+            it('Does not change source dive', () => assertSourceNotChanged());
+
+            it('Adds 5 minutes to the new dive only', () => {
+                expect(added().depths.plannedDepthMeters).toBe(sourceDepth);
+                expect(bottomTime(added())).toBe(sourceBottomTime + fiveMinutes);
+            });
+        });
+
+        describe('Deeper and longer', () => {
+            beforeEach(() => sut.cloneSelectedDeeperAndLonger());
+
+            it('Adds new selected dive', () => assertAddedAndSelected());
+
+            it('Does not change source dive', () => assertSourceNotChanged());
+
+            it('Adds 5 m and 5 minutes to the new dive only', () => {
+                expect(added().depths.plannedDepthMeters).toBe(sourceDepth + 5);
+                expect(bottomTime(added())).toBe(sourceBottomTime + fiveMinutes);
+            });
+
+            it('Recalculates the new dive', () => {
+                expect(dispatcherSpy).toHaveBeenCalledWith(added().depths);
+            });
+        });
+
+        it('Adds 15 ft in imperial units', inject([UnitConversion], (units: UnitConversion) => {
+            units.imperialUnits = true;
+            sut.cloneSelectedDeeper();
+            expect(added().depths.plannedDepthMeters).toBeCloseTo(sourceDepth + 4.572, 6);
+        }));
+    });
+
     describe('Remove dive', () => {
         let scheduleRemoveSpy: Spy<(d: DiveSchedule) => void>;
         let depthChangedSpy: Spy<() => void>;

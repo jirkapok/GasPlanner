@@ -3,6 +3,19 @@
     [cardTitle]="'depthsComplex.cardTitle' | translate"
     helpDocument="depths"
     [headerIcon]="cardIcon">
+    <div mdbDropdown class="dropdown">
+      <button class="btn btn-sm btn-secondary dropdown-toggle" id="modifyMenu" type="button" mdbDropdownToggle aria-expanded="false">
+        {{ 'depthsComplex.modify' | translate }}
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu aria-labelledby="modifyMenu">
+        <li><a class="dropdown-item" id="extendDepth" (click)="extendDepth()"
+            title="{{ 'menu.deeperTitle' | translate }}">{{ 'menu.deeper' | translate }}</a></li>
+        <li><a class="dropdown-item" id="extendDuration" (click)="extendDuration()"
+            title="{{ 'menu.longerTitle' | translate }}">{{ 'menu.longer' | translate }}</a></li>
+        <li><a class="dropdown-item" id="extendDepthAndDuration" (click)="extendDepthAndDuration()"
+            title="{{ 'menu.deeperAndLongerTitle' | translate }}">{{ 'menu.deeperAndLonger' | translate }}</a></li>
+      </ul>
+    </div>
   </app-card-header>
   <form [formGroup]="complexForm">
 

@@ -11,6 +11,8 @@ export interface DefaultValues {
     autoStopLevel: number;
     /** Distance defining stops during auto calculated ascent */
     stopsDistance: number;
+    /** Depth added to the deepest segment, when extending the dive */
+    extendDepth: number;
 
     recreationalOptions: DefaultOptions;
     recommendedOptions: DefaultOptions;
@@ -41,6 +43,10 @@ export class MetricDefaults implements DefaultValues {
 
     public get stopsDistance(): number {
         return 3;
+    }
+
+    public get extendDepth(): number {
+        return 5;
     }
 
     public get recreationalOptions(): DefaultOptions {
@@ -89,6 +95,10 @@ export class ImperialDefaults implements DefaultValues {
 
     public get stopsDistance(): number {
         return ImperialDefaults.depthDistance;
+    }
+
+    public get extendDepth(): number {
+        return 15;
     }
 
     public get recreationalOptions(): DefaultOptions {

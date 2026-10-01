@@ -38,10 +38,19 @@ export class ManagedDiveSchedules {
     }
 
     public cloneSelected(): void {
-        const toLoadFrom = this.schedules.selected;
-        const added = this.schedules.add();
-        this.preferences.loadFrom(toLoadFrom, added);
-        this.preferences.save();
+        this.cloneSelectedAndModify(() => {});
+    }
+
+    public cloneSelectedDeeper(): void {
+        this.cloneSelectedAndModify(added => added.depths.extendDeepestDepth());
+    }
+
+    public cloneSelectedLonger(): void {
+        this.cloneSelectedAndModify(added => added.depths.extendDeepestDuration());
+    }
+
+    public cloneSelectedDeeperAndLonger(): void {
+        this.cloneSelectedAndModify(added => added.depths.extendDeepestDepthAndDuration());
     }
 
     public add(): void {
@@ -73,6 +82,15 @@ export class ManagedDiveSchedules {
         // order matters, since first update main view and second enforces save preferences
         this.viewStore.setSelectedDive(newIndex);
         this.schedules.setSelectedIndex(newIndex);
+    }
+
+    /** Creates new dive as copy of the selected one and applies the modification only to the new dive. */
+    private cloneSelectedAndModify(modify: (added: DiveSchedule) => void): void {
+        const toLoadFrom = this.schedules.selected;
+        const added = this.schedules.add();
+        this.preferences.loadFrom(toLoadFrom, added);
+        modify(added);
+        this.preferences.save();
     }
 
     private loadDefaultTo(dive: DiveSchedule) {

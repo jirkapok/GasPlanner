@@ -81,6 +81,14 @@ export class Plan {
         this._segments.fixStartDepths();
     }
 
+    /**
+     * @param depthDelta in meters
+     * @param durationDelta in seconds
+     */
+    public extendDeepest(depthDelta: number, durationDelta: number): void {
+        this._segments.extendDeepest(depthDelta, durationDelta);
+    }
+
     public loadFrom(other: Segment[]): void {
         if (other.length <= 1) {
             return;

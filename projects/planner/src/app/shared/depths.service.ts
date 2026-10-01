@@ -7,13 +7,15 @@ import { Streamed } from './streamed';
 import { takeUntil } from 'rxjs';
 import { OptionsService } from './options.service';
 import {
-    Tank, Segment, GasNames, Precision, GasToxicity
+    Tank, Segment, GasNames, Precision, GasToxicity, Time
 } from 'scuba-physics';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class DepthsService extends Streamed {
+    /** in seconds */
+    private static readonly extendDuration = Time.toSeconds(5);
     private _levels: Level[] = [];
     private toxicity: GasToxicity;
     private plan = new Plan();
@@ -91,6 +93,11 @@ export class DepthsService extends Streamed {
         return this.tanksService.firstTank.tank;
     }
 
+    /** in meters */
+    private get extendDepthMeters(): number {
+        return this.units.toMeters(this.units.defaults.extendDepth);
+    }
+
     public set plannedDepth(newValue: number) {
         const depth = this.units.toMeters(newValue);
         this.assignDepth(depth);
@@ -132,6 +139,21 @@ export class DepthsService extends Streamed {
         this.levelChanged();
     }
 
+    /** Adds 5 m (15 ft) to the deepest segment */
+    public extendDeepestDepth(): void {
+        this.extendDeepest(this.extendDepthMeters, 0);
+    }
+
+    /** Adds 5 minutes to the deepest segment */
+    public extendDeepestDuration(): void {
+        this.extendDeepest(0, DepthsService.extendDuration);
+    }
+
+    /** Adds 5 m (15 ft) and 5 minutes to the deepest segment */
+    public extendDeepestDepthAndDuration(): void {
+        this.extendDeepest(this.extendDepthMeters, DepthsService.extendDuration);
+    }
+
     public levelChanged(): void {
         this.plan.fixDepths();
         this.apply();
@@ -161,6 +183,11 @@ export class DepthsService extends Streamed {
         const options = this.optionsService.getOptions();
         this.plan.assignDepth(newDepth, this.firstTank, options);
         this.updateLevels();
+    }
+
+    private extendDeepest(depthDelta: number, durationDelta: number): void {
+        this.plan.extendDeepest(depthDelta, durationDelta);
+        this.depthsReloaded();
     }
 
     private addSegmentToPlan(): void {

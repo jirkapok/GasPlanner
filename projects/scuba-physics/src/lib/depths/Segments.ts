@@ -2,6 +2,7 @@ import { Gas, Gases } from '../gases/Gases';
 import { Event, EventsFactory } from '../algorithm/CalculatedProfile';
 import { Tank } from '../consumption/Tanks';
 import { LinearFunction } from '../common/linearFunction';
+import { Precision } from '../common/precision';
 
 export class SegmentsValidator {
     public static validate(segments: Segments, gases: Gases): Event[] {
@@ -305,6 +306,19 @@ export class Segments {
         return cumulativeAverage;
     }
 
+    /** Moves end depth of the segment deeper by depthDelta in meters, keeping its speed, if it isn't flat */
+    private static deepen(segment: Segment, depthDelta: number): void {
+        const depthChange = segment.endDepth - segment.startDepth;
+        const newEndDepth = segment.endDepth + depthDelta;
+
+        if (depthChange !== 0) {
+            const newDepthChange = newEndDepth - segment.startDepth;
+            segment.duration = Precision.ceil(segment.duration * newDepthChange / depthChange);
+        }
+
+        segment.endDepth = newEndDepth;
+    }
+
     /**
      * Adds transition to newDepth in meters, from last segment end depth using given gas for given duration in seconds
      * @param newDepth The target depth in meters
@@ -408,6 +422,38 @@ export class Segments {
         }
 
         return [];
+    }
+
+    /**
+     * Extends the deepest segment (the last one reaching the max. depth).
+     * In case the deepest segment is flat, the segment leading to it is deepened too.
+     * Deepened not flat segments keep their speed, i.e. their duration is prolonged.
+     * @param depthDelta Positive number of meters to add to the deepest segment
+     * @param durationDelta Positive number of seconds to add to the deepest segment
+     */
+    public extendDeepest(depthDelta: number, durationDelta: number): void {
+        const deepestIndex = this.deepestPart().length - 1;
+
+        if (deepestIndex < 0) {
+            return;
+        }
+
+        const deepest = this.segments[deepestIndex];
+        deepest.duration += durationDelta;
+
+        if (depthDelta > 0) {
+            const isFlat = deepest.startDepth === deepest.endDepth;
+
+            if (isFlat && deepestIndex > 0) {
+                Segments.deepen(this.segments[deepestIndex - 1], depthDelta);
+                deepest.endDepth += depthDelta;
+            } else {
+                Segments.deepen(deepest, depthDelta);
+            }
+
+            this.fixStartDepths();
+            this.updateMaxDepth(deepest);
+        }
     }
 
     private updateMaxDepth(segment: Segment): void {

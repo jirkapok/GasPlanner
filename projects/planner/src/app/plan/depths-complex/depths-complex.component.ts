@@ -158,6 +158,18 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         this.levelControls.removeAt(index);
     }
 
+    public extendDepth(): void {
+        this.depths.extendDeepestDepth();
+    }
+
+    public extendDuration(): void {
+        this.depths.extendDeepestDuration();
+    }
+
+    public extendDepthAndDuration(): void {
+        this.depths.extendDeepestDepthAndDuration();
+    }
+
     public levelChanged(index: number): void {
         if (this.rootForm.invalid) {
             return;

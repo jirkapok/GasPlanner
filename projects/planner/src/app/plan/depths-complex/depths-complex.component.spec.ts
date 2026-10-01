@@ -22,6 +22,7 @@ import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import {MdbModalService} from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -75,7 +76,8 @@ describe('Depths Complex Component', () => {
                 PreferencesStore, Preferences,
                 DiveResults, ReloadDispatcher,
                 ApplicationSettingsService,
-                MdbModalService, LanguageService, provideTestTranslate()
+                MdbModalService, LanguageService, provideTestTranslate(),
+                provideNoopAnimations()
             ]
         })
             .compileComponents();
@@ -142,6 +144,51 @@ describe('Depths Complex Component', () => {
             complexPage.depthInput(1).value = 'aaa';
             complexPage.depthInput(1).dispatchEvent(new Event('input'));
             expect(durationSpy).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('Modify dive menu', () => {
+        let schedules: DiveSchedules;
+        let originalDepth: number;
+        let originalBottomTime: number;
+
+        const clickItem = (id: string) => {
+            complexPage.debugElement('#modifyMenu').click();
+            fixture.detectChanges();
+            complexPage.debugElement(id).click();
+            fixture.detectChanges();
+        };
+
+        beforeEach(() => {
+            schedules = TestBed.inject(DiveSchedules);
+            originalDepth = depths.plannedDepthMeters;
+            originalBottomTime = depths.segments[1].duration;
+        });
+
+        it('+5 m modifies current dive depth', () => {
+            clickItem('#extendDepth');
+            expect(schedules.length).toBe(1);
+            expect(depths.plannedDepthMeters).toBe(originalDepth + 5);
+            expect(depths.segments[1].duration).toBe(originalBottomTime);
+        });
+
+        it('+5 min modifies current dive duration', () => {
+            clickItem('#extendDuration');
+            expect(schedules.length).toBe(1);
+            expect(depths.plannedDepthMeters).toBe(originalDepth);
+            expect(depths.segments[1].duration).toBe(originalBottomTime + 300);
+        });
+
+        it('+5 min, +5 m modifies current dive depth and duration', () => {
+            clickItem('#extendDepthAndDuration');
+            expect(schedules.length).toBe(1);
+            expect(depths.plannedDepthMeters).toBe(originalDepth + 5);
+            expect(depths.segments[1].duration).toBe(originalBottomTime + 300);
+        });
+
+        it('Reloads the levels form', () => {
+            clickItem('#extendDepth');
+            expect(complexPage.depthInput(1).value).toBe(String(originalDepth + 5));
         });
     });
 });

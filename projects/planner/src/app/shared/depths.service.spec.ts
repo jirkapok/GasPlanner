@@ -117,6 +117,47 @@ describe('Depths service', () => {
         });
     });
 
+    describe('Extend deepest segment', () => {
+        let originalBottomTime: number;
+        let reloadedSpy: jasmine.Spy<(source: DepthsService) => void>;
+
+        beforeEach(() => {
+            originalBottomTime = depthService.segments[1].duration;
+            const dispatcher = TestBed.inject(ReloadDispatcher);
+            reloadedSpy = spyOn(dispatcher, 'sendDepthsReloaded').and.callThrough();
+        });
+
+        it('Depth adds 5 m to the deepest segment only', () => {
+            depthService.extendDeepestDepth();
+            expect(depthService.plannedDepthMeters).toBe(35);
+            expect(depthService.segments[1].duration).toBe(originalBottomTime);
+            expect(depthService.levels[1].endDepth).toBe(35);
+        });
+
+        it('Duration adds 5 minutes to the deepest segment only', () => {
+            depthService.extendDeepestDuration();
+            expect(depthService.plannedDepthMeters).toBe(30);
+            expect(depthService.segments[1].duration).toBe(originalBottomTime + 300);
+        });
+
+        it('Depth and duration adds 5 m and 5 minutes to the deepest segment', () => {
+            depthService.extendDeepestDepthAndDuration();
+            expect(depthService.plannedDepthMeters).toBe(35);
+            expect(depthService.segments[1].duration).toBe(originalBottomTime + 300);
+        });
+
+        it('Depth adds 15 ft in imperial units', () => {
+            TestBed.inject(UnitConversion).imperialUnits = true;
+            depthService.extendDeepestDepth();
+            expect(depthService.plannedDepthMeters).toBeCloseTo(30 + 4.572, 6);
+        });
+
+        it('Notifies depths reloaded', () => {
+            depthService.extendDeepestDuration();
+            expect(reloadedSpy).toHaveBeenCalledWith(depthService);
+        });
+    });
+
     describe('Imperial Units', () => {
         beforeEach(() => {
             const units = TestBed.inject(UnitConversion);

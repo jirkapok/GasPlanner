@@ -1,9 +1,9 @@
 import _ from 'lodash';
-import { ProfileTissues } from "./ProfileTissues";
-import { LoadSegment, Tissues } from "./Tissues";
-import { StandardGases } from "../gases/StandardGases";
-import { Time } from "../physics/Time";
-import { LoadedTissues } from "./Tissues.api";
+import { ProfileTissues } from './ProfileTissues';
+import { LoadSegment, Tissues } from './Tissues';
+import { StandardGases } from '../gases/StandardGases';
+import { Time } from '../physics/Time';
+import { LoadedTissues } from './Tissues.api';
 
 describe('Profile tissues', () => {
     const sut = new ProfileTissues();
@@ -59,9 +59,9 @@ describe('Profile tissues', () => {
         });
 
         it('No submerging saturation returns dive start', () => {
-           const loadedTissues = createLoadedTissues([1, 1, 1, 1, 1]);
-           const result = sut.offgasingStart(loadedTissues);
-           expect(result).toEqual(4);
+            const loadedTissues = createLoadedTissues([1, 1, 1, 1, 1]);
+            const result = sut.offgasingStart(loadedTissues);
+            expect(result).toEqual(4);
         });
 
         it('Simple profile saturation returns 5th sample index', () => {

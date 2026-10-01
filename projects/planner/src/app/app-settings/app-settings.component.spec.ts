@@ -45,24 +45,24 @@ export class AppSettingsPage {
         return this.fixture.debugElement.query(By.css('#resetToDefault')).nativeElement as HTMLButtonElement;
     }
 
-     public get maxDensityInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="maxDensity"]')).nativeElement as HTMLInputElement;
+    public get maxDensityInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('[formControlName="maxDensity"]')).nativeElement as HTMLInputElement;
     }
 
     public get primaryReserveInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="primaryTankReserve"]')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('[formControlName="primaryTankReserve"]')).nativeElement as HTMLInputElement;
 
     }
 
     public get stageReserveInput(): HTMLInputElement {
-    return this.fixture.debugElement.query(By.css('[formControlName="stageTankReserve"]')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('[formControlName="stageTankReserve"]')).nativeElement as HTMLInputElement;
 
     }
 
     public setInputValue(input: HTMLInputElement, value: number | string): void {
-    input.value = String(value);
-    input.dispatchEvent(new Event('input'));
-    this.fixture.detectChanges();
+        input.value = String(value);
+        input.dispatchEvent(new Event('input'));
+        this.fixture.detectChanges();
     }
 }
 
@@ -148,8 +148,8 @@ describe('App settings component', () => {
 
         it('Applies units change', inject([UnitConversion],
             (units: UnitConversion) => {
-            expect(units.imperialUnits).toBeTruthy();
-        }));
+                expect(units.imperialUnits).toBeTruthy();
+            }));
 
         it('Should use stepping precision 0.0001 after increasing max density by one step', () => {
             page.maxDensityInput.stepUp(1);
@@ -167,7 +167,7 @@ describe('App settings component', () => {
             component.use();
             const schedules = TestBed.inject(DiveSchedules);
             options = schedules.selected.optionsService;
-        })
+        });
 
         it('Should set Max Gas density after switch to metric units', () => {
             expect(component.appSettings.maxGasDensity).toBeCloseTo(5.7, 1);

@@ -4,7 +4,7 @@ import { Time } from '../physics/Time';
 import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
-import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {
@@ -40,7 +40,8 @@ export class PlanFactory {
         return Precision.ceil(estimate);
     }
 
-    public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[], surfaceInterval?: RestingParameters): Segment[] {
+    public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[],
+        surfaceInterval?: RestingParameters): Segment[] {
         const profile = Segments.fromCollection(originalPlan);
         const emergencySegments = profile.deepestPart();
         const issueSegmentIndex = emergencySegments.length;

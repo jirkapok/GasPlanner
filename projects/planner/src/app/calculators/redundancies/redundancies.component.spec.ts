@@ -14,7 +14,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
@@ -24,17 +24,17 @@ describe('RedundanciesComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [RedundanciesComponent],
-    providers: [
-        UnitConversion, ValidatorGroups, InputControls,
-        DecimalPipe, SubViewStorage, ViewStates,
-        PreferencesStore, PlannerService, WorkersFactoryCommon,
-        Preferences, ViewSwitchService,
-        ReloadDispatcher, DiveSchedules,
-        ApplicationSettingsService,
-        MdbModalService, LanguageService, provideTestTranslate()
-    ]
-});
+            imports: [RedundanciesComponent],
+            providers: [
+                UnitConversion, ValidatorGroups, InputControls,
+                DecimalPipe, SubViewStorage, ViewStates,
+                PreferencesStore, PlannerService, WorkersFactoryCommon,
+                Preferences, ViewSwitchService,
+                ReloadDispatcher, DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService, LanguageService, provideTestTranslate()
+            ]
+        });
 
         const units = TestBed.inject(UnitConversion);
         units.imperialUnits = true;

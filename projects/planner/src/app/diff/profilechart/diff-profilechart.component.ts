@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import * as Plotly from 'plotly.js-dist';

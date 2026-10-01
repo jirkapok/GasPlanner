@@ -28,7 +28,7 @@ describe('ConsumedByMix', () => {
 
         const assertResult = (mapFn: (s: IConsumedMix) => number, expected: number[]): void => {
             const mapped = _(result).map(mapFn).value();
-            mapped.forEach((n, index) => expect(n).toBeCloseTo(expected[index], 1))
+            mapped.forEach((n, index) => expect(n).toBeCloseTo(expected[index], 1));
         };
 
         it('Groups by Gas', () => {

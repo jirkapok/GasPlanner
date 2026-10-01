@@ -13,7 +13,7 @@ import { KnownViews } from '../../shared/viewStates';
 import { WeightViewState } from '../../shared/views.model';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { TankBound } from '../../shared/models';
-import { ApplicationSettingsService } from "../../shared/ApplicationSettings";
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';

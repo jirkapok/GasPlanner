@@ -1,5 +1,5 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
-import {faSlidersH} from '@fortawesome/free-solid-svg-icons';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DiveResultsTableDifferenceComponent } from './table/diff-diveresults-table.component';
 import { TranslatePipe } from '@ngx-translate/core';

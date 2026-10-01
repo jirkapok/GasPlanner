@@ -39,16 +39,16 @@ interface TanksForm {
     styleUrls: ['./tanks-complex.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-    ReactiveFormsModule,
-    CardHeaderComponent,
-    MdbAccordionModule,
-    FaIconComponent,
-    TankSizeComponent,
-    OxygenDropDownComponent,
-    GaslabelComponent,
-    LocaleNumberPipe,
-    TranslatePipe
-],
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        MdbAccordionModule,
+        FaIconComponent,
+        TankSizeComponent,
+        OxygenDropDownComponent,
+        GaslabelComponent,
+        LocaleNumberPipe,
+        TranslatePipe
+    ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

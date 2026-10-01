@@ -20,7 +20,7 @@ export class DashboardStartUp {
         private viewStore: SubViewStorage,
         private views: ViewStates,
         private help: HelpService
-) {
+    ) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
         this._showInstallButton = this.preferences.installEnabled();
     }

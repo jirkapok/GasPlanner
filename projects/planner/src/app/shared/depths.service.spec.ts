@@ -6,7 +6,7 @@ import { OptionsService } from './options.service';
 import { DiveResults } from './diveresults';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { HighestDensity } from "scuba-physics";
+import { HighestDensity } from 'scuba-physics';
 
 describe('Depths service', () => {
     let depthService: DepthsService;

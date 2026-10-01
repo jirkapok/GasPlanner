@@ -16,7 +16,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
@@ -50,17 +50,17 @@ describe('GasBlenderComponent', () => {
     let simplePage: GasBlenderPage;
     beforeEach(async() => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, GasBlenderComponent],
-    providers: [
-        UnitConversion,
-        GasBlenderService, BlendPricingService,
-        ValidatorGroups, InputControls, DecimalPipe,
-        SubViewStorage, ViewStates, PreferencesStore,
-        Preferences, ViewSwitchService, DiveSchedules,
-        ReloadDispatcher, ApplicationSettingsService,
-        MdbModalService, LanguageService, provideTestTranslate()
-    ]
-}).compileComponents();
+            imports: [ReactiveFormsModule, GasBlenderComponent],
+            providers: [
+                UnitConversion,
+                GasBlenderService, BlendPricingService,
+                ValidatorGroups, InputControls, DecimalPipe,
+                SubViewStorage, ViewStates, PreferencesStore,
+                Preferences, ViewSwitchService, DiveSchedules,
+                ReloadDispatcher, ApplicationSettingsService,
+                MdbModalService, LanguageService, provideTestTranslate()
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {

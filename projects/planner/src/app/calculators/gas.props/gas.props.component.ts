@@ -33,7 +33,8 @@ interface GasForm {
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent, LocaleNumberPipe, TranslatePipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent,
+        LocaleNumberPipe, TranslatePipe]
 })
 export class GasPropertiesCalcComponent implements OnInit {
     public calcIcon = faFileLines;

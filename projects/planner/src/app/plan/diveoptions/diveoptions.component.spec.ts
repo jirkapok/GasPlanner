@@ -29,20 +29,20 @@ describe('Dive options component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, DiveOptionsComponent],
-    providers: [
-        WorkersFactoryCommon, DecimalPipe,
-        InputControls, DiveSchedules,
-        ValidatorGroups, PlannerService,
-        UnitConversion, ReloadDispatcher,
-        ViewSwitchService, WayPointsService,
-        ViewStates, SubViewStorage,
-        Preferences, PreferencesStore,
-        ApplicationSettingsService,
-        MdbModalService, OptionsService,
-        provideTestTranslate(), LanguageService
-    ]
-}).compileComponents();
+            imports: [ReactiveFormsModule, DiveOptionsComponent],
+            providers: [
+                WorkersFactoryCommon, DecimalPipe,
+                InputControls, DiveSchedules,
+                ValidatorGroups, PlannerService,
+                UnitConversion, ReloadDispatcher,
+                ViewSwitchService, WayPointsService,
+                ViewStates, SubViewStorage,
+                Preferences, PreferencesStore,
+                ApplicationSettingsService,
+                MdbModalService, OptionsService,
+                provideTestTranslate(), LanguageService
+            ]
+        }).compileComponents();
     });
 
     beforeEach(() => {

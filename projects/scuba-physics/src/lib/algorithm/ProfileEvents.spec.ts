@@ -11,7 +11,7 @@ import { Tank } from '../consumption/Tanks';
 import { GasDensity } from '../gases/GasDensity';
 import { Precision } from '../common/precision';
 import { StandardGases } from '../gases/StandardGases';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 interface EventAssert {
     depth: number;

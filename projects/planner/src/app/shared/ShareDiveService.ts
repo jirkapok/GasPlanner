@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { ClipboardService, IClipboardResponse } from "ngx-clipboard";
-import { Streamed } from "./streamed";
+import { Injectable } from '@angular/core';
+import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { Streamed } from './streamed';
 
 @Injectable()
 export class ShareDiveService extends Streamed {

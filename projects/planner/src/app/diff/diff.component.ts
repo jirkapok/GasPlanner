@@ -22,8 +22,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './diff.component.html',
     styleUrls: ['./diff.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent, DiveResultsDifferenceComponent,
-        GasConsumedDifferenceComponent, TranslatePipe]
+    imports: [DiffTabsComponent, FaIconComponent, ProfileDifferenceChartComponent, WaypointsDifferenceComponent,
+        DiveResultsDifferenceComponent, GasConsumedDifferenceComponent, TranslatePipe]
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;

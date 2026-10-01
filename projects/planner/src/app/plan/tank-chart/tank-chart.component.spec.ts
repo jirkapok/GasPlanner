@@ -12,9 +12,9 @@ describe('TankChartComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [TankChartComponent],
-    providers: [UnitConversion, provideTestTranslate(), LanguageService]
-})
+            imports: [TankChartComponent],
+            providers: [UnitConversion, provideTestTranslate(), LanguageService]
+        })
             .compileComponents();
     });
 

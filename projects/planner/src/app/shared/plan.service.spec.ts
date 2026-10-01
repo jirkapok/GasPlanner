@@ -1,4 +1,4 @@
-import {Options, Segment, Tank} from 'scuba-physics';
+import { Options, Segment, Tank } from 'scuba-physics';
 import { Plan } from './plan.service';
 
 describe('Plan service', () => {

@@ -15,7 +15,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 
@@ -25,17 +25,17 @@ describe('GasPropertiesCalcComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [GasPropertiesCalcComponent],
-    providers: [
-        UnitConversion, ValidatorGroups, InputControls,
-        DecimalPipe, SubViewStorage, ViewStates,
-        PreferencesStore, PlannerService, WorkersFactoryCommon,
-        Preferences, ViewSwitchService,
-        ReloadDispatcher, DiveSchedules,
-        ApplicationSettingsService,
-        MdbModalService, provideTestTranslate(), LanguageService
-    ]
-});
+            imports: [GasPropertiesCalcComponent],
+            providers: [
+                UnitConversion, ValidatorGroups, InputControls,
+                DecimalPipe, SubViewStorage, ViewStates,
+                PreferencesStore, PlannerService, WorkersFactoryCommon,
+                Preferences, ViewSwitchService,
+                ReloadDispatcher, DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService, provideTestTranslate(), LanguageService
+            ]
+        });
         fixture = TestBed.createComponent(GasPropertiesCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -1,4 +1,4 @@
-import { Precision } from "../common/precision";
+import { Precision } from '../common/precision';
 
 export class GasNames {
     public static readonly airName = 'Air';

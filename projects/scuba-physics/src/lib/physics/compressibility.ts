@@ -1,5 +1,5 @@
 import { Gas } from '../gases/Gases';
-import { TankFill } from "../consumption/Tanks";
+import { TankFill } from '../consumption/Tanks';
 
 /**
  * Real gas compression calculator. Does not use Gas ideal law, instead uses Z-factor.

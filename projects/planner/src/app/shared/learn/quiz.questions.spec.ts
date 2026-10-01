@@ -1,5 +1,5 @@
 import { topics } from './quiz.questions';
-import { Topic, Category, QuestionTemplate} from './learn.models';
+import { Topic, Category, QuestionTemplate } from './learn.models';
 import { Question } from './quiz.question';
 import en from '../../../assets/i18n/en.json';
 
@@ -10,10 +10,10 @@ describe('Quiz questions definition', () => {
     it('All topics have at least one category with one question', () => {
         const wrongCategories = topics
             .flatMap((t: Topic) => t.categories.map(c => ({
-                    topic: t.name,
-                    category: c.name,
-                    questions: c.questions.length
-                })))
+                topic: t.name,
+                category: c.name,
+                questions: c.questions.length
+            })))
             .filter(s => s.questions <= 0);
 
         expect(wrongCategories.length)
@@ -67,8 +67,8 @@ describe('Quiz questions definition', () => {
 
                         const variables = calculateSpy.calls.mostRecent().args[0];
                         variables.forEach(v => expect(Number.isFinite(v))
-                             .withContext(`Generated invalid variables for: '${template.question}' with variables [${ variables }].`)
-                             .toBeTruthy());
+                            .withContext(`Generated invalid variables for: '${template.question}' with variables [${ variables }].`)
+                            .toBeTruthy());
                         expect(Number.isFinite(question.correctAnswer))
                             .withContext(`Generated invalid answer for: '${template.question}' with variables [${ variables }].`)
                             .toBeTruthy();

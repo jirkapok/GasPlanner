@@ -26,13 +26,13 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
     templateUrl: './app-settings.component.html',
     styleUrls: ['./app-settings.component.scss'],
     imports: [
-    ReactiveFormsModule,
-    CardHeaderComponent,
-    MdbCheckboxModule,
-    MdbFormsModule,
-    TranslatePipe,
-    LanguageDropdownComponent
-],
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        MdbCheckboxModule,
+        MdbFormsModule,
+        TranslatePipe,
+        LanguageDropdownComponent
+    ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AppSettingsComponent implements OnInit {

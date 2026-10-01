@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
@@ -6,12 +6,12 @@ import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } f
 import { TankTemplate, Precision } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { ITankSize } from '../../shared/models';
-import {ValidatorGroups} from '../../shared/ValidatorGroups';
-import {InputControls} from '../../shared/inputcontrols';
-import {RedundanciesService} from '../../shared/redundancies.service';
-import {RedundanciesViewState, TankFillState} from '../../shared/views.model';
-import {KnownViews} from '../../shared/viewStates';
-import {SubViewStorage} from '../../shared/subViewStorage';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { InputControls } from '../../shared/inputcontrols';
+import { RedundanciesService } from '../../shared/redundancies.service';
+import { RedundanciesViewState, TankFillState } from '../../shared/views.model';
+import { KnownViews } from '../../shared/viewStates';
+import { SubViewStorage } from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';

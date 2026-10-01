@@ -253,15 +253,15 @@ describe('PlannerService', () => {
 
         it('Max bottom time uses previous dive surface interval',  inject([DiveSchedules],
             (schedules: DiveSchedules) => {
-            const firstDive = schedules.dives[0];
-            // make some interesting dive
-            firstDive.depths.plannedDepth = 40;
-            firstDive.depths.planDuration = 20;
-            const followingDive = schedules.add();
-            followingDive.surfaceInterval = Time.oneMinute * 10;
-            planner.calculate(2);
-            expect(followingDive.diveResult.maxTime).toEqual(15); // without surface intrval should be 18
-        }));
+                const firstDive = schedules.dives[0];
+                // make some interesting dive
+                firstDive.depths.plannedDepth = 40;
+                firstDive.depths.planDuration = 20;
+                const followingDive = schedules.add();
+                followingDive.surfaceInterval = Time.oneMinute * 10;
+                planner.calculate(2);
+                expect(followingDive.diveResult.maxTime).toEqual(15); // without surface intrval should be 18
+            }));
     });
 
     describe('Errors', () => {

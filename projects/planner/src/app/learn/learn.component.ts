@@ -111,13 +111,13 @@ export class LearnComponent {
 
     public getRoundingExplanation(roundType: RoundType): string {
         switch (roundType) {
-        case RoundType.floor:
-            return 'learn.roundingExplanationDown';
-        case RoundType.ceil:
-            return 'learn.roundingExplanationUp';
-        case RoundType.round:
-        default:
-            return 'learn.roundingExplanationExact';
+            case RoundType.floor:
+                return 'learn.roundingExplanationDown';
+            case RoundType.ceil:
+                return 'learn.roundingExplanationUp';
+            case RoundType.round:
+            default:
+                return 'learn.roundingExplanationExact';
         }
     }
 

@@ -28,8 +28,8 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent, LocaleNumberPipe,
-        TranslatePipe]
+    imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent,
+        LocaleNumberPipe, TranslatePipe]
 })
 export class NdlLimitsComponent implements OnInit {
     public icon = faTable;

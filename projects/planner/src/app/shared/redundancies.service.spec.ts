@@ -1,5 +1,5 @@
-import {RedundanciesService} from './redundancies.service';
-import {UnitConversion} from './UnitConversion';
+import { RedundanciesService } from './redundancies.service';
+import { UnitConversion } from './UnitConversion';
 
 describe('Redundancies service', () => {
     it('Calculates final pressure', () => {

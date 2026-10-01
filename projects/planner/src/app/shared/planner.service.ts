@@ -22,7 +22,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 
 @Injectable()

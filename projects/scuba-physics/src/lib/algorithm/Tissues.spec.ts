@@ -3,7 +3,7 @@ import { LoadSegment, Tissue, Tissues, TissuesValidator } from './Tissues';
 import { Compartments } from './Compartments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
-import { LoadedTissues } from "./Tissues.api";
+import { LoadedTissues } from './Tissues.api';
 
 describe('Tissues', () => {
     const createTissue = () => new Tissue(Compartments.buhlmannZHL16C[0], 1);
@@ -82,7 +82,7 @@ describe('Tissues', () => {
 
         // saturation values are not precise, because of M-values evaluate to decimal places.
         const createLoadedTissue = (pN2: number) =>
-            Tissue.fromCurrent({ pN2: pN2, pHe: 0}, Compartments.buhlmannZHL16C[0]);
+            Tissue.fromCurrent({ pN2: pN2, pHe: 0 }, Compartments.buhlmannZHL16C[0]);
 
         it('Is 0 at equilibrium (surface)', () => {
             const tissue = createLoadedTissue(1);

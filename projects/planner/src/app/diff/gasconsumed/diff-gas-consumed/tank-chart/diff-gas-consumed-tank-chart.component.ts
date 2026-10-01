@@ -17,7 +17,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     imports: [FaIconComponent, NgClass, LocaleNumberPipe, TranslatePipe]
 })
 export class GasConsumedDifferenceTankComponent {
-    @Input({required: true})
+    @Input({ required: true })
     public gasDiff = new ConsumedGasDifference(
             StandardGases.air.copy(),
             {

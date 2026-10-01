@@ -6,7 +6,7 @@ import {
     NumberVariable,
     OptionsVariable
 } from './learn.models';
-import { DepthConverter, GasProperties, NitroxCalculator, SacCalculator } from "scuba-physics";
+import { DepthConverter, GasProperties, NitroxCalculator, SacCalculator } from 'scuba-physics';
 
 const depthConverter = DepthConverter.simple();
 const nitroxCalculator = new NitroxCalculator(depthConverter, 0.21);

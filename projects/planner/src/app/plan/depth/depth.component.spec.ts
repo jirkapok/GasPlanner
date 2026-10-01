@@ -28,13 +28,13 @@ describe('DepthComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [ReactiveFormsModule, DepthComponent],
-    providers: [
-        UnitConversion, ValidatorGroups,
-        InputControls, DecimalPipe,
-        provideTestTranslate()
-    ]
-})
+            imports: [ReactiveFormsModule, DepthComponent],
+            providers: [
+                UnitConversion, ValidatorGroups,
+                InputControls, DecimalPipe,
+                provideTestTranslate()
+            ]
+        })
             .compileComponents();
     });
 

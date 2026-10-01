@@ -1,6 +1,6 @@
 import _ from 'lodash';
-import { LoadedTissues } from "./Tissues.api";
-import { Tissue, Tissues } from "./Tissues";
+import { LoadedTissues } from './Tissues.api';
+import { Tissue, Tissues } from './Tissues';
 
 export class ProfileTissues {
     /**

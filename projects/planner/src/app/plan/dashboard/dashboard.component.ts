@@ -8,7 +8,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { DashboardStartUp } from '../../shared/startUp';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
-import { ShareDiveService } from "../../shared/ShareDiveService";
+import { ShareDiveService } from '../../shared/ShareDiveService';
 import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { PlanTabsComponent } from '../plan.tabs/plan.tabs.component';
@@ -27,7 +27,9 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './dashboard.component.html',
     styleUrls: ['./dashboard.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent, DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent, DiveInfoComponent, TranslatePipe]
+    imports: [ReactiveFormsModule, FaIconComponent, PlanTabsComponent, NgClass, TanksSimpleComponent, TanksComplexComponent,
+        DepthsSimpleComponent, DepthsComplexComponent, DiveOptionsComponent, ProfileChartComponent, WayPointsComponent,
+        DiveInfoComponent, TranslatePipe]
 })
 export class DashboardComponent extends Streamed implements OnInit {
     public exclamation = faExclamationTriangle;

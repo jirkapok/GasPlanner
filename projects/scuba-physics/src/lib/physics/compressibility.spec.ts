@@ -1,6 +1,6 @@
-import { Compressibility } from "./compressibility";
-import { StandardGases } from "../gases/StandardGases";
-import { Gas } from "../gases/Gases";
+import { Compressibility } from './compressibility';
+import { StandardGases } from '../gases/StandardGases';
+import { Gas } from '../gases/Gases';
 
 describe('Gas compressibility', () => {
     const sut = new Compressibility();

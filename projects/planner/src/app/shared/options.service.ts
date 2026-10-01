@@ -7,7 +7,7 @@ import {
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
 
 /** All options stored in metric units */
 @Injectable()
@@ -133,8 +133,8 @@ export class OptionsService {
     }
 
     public get decoStopDistance(): number {
-    const source = this.options.decoStopDistance;
-    return this.units.fromMeters(source);
+        const source = this.options.decoStopDistance;
+        return this.units.fromMeters(source);
     }
 
 

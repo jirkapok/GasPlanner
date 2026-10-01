@@ -1,7 +1,7 @@
 import { Gas } from '../gases/Gases';
 import { Segment } from '../depths/Segments';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
-import { ProfileTissues } from "./ProfileTissues";
+import { ProfileTissues } from './ProfileTissues';
 
 export enum EventType {
     noAction = 0,
@@ -240,7 +240,7 @@ export class CalculatedProfileStatistics extends CalculatedProfile {
     }
 
     public static fromStatisticsProfile(segments: Segment[], ceilings: Ceiling[], tissueOverPressures: TissueOverPressures[],
-                              finalTissues: LoadedTissues, tissues: LoadedTissues[])
+        finalTissues: LoadedTissues, tissues: LoadedTissues[])
         : CalculatedProfileStatistics {
         return new CalculatedProfileStatistics(segments, ceilings, finalTissues, tissues, tissueOverPressures, []);
     }

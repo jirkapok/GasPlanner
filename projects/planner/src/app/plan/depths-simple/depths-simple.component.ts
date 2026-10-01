@@ -30,7 +30,8 @@ interface SimpleDepthsForm {
     templateUrl: './depths-simple.component.html',
     styleUrls: ['./depths-simple.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, LocaleNumberPipe, TranslatePipe]
+    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, LocaleNumberPipe,
+        TranslatePipe]
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

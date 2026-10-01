@@ -12,11 +12,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./salinity.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-    ReactiveFormsModule,
-    MdbFormsModule,
-    MdbDropdownModule,
-    TranslatePipe
-],
+        ReactiveFormsModule,
+        MdbFormsModule,
+        MdbDropdownModule,
+        TranslatePipe
+    ],
 })
 export class SalinityComponent {
     @Input()
@@ -31,12 +31,12 @@ export class SalinityComponent {
 
     public get salinityOption(): string {
         switch (this.salinity) {
-        case Salinity.salt:
-            return this.saltName;
-        case Salinity.brackish:
-            return this.brackishName;
-        default:
-            return this.freshName;
+            case Salinity.salt:
+                return this.saltName;
+            case Salinity.brackish:
+                return this.brackishName;
+            default:
+                return this.freshName;
         }
     }
 

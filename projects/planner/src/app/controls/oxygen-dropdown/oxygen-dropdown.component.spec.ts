@@ -25,13 +25,13 @@ describe('Oxygen DropDown component', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    providers: [UnitConversion,
-        InputControls, DecimalPipe,
-        ValidatorGroups, OptionsService,
-        provideTestTranslate()
-    ],
-    imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
-})
+            providers: [UnitConversion,
+                InputControls, DecimalPipe,
+                ValidatorGroups, OptionsService,
+                provideTestTranslate()
+            ],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
+        })
             .compileComponents();
     });
 

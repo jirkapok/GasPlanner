@@ -1,10 +1,10 @@
 import { QuizSession } from './quiz.session';
-import { Category, QuestionTemplate, RoundType } from "./learn.models";
+import { Category, QuestionTemplate, RoundType } from './learn.models';
 
 describe('Quiz Session', () => {
     const expectedAnswer = 99;
-    const questionTemplate = new QuestionTemplate("Question 1", 0, RoundType.round, [], () => expectedAnswer);
-    const category = new Category("Category", "category_help", [ questionTemplate ]);
+    const questionTemplate = new QuestionTemplate('Question 1', 0, RoundType.round, [], () => expectedAnswer);
+    const category = new Category('Category', 'category_help', [ questionTemplate ]);
 
     const assertSessionInInitialState = (sut: QuizSession) => {
         expect(sut.trophyGained).toBeFalsy();
@@ -97,7 +97,7 @@ describe('Quiz Session', () => {
             }
 
             return sut;
-        }
+        };
 
         it('Marks as finished', () => {
             const sut = createFinishedSession();

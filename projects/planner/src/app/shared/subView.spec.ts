@@ -12,7 +12,7 @@ import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from './language.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 

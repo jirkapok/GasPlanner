@@ -4,7 +4,7 @@ import { Precision, Ceiling } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 export interface AxisValues {
     xValues: Date[];

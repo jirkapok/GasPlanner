@@ -24,5 +24,5 @@ registerLocaleData(localeFr);
 registerLocaleData(localeRu);
 registerLocaleData(localeZhHans);
 
-bootstrapApplication(AppComponent, {...CONFIG, providers: [provideZoneChangeDetection(), ...CONFIG.providers]})
+bootstrapApplication(AppComponent, { ...CONFIG, providers: [provideZoneChangeDetection(), ...CONFIG.providers] })
     .catch((err) => console.error(err));

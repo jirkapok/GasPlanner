@@ -17,18 +17,18 @@ describe('DiveResultsTableDifferenceComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [DiveResultsTableDifferenceComponent],
-    providers: [
-        ViewSwitchService,
-        DiveSchedules,
-        ReloadDispatcher,
-        UnitConversion,
-        ProfileComparatorService,
-        ResultsComparison,
-        provideTestTranslate(),
-        LanguageService
-    ]
-});
+            imports: [DiveResultsTableDifferenceComponent],
+            providers: [
+                ViewSwitchService,
+                DiveSchedules,
+                ReloadDispatcher,
+                UnitConversion,
+                ProfileComparatorService,
+                ResultsComparison,
+                provideTestTranslate(),
+                LanguageService
+            ]
+        });
         fixture = TestBed.createComponent(DiveResultsTableDifferenceComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

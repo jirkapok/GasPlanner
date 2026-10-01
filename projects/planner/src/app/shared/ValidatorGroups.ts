@@ -68,7 +68,7 @@ export class ValidatorGroups {
     }
 
     public get decoStopDistance(): ValidatorFn[] {
-    return this.rangeFor(this.ranges.decoStopDistance);
+        return this.rangeFor(this.ranges.decoStopDistance);
     }
 
     /** Duration in minutes 1-100 */

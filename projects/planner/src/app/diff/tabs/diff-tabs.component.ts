@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {DiveSchedules} from '../../shared/dive.schedules';
+import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { DiffTabsButtonComponent } from './profile-button/diff-tabs-button.component';

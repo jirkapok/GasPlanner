@@ -8,7 +8,7 @@ import { Tank, Tanks } from './Tanks';
 import { Time } from '../physics/Time';
 import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSearch';
 import { PlanFactory } from '../depths/PlanFactory';
-import { AlgorithmParams, RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
 
 export type { ConsumptionOptions } from './consumptionCommon';

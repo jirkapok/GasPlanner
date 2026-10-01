@@ -1,7 +1,7 @@
 import { GasMixtures } from './GasMixtures';
 import { Gas } from './Gases';
 import _ from 'lodash';
-import { GasNames } from "./GasNames";
+import { GasNames } from './GasNames';
 
 export class StandardGases {
     // theoretical range for ppo2 1.3 test data (even not used all gases with these values)

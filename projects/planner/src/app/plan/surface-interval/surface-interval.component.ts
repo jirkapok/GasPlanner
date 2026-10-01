@@ -24,12 +24,12 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./surface-interval.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-    MaskitoDirective,
-    ReactiveFormsModule,
-    MdbDropdownModule,
-    MdbFormsModule,
-    TranslatePipe
-]
+        MaskitoDirective,
+        ReactiveFormsModule,
+        MdbDropdownModule,
+        MdbFormsModule,
+        TranslatePipe
+    ]
 })
 export class SurfaceIntervalComponent extends Streamed implements OnInit {
     @Input() public form!: FormGroup;

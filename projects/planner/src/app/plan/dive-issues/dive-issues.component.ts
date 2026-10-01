@@ -7,7 +7,7 @@ import { OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
-import { BoundEvent } from "../../shared/models";
+import { BoundEvent } from '../../shared/models';
 
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { DurationPipe } from '../../pipes/duration.pipe';

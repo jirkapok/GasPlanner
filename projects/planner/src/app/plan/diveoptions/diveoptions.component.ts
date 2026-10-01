@@ -149,8 +149,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
     }
 
     public get decoStopDistanceInvalid(): boolean {
-    const control = this.optionsForm.controls.decoStopDistance;
-    return this.inputs.controlInValid(control);
+        const control = this.optionsForm.controls.decoStopDistance;
+        return this.inputs.controlInValid(control);
     }
 
     public set isComplex(newValue: boolean) {

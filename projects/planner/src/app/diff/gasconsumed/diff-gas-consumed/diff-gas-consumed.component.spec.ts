@@ -13,16 +13,16 @@ describe('DiffGasConsumedComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-    imports: [GasConsumedDifferenceComponent],
-    providers: [
-        GasesComparisonService,
-        ProfileComparatorService,
-        DiveSchedules,
-        UnitConversion,
-        ReloadDispatcher,
-        provideTestTranslate()
-    ]
-})
+            imports: [GasConsumedDifferenceComponent],
+            providers: [
+                GasesComparisonService,
+                ProfileComparatorService,
+                DiveSchedules,
+                UnitConversion,
+                ReloadDispatcher,
+                provideTestTranslate()
+            ]
+        })
             .compileComponents();
 
         fixture = TestBed.createComponent(GasConsumedDifferenceComponent);

@@ -6,7 +6,7 @@ import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
 import { Ceiling, FeatureFlags } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
-import { BoundEvent } from "./models";
+import { BoundEvent } from './models';
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {

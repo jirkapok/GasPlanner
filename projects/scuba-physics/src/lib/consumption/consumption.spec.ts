@@ -7,8 +7,8 @@ import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from '../algorithm/Options.spec';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
-import { ProfileTissues } from "../algorithm/ProfileTissues";
-import { RestingParameters } from "../algorithm/BuhlmannAlgorithmParameters";
+import { ProfileTissues } from '../algorithm/ProfileTissues';
+import { RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 
 describe('Consumption', () => {
     const consumptionOptions: ConsumptionOptions = {

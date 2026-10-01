@@ -1,18 +1,18 @@
-import {DiveSchedule, DiveSchedules} from './dive.schedules';
+import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { TestBed, inject } from '@angular/core/testing';
-import {UnitConversion} from './UnitConversion';
-import {PreferencesStore} from './preferencesStore';
-import {PlannerService} from './planner.service';
-import {WorkersFactoryCommon} from './serial.workers.factory';
-import {WayPointsService} from './waypoints.service';
-import {Preferences} from './preferences';
-import {ViewSwitchService} from './viewSwitchService';
-import {ViewStates} from './viewStates';
-import {DelayedScheduleService} from './delayedSchedule.service';
-import {SubViewStorage} from './subViewStorage';
-import {ManagedDiveSchedules} from './managedDiveSchedules';
+import { UnitConversion } from './UnitConversion';
+import { PreferencesStore } from './preferencesStore';
+import { PlannerService } from './planner.service';
+import { WorkersFactoryCommon } from './serial.workers.factory';
+import { WayPointsService } from './waypoints.service';
+import { Preferences } from './preferences';
+import { ViewSwitchService } from './viewSwitchService';
+import { ViewStates } from './viewStates';
+import { DelayedScheduleService } from './delayedSchedule.service';
+import { SubViewStorage } from './subViewStorage';
+import { ManagedDiveSchedules } from './managedDiveSchedules';
 import Spy = jasmine.Spy;
-import {ReloadDispatcher} from './reloadDispatcher';
+import { ReloadDispatcher } from './reloadDispatcher';
 import { DepthsService } from './depths.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
@@ -120,23 +120,23 @@ describe('Managed Schedules', () => {
 
         it('When adding a new dive in metric units, the default decoStopDistance value should be 3 m', () => {
 
-        const diveMetric = schedules.dives[1];
-        expect(diveMetric.optionsService.decoStopDistance).toBe(3);
+            const diveMetric = schedules.dives[1];
+            expect(diveMetric.optionsService.decoStopDistance).toBe(3);
 
         });
 
         it('When adding a new dive in imperial units, the default decoStopDistance value should be set to 10 ft', inject(
-        [UnitConversion],
-        (units: UnitConversion) => {
+            [UnitConversion],
+            (units: UnitConversion) => {
 
-        units.imperialUnits = true;
+                units.imperialUnits = true;
 
-        sut.add();
+                sut.add();
 
-        const diveImperial = schedules.dives[2];
-        expect(diveImperial.optionsService.decoStopDistance).toBeCloseTo(10, 0);
+                const diveImperial = schedules.dives[2];
+                expect(diveImperial.optionsService.decoStopDistance).toBeCloseTo(10, 0);
 
-        }));
+            }));
     });
 
     describe('Clone dive', () => {

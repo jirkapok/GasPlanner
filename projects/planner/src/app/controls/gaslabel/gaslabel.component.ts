@@ -11,11 +11,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     templateUrl: './gaslabel.component.html',
     styleUrls: ['./gaslabel.component.scss'],
     imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    LocaleNumberPipe,
-    TranslatePipe
-],
+        CommonModule,
+        ReactiveFormsModule,
+        LocaleNumberPipe,
+        TranslatePipe
+    ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class GaslabelComponent {

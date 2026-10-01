@@ -5,7 +5,7 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
 import { ResultDiff, ResultsComparison } from './results-comparison.service';
 import { DiveResults } from '../diveresults';
-import { HighestDensity } from "scuba-physics";
+import { HighestDensity } from 'scuba-physics';
 import { LanguageService } from '../language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 

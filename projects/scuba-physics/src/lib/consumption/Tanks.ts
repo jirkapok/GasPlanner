@@ -2,7 +2,7 @@ import { Precision } from '../common/precision';
 import { GasMixtures } from '../gases/GasMixtures';
 import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
-import { Compressibility } from "../physics/compressibility";
+import { Compressibility } from '../physics/compressibility';
 
 export interface TankFill {
     /** Start pressure in bars as non zero positive number as shown on the pressure gauge (not absolute pressure). */
@@ -249,19 +249,19 @@ export class Tank implements TankFill {
     }
 
     public set startPressure(newValue: number) {
-       if(newValue < Tank.minimumZero) {
-           this._startPressure = Tank.minimumZero;
-       } else {
-           this._startPressure = newValue;
-       }
+        if(newValue < Tank.minimumZero) {
+            this._startPressure = Tank.minimumZero;
+        } else {
+            this._startPressure = newValue;
+        }
 
-       this.fitStoredVolumes();
+        this.fitStoredVolumes();
     }
 
     public set size(newValue: number) {
         // Consider to make the size readonly
         if(newValue < Tank.minimumSize) {
-            this._size = Tank.minimumSize
+            this._size = Tank.minimumSize;
         } else {
             this._size = newValue;
         }

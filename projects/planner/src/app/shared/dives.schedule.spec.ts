@@ -135,22 +135,22 @@ describe('Scheduled dives', () => {
         const defaultTissues = ProfileTissues.createAtSurface(0);
 
         it('First dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(1)
+            const tissues = sut.previousDiveTissues(1);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Repetitive dive returns previous dive tissues', () => {
-            const tissues = sut.previousDiveTissues(2)
+            const tissues = sut.previousDiveTissues(2);
             expect(tissues).toEqual(loadedTissues);
         });
 
         it('Non repetitive dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(3)
+            const tissues = sut.previousDiveTissues(3);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Non existing dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(5)
+            const tissues = sut.previousDiveTissues(5);
             expect(tissues).toEqual(defaultTissues);
         });
     });

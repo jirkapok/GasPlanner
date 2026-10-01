@@ -3,7 +3,7 @@ import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
-import {ITankSize, TankBound} from '../../shared/models';
+import { ITankSize, TankBound } from '../../shared/models';
 import { InputControls } from '../../shared/inputcontrols';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
@@ -13,10 +13,10 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     templateUrl: './tank.size.component.html',
     styleUrls: ['./tank.size.component.scss'],
     imports: [
-    ReactiveFormsModule,
-    MdbFormsModule,
-    MdbDropdownModule
-],
+        ReactiveFormsModule,
+        MdbFormsModule,
+        MdbDropdownModule
+    ],
     changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TankSizeComponent implements OnInit {

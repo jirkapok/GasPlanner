@@ -6,7 +6,7 @@ import { OptionExtensions } from './Options.spec';
 import { Salinity } from '../physics/pressure-converter';
 import { Options, SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
-import { AlgorithmParams } from "./BuhlmannAlgorithmParameters";
+import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 function concatenatePlan(decoPlan: Segment[]): string {
     let planText = '';

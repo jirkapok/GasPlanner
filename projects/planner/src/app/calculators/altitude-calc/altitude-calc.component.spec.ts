@@ -14,7 +14,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
@@ -24,17 +24,17 @@ describe('AltitudeCalcComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [AltitudeCalcComponent],
-    providers: [
-        UnitConversion, ValidatorGroups, InputControls,
-        DecimalPipe, SubViewStorage, ViewStates,
-        PreferencesStore, PlannerService, WorkersFactoryCommon,
-        Preferences, ViewSwitchService,
-        ReloadDispatcher, DiveSchedules,
-        ApplicationSettingsService,
-        MdbModalService, LanguageService, provideTestTranslate()
-    ]
-});
+            imports: [AltitudeCalcComponent],
+            providers: [
+                UnitConversion, ValidatorGroups, InputControls,
+                DecimalPipe, SubViewStorage, ViewStates,
+                PreferencesStore, PlannerService, WorkersFactoryCommon,
+                Preferences, ViewSwitchService,
+                ReloadDispatcher, DiveSchedules,
+                ApplicationSettingsService,
+                MdbModalService, LanguageService, provideTestTranslate()
+            ]
+        });
         fixture = TestBed.createComponent(AltitudeCalcComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

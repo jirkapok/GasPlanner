@@ -35,7 +35,8 @@ interface DepthsForm {
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule, LocaleNumberPipe, TranslatePipe]
+    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule,
+        LocaleNumberPipe, TranslatePipe]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;

@@ -13,11 +13,11 @@ import { TranslatePipe } from '@ngx-translate/core';
     styleUrls: ['./altitude.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-    ReactiveFormsModule,
-    MdbFormsModule,
-    MdbDropdownModule,
-    TranslatePipe
-],
+        ReactiveFormsModule,
+        MdbFormsModule,
+        MdbDropdownModule,
+        TranslatePipe
+    ],
 })
 export class AltitudeComponent implements OnInit {
     @Output() public inputChange = new EventEmitter<number>();

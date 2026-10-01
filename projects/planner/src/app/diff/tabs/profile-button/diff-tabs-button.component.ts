@@ -25,17 +25,17 @@ import { TranslatePipe } from '@ngx-translate/core';
             transition('disabled => secondary', [animate('400ms')]),
             transition('secondary => primary', [animate('500ms')]),
             transition('primary => disabled', [animate('400ms', keyframes([
-                    style({ transform: 'rotateX(180deg)', offset: 0 }),
-                    style({ transform: 'rotateX(180deg) translateY(-21px)', offset: 1 })
-                ]))]),
+                style({ transform: 'rotateX(180deg)', offset: 0 }),
+                style({ transform: 'rotateX(180deg) translateY(-21px)', offset: 1 })
+            ]))]),
         ]),
     ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, TranslatePipe]
 })
 export class DiffTabsButtonComponent {
-    @Input({required: true}) index = 0;
-    @Input({required: true}) title = '';
+    @Input({ required: true }) index = 0;
+    @Input({ required: true }) title = '';
     private readonly disabled = 'disabled';
 
     public constructor(private profilesDiff: ProfileComparatorService) {

@@ -26,20 +26,20 @@ describe('PlanTabsComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-    imports: [MdbTabsModule, PlanTabsComponent],
-    providers: [
-        provideHttpClient(withXhr()),
-        provideHttpClientTesting(),
-        UnitConversion, ReloadDispatcher,
-        DiveSchedules, ManagedDiveSchedules,
-        PreferencesStore, Preferences,
-        ViewSwitchService, ViewStates,
-        DelayedScheduleService, PlannerService,
-        WorkersFactoryCommon, SubViewStorage,
-        ApplicationSettingsService,
-        MdbModalService, LanguageService, provideTestTranslate()
-    ]
-});
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: [
+                provideHttpClient(withXhr()),
+                provideHttpClientTesting(),
+                UnitConversion, ReloadDispatcher,
+                DiveSchedules, ManagedDiveSchedules,
+                PreferencesStore, Preferences,
+                ViewSwitchService, ViewStates,
+                DelayedScheduleService, PlannerService,
+                WorkersFactoryCommon, SubViewStorage,
+                ApplicationSettingsService,
+                MdbModalService, LanguageService, provideTestTranslate()
+            ]
+        });
         fixture = TestBed.createComponent(PlanTabsComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

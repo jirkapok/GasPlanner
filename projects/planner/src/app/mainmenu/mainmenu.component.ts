@@ -28,13 +28,13 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
     styleUrls: ['./mainmenu.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
-    RouterLink,
-    FaIconComponent,
-    MdbCollapseModule,
-    MdbDropdownModule,
-    TranslatePipe,
-    LanguageDropdownComponent
-]
+        RouterLink,
+        FaIconComponent,
+        MdbCollapseModule,
+        MdbDropdownModule,
+        TranslatePipe,
+        LanguageDropdownComponent
+    ]
 })
 export class MainMenuComponent extends Streamed {
     public isNavbarCollapsed = true;

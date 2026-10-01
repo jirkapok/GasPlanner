@@ -1,6 +1,6 @@
 import { Gas } from './Gases';
 import { StandardGases } from './StandardGases';
-import { GasNames } from "./GasNames";
+import { GasNames } from './GasNames';
 
 
 describe('Standard gases', () => {

@@ -15,7 +15,7 @@ import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ShareDiveService } from '../../shared/ShareDiveService';
-import {MdbModalService} from 'mdb-angular-ui-kit/modal';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';

@@ -73,6 +73,7 @@
     "@types/plotly.js": "^3.0.13",
     "@typescript-eslint/eslint-plugin": "^8.70.0",
     "@typescript-eslint/parser": "^8.70.0",
+    "angular-eslint": "^22.5.0",
     "eslint": "^9.39.5",
     "eslint-plugin-html": "^8.2.0",
     "eslint-plugin-import": "^2.32.0",
@@ -91,6 +92,7 @@
     "ng-packagr": "^22.1.1",
     "playwright-ng-schematics": "^22.1.2",
     "semantic-release": "^25.0.3",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.0"
   }
 }

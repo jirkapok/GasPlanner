@@ -140,6 +140,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
+            "eslintConfig": "projects/planner/eslint.config.mjs",
             "lintFilePatterns": [
               "projects/planner/**/*.ts",
               "projects/planner/**/*.html"
@@ -191,6 +192,7 @@
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {
+            "eslintConfig": "projects/scuba-physics/eslint.config.mjs",
             "lintFilePatterns": [
               "projects/scuba-physics/**/*.ts",
               "projects/scuba-physics/**/*.html"

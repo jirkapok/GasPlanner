@@ -1,6 +1,6 @@
 import {
     CalculatedProfile, CalculatedProfileStatistics,
-    CnsCalculator, Event, StandardGases, Time
+    Event, StandardGases, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';

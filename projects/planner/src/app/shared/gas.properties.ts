@@ -1,5 +1,5 @@
 import {
-    GasProperties, Tank, GasDensity, GasMixtures
+    GasProperties, Tank, GasMixtures
 } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 

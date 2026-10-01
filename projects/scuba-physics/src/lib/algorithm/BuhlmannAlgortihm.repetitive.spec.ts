@@ -7,7 +7,6 @@ import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
 import { Options } from './Options';
 import { StandardGases } from '../gases/StandardGases';
-import { FeatureFlags } from '../common/featureFlags';
 import { LoadedTissues } from './Tissues.api';
 import {
     AlgorithmParams, RestingParameters, SurfaceIntervalParameters

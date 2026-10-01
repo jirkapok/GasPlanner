@@ -4,7 +4,7 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling, FeatureFlags } from 'scuba-physics';
+import { Ceiling } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 

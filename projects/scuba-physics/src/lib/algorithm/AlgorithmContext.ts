@@ -9,7 +9,6 @@ import { Options } from './Options';
 import { DepthConverter } from '../physics/depth-converter';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
-import { FeatureFlags } from '../common/featureFlags';
 import { LoadedTissues, TissueOverPressures } from './Tissues.api';
 import { Precision } from '../common/precision';
 

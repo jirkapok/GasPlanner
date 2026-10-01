@@ -5,7 +5,7 @@ import { Observable, Subject, takeUntil } from 'rxjs';
 import {
     ConsumptionByMix, IConsumedMix,
     SurfaceIntervalParameters, BuhlmannAlgorithm,
-    TissueOverPressures, Time
+    TissueOverPressures
 } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';

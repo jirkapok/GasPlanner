@@ -3,8 +3,7 @@ import { takeUntil } from 'rxjs';
 import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
-    CalculatedProfile, Precision,
-    LoadedTissue
+    CalculatedProfile, Precision
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,

@@ -3,7 +3,7 @@ import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { faLungs } from '@fortawesome/free-solid-svg-icons';
-import { Diver, Precision, Tank, TankTemplate, FeatureFlags } from 'scuba-physics';
+import { Diver, Precision, Tank, TankTemplate } from 'scuba-physics';
 import { SacCalculatorService } from '../../shared/sac-calculator.service';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { InputControls } from '../../shared/inputcontrols';

@@ -4,7 +4,7 @@ import { ProfileComparatorService } from './profileComparatorService';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
 import {
-    ConsumptionByMix, FeatureFlags, HighestDensity,
+    ConsumptionByMix, HighestDensity,
     IConsumedMix, ProfileTissues, Segment,
     StandardGases, Tank
 } from 'scuba-physics';

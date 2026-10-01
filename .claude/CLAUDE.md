@@ -66,11 +66,24 @@ Tiered, each tier gated on the previous, later tiers restricted to `master`:
 3. **Release** (`master` only, needs #1+#2) — `npx semantic-release` (`.releaserc.json`): derives next version from conventional commits, updates `doc/CHANGELOG.md`, runs `build/bump-version.ps1` to stamp the version into `scuba-physics/package.json` and the PWA manifest's `id`, commits as `chore(release): X.Y.Z`, creates a GitHub release.
 4. **Deploy** (after release) — `build/deploy.ps1`: builds lib+app, uses a `git worktree` to update `gh-pages` in place (wipes old build files, copies in `dist/planner`, duplicates `index.html` → `404.html` for SPA routing on GitHub Pages), pushes if changed. `build/wait-for-deploy.ps1` then polls the live `manifest.webmanifest` `id` until it matches the released version (cache-busted, 4 min timeout) before a Playwright smoke test runs against production. On any deploy-stage failure, `build/rollback-deploy.ps1` force-resets `gh-pages` to the pre-deploy SHA — deploys self-heal without manual intervention.
 
+## Workflow (Superpowers plugin)
+
+Use the Superpowers plugin skills for feature and bug-fix work:
+
+1. `superpowers:brainstorming` — clarify the feature and get the design/spec approved before planning.
+2. `superpowers:writing-plans` — write the implementation plan into `docs/superpowers/plans/`. Give every task a `- [ ] Status` checkbox.
+3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement the plan, but override their continuous execution:
+   implement ONE task per request, run its verification (tests + `npm run lint`), tick its `- [ ] Status` checkbox, then STOP for my review.
+   Don't continue to the next task or run `superpowers:finishing-a-development-branch` without my explicit go-ahead.
+4. Use `superpowers:systematic-debugging` for bugs and test failures, and `superpowers:verification-before-completion` before claiming anything works.
+
+The project rules in this file take precedence over the Superpowers skills where they conflict.
+
 ## Conventions
 
 - Keep new UI/state code in the standalone-component style (no NgModules); don't reintroduce them.
 - Push logic into `scuba-physics` wherever it's pure computation/domain logic — keep `planner` focused on UI, routing, and orchestration.
-- Test coverage: write component tests for app code; write unit tests only for library (`scuba-physics`) code.
+- Use test-driven development as defined by the `superpowers:test-driven-development` skill (failing test first, then minimal code to pass, then refactor) for every feature and bug fix. Write the tests as component tests for `planner` app code and as unit tests for library (`scuba-physics`) code.
 - Add E2E coverage only for the happy path of a key scenario when introducing a new page — not for every case.
 - Prefer Angular MDbootstrap library classes over custom CSS/SCSS where possible (note: current UI relies on `mdb-angular-ui-kit`).
 - Don't edit generated output in `dist/`, `.angular/`, or `coverage/`.

@@ -35,6 +35,13 @@ describe('Loop gas', () => {
             const diluent = new Gas(0.1, 0.7);
             expect(() => LoopGas.constantPpO2(13, diluent, 1.3)).not.toThrow();
         });
+
+        it('never exceeds 100 % because of rounding for heliox diluent', () => {
+            // without capping, the fractions sum to 1.0000000000000002 at this pressure
+            const diluent = new Gas(0.12, 0.88);
+            const createLoop = () => LoopGas.constantPpO2(10.579999999999819, diluent, 1.3);
+            expect(createLoop).not.toThrow();
+        });
     });
 
     describe('pSCR steady state', () => {

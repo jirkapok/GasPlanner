@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "Rechner", "planner": "Planer", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
     "gasProperties": "Gaseigenschaften", "altitude": "Höhe", "weight": "Gewicht", "ndlTable": "NDL-Tabelle",
-    "cylinderBalancing": "Flaschenbalance", "gasBlender": "Gasmischer", "dive": "Tauchgang", "clone": "Duplizieren",
+    "cylinderBalancing": "Flaschenbalance", "gasBlender": "Gasmischer", "dive": "Tauchgang", "clone": "Duplizieren", "deeper": "+5 m/15ft", "deeperTitle": "Den tiefsten Abschnitt um +5 m vertiefen", "longer": "+5 min", "longerTitle": "Die Zeit in der Tiefe um +5 Minuten verlängern", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Dem tiefsten Abschnitt +5 min und +5 m hinzufügen",
     "saveAsDefault": "Als Standard speichern", "loadDefault": "Standard laden", "share": "Teilen", "delete": "Löschen",
     "settings": "Einstellungen", "compareDives": "Tauchgänge vergleichen", "standardGases": "Standardgase", "help": "Hilfe",
     "learn": "Lernen", "about": "Über", "toggleNavigation": "Navigation umschalten"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "Plan teilen", "shareUrlCopied": "Die URL-Adresse dieses Tauchplans wurde in die Zwischenablage kopiert."
   },
   "depth": { "label": "Tiefe", "bestMixLabel": "Beste Mischung ist", "maxDepthTitle": "Maximale Tiefe anhand der narkotischen Gasgrenze setzen", "maxButton": "Max" },
-  "depthsComplex": { "cardTitle": "Tiefen", "from": "Von", "to": "Bis", "duration": "Dauer", "tank": "Flasche", "endDepthLabel": "Endtiefe" },
+  "depthsComplex": { "cardTitle": "Tiefen", "modify": "Ändern", "from": "Von", "to": "Bis", "duration": "Dauer", "tank": "Flasche", "endDepthLabel": "Endtiefe" },
   "depthsSimple": { "cardTitle": "Tiefe", "bottomTime": "Grundzeit", "noDecoLimit": "Nullzeitgrenze", "maxDurationTitle": "Tauchzeit anhand des Gasverbrauchs maximieren", "maxButton": "Max", "noDecoTitle": "Tauchzeit auf Nullzeitgrenze setzen", "noDecoButton": "Nullzeit" },
   "diveIssues": {
     "calculationError": "Bei der Berechnung des Profils ist ein Fehler aufgetreten.",

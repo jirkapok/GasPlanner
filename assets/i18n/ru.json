@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "Калькуляторы", "planner": "Планировщик", "rmvSac": "RMV/SAC", "nitrox": "Нитрокс",
     "gasProperties": "Свойства газа", "altitude": "Высота", "weight": "Груз", "ndlTable": "Таблица NDL",
-    "cylinderBalancing": "Балансировка баллонов", "gasBlender": "Смеситель газов", "dive": "Погружение", "clone": "Дублировать",
+    "cylinderBalancing": "Балансировка баллонов", "gasBlender": "Смеситель газов", "dive": "Погружение", "clone": "Дублировать", "deeper": "+5 м/15 фт", "deeperTitle": "Добавить +5 м к самому глубокому участку", "longer": "+5 мин", "longerTitle": "Продлить время на глубине на +5 минут", "deeperAndLonger": "+5 мин, +5 м/15 фт", "deeperAndLongerTitle": "Добавить +5 мин и +5 м к самому глубокому участку",
     "saveAsDefault": "Сохранить по умолчанию", "loadDefault": "Загрузить по умолчанию", "share": "Поделиться", "delete": "Удалить",
     "settings": "Настройки", "compareDives": "Сравнить погружения", "standardGases": "Стандартные смеси", "help": "Справка",
     "learn": "Обучение", "about": "О программе", "toggleNavigation": "Переключить навигацию"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "Поделиться планом", "shareUrlCopied": "Ссылка на этот план погружения скопирована в буфер обмена."
   },
   "depth": { "label": "Глубина", "bestMixLabel": "Оптимальная смесь —", "maxDepthTitle": "Установить максимальную глубину по наркотическому пределу газа", "maxButton": "Макс" },
-  "depthsComplex": { "cardTitle": "Глубины", "from": "От", "to": "До", "duration": "Длительность", "tank": "Баллон", "endDepthLabel": "Конечная глубина" },
+  "depthsComplex": { "cardTitle": "Глубины", "modify": "Изменить", "from": "От", "to": "До", "duration": "Длительность", "tank": "Баллон", "endDepthLabel": "Конечная глубина" },
   "depthsSimple": { "cardTitle": "Глубина", "bottomTime": "Время на глубине", "noDecoLimit": "Бездекомпрессионный предел", "maxDurationTitle": "Установить максимальное время погружения по расходу газа", "maxButton": "Макс", "noDecoTitle": "Установить время погружения по бездекомпрессионному пределу", "noDecoButton": "Без деко" },
   "diveIssues": {
     "calculationError": "Произошла ошибка при расчёте профиля.",

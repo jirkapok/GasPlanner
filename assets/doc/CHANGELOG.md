@@ -1,3 +1,10 @@
+# [0.8.0](https://github.com/jirkapok/GasPlanner/compare/v0.7.1...v0.8.0) (2026-10-01)
+
+
+### Features
+
+* [#66](https://github.com/jirkapok/GasPlanner/issues/66) extend deepest segment by +5 m and/or +5 min ([02df52b](https://github.com/jirkapok/GasPlanner/commit/02df52bc34f5a7f47785017ac0cd9d9072eb8ca0))
+
 ## [0.7.1](https://github.com/jirkapok/GasPlanner/compare/v0.7.0...v0.7.1) (2026-09-30)
 
 

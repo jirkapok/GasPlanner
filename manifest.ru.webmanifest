@@ -13,7 +13,7 @@
   "lang": "ru",
   "dir": "ltr",
   "display": "standalone",
-  "id": "0.7.1",
+  "id": "0.8.0",
   "scope": "./",
   "start_url": "./",
   "orientation": "portrait-primary",

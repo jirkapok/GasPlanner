@@ -2,7 +2,7 @@
   "menu": {
     "calculators": "Kalkulačky", "planner": "Plánovač", "rmvSac": "RMV/SAC", "nitrox": "Nitrox",
     "gasProperties": "Vlastnosti plynu", "altitude": "Nadmořská výška", "weight": "Zátěž", "ndlTable": "Tabulka NDL",
-    "cylinderBalancing": "Vyvážení lahví", "gasBlender": "Míchání plynů", "dive": "Ponor", "clone": "Duplikovat",
+    "cylinderBalancing": "Vyvážení lahví", "gasBlender": "Míchání plynů", "dive": "Ponor", "clone": "Duplikovat", "deeper": "+5 m/15ft", "deeperTitle": "Prohloubit nejhlubší úsek o +5 m", "longer": "+5 min", "longerTitle": "Prodloužit čas v hloubce o +5 minut", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Přidat +5 min a +5 m k nejhlubšímu úseku",
     "saveAsDefault": "Uložit jako výchozí", "loadDefault": "Načíst výchozí", "share": "Sdílet", "delete": "Smazat",
     "settings": "Nastavení", "compareDives": "Porovnat ponory", "standardGases": "Standardní směsi", "help": "Nápověda",
     "learn": "Výuka", "about": "O aplikaci", "toggleNavigation": "Přepnout navigaci"
@@ -114,7 +114,7 @@
     "sharePlanTitle": "Sdílet plán", "shareUrlCopied": "Adresa URL tohoto plánu ponoru byla zkopírována do schránky."
   },
   "depth": { "label": "Hloubka", "bestMixLabel": "Nejlepší směs je", "maxDepthTitle": "Nastavit maximální hloubku podle narkotického limitu plynu", "maxButton": "Max" },
-  "depthsComplex": { "cardTitle": "Hloubky", "from": "Od", "to": "Do", "duration": "Doba", "tank": "Lahev", "endDepthLabel": "Koncová hloubka" },
+  "depthsComplex": { "cardTitle": "Hloubky", "modify": "Upravit", "from": "Od", "to": "Do", "duration": "Doba", "tank": "Lahev", "endDepthLabel": "Koncová hloubka" },
   "depthsSimple": { "cardTitle": "Hloubka", "bottomTime": "Doba na dně", "noDecoLimit": "Bezdekompresní limit", "maxDurationTitle": "Nastavit dobu ponoru na maximum podle spotřebovaného plynu", "maxButton": "Max", "noDecoTitle": "Nastavit dobu ponoru na bezdekompresní limit", "noDecoButton": "Bez deko" },
   "diveIssues": {
     "calculationError": "Při výpočtu profilu došlo k chybě.",

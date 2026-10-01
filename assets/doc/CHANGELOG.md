@@ -1,3 +1,11 @@
+## [0.8.1](https://github.com/jirkapok/GasPlanner/compare/v0.8.0...v0.8.1) (2026-10-01)
+
+
+### Bug Fixes
+
+* components used isolated copies of shared services, losing settings, quiz progress and units ([22259a6](https://github.com/jirkapok/GasPlanner/commit/22259a6620be854d87c346b6ce55c5477549f48a))
+* dive tabs title rounds depth and duration to one decimal ([de8e698](https://github.com/jirkapok/GasPlanner/commit/de8e69831627f40320768ca3215dc7bd74393cdf))
+
 # [0.8.0](https://github.com/jirkapok/GasPlanner/compare/v0.7.1...v0.8.0) (2026-10-01)
 
 

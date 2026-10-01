@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AltitudeComponent } from './altitude.component';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { DecimalPipe } from '@angular/common';
+import { InputControls } from '../../shared/inputcontrols';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { UnitConversion } from '../../shared/UnitConversion';
 
 describe('Altitude', () => {
     let component: AltitudeComponent;
@@ -8,7 +12,11 @@ describe('Altitude', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            providers: [provideTestTranslate()]
+            providers: [
+                provideTestTranslate(),
+                InputControls, DecimalPipe,
+                ValidatorGroups, UnitConversion
+            ]
         }).compileComponents();
     });
 
@@ -49,7 +57,8 @@ describe('Altitude', () => {
 
     describe('Imperial', () => {
         beforeEach(() => {
-            component.units.imperialUnits = true;
+            // switched in shared settings, not on the component, to verify the units are not component scoped
+            TestBed.inject(UnitConversion).imperialUnits = true;
         });
 
         it('Get 1000 ft.a.s.l label', () => {

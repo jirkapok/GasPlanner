@@ -2,7 +2,7 @@ import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
-import { DecimalPipe, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import { faFlag } from '@fortawesome/free-regular-svg-icons';
 import { faUserCog } from '@fortawesome/free-solid-svg-icons';
 import { SettingsNormalizationService } from '../shared/settings-normalization.service';
@@ -14,10 +14,7 @@ import { ValidatorGroups } from '../shared/ValidatorGroups';
 import { Precision } from 'scuba-physics';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ViewState } from '../shared/views.model';
-import { KnownViews, ViewStates } from '../shared/viewStates';
-import { PreferencesStore } from '../shared/preferencesStore';
-import { Preferences } from '../shared/preferences';
-import { ViewSwitchService } from '../shared/viewSwitchService';
+import { KnownViews } from '../shared/viewStates';
 import { CardHeaderComponent } from '../card-header/card-header.component';
 import { MdbCheckboxModule } from 'mdb-angular-ui-kit/checkbox';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
@@ -36,14 +33,7 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
     TranslatePipe,
     LanguageDropdownComponent
 ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        DecimalPipe, InputControls, ValidatorGroups,
-        SettingsNormalizationService, ApplicationSettingsService,
-        SubViewStorage, ViewStates,
-        PreferencesStore, Preferences,
-        ViewSwitchService
-    ]
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class AppSettingsComponent implements OnInit {
     public readonly flagIcon = faFlag;

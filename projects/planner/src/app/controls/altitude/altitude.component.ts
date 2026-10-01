@@ -5,17 +5,12 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
-import { DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.scss'],
-    providers: [
-        InputControls, DecimalPipe,
-        ValidatorGroups, UnitConversion
-    ],
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
     ReactiveFormsModule,

@@ -17,7 +17,8 @@ describe('Gas label component', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(GaslabelComponent);
         component = fixture.componentInstance;
-        component.units.imperialUnits = true;
+        // switched in shared settings, not on the component, to verify the units are not component scoped
+        TestBed.inject(UnitConversion).imperialUnits = true;
         fixture.detectChanges();
     });
 

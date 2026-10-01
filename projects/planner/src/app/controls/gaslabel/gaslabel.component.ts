@@ -16,8 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
     LocaleNumberPipe,
     TranslatePipe
 ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [ UnitConversion ]
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class GaslabelComponent {
     @Input()

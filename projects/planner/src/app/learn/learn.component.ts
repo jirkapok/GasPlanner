@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
-import { NgxMdModule, NgxMdService } from 'ngx-md';
+import { NgxMdModule } from 'ngx-md';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CategoryStatus, QuizService, TopicStatus } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -22,10 +22,7 @@ import { Urls } from '../shared/navigation.service';
 @Component({
     selector: 'app-learn',
     imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgClass, FormsModule, TranslatePipe],
-    providers: [
-        NgxMdService, Urls, QuizService, PreferencesStore, HelpService,
-        MarkdownCustomization, SubViewStorage
-    ],
+    providers: [MarkdownCustomization],
     templateUrl: './learn.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./learn.component.scss']

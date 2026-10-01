@@ -20,6 +20,11 @@ import { values } from 'lodash';
 import { AppSettings } from '../shared/models';
 import { LanguageService } from '../shared/language.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
+import { ApplicationSettingsService } from '../shared/ApplicationSettings';
+import { ViewStates } from '../shared/viewStates';
+import { PreferencesStore } from '../shared/preferencesStore';
+import { Preferences } from '../shared/preferences';
+import { ViewSwitchService } from '../shared/viewSwitchService';
 
 export class AppSettingsPage {
     constructor(private fixture: ComponentFixture<AppSettingsComponent>) { }
@@ -76,9 +81,44 @@ describe('App settings component', () => {
             providers: [
                 MdbModalService, DiveSchedules,
                 UnitConversion, ReloadDispatcher,
-                LanguageService, provideTestTranslate()
+                LanguageService, provideTestTranslate(),
+                DecimalPipe, InputControls, ValidatorGroups,
+                SettingsNormalizationService, ApplicationSettingsService,
+                SubViewStorage, ViewStates,
+                PreferencesStore, Preferences,
+                ViewSwitchService
             ]
         }).compileComponents();
+    });
+
+    describe('Ignored issues', () => {
+        beforeEach(() => {
+            component.settingsForm.patchValue({
+                icdIgnored: true,
+                densityIgnored: true,
+                noDecoIgnored: true,
+                missingAirBreak: true
+            });
+            component.use();
+        });
+
+        it('Are applied to shared application settings', () => {
+            const appSettings = TestBed.inject(ApplicationSettingsService);
+            expect(appSettings.icdIgnored).toBeTruthy();
+            expect(appSettings.densityIgnored).toBeTruthy();
+            expect(appSettings.noDecoIgnored).toBeTruthy();
+            expect(appSettings.missingAirBreakIgnored).toBeTruthy();
+        });
+
+        it('Are restored when returning to the page', () => {
+            const reopened = TestBed.createComponent(AppSettingsComponent);
+            reopened.detectChanges();
+            const restored = reopened.componentInstance.settingsForm.getRawValue();
+            expect(restored.icdIgnored).toBeTruthy();
+            expect(restored.densityIgnored).toBeTruthy();
+            expect(restored.noDecoIgnored).toBeTruthy();
+            expect(restored.missingAirBreak).toBeTruthy();
+        });
     });
 
     beforeEach(() => {

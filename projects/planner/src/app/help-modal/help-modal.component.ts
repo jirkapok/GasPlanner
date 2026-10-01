@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
-import { NgxMdModule, NgxMdService } from 'ngx-md';
+import { NgxMdModule } from 'ngx-md';
 import { Urls } from '../shared/navigation.service';
 import { MarkdownCustomization } from '../shared/markdown-customization.service';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -8,7 +8,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 @Component({
     selector: 'app-help-modal',
     imports: [NgxMdModule, TranslatePipe],
-    providers: [Urls, NgxMdService, MarkdownCustomization],
+    providers: [MarkdownCustomization],
     templateUrl: './help-modal.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './help-modal.component.scss'

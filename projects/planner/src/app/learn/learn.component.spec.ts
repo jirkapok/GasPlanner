@@ -104,6 +104,14 @@ describe('LearnComponent', () => {
         expect(prefsSpy).toHaveBeenCalledWith();
     });
 
+    it('Answered questions are part of saved preferences', () => {
+        component.session.answerCorrectly();
+
+        const saved = TestBed.inject(Preferences).toPreferences().quizSessions;
+        const selected = saved.find(s => s.category === component.selectedCategory.name);
+        expect(selected?.totalAnswered).toBe(1);
+    });
+
     it('Continue practicing switches to new question', () => {
         const oldQuestion = component.question;
         component.continuePracticing();

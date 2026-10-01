@@ -5,7 +5,6 @@ import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import {ITankSize, TankBound} from '../../shared/models';
 import { InputControls } from '../../shared/inputcontrols';
-import { DecimalPipe } from '@angular/common';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 
@@ -18,10 +17,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
     MdbFormsModule,
     MdbDropdownModule
 ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    providers: [
-        InputControls, DecimalPipe
-    ]
+    changeDetection: ChangeDetectionStrategy.Eager
 })
 export class TankSizeComponent implements OnInit {
     @Input() public sizeForm!: FormGroup;

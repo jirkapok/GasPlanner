@@ -1,6 +1,6 @@
 import {
     Tank, Ceiling, EventType,
-    Salinity, SafetyStop,
+    Salinity, SafetyStop, CircuitType,
     TissueOverPressures
 } from 'scuba-physics';
 import { ViewState } from './views.model';
@@ -66,12 +66,13 @@ export interface PlanRequestDto {
     /** Only the source plan segments defined by user */
     plan: SegmentDto[];
     options: OptionsDto;
+    /** needed by rebreathers, where the breathed gas depends on the diver */
+    diver: DiverDto;
     previousTissues: LoadedTissueDto[];
     surfaceInterval: number;
 }
 
-export interface ProfileRequestDto extends PlanRequestDto {
-}
+export type ProfileRequestDto = PlanRequestDto;
 
 export interface DiveInfoRequestDto extends PlanRequestDto{
     eventOptions: EventOptionsDto;
@@ -245,6 +246,17 @@ export interface OptionsDto {
     problemSolvingDuration: number;
     /** optional because of upgrade */
     airBreaks?: AirBreaksDto;
+    /** optional because of upgrade, missing means open circuit */
+    rebreather?: RebreatherDto;
+}
+
+export interface RebreatherDto {
+    circuit: CircuitType;
+    /** liters/minute */
+    metabolicO2: number;
+    /** liters */
+    loopVolume: number;
+    injectionRatio: number;
 }
 
 export interface QuizSessionDto {

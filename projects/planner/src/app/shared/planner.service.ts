@@ -137,6 +137,7 @@ export class PlannerService extends Streamed {
             tanks: DtoSerialization.fromTanks(serializableTanks),
             plan: DtoSerialization.fromSegments(dive.depths.segments),
             options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
+            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
             previousTissues: DtoSerialization.fromTissues(previousTissues),
             surfaceInterval: dive.surfaceInterval
         };

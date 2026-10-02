@@ -2,13 +2,14 @@ import _ from 'lodash';
 import {
     CalculatedProfile, Diver, Events, Event, Gas,
     HighestDensity, Options, Segment, Tank, Tanks,
-    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics, ConsumedGas
+    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics, ConsumedGas,
+    RebreatherOptions
 } from 'scuba-physics';
 import {
     AirBreaksDto,
     CalculatedProfileDto, ConsumedDto, ConsumedGasDto, DensityDto,
     DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
-    OptionsDto, SegmentDto, TankDto
+    OptionsDto, RebreatherDto, SegmentDto, TankDto
 } from './serialization.model';
 
 /** Serialization used to store preferences and for communication with background workers */
@@ -225,7 +226,8 @@ export class DtoSerialization {
             ascentSpeed50perc: options.ascentSpeed50perc,
             descentSpeed: options.descentSpeed,
             problemSolvingDuration: options.problemSolvingDuration,
-            airBreaks: DtoSerialization.fromAirBreaks(options.airBreaks)
+            airBreaks: DtoSerialization.fromAirBreaks(options.airBreaks),
+            rebreather: DtoSerialization.fromRebreather(options.rebreather)
         };
     }
 
@@ -246,6 +248,7 @@ export class DtoSerialization {
         options.descentSpeed = dto.descentSpeed;
         options.problemSolvingDuration = dto.problemSolvingDuration;
         DtoSerialization.toAirBreaks(options.airBreaks, dto.airBreaks);
+        DtoSerialization.toRebreather(options.rebreather, dto.rebreather);
         return options;
     }
 
@@ -279,6 +282,24 @@ export class DtoSerialization {
             oxygenDuration: airBreaks.oxygenDuration,
             bottomGasDuration: airBreaks.bottomGasDuration
         };
+    }
+
+    private static fromRebreather(rebreather: RebreatherOptions): RebreatherDto {
+        return {
+            circuit: rebreather.circuit,
+            metabolicO2: rebreather.metabolicO2,
+            loopVolume: rebreather.loopVolume,
+            injectionRatio: rebreather.injectionRatio
+        };
+    }
+
+    private static toRebreather(rebreather: RebreatherOptions, rebreatherDto: RebreatherDto | undefined): void {
+        if (rebreatherDto) {
+            rebreather.circuit = rebreatherDto.circuit;
+            rebreather.metabolicO2 = rebreatherDto.metabolicO2;
+            rebreather.loopVolume = rebreatherDto.loopVolume;
+            rebreather.injectionRatio = rebreatherDto.injectionRatio;
+        }
     }
 
     private static toAirBreaks(airBreaks: AirBreakOptions, airBreaksDto: AirBreaksDto | undefined) {

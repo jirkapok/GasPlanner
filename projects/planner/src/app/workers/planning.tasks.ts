@@ -3,7 +3,8 @@ import {
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
-    Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas
+    Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas,
+    BreathingModel, BreathingModelFactory, DepthConverter, Options
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
@@ -44,22 +45,25 @@ export class PlanningTasks {
         const noDecoLimit = algorithm.noDecoLimit(ndlParameters);
 
         const depthConverter = new DepthConverterFactory(task.options).create();
+        const breathing = PlanningTasks.breathingFor(task, parameters.options, depthConverter);
+        const startAscentIndex = parameters.segments.startAscentIndex;
         const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);
-        const otu = new OtuCalculator(depthConverter).calculateForProfile(originalProfile);
-        const cns = new CnsCalculator(depthConverter)
-            .calculateForRepetitiveDive(originalProfile, task.previousCns, task.surfaceInterval);
-        const dailyCnsCalculator = new CnsDailyCalculator(depthConverter);
-        const diveExposures = dailyCnsCalculator.exposuresForProfile(originalProfile);
+        const otu = new OtuCalculator(depthConverter, breathing).calculateForProfile(originalProfile, startAscentIndex);
+        const cns = new CnsCalculator(depthConverter, breathing)
+            .calculateForRepetitiveDive(originalProfile, task.previousCns, task.surfaceInterval, startAscentIndex);
+        const dailyCnsCalculator = new CnsDailyCalculator(depthConverter, breathing);
+        const diveExposures = dailyCnsCalculator.exposuresForProfile(originalProfile, startAscentIndex);
         const cnsExposures = CnsDailyCalculator.appendDive(task.previousCnsExposures, task.surfaceInterval, diveExposures);
-        const density = new DensityAtDepth(depthConverter).forProfile(originalProfile);
+        const density = new DensityAtDepth(depthConverter, breathing).forProfile(originalProfile, startAscentIndex);
         const averageDepth = Segments.averageDepth(originalProfile);
 
         const eventOptions: EventOptions = {
             maxDensity: task.eventOptions.maxDensity,
-            startAscentIndex: parameters.segments.startAscentIndex,
+            startAscentIndex: startAscentIndex,
             profile: originalProfile,
             ceilings: statistics.ceilings,
-            profileOptions: parameters.options
+            profileOptions: parameters.options,
+            breathing: breathing
         };
         const events = ProfileEvents.fromProfile(eventOptions);
         const eventsDto = DtoSerialization.fromEvents(events.items);
@@ -92,7 +96,6 @@ export class PlanningTasks {
     /** 2.B calculate consumption only as the most time consuming operation */
     public static calculateConsumption(task: ConsumptionRequestDto): ConsumptionResultDto {
         const depthConverter = new DepthConverterFactory(task.options).create();
-        const consumption = new Consumption(depthConverter);
 
         // deserialize
         const tanks = DtoSerialization.toTanks(task.tanks);
@@ -104,6 +107,8 @@ export class PlanningTasks {
         const diver = new Diver(diverDto.rmv, diverDto.stressRmv);
 
         const options = DtoSerialization.toOptions(task.options);
+        const breathing = BreathingModelFactory.create(options, diver.rmv, depthConverter);
+        const consumption = new Consumption(depthConverter, breathing);
         const plan = PlanningTasks.selectConsumptionPlan(segments, task.isComplex);
         const consumptionOptions: ConsumptionOptions = {
             diver: diver,
@@ -116,12 +121,13 @@ export class PlanningTasks {
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options, surfaceInterval);
 
+        // emergency (bailout) ascent is always open circuit
         const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, surfaceInterval);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, consumptionOptions);
         // calculated both in one go, so the UI is able to switch between them without recalculation
-        const gases = new ConsumptionByGas(depthConverter).consume(originProfile, emergencyAscent, tanks, consumptionOptions);
+        const gases = new ConsumptionByGas(depthConverter, breathing).consume(originProfile, emergencyAscent, tanks, consumptionOptions);
 
         return {
             diveId: task.diveId,
@@ -151,6 +157,12 @@ export class PlanningTasks {
         const options = DtoSerialization.toOptions(task.options);
         const previousTissues = DtoSerialization.toTissues(task.previousTissues);
         const rest = new RestingParameters(previousTissues, task.surfaceInterval);
-        return AlgorithmParams.forMultilevelDive(segments, gases, options, rest);
+        const depthConverter = new DepthConverterFactory(options).create();
+        const breathing = PlanningTasks.breathingFor(task, options, depthConverter);
+        return AlgorithmParams.forMultilevelDive(segments, gases, options, rest, breathing);
+    }
+
+    private static breathingFor(task: PlanRequestDto, options: Options, depthConverter: DepthConverter): BreathingModel {
+        return BreathingModelFactory.create(options, task.diver.rmv, depthConverter);
     }
 }

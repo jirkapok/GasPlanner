@@ -1507,7 +1507,7 @@ Decisions made while detailing (from reading the planner code):
 - `new ConsumptionByGas(depthConverter, breathing?)`: plan consumption via the model, reserve OC. Specs: explicit OC equals no model; pSCR consumes supply rate.
 
 ##### Task 2.3: Planner state, DTOs and workers
-- [ ] Status
+- [x] Status
 - `RebreatherDto { circuit, metabolicO2, loopVolume, injectionRatio }`, `OptionsDto.rebreather?`, `PlanRequestDto.diver`, converters in `DtoSerialization` (missing dto keeps defaults).
 - `PlannerService` sends `diver` in plan requests; `PlanningTasks` builds the model by `BreathingModelFactory` and passes it (+ `startAscentIndex`) to algorithm, OTU/CNS/daily CNS, density, events, `Consumption` and `ConsumptionByGas`.
 - `OptionsService`: `circuit`, `injectionRatio`, `metabolicO2` (imperial via `units.fromLiter`), `isRebreather`; `resetToSimple` forces OC.

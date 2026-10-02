@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
     DefaultOptions, Diver, OptionDefaults,
     Options, SafetyStop, Salinity, GasToxicity,
-    AirBreakOptions
+    AirBreakOptions, CircuitType
 } from 'scuba-physics';
 import { StandardGradientsService } from './standard-gradients.service';
 import { UnitConversion } from './UnitConversion';
@@ -132,6 +132,24 @@ export class OptionsService {
         return this.options.airBreaks;
     }
 
+    public get circuit(): CircuitType {
+        return this.options.rebreather.circuit;
+    }
+
+    public get isRebreather(): boolean {
+        return this.circuit !== CircuitType.oc;
+    }
+
+    public get injectionRatio(): number {
+        return this.options.rebreather.injectionRatio;
+    }
+
+    /** In current volume units per minute */
+    public get metabolicO2(): number {
+        const source = this.options.rebreather.metabolicO2;
+        return this.units.fromLiter(source);
+    }
+
     public get decoStopDistance(): number {
         const source = this.options.decoStopDistance;
         return this.units.fromMeters(source);
@@ -229,6 +247,18 @@ export class OptionsService {
         this.options.decoStopDistance = this.units.toMeters(newValue);
     }
 
+    public set circuit(newValue: CircuitType) {
+        this.options.rebreather.circuit = newValue;
+    }
+
+    public set injectionRatio(newValue: number) {
+        this.options.rebreather.injectionRatio = newValue;
+    }
+
+    public set metabolicO2(newValue: number) {
+        this.options.rebreather.metabolicO2 = this.units.toLiter(newValue);
+    }
+
     public useRecreational(): void {
         const newValues = this.units.defaults.recreationalOptions;
         this.applyValues(newValues);
@@ -263,6 +293,8 @@ export class OptionsService {
     }
 
     public resetToSimple(): void {
+        // rebreathers are available only in complex mode
+        this.options.rebreather.circuit = CircuitType.oc;
         const foundGfLabel = this.standardGradients.labelFor(this.gfLow, this.gfHigh);
         if(foundGfLabel === '') {
             OptionDefaults.setMediumConservatism(this.options);

@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
     AirBreakOptions, OptionDefaults,
-    Diver, Options, SafetyStop, Salinity, Segment
+    Diver, Options, SafetyStop, Salinity, Segment,
+    CircuitType, RebreatherDefaults, RebreatherOptions
 } from 'scuba-physics';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
 import {
     AirBreaksDto,
     AppOptionsDto, AppPreferencesDto, DiverDto,
-    OptionsDto, SegmentDto, TankDto
+    OptionsDto, RebreatherDto, SegmentDto, TankDto
 } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
@@ -153,6 +154,38 @@ export class PlanUrlSerialization {
             oxygenDuration: OptionDefaults.airBreakOxygenDuration,
             bottomGasDuration: OptionDefaults.airBreakBottomGasDuration
         };
+    }
+
+    /**
+     * Optional rebreather group: index 0 = circuit type, the rest are indexed rebreather options,
+     * starting with pSCR options. Missing values use defaults, missing group means open circuit.
+     */
+    private static fromRebreatherParam(rebreatherParam: string): RebreatherDto | undefined {
+        if (!rebreatherParam) {
+            return undefined;
+        }
+
+        const context = new ParseContext(rebreatherParam, ',');
+        const values = context.paramValues;
+
+        // circuit + pSCR options; caught by fromUrl, which skips loading of invalid url
+        const maxValues = 3;
+        if (values.length > maxValues) {
+            throw new Error('Too many rebreather values.');
+        }
+        const valueOrDefault = (index: number, defaultValue: number): number =>
+            values.length > index ? context.parseNumber(index) : defaultValue;
+
+        return {
+            circuit: context.parseEnum<CircuitType>(0),
+            injectionRatio: valueOrDefault(1, RebreatherDefaults.injectionRatio),
+            metabolicO2: valueOrDefault(2, RebreatherDefaults.metabolicO2),
+            loopVolume: RebreatherDefaults.loopVolume
+        };
+    }
+
+    private static toRebreatherParam(rebreather: RebreatherOptions): string {
+        return `${rebreather.circuit},${rebreather.injectionRatio},${rebreather.metabolicO2}`;
     }
 
     private static fromDiverParam(parseParam: string): DiverDto {
@@ -344,8 +377,14 @@ export class PlanUrlSerialization {
         const tanksParam = PlanUrlSerialization.toTanksParam(dive.tanksService.tanks);
         const depthsParam = PlanUrlSerialization.toDepthsParam(dive.depths.segments);
         const diParam = PlanUrlSerialization.toDiverParam(dive.optionsService.getDiver());
-        const optionsParam = PlanUrlSerialization.toOptionsParam(dive.optionsService.getOptions());
+        const options = dive.optionsService.getOptions();
+        const optionsParam = PlanUrlSerialization.toOptionsParam(options);
         let result = `t=${tanksParam}&de=${depthsParam}&di=${diParam}&o=${optionsParam}`;
+
+        // written only for rebreathers, so open circuit urls stay the same
+        if (dive.optionsService.isRebreather) {
+            result += `&r=${PlanUrlSerialization.toRebreatherParam(options.rebreather)}`;
+        }
 
         if(dive.isRepetitive) {
             result += `&si=${dive.surfaceInterval}`;
@@ -362,13 +401,16 @@ export class PlanUrlSerialization {
         const tanksParam = params.get('t') || '';
         const depthsParam = params.get('de') || '';
         const siParam = params.get('si') || '';
+        const rebreatherParam = params.get('r') || '';
         const siContext = new ParseContext(siParam, ',');
 
         const tanks = PlanUrlSerialization.fromTanksParam(tanksParam);
+        const options = PlanUrlSerialization.fromOptionsParam(optionsParam);
+        options.rebreather = PlanUrlSerialization.fromRebreatherParam(rebreatherParam);
         const parsed: AppPreferencesDto = {
             options: this.fromAppSettingsParam(appSettingsParam),
             dives: [{
-                options: PlanUrlSerialization.fromOptionsParam(optionsParam),
+                options: options,
                 diver: PlanUrlSerialization.fromDiverParam(diverParam),
                 tanks: tanks,
                 plan: PlanUrlSerialization.fromDepthsParam(tanks, depthsParam),

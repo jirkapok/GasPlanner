@@ -1514,7 +1514,7 @@ Decisions made while detailing (from reading the planner code):
 - Specs: `dtoSerialization`/`planner.service` (pSCR dive calculates, differs from OC), `options.service.spec.ts`.
 
 ##### Task 2.4: URL `r` group, validation, normalization, saving/loading
-- [ ] Status
+- [x] Status
 - `PlanUrlSerialization`: optional `r=<circuit>,<injectionRatio>,<metabolicO2>`, written only for non-OC; missing → OC defaults; missing trailing values → defaults.
 - `UnitConversion` ranges `injectionRatio` [4, 20], `metabolicO2` metric [0.5, 3] L/min, imperial [0.018, 0.106] cuft/min (+ labels), `ValidatorGroups` getters.
 - `PlanValidation`: numeric values, `circuit in CircuitType`, ranges, simple dives must be OC. `SettingsNormalizationService` clamps the values.

@@ -11,7 +11,10 @@ import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { SettingsNormalizationService } from './settings-normalization.service';
-import { AirBreakOptions, Diver } from 'scuba-physics';
+import {
+    AirBreakOptions, CircuitType, Diver,
+    RebreatherDefaults, RebreatherOptions
+} from 'scuba-physics';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { QuizService } from './learn/quiz.service';
 import { LanguageService } from './language.service';
@@ -195,6 +198,7 @@ describe('Url Serialization', () => {
             expect(complexSut.schedules.selected.optionsService.airBreaks)
                 .toEqual(new AirBreakOptions(true, 20, 5));
         });
+
         it('Deserialize Air break options', () => {
             const missingStressUrl = 't=1-18-0-200-0.209-0&' +
                 'de=0-30-102-1,30-30-618-1&' +
@@ -204,6 +208,88 @@ describe('Url Serialization', () => {
             complexSut.urlSerialization.fromUrl(missingStressUrl);
             expect(complexSut.schedules.selected.optionsService.airBreaks)
                 .toEqual(new AirBreakOptions(true, 17, 3));
+        });
+    });
+
+    describe('Rebreather', () => {
+        const preCcrUrl = 't=1-18-0-200-0.209-0&' +
+            'de=0-30-102-1,30-30-618-1&' +
+            'di=24&' +
+            'o=0,9,6,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,1,20,5&' +
+            'ao=1,0';
+
+        const usePscr = (sut: TestSut): void => {
+            sut.options.circuit = CircuitType.pscr;
+            sut.options.injectionRatio = 10;
+            sut.options.metabolicO2 = 1.2;
+        };
+
+        it('Open circuit url has no rebreather group', () => {
+            expect(complexViewUrl).not.toContain('&r=');
+        });
+
+        it('Serializes pSCR as rebreather group', () => {
+            usePscr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            expect(url).toContain('&r=2,10,1.2&');
+        });
+
+        it('Round trips pSCR options', () => {
+            usePscr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            const current = createComplexSut();
+            current.urlSerialization.fromUrl(url);
+            expect(current.options.getOptions().rebreather).toEqual(complexSut.options.getOptions().rebreather);
+        });
+
+        it('URL without r falls back to OC dive configuration', () => {
+            complexSut.urlSerialization.fromUrl(preCcrUrl);
+            const loaded = complexSut.schedules.selected.optionsService;
+            expect(loaded.getOptions().rebreather).toEqual(new RebreatherOptions());
+            expect(loaded.isRebreather).toBeFalse();
+            const reserialized = complexSut.urlSerialization.toUrl();
+            expect(reserialized).not.toContain('&r=');
+        });
+
+        it('Partial rebreather group falls back to defaults', () => {
+            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2');
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.pscr);
+            expect(rebreather.injectionRatio).toBe(RebreatherDefaults.injectionRatio);
+            expect(rebreather.metabolicO2).toBe(RebreatherDefaults.metabolicO2);
+        });
+
+        describe('Skips loading invalid rebreather group', () => {
+            const assertSkipped = (rebreatherParam: string, appOptions = 'ao=1,0'): void => {
+                const current = createComplexSut();
+                const url = preCcrUrl.replace('ao=1,0', appOptions) + rebreatherParam;
+                current.urlSerialization.fromUrl(url);
+                expectSelectedEquals(current, complexSut);
+            };
+
+            it('Unknown circuit', () => {
+                assertSkipped('&r=9,10,1');
+            });
+
+            it('Injection ratio out of range', () => {
+                assertSkipped('&r=2,50,1');
+            });
+
+            it('Metabolic O2 out of range', () => {
+                assertSkipped('&r=2,10,10');
+            });
+
+            it('Not a number', () => {
+                assertSkipped('&r=2,abc,1');
+            });
+
+            it('Too many values', () => {
+                assertSkipped('&r=2,10,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5');
+            });
+
+            it('Rebreather in simple view', () => {
+                assertSkipped('&r=2,10,1', 'ao=0,0');
+            });
         });
     });
 

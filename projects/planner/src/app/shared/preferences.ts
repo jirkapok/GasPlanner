@@ -81,6 +81,17 @@ export class Preferences {
         return added;
     }
 
+    public toDiveFrom(dive: DiveSchedule): DiveDto {
+        const surfaceInterval = dive.isRepetitive ? dive.surfaceInterval : undefined;
+        return {
+            options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
+            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
+            tanks: DtoSerialization.fromTanks(dive.tanksService.tanks),
+            plan: DtoSerialization.fromSegments(dive.depths.segments),
+            surfaceInterval: surfaceInterval
+        };
+    }
+
     private applyLoaded(loaded: AppPreferencesDto): void {
         // first apply units to prevent loading of invalid values
         this.units.imperialUnits = loaded.options.imperialUnits;
@@ -91,6 +102,7 @@ export class Preferences {
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;
         this.viewSwitch.consumptionInLiters = loaded.options.consumptionInLiters;
+        this.viewSwitch.rebreatherTab = loaded.options.rebreatherTab ?? false;
         // not using normalization to fix values here, because expecting they are valid
     }
 
@@ -122,6 +134,7 @@ export class Preferences {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
             consumptionInLiters: this.viewSwitch.consumptionInLiters,
+            rebreatherTab: this.viewSwitch.rebreatherTab,
             language: this.languages.currentCode,
             maxDensity: settings.maxGasDensity,
             primaryTankReserve: settings.primaryTankReserve,
@@ -130,17 +143,6 @@ export class Preferences {
             densityIgnored: settings.densityIgnored,
             noDecoIgnored: settings.noDecoIgnored,
             missingAirBreakIgnored: settings.missingAirBreakIgnored
-        };
-    }
-
-    public toDiveFrom(dive: DiveSchedule): DiveDto {
-        const surfaceInterval = dive.isRepetitive ? dive.surfaceInterval : undefined;
-        return {
-            options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
-            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
-            tanks: DtoSerialization.fromTanks(dive.tanksService.tanks),
-            plan: DtoSerialization.fromSegments(dive.depths.segments),
-            surfaceInterval: surfaceInterval
         };
     }
 

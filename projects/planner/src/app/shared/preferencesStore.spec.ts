@@ -1,7 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
-import { Options, Tank, Salinity, SafetyStop, AirBreakOptions } from 'scuba-physics';
+import { Options, Tank, Salinity, SafetyStop, AirBreakOptions, CircuitType } from 'scuba-physics';
+import { AppPreferences } from './serialization.model';
 import { OptionExtensions } from './Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsService } from './options.service';
@@ -293,5 +294,45 @@ describe('PreferencesStore', () => {
 
             expect(options.airBreaks).toEqual(new AirBreakOptions(true, 16, 6));
         });
+
+        it('Rebreather options and tab are loaded after save', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
+                viewSwitch.isComplex = true;
+                options.circuit = CircuitType.pscr;
+                options.injectionRatio = 12;
+                options.metabolicO2 = 1.5;
+                viewSwitch.rebreatherTab = true;
+                sut.save();
+
+                options.circuit = CircuitType.oc;
+                options.injectionRatio = 8;
+                options.metabolicO2 = 1;
+                viewSwitch.rebreatherTab = false;
+                sut.load();
+
+                const loadedOptions = TestBed.inject(DiveSchedules).dives[0].optionsService;
+                expect(loadedOptions.circuit).toBe(CircuitType.pscr);
+                expect(loadedOptions.injectionRatio).toBe(12);
+                expect(loadedOptions.metabolicO2).toBeCloseTo(1.5, 6);
+                expect(viewSwitch.rebreatherTab).toBeTrue();
+            }));
+
+        it('Legacy preferences without rebreather load as open circuit', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
+                viewSwitch.isComplex = true;
+                options.circuit = CircuitType.pscr;
+                viewSwitch.rebreatherTab = true;
+                sut.save();
+                const stored = JSON.parse(localStorage.getItem('preferences') ?? '{}') as AppPreferences;
+                delete stored.options.rebreatherTab;
+                stored.dives.forEach(d => delete d.options.rebreather);
+                localStorage.setItem('preferences', JSON.stringify(stored));
+
+                sut.load();
+
+                const loadedOptions = TestBed.inject(DiveSchedules).dives[0].optionsService;
+                expect(loadedOptions.isRebreather).toBeFalse();
+                expect(viewSwitch.rebreatherTab).toBeFalse();
+            }));
     });
 });

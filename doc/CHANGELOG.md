@@ -1,3 +1,10 @@
+## [0.8.2](https://github.com/jirkapok/GasPlanner/compare/v0.8.1...v0.8.2) (2026-10-02)
+
+
+### Bug Fixes
+
+* [#22](https://github.com/jirkapok/GasPlanner/issues/22) alternate overlapping event labels in profile chart ([#111](https://github.com/jirkapok/GasPlanner/issues/111)) ([68a4ed5](https://github.com/jirkapok/GasPlanner/commit/68a4ed5d92549a596e82fa2bae01effbe5f2407f))
+
 ## [0.8.1](https://github.com/jirkapok/GasPlanner/compare/v0.8.0...v0.8.1) (2026-10-01)
 
 

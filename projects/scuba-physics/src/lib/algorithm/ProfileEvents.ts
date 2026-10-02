@@ -10,6 +10,7 @@ import { DepthLevels } from '../depths/DepthLevels';
 import { LinearFunction } from '../common/linearFunction';
 import { StandardGases } from '../gases/StandardGases';
 import { Gas } from '../gases/Gases';
+import { GasMixtures } from '../gases/GasMixtures';
 import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /** all values in bar */
@@ -60,6 +61,8 @@ class EventsContext {
     public elapsed = 0;
     public index = 0;
     public fixedMnd = true;
+    /** Rebreather loop was hypoxic at end of previous segment */
+    public loopHypoxic = false;
     public maxDensity: number;
     private levels: DepthLevels;
     private breathing: BreathingModel;
@@ -157,6 +160,11 @@ class EventsContext {
         return this.levels.addSafetyStop(currentDepth, this.maxDepth);
     }
 
+    /** Rebreather loop gas differs from the tank gas assigned to the segment */
+    public get breathesLoop(): boolean {
+        return !(this.breathing instanceof OpenCircuitBreathing);
+    }
+
     /** For depth in bars calculates the current equivalent narcotic depth in bars */
     public gasEnd(depth: number): number {
         const gas = this.inspiredGasAt(this.simpleDepths.fromBar(depth));
@@ -167,6 +175,10 @@ class EventsContext {
     /** Gas breathed by the diver at depth in meters for current segment */
     public inspiredGasAt(depth: number): Gas {
         return this.breathing.inspiredGas(this.current.gas, depth, !this.isBeforeDecoAscent);
+    }
+    /** Breathed oxygen partial pressure in bars at depth in meters for current segment */
+    public ppO2At(depth: number): number {
+        return this.breathing.ppO2(this.current.gas, depth, !this.isBeforeDecoAscent);
     }
 
     public addElapsed(): void {
@@ -301,7 +313,29 @@ export class ProfileEvents {
         }
     }
 
+    /** Reported once at segment where the loop becomes hypoxic, again only after it recovered */
+    private static addLowLoopPpO2(context: EventsContext): void {
+        const current = context.current;
+        const minDepth = Math.min(current.startDepth, current.endDepth);
+        const hypoxic = context.ppO2At(minDepth) < GasMixtures.minPpO2;
+
+        if (hypoxic && !context.loopHypoxic) {
+            const hypoxicAtStart = context.ppO2At(current.startDepth) < GasMixtures.minPpO2;
+            const timeStamp = hypoxicAtStart ? context.elapsed : context.currentEndTime;
+            const depth = hypoxicAtStart ? current.startDepth : current.endDepth;
+            const event = EventsFactory.createLowPpO2(timeStamp, depth);
+            context.events.add(event);
+        }
+
+        context.loopHypoxic = hypoxic;
+    }
+
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
+        if (context.breathesLoop) {
+            this.addLowLoopPpO2(context);
+            return;
+        }
+
         const current = context.current;
         const gasCeiling = current.gas.ceiling(context.simpleDepths.surfacePressure);
         const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||

@@ -12,6 +12,7 @@ describe('Rebreather options', () => {
     it('loads all values', () => {
         const sut = new RebreatherOptions();
         const source = new RebreatherOptions(CircuitType.eccr, 1.5, 4);
+        source.injectionRatio = 10;
         sut.loadFrom(source);
         expect(sut).toEqual(source);
     });

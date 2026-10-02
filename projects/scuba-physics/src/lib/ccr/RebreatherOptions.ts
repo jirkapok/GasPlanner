@@ -15,10 +15,15 @@ export class RebreatherDefaults {
     public static readonly metabolicO2 = 1.0;
     /** Liters */
     public static readonly loopVolume = 6;
+    /** pSCR ratio of breathed to dumped volume */
+    public static readonly injectionRatio = 8;
 }
 
 /** Rebreather configuration, rebreather type specific values are added by each rebreather type. */
 export class RebreatherOptions {
+    /** pSCR only: ratio of breathed to dumped volume, range 4-20 */
+    public injectionRatio = RebreatherDefaults.injectionRatio;
+
     constructor(
         public circuit: CircuitType = CircuitType.oc,
         /** Oxygen consumed by the diver in liters/minute surface equivalent, range 0.5-3 */
@@ -31,5 +36,6 @@ export class RebreatherOptions {
         this.circuit = source.circuit || this.circuit;
         this.metabolicO2 = source.metabolicO2 || this.metabolicO2;
         this.loopVolume = source.loopVolume || this.loopVolume;
+        this.injectionRatio = source.injectionRatio || this.injectionRatio;
     }
 }

@@ -6,6 +6,8 @@ export * from './lib/calculators/altitudeCalculator';
 export * from './lib/algorithm/BuhlmannAlgorithm';
 export * from './lib/algorithm/BuhlmannAlgorithmParameters';
 export * from './lib/ccr/BreathingModel';
+export * from './lib/ccr/BreathingModelFactory';
+export * from './lib/ccr/PscrBreathing';
 export * from './lib/ccr/LoopGas';
 export * from './lib/ccr/RebreatherOptions';
 export * from './lib/ccr/Rebreathers';

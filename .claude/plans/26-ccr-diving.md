@@ -1496,7 +1496,7 @@ Decisions made while detailing (from reading the planner code):
 - The emergency ascent stays open circuit (user decision); `ConsumptionByGas` gets the model (Stage 1 review finding).
 
 ##### Task 2.1: pSCR breathing model and factory (lib)
-- [ ] Status
+- [x] Status
 - `RebreatherOptions.injectionRatio` (default 8, `RebreatherDefaults.injectionRatio`), included in `loadFrom`.
 - `ccr/PscrBreathing.ts`: `PscrBreathing(options: RebreatherOptions, rmv: number, depthConverter)`; `inspiredGas` = `LoopGas.pscrSteadyState(toBar(depth), sourceGas, rmv, injectionRatio, metabolicO2)`; `ppO2` = inspired fO2 × toBar(depth); `consumedLiters` = `Rebreathers.pscrSupplyRate(toBar(averageDepth), rmvPerSecond, injectionRatio)` × rounded duration; `usesGasSwitching = true`, `usesAirBreaks = false`.
 - `ccr/BreathingModelFactory.ts`: `create(options: Options, rmv: number, depthConverter): BreathingModel` → `PscrBreathing` for `CircuitType.pscr`, otherwise `OpenCircuitBreathing`.

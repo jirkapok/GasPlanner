@@ -3,6 +3,9 @@ import { Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 
+/** Bound wrapper, because the static method reference is unbound */
+const required: ValidatorFn = (control: AbstractControl): ValidationErrors | null => Validators.required(control);
+
 @Injectable()
 export class ValidatorGroups {
     public static readonly minGradient = 10;
@@ -25,6 +28,14 @@ export class ValidatorGroups {
 
     public get ppO2(): ValidatorFn[] {
         return this.rangeFor(this.ranges.ppO2);
+    }
+
+    public get injectionRatio(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.injectionRatio);
+    }
+
+    public get metabolicO2(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.metabolicO2);
     }
 
     public get depth(): ValidatorFn[] {
@@ -82,17 +93,17 @@ export class ValidatorGroups {
 
     // dynamic validation
     public get diverRmv(): ValidatorFn[] {
-        return [Validators.required, this.validateMinRmv, this.validateMaxRmv];
+        return [required, this.validateMinRmv(), this.validateMaxRmv()];
     }
 
     // dynamic validation
     public get maxDensity(): ValidatorFn[] {
-        return [Validators.required, this.validateMinDensity, this.validateMaxDensity];
+        return [required, this.validateMinDensity(), this.validateMaxDensity()];
     }
 
     // dynamic validation
     public get tankPressure(): ValidatorFn[] {
-        return [Validators.required, this.validateMinPressure, this.validateMaxPressure];
+        return [required, this.validateMinPressure(), this.validateMaxPressure()];
     }
 
     private get ranges(): RangeConstants {
@@ -100,7 +111,7 @@ export class ValidatorGroups {
     }
 
     public rangeFor(range: [number, number]): ValidatorFn[] {
-        return [Validators.required, Validators.min(range[0]), Validators.max(range[1])];
+        return [required, Validators.min(range[0]), Validators.max(range[1])];
     }
 
     public surfaceInterval(): ValidatorFn {

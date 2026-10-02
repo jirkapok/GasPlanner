@@ -11,6 +11,20 @@ import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { TranslatePipe } from '@ngx-translate/core';
 
+interface HelpItem {
+    label: string;
+    path: string;
+    anchor?: string;
+}
+
+type HelpLink = Pick<HelpItem, 'path' | 'anchor'>;
+
+interface HelpSection {
+    id: string;
+    title: string;
+    items: HelpItem[];
+}
+
 @Component({
     selector: 'app-help',
     imports: [NgxMdModule, FontAwesomeModule, NgClass, TranslatePipe],
@@ -22,11 +36,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 export class HelpComponent implements OnInit {
     private static defaultDocument = 'application';
     public headerIcon = faCircleInfo;
-    private activeSection = HelpComponent.defaultDocument;
-    private _document = HelpComponent.defaultDocument;
-    private _anchor?: string = '';
-
-    public sections: any[] = [
+    public sections: HelpSection[] = [
         {
             id: HelpComponent.defaultDocument,
             title: 'help.menu.application.title',
@@ -40,6 +50,7 @@ export class HelpComponent implements OnInit {
             title: 'help.menu.plan.title',
             items: [
                 { label: 'help.menu.plan.tanks', path: 'tanks' },
+                { label: 'help.menu.plan.rebreather', path: 'rebreather' },
                 { label: 'help.menu.plan.standardGases', path: 'standard_gases' },
                 { label: 'help.menu.plan.depths', path: 'depths' },
                 { label: 'help.menu.plan.surfaceInterval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
@@ -88,6 +99,10 @@ export class HelpComponent implements OnInit {
         }
     ];
 
+    private activeSection = HelpComponent.defaultDocument;
+    private _document = HelpComponent.defaultDocument;
+    private _anchor?: string = '';
+
     constructor(
         public urls: Urls,
         private location: Location,
@@ -124,7 +139,7 @@ export class HelpComponent implements OnInit {
         }
     }
 
-    public updatePath(item: { path: string, anchor?: string }): void {
+    public updatePath(item: HelpLink): void {
         this.document = item.path;
         this.anchor = item.anchor;
         this.scrollToAnchor();
@@ -136,7 +151,7 @@ export class HelpComponent implements OnInit {
     }
 
     public scrollToAnchor(): void {
-        const section = _(this.sections).find(s => _(s.items).find(i => i.path === this.document && i.anchor === this.anchor));
+        const section = _(this.sections).find(s => _(s.items).some(i => i.path === this.document && i.anchor === this.anchor));
         this.activeSection = section ? section.id : HelpComponent.defaultDocument;
         const location = this.urls.helpUrl(this.document, this.anchor);
         this.location.go(location);
@@ -147,7 +162,7 @@ export class HelpComponent implements OnInit {
         }
     }
 
-    public isActiveDocument(item: {path: string, anchor: string }): boolean {
+    public isActiveDocument(item: HelpLink): boolean {
         return this.document === item.path && (this.anchor || '') === (item.anchor || '');
     }
 

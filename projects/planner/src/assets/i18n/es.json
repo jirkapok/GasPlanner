@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "Aplicación", "usage": "Uso de la aplicación", "settings": "Configuración de la aplicación" },
-      "plan": { "title": "Plan de inmersión", "tanks": "Botellas", "standardGases": "Gases estándar", "depths": "Profundidades", "surfaceInterval": "Intervalo de superficie" },
+      "plan": { "title": "Plan de inmersión", "tanks": "Botellas", "rebreather": "Recirculador", "standardGases": "Gases estándar", "depths": "Profundidades", "surfaceInterval": "Intervalo de superficie" },
       "options": { "title": "Opciones de inmersión", "general": "General", "environment": "Entorno", "conservatism": "Conservadurismo", "gases": "Gases", "airBreaks": "Pausas de aire", "stops": "Paradas", "speeds": "Velocidades", "diver": "Buceador" },
       "results": { "title": "Resultados de la inmersión", "diveInfoTable": "Tabla de información de la inmersión", "oxygenToxicity": "Toxicidad del oxígeno", "events": "Eventos que causan errores y advertencias", "consumedGasCharts": "Gráficos de consumo de gas", "wayPointsTable": "Tabla de puntos de la inmersión", "profileChart": "Gráfico del perfil de inmersión", "tissuesHeatMap": "Mapa de calor de tejidos" },
       "calculators": { "title": "Calculadoras", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Tabla de límites sin descompresión (NDL)", "altitude": "Altitud", "weight": "Peso", "gasProperties": "Propiedades del gas", "redundancies": "Balance de botellas", "gasBlender": "Mezclador de gases" }

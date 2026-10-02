@@ -1528,7 +1528,7 @@ Decisions made while detailing (from reading the planner code):
 - i18n keys in all 7 `assets/i18n/*.json`. Component specs.
 
 ##### Task 2.6: Docs and E2E
-- [ ] Status
+- [x] Status
 - `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve, limits) + help menu entry + `helpDocument` on the Rebreather tab.
 - E2E happy path: complex view → pSCR → results show a calculated dive.
 - Full verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.

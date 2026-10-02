@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "Aplikace", "usage": "Používání aplikace", "settings": "Nastavení aplikace" },
-      "plan": { "title": "Plán ponoru", "tanks": "Lahve", "standardGases": "Standardní směsi", "depths": "Hloubky", "surfaceInterval": "Povrchová pauza" },
+      "plan": { "title": "Plán ponoru", "tanks": "Lahve", "rebreather": "Rebreather", "standardGases": "Standardní směsi", "depths": "Hloubky", "surfaceInterval": "Povrchová pauza" },
       "options": { "title": "Možnosti ponoru", "general": "Obecné", "environment": "Prostředí", "conservatism": "Konzervatismus", "gases": "Plyny", "airBreaks": "Vzduchové přestávky", "stops": "Zastávky", "speeds": "Rychlosti", "diver": "Potápěč" },
       "results": { "title": "Výsledky ponoru", "diveInfoTable": "Tabulka informací o ponoru", "oxygenToxicity": "Toxicita kyslíku", "events": "Události způsobující chyby a varování", "consumedGasCharts": "Grafy spotřeby plynu", "wayPointsTable": "Tabulka bodů ponoru", "profileChart": "Graf profilu ponoru", "tissuesHeatMap": "Tepelná mapa tkání" },
       "calculators": { "title": "Kalkulačky", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Tabulka bezdekompresních limitů (NDL)", "altitude": "Nadmořská výška", "weight": "Zátěž", "gasProperties": "Vlastnosti plynu", "redundancies": "Vyvážení lahví", "gasBlender": "Míchání plynů" }

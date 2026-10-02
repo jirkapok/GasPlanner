@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "Application", "usage": "Utilisation de l'application", "settings": "Paramètres de l'application" },
-      "plan": { "title": "Plan de plongée", "tanks": "Blocs", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
+      "plan": { "title": "Plan de plongée", "tanks": "Blocs", "rebreather": "Recycleur", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
       "options": { "title": "Options de plongée", "general": "Général", "environment": "Environnement", "conservatism": "Conservatisme", "gases": "Gaz", "airBreaks": "Pauses O2", "stops": "Paliers", "speeds": "Vitesses", "diver": "Plongeur" },
       "results": { "title": "Résultats de plongée", "diveInfoTable": "Tableau des informations de plongée", "oxygenToxicity": "Toxicité de l'oxygène", "events": "Événements causant des erreurs et avertissements", "consumedGasCharts": "Graphiques de gaz consommé", "wayPointsTable": "Tableau des points de passage", "profileChart": "Graphique du profil de plongée", "tissuesHeatMap": "Carte thermique des tissus" },
       "calculators": { "title": "Calculatrices", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Table des limites de non-décompression (NDL)", "altitude": "Altitude", "weight": "Poids", "gasProperties": "Propriétés du gaz", "redundancies": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz" }

@@ -1486,6 +1486,52 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
   - `depths-complex` and the `diveinfo` Consumed tab are unchanged.
 - **Docs**: create `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve) + help menu entry.
 
+#### Stage 2 detailed tasks (branch `feat/26-ccr-pscr`)
+- [ ] Status
+
+Decisions made while detailing (from reading the planner code):
+- pSCR loop gas needs the diver RMV also in profile/dive info workers, so `PlanRequestDto` gets `diver: DiverDto`.
+- Rebreather options travel in `OptionsDto.rebreather?` (optional "because of upgrade"), so preferences save/load them through the existing `fromOptions`/`toOptions`.
+- The selected tanks-card tab is persisted like `consumptionInLiters`: `ViewSwitchService.rebreatherTab` + optional `AppOptionsDto.rebreatherTab`.
+- The emergency ascent stays open circuit (user decision); `ConsumptionByGas` gets the model (Stage 1 review finding).
+
+##### Task 2.1: pSCR breathing model and factory (lib)
+- [ ] Status
+- `RebreatherOptions.injectionRatio` (default 8, `RebreatherDefaults.injectionRatio`), included in `loadFrom`.
+- `ccr/PscrBreathing.ts`: `PscrBreathing(options: RebreatherOptions, rmv: number, depthConverter)`; `inspiredGas` = `LoopGas.pscrSteadyState(toBar(depth), sourceGas, rmv, injectionRatio, metabolicO2)`; `ppO2` = inspired fO2 × toBar(depth); `consumedLiters` = `Rebreathers.pscrSupplyRate(toBar(averageDepth), rmvPerSecond, injectionRatio)` × rounded duration; `usesGasSwitching = true`, `usesAirBreaks = false`.
+- `ccr/BreathingModelFactory.ts`: `create(options: Options, rmv: number, depthConverter): BreathingModel` → `PscrBreathing` for `CircuitType.pscr`, otherwise `OpenCircuitBreathing`.
+- Export both; specs `PscrBreathing.spec.ts`, `BreathingModelFactory.spec.ts`, `BuhlmannAlgorithm.pscr.spec.ts` (no air breaks, loop gas loads tissues → different deco than OC on the supply gas), `consumption.pscr.spec.ts`.
+
+##### Task 2.2: ConsumptionByGas uses the breathing model (lib)
+- [ ] Status
+- `new ConsumptionByGas(depthConverter, breathing?)`: plan consumption via the model, reserve OC. Specs: explicit OC equals no model; pSCR consumes supply rate.
+
+##### Task 2.3: Planner state, DTOs and workers
+- [ ] Status
+- `RebreatherDto { circuit, metabolicO2, loopVolume, injectionRatio }`, `OptionsDto.rebreather?`, `PlanRequestDto.diver`, converters in `DtoSerialization` (missing dto keeps defaults).
+- `PlannerService` sends `diver` in plan requests; `PlanningTasks` builds the model by `BreathingModelFactory` and passes it (+ `startAscentIndex`) to algorithm, OTU/CNS/daily CNS, density, events, `Consumption` and `ConsumptionByGas`.
+- `OptionsService`: `circuit`, `injectionRatio`, `metabolicO2` (imperial via `units.fromLiter`), `isRebreather`; `resetToSimple` forces OC.
+- Specs: `dtoSerialization`/`planner.service` (pSCR dive calculates, differs from OC), `options.service.spec.ts`.
+
+##### Task 2.4: URL `r` group, validation, normalization, saving/loading
+- [ ] Status
+- `PlanUrlSerialization`: optional `r=<circuit>,<injectionRatio>,<metabolicO2>`, written only for non-OC; missing → OC defaults; missing trailing values → defaults.
+- `UnitConversion` ranges `injectionRatio` [4, 20], `metabolicO2` metric [0.5, 3] L/min, imperial [0.018, 0.106] cuft/min (+ labels), `ValidatorGroups` getters.
+- `PlanValidation`: numeric values, `circuit in CircuitType`, ranges, simple dives must be OC. `SettingsNormalizationService` clamps the values.
+- `ViewSwitchService.rebreatherTab`, `AppOptionsDto.rebreatherTab?`, `Preferences` save/load (legacy → false).
+- Specs: URL round-trip, "URL without `r` falls back to OC dive configuration", partial/invalid `r`, preferences round-trip + legacy JSON.
+
+##### Task 2.5: Tanks card UI (dropdown + tabs + pSCR options)
+- [ ] Status
+- `tanks-complex`: circuit dropdown (OC / pSCR) projected into the card header; body wrapped in `mdb-tabs` "Tanks" / "Rebreather" (Rebreather tab only when not OC); selected tab synced with `ViewSwitchService.rebreatherTab`.
+- New `RebreatherOptionsComponent` (`plan/rebreather-options/`, `app-rebreather-options`, registered in `app.config.ts`): injection ratio + metabolic O2 inputs, reactive form, `[class.is-invalid]` + sibling message, `col-12 col-sm-6 col-md-*` grid, thin handlers → `OptionsService` → `sendOptionsChanged`.
+- i18n keys in all 7 `assets/i18n/*.json`. Component specs.
+
+##### Task 2.6: Docs and E2E
+- [ ] Status
+- `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve, limits) + help menu entry + `helpDocument` on the Rebreather tab.
+- E2E happy path: complex view → pSCR → results show a calculated dive.
+- Full verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
 ### Stage 3: mCCR
 - [ ] Status
 

@@ -171,7 +171,7 @@ export class DiveTracesBuilder {
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
         const profileTraces = this.profileTraces();
         const ceilings = this.plotCeilings(diveResult.ceilings);
-        const events = this.plotEvents(diveResult.events);
+        const events = this.plotEvents(diveResult.events, diveResult.totalDuration);
         const emergencyDepths = this.plotEmergencyDepths(diveResult.emergencyAscent);
 
         if(this.showEmergencyAscent) {
@@ -257,8 +257,8 @@ export class DiveTracesBuilder {
         return <Partial<Plotly.PlotData>>dataCeilings;
     }
 
-    private plotEvents(events: BoundEvent[]): Partial<Plotly.PlotData> {
-        const resampled = this.resampling.convertEvents(events);
+    private plotEvents(events: BoundEvent[], totalDuration: number): Partial<Plotly.PlotData> {
+        const resampled = this.resampling.convertEvents(events, totalDuration);
 
         const dataEvents = {
             x: resampled.xValues,
@@ -271,7 +271,8 @@ export class DiveTracesBuilder {
             name: this.namePrefix + this.translate('profileChart.eventTraceName'),
             hovertemplate: '%{text}',
             texttemplate: '%{text}',
-            textposition: 'top center',
+            // plotly supports position per point, but typings allow only single value
+            textposition: <Plotly.PlotData['textposition']><unknown>resampled.textPositions,
             fillcolor: 'rgba(0, 0, 0, 0)',
             marker: {
                 color: this.eventFillColor,

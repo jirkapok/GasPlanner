@@ -13,10 +13,16 @@ export interface AxisValues {
 
 export interface EventValues extends AxisValues {
     labels: string[];
+    textPositions: string[];
 }
 
 @Injectable()
 export class ResamplingService {
+    /** Part of the dive duration, under which two event labels are considered as overlapping */
+    private static readonly closeEventsRatio = 0.05;
+    private static readonly labelAbove = 'top center';
+    private static readonly labelBelow = 'bottom center';
+
     constructor(private units: UnitConversion, private translate: TranslateService) {
     }
 
@@ -34,10 +40,19 @@ export class ResamplingService {
         };
     }
 
-    public convertEvents(events: BoundEvent[]): EventValues {
+    /**
+     * Labels of events closer than the threshold alternate above and below the profile to prevent their overlap,
+     * e.g. gas switches during air breaks.
+     * @param totalDuration in seconds, x axis range used to decide, which events are close to each other.
+     */
+    public convertEvents(events: BoundEvent[], totalDuration: number): EventValues {
         const xValues: Date[] = [];
         const yValues: number[] = [];
         const labels: string[] = [];
+        const textPositions: string[] = [];
+        const minLabelsDistance = totalDuration * ResamplingService.closeEventsRatio;
+        let lastTimeStamp = Number.NEGATIVE_INFINITY;
+        let lastPosition = ResamplingService.labelBelow;
 
         events.forEach((event) => {
             if (event.showInProfileChart) {
@@ -46,13 +61,20 @@ export class ResamplingService {
                 yValues.push(convertedDepth);
                 const text = event.chartEventText;
                 labels.push(this.translate.instant(text));
+
+                const isClose = event.timeStamp - lastTimeStamp < minLabelsDistance;
+                lastPosition = isClose && lastPosition === ResamplingService.labelAbove ?
+                    ResamplingService.labelBelow : ResamplingService.labelAbove;
+                textPositions.push(lastPosition);
+                lastTimeStamp = event.timeStamp;
             }
         });
 
         return {
             xValues,
             yValues,
-            labels
+            labels,
+            textPositions
         };
     }
 

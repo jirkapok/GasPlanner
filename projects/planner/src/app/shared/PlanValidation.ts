@@ -7,6 +7,8 @@ import { CircuitType, Precision, SafetyStop, Salinity, Time, Units } from 'scuba
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
+    /** Only circuits, which the planner is able to calculate */
+    private static readonly supportedCircuits: CircuitType[] = [CircuitType.oc, CircuitType.pscr];
     private ranges: RangeConstants;
     private units: Units;
     private durationRange: [number, number];
@@ -143,7 +145,7 @@ export class PlanValidation {
         }
 
         const metabolicO2 = this.units.fromLiter(rebreather.metabolicO2);
-        return rebreather.circuit in CircuitType &&
+        return PlanValidation.supportedCircuits.includes(rebreather.circuit) &&
             this.isInRange(rebreather.injectionRatio, this.ranges.injectionRatio) &&
             this.isInRange(metabolicO2, this.ranges.metabolicO2);
     }

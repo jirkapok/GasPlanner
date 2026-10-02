@@ -86,6 +86,30 @@ describe('Tanks Complex component - Rebreather', () => {
         expect(TestBed.inject(ViewSwitchService).rebreatherTab).toBeTrue();
     });
 
+    it('invalid rebreather value does not block the form after leaving the tab', () => {
+        const typeRatio = (value: string): void => {
+            const input = element('#injectionRatio') as HTMLInputElement;
+            input.value = value;
+            input.dispatchEvent(new Event('input'));
+            fixture.detectChanges();
+        };
+
+        selectCircuit('#circuitPscr');
+        element('#rebreatherTab')?.click();
+        fixture.detectChanges();
+        typeRatio('2');
+        expect(fixture.componentInstance.rootForm.valid).toBeFalse();
+
+        element('#tanksTab')?.click();
+        fixture.detectChanges();
+        expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+
+        element('#rebreatherTab')?.click();
+        fixture.detectChanges();
+        typeRatio('10');
+        expect(schedules.selectedOptions.injectionRatio).toBe(10);
+    });
+
     it('selecting open circuit switches back', () => {
         selectCircuit('#circuitPscr');
         selectCircuit('#circuitOc');

@@ -1,6 +1,7 @@
 import { FormControl, ValidatorFn } from '@angular/forms';
 import { ValidatorGroups } from './ValidatorGroups';
 import { UnitConversion } from './UnitConversion';
+import { Precision } from 'scuba-physics';
 
 describe('ValidatorGroups', () => {
     const units = new UnitConversion();
@@ -39,6 +40,17 @@ describe('ValidatorGroups', () => {
         it('Metabolic O2 out of range is invalid', () => {
             expect(isValid(1, sut.metabolicO2)).toBeTrue();
             expect(isValid(4, sut.metabolicO2)).toBeFalse();
+        });
+
+        it('Metric metabolic O2 limits are valid in imperial units', () => {
+            const imperial = new UnitConversion();
+            imperial.imperialUnits = true;
+            const imperialValidators = new ValidatorGroups(imperial);
+            const rounding = imperial.ranges.rmvRounding;
+            const minimum = Precision.round(imperial.fromLiter(0.5), rounding);
+            const maximum = Precision.round(imperial.fromLiter(3), rounding);
+            expect(isValid(minimum, imperialValidators.metabolicO2)).toBeTrue();
+            expect(isValid(maximum, imperialValidators.metabolicO2)).toBeTrue();
         });
     });
 });

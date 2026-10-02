@@ -263,7 +263,7 @@ class ImperialRanges implements RangeConstants {
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
     public readonly injectionRatio: [number, number] = [4, 20];
     public readonly injectionRatioLabel: string = toLabel(this.injectionRatio, '');
-    public readonly metabolicO2: [number, number] = [0.018, 0.106];
+    public readonly metabolicO2: [number, number] = [0.017, 0.106];
     public readonly metabolicO2Label: string = toLabel(this.metabolicO2, this.units.volumeShortcut + perMinute);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');

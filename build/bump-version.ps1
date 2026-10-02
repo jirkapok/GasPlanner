@@ -39,8 +39,8 @@ foreach ($file in $manifestFiles) {
         # Convert back to JSON with proper formatting (2-space indent for consistency)
         $jsonContent = $manifestContent | ConvertTo-Json -Depth 10
 
-        # Write back without trailing newline
-        Set-Content $file.FullName $jsonContent -NoNewline -Encoding UTF8
+        # Write back with trailing newline
+        Set-Content $file.FullName $jsonContent -Encoding UTF8
 
         Write-Host "✓ Updated $($file.Name): '$oldId' → '$Version'"
         $updatedFiles += $file.Name

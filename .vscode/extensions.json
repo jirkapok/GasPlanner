@@ -1,13 +1,13 @@
 {
-	// See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
-	"recommendations": [
-		"dbaeumer.vscode-eslint",
+    // See https://go.microsoft.com/fwlink/?LinkId=827846 to learn about workspace recommendations.
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
         "streetsidesoftware.code-spell-checker",
         "editorconfig.editorconfig",
         "lucono.karma-test-explorer",
         "davidanson.vscode-markdownlint"
-	],
-	"unwantedRecommendations": [
+    ],
+    "unwantedRecommendations": [
 
-	]
+    ]
 }

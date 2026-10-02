@@ -102,7 +102,8 @@ export class BuhlmannAlgorithm {
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
         const breathing = this.breathingFor(algorithmParams, depthConverter);
-        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, breathing, rested.finalTissues);
+        const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, breathing,
+            rested.finalTissues);
         this.swimPlan(context);
         return this.toFullProfile(context, algorithmParams);
     }
@@ -125,7 +126,8 @@ export class BuhlmannAlgorithm {
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
         const breathing = this.breathingFor(algorithmParams, depthConverter);
-        const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, breathing, rested.finalTissues);
+        const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, breathing,
+            rested.finalTissues);
         this.swimPlan(context);
         context.markAverageDepth();
         context.isAscent = true;

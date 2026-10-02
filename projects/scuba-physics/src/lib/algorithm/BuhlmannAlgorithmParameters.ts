@@ -1,10 +1,10 @@
-import { LoadedTissues, TissueOverPressures } from "./Tissues.api";
-import { Segments } from "../depths/Segments";
-import { Gas, Gases } from "../gases/Gases";
-import { Options } from "./Options";
-import { Tissues, TissuesValidator } from "./Tissues";
-import { Time } from "../physics/Time";
-import { BreathingModel } from "../ccr/BreathingModel";
+import { LoadedTissues, TissueOverPressures } from './Tissues.api';
+import { Segments } from '../depths/Segments';
+import { Gas, Gases } from '../gases/Gases';
+import { Options } from './Options';
+import { Tissues, TissuesValidator } from './Tissues';
+import { Time } from '../physics/Time';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 // Speed in meters / min.
 export const durationFor = (depthDifference: number, speed: number): number => {

@@ -1,4 +1,4 @@
-import { OpenCircuitBreathing } from './BreathingModel';
+import { BreathingModel, OpenCircuitBreathing } from './BreathingModel';
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { StandardGases } from '../gases/StandardGases';
@@ -8,7 +8,8 @@ describe('Breathing model', () => {
     const depthConverter = DepthConverter.simple();
 
     describe('Open circuit', () => {
-        const sut = new OpenCircuitBreathing(depthConverter);
+        // used by interface, as consumers do, because open circuit ignores depth and ascent for the gas
+        const sut: BreathingModel = new OpenCircuitBreathing(depthConverter);
 
         it('breathes the source gas', () => {
             const gas = StandardGases.ean32.copy();

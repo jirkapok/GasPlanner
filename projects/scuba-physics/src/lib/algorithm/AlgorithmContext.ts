@@ -42,7 +42,7 @@ export class AlgorithmContext {
     private levels: DepthLevels;
     private gasSource: OCGasSource;
     /** This is performance optimization to call only necessary methods */
-    private collectStatistics: (depth: number) => void = this.noStatistics;
+    private collectStatistics: (depth: number) => void = this.noStatistics.bind(this);
 
     private constructor(
         public gases: Gases,
@@ -67,40 +67,6 @@ export class AlgorithmContext {
         this.speeds = new AscentSpeeds(this.options);
         this.levels = new DepthLevels(depthConverter, options);
         this.gasSource = new OCGasSource(gases, options);
-    }
-
-    public static createWithoutStatistics(
-        gases: Gases,
-        segments: Segments,
-        options: Options,
-        depthConverter: DepthConverter,
-        breathing: BreathingModel,
-        currentTissues: LoadedTissues): AlgorithmContext {
-        return new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
-    }
-
-    public static createForCeilings(
-        gases: Gases,
-        segments: Segments,
-        options: Options,
-        depthConverter: DepthConverter,
-        breathing: BreathingModel,
-        currentTissues: LoadedTissues): AlgorithmContext {
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
-        context.collectStatistics = context.addCeilingStatistics;
-        return context;
-    }
-
-    public static createForFullStatistics(
-        gases: Gases,
-        segments: Segments,
-        options: Options,
-        depthConverter: DepthConverter,
-        breathing: BreathingModel,
-        currentTissues: LoadedTissues): AlgorithmContext {
-        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
-        context.collectStatistics = context.addFullStatistics;
-        return context;
     }
 
     public get currentGas(): Gas {
@@ -166,13 +132,50 @@ export class AlgorithmContext {
         this._currentGas = newValue;
     }
 
+    public static createWithoutStatistics(
+        this: void,
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        breathing: BreathingModel,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        return new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
+    }
+
+    public static createForCeilings(
+        this: void,
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        breathing: BreathingModel,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
+        context.collectStatistics = context.addCeilingStatistics.bind(context);
+        return context;
+    }
+
+    public static createForFullStatistics(
+        this: void,
+        gases: Gases,
+        segments: Segments,
+        options: Options,
+        depthConverter: DepthConverter,
+        breathing: BreathingModel,
+        currentTissues: LoadedTissues): AlgorithmContext {
+        const context = new AlgorithmContext(gases, segments, options, depthConverter, breathing, currentTissues);
+        context.collectStatistics = context.addFullStatistics.bind(context);
+        return context;
+    }
+
     /** use this just before calculating ascent to be able calculate correct speeds */
     public markAverageDepth(): void {
         this.speeds.markAverageDepth(this.segments);
     }
 
     public withoutStatistics() : AlgorithmContext {
-        this.collectStatistics = this.noStatistics;
+        this.collectStatistics = this.noStatistics.bind(this);
         return this;
     }
 
@@ -195,22 +198,6 @@ export class AlgorithmContext {
 
     public addStatistics(currentDepth: number): void {
         this.collectStatistics(currentDepth);
-    }
-
-    private noStatistics(currentDepth: number): void {}
-
-    private addCeilingStatistics(currentDepth: number): void {
-        this.addCeiling();
-    }
-
-    private addFullStatistics(currentDepth: number): void {
-        this.addCeiling();
-
-        // following methods slow down calculation 2x
-        this.tissuesHistory.push(this.tissues.finalState());
-        const ambientPressure = this.depthConverter.toBar(currentDepth);
-        const currentOverPressures = this.tissues.saturationRatio(ambientPressure);
-        this.tissueOverPressures.push(currentOverPressures);
     }
 
     /** Gas loaded into tissues for the segment */
@@ -289,6 +276,22 @@ export class AlgorithmContext {
 
     public airBreakGas(): Gas {
         return this.gasSource.airBreakGas(this.currentDepth, this.currentGas);
+    }
+
+    private noStatistics(): void {}
+
+    private addCeilingStatistics(): void {
+        this.addCeiling();
+    }
+
+    private addFullStatistics(currentDepth: number): void {
+        this.addCeiling();
+
+        // following methods slow down calculation 2x
+        this.tissuesHistory.push(this.tissues.finalState());
+        const ambientPressure = this.depthConverter.toBar(currentDepth);
+        const currentOverPressures = this.tissues.saturationRatio(ambientPressure);
+        this.tissueOverPressures.push(currentOverPressures);
     }
 }
 

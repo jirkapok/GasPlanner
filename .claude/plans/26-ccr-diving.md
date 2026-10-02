@@ -14,7 +14,7 @@
 - Branch: Stage 1 runs on the existing `feat/26-ccr_diving` (it holds the POC). Every later stage starts in a new branch from the latest clean `master`.
 - Commit messages: Conventional Commits with the issue prefix, e.g. `refactor(scuba-physics): #26 inject breathing model into algorithm`. Each commit message ends with the line `Co-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`.
 - ESLint: 4-space indent, **single quotes**, semicolons, 140-char lines. Run `npm run lint` before finishing.
-- `CircuitType` member names: `OC`, `PSCR`, `MCCR`, `ECCR`.
+- `CircuitType` member names: `oc`, `pscr`, `mccr`, `eccr` (camelCase, required by the `naming-convention` lint rule).
 - Generic rebreather formulas live in `ccr/Rebreathers.ts`, never in a file called `RebreatherFormulas`.
 - OC results must stay **bit-for-bit identical**. No existing spec may be edited to make it pass.
 - Pure computation belongs in `scuba-physics`. No planner (`projects/planner`) changes in Stage 1, except that it must keep compiling (`npm run test-ci`).
@@ -190,7 +190,7 @@ git commit -m "feat(scuba-physics): #26 generic rebreather formulas" -m "Co-Auth
 - Modify: `algorithm/Options.ts` (fields after `_airBreaks` L148, getter after L188-190, `loadFrom` L221)
 
 **Interfaces:**
-- Produces: `enum CircuitType { OC = 1, PSCR = 2, MCCR = 3, ECCR = 4 }` (it starts at 1 because `Options.loadFrom` treats 0 as "missing", see `safetyStop`). `class RebreatherOptions { circuit: CircuitType; metabolicO2: number; loopVolume: number; loadFrom(source: RebreatherOptions): void }`. `RebreatherDefaults.metabolicO2 = 1.0`, `RebreatherDefaults.loopVolume = 6`. `Options.rebreather: RebreatherOptions` (getter).
+- Produces: `enum CircuitType { oc = 1, pscr = 2, mccr = 3, eccr = 4 }` (it starts at 1 because `Options.loadFrom` treats 0 as "missing", see `safetyStop`). `class RebreatherOptions { circuit: CircuitType; metabolicO2: number; loopVolume: number; loadFrom(source: RebreatherOptions): void }`. `RebreatherDefaults.metabolicO2 = 1.0`, `RebreatherDefaults.loopVolume = 6`. `Options.rebreather: RebreatherOptions` (getter).
 
 - [x] **Step 1: Write the failing test**
 
@@ -202,14 +202,14 @@ import { Options } from '../algorithm/Options';
 describe('Rebreather options', () => {
     it('defaults to open circuit', () => {
         const sut = new RebreatherOptions();
-        expect(sut.circuit).toBe(CircuitType.OC);
+        expect(sut.circuit).toBe(CircuitType.oc);
         expect(sut.metabolicO2).toBeCloseTo(1.0, 6);
         expect(sut.loopVolume).toBeCloseTo(6, 6);
     });
 
     it('loads all values', () => {
         const sut = new RebreatherOptions();
-        const source = new RebreatherOptions(CircuitType.ECCR, 1.5, 4);
+        const source = new RebreatherOptions(CircuitType.eccr, 1.5, 4);
         sut.loadFrom(source);
         expect(sut).toEqual(source);
     });
@@ -217,10 +217,10 @@ describe('Rebreather options', () => {
     it('options load rebreather values', () => {
         const sut = new Options();
         const source = new Options();
-        source.rebreather.circuit = CircuitType.PSCR;
+        source.rebreather.circuit = CircuitType.pscr;
         source.rebreather.metabolicO2 = 1.2;
         sut.loadFrom(source);
-        expect(sut.rebreather.circuit).toBe(CircuitType.PSCR);
+        expect(sut.rebreather.circuit).toBe(CircuitType.pscr);
         expect(sut.rebreather.metabolicO2).toBeCloseTo(1.2, 6);
     });
 });
@@ -238,13 +238,13 @@ Expected: FAIL, `Cannot find module './RebreatherOptions'`.
 /** Breathing apparatus used during the dive. Values start from 1, because 0 is considered as not defined. */
 export enum CircuitType {
     /** Open circuit */
-    OC = 1,
+    oc = 1,
     /** Passive semi-closed rebreather */
-    PSCR = 2,
+    pscr = 2,
     /** Manual closed circuit rebreather */
-    MCCR = 3,
+    mccr = 3,
     /** Electronic closed circuit rebreather */
-    ECCR = 4
+    eccr = 4
 }
 
 export class RebreatherDefaults {
@@ -257,7 +257,7 @@ export class RebreatherDefaults {
 /** Rebreather configuration, rebreather type specific values are added by each rebreather type. */
 export class RebreatherOptions {
     constructor(
-        public circuit: CircuitType = CircuitType.OC,
+        public circuit: CircuitType = CircuitType.oc,
         /** Oxygen consumed by the diver in liters/minute surface equivalent, range 0.5-3 */
         public metabolicO2: number = RebreatherDefaults.metabolicO2,
         /** Breathing loop volume in liters */
@@ -1475,10 +1475,10 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
   - `RebreatherDto` (optional on `OptionsDto`), converters next to `fromAirBreaks`/`toAirBreaks`.
   - URL (`shared/PlanUrlSerialization.ts`): `t=`, `de=` and `o=` are unchanged.
     - New **optional** group `r=<circuit>,<opt1>,…` of numbers. Index 0 = `CircuitType`, then indexed options starting with the pSCR options: `r=<circuit>,<injectionRatio>,<metabolicO2>`. Stages 3/4 append theirs.
-    - A missing `r` → `CircuitType.OC` + defaults. Missing trailing indexes → defaults (length-guarded like `fromAirBreakParam`).
+    - A missing `r` → `CircuitType.oc` + defaults. Missing trailing indexes → defaults (length-guarded like `fromAirBreakParam`).
     - `toDiveUrl` writes `r` only when circuit ≠ OC.
     - Specs: pSCR round-trip, partial `r` falls back to defaults, invalid `r` is skipped.
-    - **Test "URL without `r` falls back to OC dive configuration"** (style of `PlanUrlSerialization.spec.ts:183-207`): load a literal pre-CCR URL; assert `circuit = CircuitType.OC`, default rebreather options, and tanks/segments/options equal to the OC dive (`expectSelectedEquals`); re-serializing writes no `r`.
+    - **Test "URL without `r` falls back to OC dive configuration"** (style of `PlanUrlSerialization.spec.ts:183-207`): load a literal pre-CCR URL; assert `circuit = CircuitType.oc`, default rebreather options, and tanks/segments/options equal to the OC dive (`expectSelectedEquals`); re-serializing writes no `r`.
   - Workers: `BreathingModelFactory` in `workers/planning.tasks.ts`. Simple mode / `resetToSimple` forces OC.
 - **UI** (complex view only):
   - **Circuit dropdown in the tanks card header** (`plan/tanks-complex/tanks-complex.component.html`, projected into `<app-card-header>`; safety-stop dropdown pattern `diveoptions.component.html:135-152`). It lists OC and pSCR, and a thin handler sets `options.circuit` → `sendOptionsChanged`.

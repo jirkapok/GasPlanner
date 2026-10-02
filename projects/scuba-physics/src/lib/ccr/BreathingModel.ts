@@ -40,11 +40,11 @@ export class OpenCircuitBreathing implements BreathingModel {
 
     constructor(private depthConverter: DepthConverter) { }
 
-    public inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean): Gas {
+    public inspiredGas(sourceGas: Gas): Gas {
         return sourceGas;
     }
 
-    public ppO2(sourceGas: Gas, depth: number, isAscent: boolean): number {
+    public ppO2(sourceGas: Gas, depth: number): number {
         return sourceGas.fO2 * this.depthConverter.toBar(depth);
     }
 

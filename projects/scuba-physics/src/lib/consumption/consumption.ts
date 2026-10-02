@@ -86,8 +86,8 @@ export class Consumption {
         // Reserve needs to be first to be able to preserve it, when possible.
         this.updateReserve(emergencyAscent, tanks, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
-        const getRmvPerSecond = (_: Segment) => rmvContext.rmvPerSecond;
-        const consumedBySegmentRmv = (s: Segment, _: number) => this.planConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
+        const getRmvPerSecond = () => rmvContext.rmvPerSecond;
+        const consumedBySegmentRmv = (s: Segment) => this.planConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
 
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly

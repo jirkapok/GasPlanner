@@ -9,10 +9,11 @@ Create Pull requests to the **master** branch and link issue the PR solves.
 * [Michael Czolko](https://github.com/mCzolko) - CNS and OTU calculations
 * [Joseg Bogar](https://github.com/josefbogar) - All kinds of automated tests
 * [Mark Tai](https://github.com/marktai) - UI improvements
+* [Marshall Asch](https://github.com/MarshallAsch) - Various UI improvements
 
 ## Bachelor/Master's thesis
 
 * [Denis Lebo](https://github.com/xlebod) - Profiles comparison
 * [Viktor Konupčík](https://github.com/Darkvikis) - Help and learn quizzes
-
+* [Marek Dlouhý](https://github.com/WortoxCZ) - Automated release process
 

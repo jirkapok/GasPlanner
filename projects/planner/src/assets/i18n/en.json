@@ -485,7 +485,15 @@
     "o2": "O2",
     "sac": "SAC:",
     "workingPressureLabel": "Working pressure",
-    "startPressureLabel": "Start pressure"
+    "startPressureLabel": "Start pressure",
+    "openCircuit": "Open circuit",
+    "pscr": "pSCR",
+    "tanksTab": "Tanks",
+    "rebreatherTab": "Rebreather"
+  },
+  "rebreatherOptions": {
+    "injectionRatio": "Injection ratio",
+    "metabolicO2": "Metabolic O2"
   },
   "tanksSimple": {
     "cardTitle": "Bottom gas tank",

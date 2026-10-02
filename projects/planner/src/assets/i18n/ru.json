@@ -160,7 +160,8 @@
   "surfaceInterval": { "label": "Поверхностный интервал", "firstDive": "Первое погружение", "thirtyMinutes": "30 минут", "oneHour": "1 час", "twoHours": "2 часа", "invalidFormat": "Должно быть в формате чч:мм" },
   "tankChart": { "gasRemaining": "Остаток газа:", "rockBottom": "Резерв:" },
   "gasChart": { "reserve": "Резерв:", "consumed": "Израсходовано:", "available": "Доступно:" },
-  "tanksComplex": { "cardTitle": "Баллоны", "size": "Объём", "workPressure": "Раб. давл.", "pressure": "Давление", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Рабочее давление", "startPressureLabel": "Начальное давление" },
+  "tanksComplex": { "cardTitle": "Баллоны", "size": "Объём", "workPressure": "Раб. давл.", "pressure": "Давление", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Рабочее давление", "startPressureLabel": "Начальное давление", "openCircuit": "Открытый контур", "pscr": "pSCR", "tanksTab": "Баллоны", "rebreatherTab": "Ребризер" },
+  "rebreatherOptions": { "injectionRatio": "Коэффициент сброса", "metabolicO2": "Метаболический O2" },
   "tanksSimple": { "cardTitle": "Баллон с донным газом", "size": "Объём", "sac": "SAC:", "workingPressure": "Рабочее давление", "startPressure": "Начальное давление" },
   "waypointsTable": { "cardTitle": "Точки погружения", "filterTitle": "Показать только остановки", "depth": "Глубина", "duration": "Длительность", "run": "Время", "gas": "Газ" },
   "learn": {

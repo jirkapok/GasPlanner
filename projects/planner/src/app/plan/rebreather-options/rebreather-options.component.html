@@ -1,0 +1,23 @@
+<div class="row" [formGroup]="rebreatherForm">
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="injectionRatio" class="form-label">{{ 'rebreatherOptions.injectionRatio' | translate }}:</label>
+    <input id="injectionRatio" class="form-control" type="number" formControlName="injectionRatio"
+      required [min]="ranges.injectionRatio[0]" [max]="ranges.injectionRatio[1]" step="0.1"
+      (input)="applyOptions()" [class.is-invalid]="injectionRatioInvalid" />
+    @if (injectionRatioInvalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.injectionRatioLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="metabolicO2" class="form-label">{{ 'rebreatherOptions.metabolicO2' | translate }}
+      [{{ units.volume }}/min]:</label>
+    <input id="metabolicO2" class="form-control" type="number" formControlName="metabolicO2"
+      required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" step="0.01"
+      (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
+    @if (metabolicO2Invalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.metabolicO2Label }}</div>
+    }
+  </div>
+</div>

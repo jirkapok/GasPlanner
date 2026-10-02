@@ -1,0 +1,6 @@
+# Store text files with LF line endings in the repository.
+# Working copy uses the platform native line endings (CRLF on Windows, LF elsewhere).
+* text=auto
+
+*.png binary
+*.ico binary

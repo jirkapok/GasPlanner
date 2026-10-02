@@ -1,6 +1,9 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
-import { Precision, TankTemplate, GasToxicity } from 'scuba-physics';
+import { Precision, TankTemplate, GasToxicity, CircuitType } from 'scuba-physics';
+import { ViewSwitchService } from '../../shared/viewSwitchService';
+import { RebreatherOptionsComponent } from '../rebreather-options/rebreather-options.component';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -47,7 +50,9 @@ interface TanksForm {
         OxygenDropDownComponent,
         GaslabelComponent,
         LocaleNumberPipe,
-        TranslatePipe
+        TranslatePipe,
+        MdbDropdownModule,
+        RebreatherOptionsComponent
     ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
@@ -63,7 +68,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private viewSwitch: ViewSwitchService) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -82,6 +88,15 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public get toxicity(): GasToxicity {
         return this.schedules.selectedToxicity;
+    }
+
+    public get isRebreather(): boolean {
+        return this.schedules.selectedOptions.isRebreather;
+    }
+
+    /** Rebreather options are shown instead of tanks, only for rebreathers */
+    public get rebreatherTab(): boolean {
+        return this.isRebreather && this.viewSwitch.rebreatherTab;
     }
 
     private get tanksService(): TanksService {
@@ -105,6 +120,22 @@ export class TanksComplexComponent extends Streamed implements OnInit {
             .subscribe(() => this.reloadAll());
 
         this.rootForm.addControl('tanksForm', this.tanksForm);
+    }
+
+    public useOpenCircuit(): void {
+        this.applyCircuit(CircuitType.oc);
+    }
+
+    public usePscr(): void {
+        this.applyCircuit(CircuitType.pscr);
+    }
+
+    public showTanksTab(): void {
+        this.viewSwitch.rebreatherTab = false;
+    }
+
+    public showRebreatherTab(): void {
+        this.viewSwitch.rebreatherTab = true;
     }
 
     public gasSac(index: number): number {
@@ -194,6 +225,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         });
 
         this.tankChanged(index);
+    }
+
+    private applyCircuit(circuit: CircuitType): void {
+        this.schedules.selectedOptions.circuit = circuit;
+        this.dispatcher.sendOptionsChanged();
     }
 
     private reloadAll(): void {

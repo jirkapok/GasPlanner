@@ -3,8 +3,37 @@
     [cardTitle]="'tanksComplex.cardTitle' | translate"
     helpDocument="tanks"
     [headerIcon]="icon">
+    <div class="dropdown" mdbDropdown>
+      <button id="circuitType" type="button" class="btn btn-sm btn-secondary dropdown-toggle"
+        aria-expanded="false" mdbDropdownToggle>
+        @if (isRebreather) {
+          {{ 'tanksComplex.pscr' | translate }}
+        } @else {
+          {{ 'tanksComplex.openCircuit' | translate }}
+        }
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+        <li id="circuitOc" (click)="useOpenCircuit()"><a class="dropdown-item">{{ 'tanksComplex.openCircuit' | translate }}</a></li>
+        <li id="circuitPscr" (click)="usePscr()"><a class="dropdown-item">{{ 'tanksComplex.pscr' | translate }}</a></li>
+      </ul>
+    </div>
   </app-card-header>
 
+  @if (isRebreather) {
+    <ul class="nav nav-tabs mt-2 px-2">
+      <li class="nav-item">
+        <button id="tanksTab" type="button" class="nav-link" [class.active]="!rebreatherTab"
+          (click)="showTanksTab()">{{ 'tanksComplex.tanksTab' | translate }}</button>
+      </li>
+      <li class="nav-item">
+        <button id="rebreatherTab" type="button" class="nav-link" [class.active]="rebreatherTab"
+          (click)="showRebreatherTab()">{{ 'tanksComplex.rebreatherTab' | translate }}</button>
+      </li>
+    </ul>
+  }
+
+  <!-- tanks stay rendered, only hidden, to keep their form controls and prevent rebuilding the accordion -->
+  <div [hidden]="rebreatherTab">
   <!-- Small devices -->
   <div class="card-body d-md-none d-block" formArrayName="boundTanks">
     <mdb-accordion [flush]="true">
@@ -219,4 +248,11 @@
                   </div>
                 }
               </div>
+  </div>
+
+  @if (rebreatherTab) {
+    <div class="card-body">
+      <app-rebreather-options [rootForm]="rootForm"></app-rebreather-options>
+    </div>
+  }
             </div>

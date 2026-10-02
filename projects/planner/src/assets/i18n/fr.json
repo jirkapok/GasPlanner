@@ -160,7 +160,8 @@
   "surfaceInterval": { "label": "Intervalle de surface", "firstDive": "Première plongée", "thirtyMinutes": "30 minutes", "oneHour": "1 heure", "twoHours": "2 heures", "invalidFormat": "Doit être un texte au format hh:mm" },
   "tankChart": { "gasRemaining": "Gaz restant :", "rockBottom": "Réserve :" },
   "gasChart": { "reserve": "Réserve :", "consumed": "Consommé :", "available": "Disponible :" },
-  "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ" },
+  "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ", "openCircuit": "Circuit ouvert", "pscr": "pSCR", "tanksTab": "Blocs", "rebreatherTab": "Recycleur" },
+  "rebreatherOptions": { "injectionRatio": "Rapport d'injection", "metabolicO2": "O2 métabolique" },
   "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
   "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
   "learn": {

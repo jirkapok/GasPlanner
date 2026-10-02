@@ -160,7 +160,8 @@
   "surfaceInterval": { "label": "Povrchová pauza", "firstDive": "První ponor", "thirtyMinutes": "30 minut", "oneHour": "1 hodina", "twoHours": "2 hodiny", "invalidFormat": "Musí být text ve formátu hh:mm" },
   "tankChart": { "gasRemaining": "Zbývající plyn:", "rockBottom": "Rock bottom:" },
   "gasChart": { "reserve": "Rezerva:", "consumed": "Spotřebováno:", "available": "K dispozici:" },
-  "tanksComplex": { "cardTitle": "Lahve", "size": "Objem", "workPressure": "Prac. tlak", "pressure": "Tlak", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Pracovní tlak", "startPressureLabel": "Počáteční tlak" },
+  "tanksComplex": { "cardTitle": "Lahve", "size": "Objem", "workPressure": "Prac. tlak", "pressure": "Tlak", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Pracovní tlak", "startPressureLabel": "Počáteční tlak", "openCircuit": "Otevřený okruh", "pscr": "pSCR", "tanksTab": "Lahve", "rebreatherTab": "Rebreather" },
+  "rebreatherOptions": { "injectionRatio": "Poměr výměny", "metabolicO2": "Spotřeba O2" },
   "tanksSimple": { "cardTitle": "Lahev s dnovou směsí", "size": "Objem", "sac": "SAC:", "workingPressure": "Pracovní tlak", "startPressure": "Počáteční tlak" },
   "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
   "learn": {

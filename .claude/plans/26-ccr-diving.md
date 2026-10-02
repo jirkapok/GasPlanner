@@ -1522,8 +1522,8 @@ Decisions made while detailing (from reading the planner code):
 - Specs: URL round-trip, "URL without `r` falls back to OC dive configuration", partial/invalid `r`, preferences round-trip + legacy JSON.
 
 ##### Task 2.5: Tanks card UI (dropdown + tabs + pSCR options)
-- [ ] Status
-- `tanks-complex`: circuit dropdown (OC / pSCR) projected into the card header; body wrapped in `mdb-tabs` "Tanks" / "Rebreather" (Rebreather tab only when not OC); selected tab synced with `ViewSwitchService.rebreatherTab`.
+- [x] Status
+- `tanks-complex`: circuit dropdown (OC / pSCR) projected into the card header; body with "Tanks" / "Rebreather" tabs (Bootstrap `nav-tabs` toggling visibility: moving the body into `mdb-tabs` rebuilt the tanks accordion and broke change detection) (Rebreather tab only when not OC); selected tab synced with `ViewSwitchService.rebreatherTab`.
 - New `RebreatherOptionsComponent` (`plan/rebreather-options/`, `app-rebreather-options`, registered in `app.config.ts`): injection ratio + metabolic O2 inputs, reactive form, `[class.is-invalid]` + sibling message, `col-12 col-sm-6 col-md-*` grid, thin handlers → `OptionsService` → `sendOptionsChanged`.
 - i18n keys in all 7 `assets/i18n/*.json`. Component specs.
 

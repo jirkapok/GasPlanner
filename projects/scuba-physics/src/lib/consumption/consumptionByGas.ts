@@ -4,6 +4,7 @@ import { Segment } from '../depths/Segments';
 import { Tank } from './Tanks';
 import { IConsumedMix } from './consumptionByMix';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 /**
  * Gas consumed during the dive by one gas mixture in liters, regardless of tanks.
@@ -72,10 +73,16 @@ export class ConsumedGas implements IConsumedMix {
  * Calculates consumed gas and reserve grouped by gas mixture in liters, ignoring the tanks.
  */
 export class ConsumptionByGas {
-    private segmentsConsumption: SegmentsConsumption;
+    /** Emergency ascent is always breathed as open circuit */
+    private reserveConsumption: SegmentsConsumption;
+    private planConsumption: SegmentsConsumption;
 
-    constructor(depthConverter: DepthConverter) {
-        this.segmentsConsumption = new SegmentsConsumption(depthConverter);
+    /**
+     * @param breathing Optional breathing model of the dive, open circuit if not provided.
+     */
+    constructor(depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.reserveConsumption = new SegmentsConsumption(depthConverter);
+        this.planConsumption = new SegmentsConsumption(depthConverter, breathing);
     }
 
     /**
@@ -99,9 +106,9 @@ export class ConsumptionByGas {
         SegmentsConsumption.validate(segments, emergencyAscent);
         const rmvContext = RmvContext.create(consumptionOptions, emergencyAscent, tanks);
 
-        const reserves = this.segmentsConsumption.toBeConsumedYet(emergencyAscent, new GasVolumes(),
+        const reserves = this.reserveConsumption.toBeConsumedYet(emergencyAscent, new GasVolumes(),
             (s) => rmvContext.stressRmvPerSecond(s), () => true);
-        const consumed = this.segmentsConsumption.toBeConsumedYet(segments, new GasVolumes(),
+        const consumed = this.planConsumption.toBeConsumedYet(segments, new GasVolumes(),
             () => rmvContext.rmvPerSecond, () => true);
 
         return this.groupByGas(tanks).map(gasTanks => {

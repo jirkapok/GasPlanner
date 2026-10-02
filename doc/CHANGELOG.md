@@ -1,3 +1,14 @@
+# [0.9.0](https://github.com/jirkapok/GasPlanner/compare/v0.8.2...v0.9.0) (2026-10-02)
+
+
+### Features
+
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) breathing model abstraction ([e1fb290](https://github.com/jirkapok/GasPlanner/commit/e1fb2908b9770c1a0e980c965e14ce08247c3dca))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) density and events by inspired gas, export breathing model ([3d79caf](https://github.com/jirkapok/GasPlanner/commit/3d79caf19d9d01ae5235acde8deae695260edd04))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) generic rebreather formulas ([164bba7](https://github.com/jirkapok/GasPlanner/commit/164bba7594e4fc1cf14ec0f78136858cb66a94b4))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) rebreather loop gas ([e497194](https://github.com/jirkapok/GasPlanner/commit/e497194a45f293b288651844d752b25c92a702bf))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) rebreather options ([9da44b0](https://github.com/jirkapok/GasPlanner/commit/9da44b04b6c0758e5a6738f16b281053241c935d))
+
 ## [0.8.2](https://github.com/jirkapok/GasPlanner/compare/v0.8.1...v0.8.2) (2026-10-02)
 
 

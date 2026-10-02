@@ -1458,7 +1458,7 @@ Each stage starts from the latest master and is a full vertical slice:
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
 
 ### Stage 2: pSCR (introduces the shared rebreather plumbing)
-- [ ] Status
+- [x] Status
 
 Tanks work exactly as in OC: one `TanksService` list, and any tank can be assigned to any depth level. In pSCR the assigned tank is that level's **supply gas**, and the same list defines the **bailout gases**. No separate diluent/oxygen tanks.
 - **Lib**:
@@ -1487,7 +1487,7 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
 - **Docs**: create `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve) + help menu entry.
 
 #### Stage 2 detailed tasks (branch `feat/26-ccr-pscr`)
-- [ ] Status
+- [x] Status
 
 Decisions made while detailing (from reading the planner code):
 - pSCR loop gas needs the diver RMV also in profile/dive info workers, so `PlanRequestDto` gets `diver: DiverDto`.
@@ -1532,6 +1532,16 @@ Decisions made while detailing (from reading the planner code):
 - `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve, limits) + help menu entry + `helpDocument` on the Rebreather tab.
 - E2E happy path: complex view → pSCR → results show a calculated dive.
 - Full verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
+##### Stage 2 final review
+- [x] Status
+- Fixed: stale invalid rebreather form blocked all planner inputs; unsupported circuits (mCCR/eCCR) loaded from url as OC; imperial metabolic O2 minimum; hypoxic loop now raises the existing `Low ppO2` warning.
+- Deferred minors (pick up in Stage 3):
+  - `PlanUrlSerialization.fromAppSettingsParam` doesn't carry `rebreatherTab`, so opening any shared url resets the selected tanks-card tab.
+  - Tanks card header keeps `helpDocument="tanks"` also on the Rebreather tab (should open `rebreather`).
+  - Metabolic O2 input `step="0.01"` is coarse in imperial units.
+  - `ValidatorGroups` `required` wrapper comment wording.
+- Known: high ppO2 warning is still evaluated for the supply gas, not the loop (Stage 5c).
+
 ### Stage 3: mCCR
 - [ ] Status
 

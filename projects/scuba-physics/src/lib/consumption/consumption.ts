@@ -10,6 +10,7 @@ import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSea
 import { PlanFactory } from '../depths/PlanFactory';
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 export type { ConsumptionOptions } from './consumptionCommon';
 
@@ -23,18 +24,24 @@ export class Consumption {
     /** Minimum bars to keep in stage tank, even for shallow dives */
     public static readonly defaultStageReserve = 20;
 
-    private segmentsConsumption: SegmentsConsumption;
+    /** Emergency ascent is always breathed as open circuit */
+    private reserveConsumption: SegmentsConsumption;
+    private planConsumption: SegmentsConsumption;
 
-    constructor(depthConverter: DepthConverter) {
-        this.segmentsConsumption = new SegmentsConsumption(depthConverter);
+    /**
+     * @param breathing Optional breathing model of the dive, open circuit if not provided.
+     */
+    constructor(depthConverter: DepthConverter, private readonly breathing?: BreathingModel) {
+        this.reserveConsumption = new SegmentsConsumption(depthConverter);
+        this.planConsumption = new SegmentsConsumption(depthConverter, breathing);
     }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[],
-        options: Options, surfaceInterval?: RestingParameters): CalculatedProfile {
+        options: Options, surfaceInterval?: RestingParameters, breathing?: BreathingModel): CalculatedProfile {
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
-        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, surfaceInterval);
+        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, surfaceInterval, breathing);
         const profile = algorithm.decompression(parameters);
         return profile;
     }
@@ -56,6 +63,7 @@ export class Consumption {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
+        // emergency (bailout) ascent is always open circuit
         const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval);
         this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
@@ -78,19 +86,19 @@ export class Consumption {
         // Reserve needs to be first to be able to preserve it, when possible.
         this.updateReserve(emergencyAscent, tanks, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
-        const getRmvPerSecond = (_: Segment) => rmvContext.rmvPerSecond;
-        const consumedBySegmentRmv = (s: Segment, _: number) => this.segmentsConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
+        const getRmvPerSecond = () => rmvContext.rmvPerSecond;
+        const consumedBySegmentRmv = (s: Segment) => this.planConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
 
         // First satisfy user defined segments where tank is assigned (also in ascent).
         // assigned tank will be consumed from that tank directly
-        let remainToConsume: GasVolumes = this.segmentsConsumption.toBeConsumedYet(segments, new GasVolumes(),
+        let remainToConsume: GasVolumes = this.planConsumption.toBeConsumedYet(segments, new GasVolumes(),
             getRmvPerSecond, (s) => !!s.tank);
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, tankMinimum, consumedBySegmentRmv);
         // if more consumed, drain the tanks
         remainToConsume = this.consumeBySegmentTank(segments, remainToConsume, () => 0, (_: Segment, remaining: number) => remaining);
 
         // and only now we can consume the remaining gas from all other segments
-        remainToConsume = this.segmentsConsumption.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
+        remainToConsume = this.planConsumption.toBeConsumedYet(segments, remainToConsume, getRmvPerSecond, (s) => !s.tank);
         remainToConsume = this.consumeByGases(tanks, remainToConsume, tankMinimum);
         // if more consumed, drain the tanks
         this.consumeByGases(tanks, remainToConsume, () => 0);
@@ -139,7 +147,7 @@ export class Consumption {
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions,
         options: Options, surfaceInterval?: RestingParameters) {
-        const profile = Consumption.calculateDecompression(testSegments, tanks, options, surfaceInterval);
+        const profile = Consumption.calculateDecompression(testSegments, tanks, options, surfaceInterval, this.breathing);
         this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions, surfaceInterval);
     }
 
@@ -154,7 +162,7 @@ export class Consumption {
         const getRmvPerSecond = (s: Segment) => rmvContext.stressRmvPerSecond(s);
         // here the consumed during emergency ascent means reserve
         // take all segments, because we expect all segments are not user defined => don't have tank assigned
-        const gasesConsumed: GasVolumes = this.segmentsConsumption.toBeConsumedYet(emergencyAscent, new GasVolumes(),
+        const gasesConsumed: GasVolumes = this.reserveConsumption.toBeConsumedYet(emergencyAscent, new GasVolumes(),
             getRmvPerSecond, () => true);
 
         // add the reserve from opposite order than consumed gas

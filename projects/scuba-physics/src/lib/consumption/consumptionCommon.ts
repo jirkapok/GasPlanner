@@ -1,9 +1,9 @@
-import { Precision } from '../common/precision';
 import { DepthConverter } from '../physics/depth-converter';
 import { Diver } from './Diver';
 import { Segment } from '../depths/Segments';
 import { Tank } from './Tanks';
 import { Time } from '../physics/Time';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 export interface ConsumptionOptions {
     diver: Diver;
@@ -84,7 +84,11 @@ export class RmvContext {
 
 /** Shared validation and liters calculation of segments used by all consumption calculators */
 export class SegmentsConsumption {
-    constructor(private depthConverter: DepthConverter) { }
+    private readonly breathing: BreathingModel;
+
+    constructor(depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    }
 
     public static validate(segments: Segment[], emergencyAscent: Segment[]): void {
         if (segments.length < 2) {
@@ -119,13 +123,10 @@ export class SegmentsConsumption {
     }
 
     /**
-     * Returns consumption in Liters at given segment average depth
+     * Returns consumption in Liters of the segment source tank
      * @param rmvPerSecond Liter/second
      */
     public consumedBySegment(segment: Segment, rmvPerSecond: number): number {
-        const averagePressure = this.depthConverter.toBar(segment.averageDepth);
-        const duration = Precision.roundTwoDecimals(segment.duration);
-        const consumed = duration * averagePressure * rmvPerSecond;
-        return consumed;
+        return this.breathing.consumedLiters(segment, rmvPerSecond);
     }
 }

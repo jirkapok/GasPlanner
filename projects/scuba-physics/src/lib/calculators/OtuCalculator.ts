@@ -1,6 +1,7 @@
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /**
  * OTU - Oxygen Toxicity Units
@@ -12,17 +13,24 @@ import { Time } from '../physics/Time';
 export class OtuCalculator {
     public static readonly dailyLimit = 300;
     private readonly minPressure = 0.5;
+    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    }
 
-    /** Calculates total OTU units for provided profile */
-    public calculateForProfile(profile: Segment[]): number {
+    /**
+     * Calculates total OTU units for provided profile
+     * @param startAscentIndex index of first segment of calculated ascent, Infinity if not known
+     */
+    public calculateForProfile(profile: Segment[], startAscentIndex: number = Number.POSITIVE_INFINITY): number {
         let total = 0;
 
-        profile.forEach(segment => {
-            const o2 = segment.gas.fO2;
-            const partOtu = this.calculate(segment.duration, o2, segment.startDepth, segment.endDepth);
-            total += partOtu;
+        profile.forEach((segment, index) => {
+            const isAscent = index >= startAscentIndex;
+            const pO2Start = this.breathing.ppO2(segment.gas, segment.startDepth, isAscent);
+            const pO2End = this.breathing.ppO2(segment.gas, segment.endDepth, isAscent);
+            total += this.calculateByPpO2(segment.duration, pO2Start, pO2End);
         });
 
         return total;
@@ -38,11 +46,19 @@ export class OtuCalculator {
      * @param endDepth - end depth in meters
      */
     public calculate(duration: number, pO2: number, startDepth: number, endDepth: number): number {
-        let durationMinutes = Time.toMinutes(duration);
         const startAAP = this.depthConverter.toBar(startDepth);
         const endAAP = this.depthConverter.toBar(endDepth);
-        let pO2Start = startAAP * pO2;
-        let pO2End = endAAP * pO2;
+        return this.calculateByPpO2(duration, startAAP * pO2, endAAP * pO2);
+    }
+
+    /**
+     * Ascent or descent profile at a constant rate of oxygen partial pressure change
+     * @param duration - time in seconds
+     * @param pO2Start - oxygen partial pressure in bars at start of the segment
+     * @param pO2End - oxygen partial pressure in bars at end of the segment
+     */
+    public calculateByPpO2(duration: number, pO2Start: number, pO2End: number): number {
+        let durationMinutes = Time.toMinutes(duration);
 
         if ((pO2Start <= this.minPressure) && (pO2End <= this.minPressure)) {
             return 0;

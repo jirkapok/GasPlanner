@@ -2,6 +2,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { CnsCalculator } from './cnsCalculator';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /** Part of the oxygen exposure history, e.g. one profile segment or surface interval */
 export interface CnsExposure {
@@ -16,6 +17,8 @@ export interface CnsDive {
     profile: Segment[];
     /** Duration of the surface interval before the dive in seconds, Infinity for first dive */
     surfaceInterval: number;
+    /** Index of first segment of calculated ascent, Infinity if not known */
+    startAscentIndex?: number;
 }
 
 /**
@@ -38,9 +41,11 @@ export class CnsDailyCalculator {
     ];
 
     private readonly singleExposure: CnsCalculator;
+    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter) {
-        this.singleExposure = new CnsCalculator(depthConverter);
+    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+        this.singleExposure = new CnsCalculator(depthConverter, this.breathing);
     }
 
     /**
@@ -113,19 +118,26 @@ export class CnsDailyCalculator {
         let exposures: CnsExposure[] = [];
 
         dives.forEach(dive => {
-            const diveExposures = this.exposuresForProfile(dive.profile);
+            const diveExposures = this.exposuresForProfile(dive.profile, dive.startAscentIndex);
             exposures = CnsDailyCalculator.appendDive(exposures, dive.surfaceInterval, diveExposures);
         });
 
         return CnsDailyCalculator.total(exposures);
     }
 
-    /** Creates exposure for each segment of the profile */
-    public exposuresForProfile(profile: Segment[]): CnsExposure[] {
-        return profile.map(segment => ({
-            duration: segment.duration,
-            cns: this.calculate(segment.gas.fO2, segment.startDepth, segment.endDepth, segment.duration)
-        }));
+    /**
+     * Creates exposure for each segment of the profile
+     * @param startAscentIndex index of first segment of calculated ascent, Infinity if not known
+     */
+    public exposuresForProfile(profile: Segment[], startAscentIndex: number = Number.POSITIVE_INFINITY): CnsExposure[] {
+        return profile.map((segment, index) => {
+            const avgDepth = (segment.startDepth + segment.endDepth) / 2;
+            const ppO2 = this.breathing.ppO2(segment.gas, avgDepth, index >= startAscentIndex);
+            return {
+                duration: segment.duration,
+                cns: this.calculateByPpO2(ppO2, segment.duration)
+            };
+        });
     }
 
     /**
@@ -138,14 +150,22 @@ export class CnsDailyCalculator {
     public calculate(fO2: number, startDepth: number, endDepth: number, duration: number): number {
         const avgDepth = (startDepth + endDepth) / 2;
         const ppO2 = fO2 * this.depthConverter.toBar(avgDepth);
+        return this.calculateByPpO2(ppO2, duration);
+    }
 
+    /**
+     * Calculates part of the daily CNS limit in % for constant oxygen partial pressure
+     * @param ppO2 oxygen partial pressure in bars
+     * @param duration duration in seconds
+     */
+    public calculateByPpO2(ppO2: number, duration: number): number {
         if (ppO2 <= CnsDailyCalculator.minimumPpO2) {
             return 0;
         }
 
         // NOAA doesn't define daily limit above 1.6 bar, the single exposure limit is more conservative
         if (ppO2 > CnsDailyCalculator.maximumPpO2) {
-            return this.singleExposure.calculate(fO2, startDepth, endDepth, duration);
+            return this.singleExposure.calculateByPpO2(ppO2, duration);
         }
 
         const limit = Time.toSeconds(CnsDailyCalculator.limitByPpO2(ppO2));

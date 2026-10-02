@@ -3,6 +3,7 @@ import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
 import { GasMixtures } from './GasMixtures';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 export class HighestDensity {
     constructor(
@@ -62,22 +63,25 @@ export class GasDensity {
 /** Calculates approximate gas density of oxygen, nitrogen, helium mixture at different depths. */
 export class DensityAtDepth {
     private density = new GasDensity();
+    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter) { }
+    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
+        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    }
 
     /**
      * Finds highest density of all profile segments.
      * @param profile not null collection of segments representing expected profile
+     * @param startAscentIndex index of first segment of calculated ascent, Infinity if not known
      * @returns Highest density found
      */
-    public forProfile(profile: Segment[]): HighestDensity {
+    public forProfile(profile: Segment[], startAscentIndex: number = Number.POSITIVE_INFINITY): HighestDensity {
         const result = HighestDensity.createDefault();
 
-        profile.forEach(s => {
-            const gas = s.gas;
-            const ataDensity = this.density.forGas(gas);
-            this.applyHigher(result, gas, s.startDepth, ataDensity);
-            this.applyHigher(result, gas, s.endDepth, ataDensity);
+        profile.forEach((s, index) => {
+            const isAscent = index >= startAscentIndex;
+            this.applyHigher(result, s.gas, s.startDepth, isAscent);
+            this.applyHigher(result, s.gas, s.endDepth, isAscent);
         });
 
         return result;
@@ -93,8 +97,9 @@ export class DensityAtDepth {
         return density;
     }
 
-    private applyHigher(result: HighestDensity, gas: Gas, depth: number, ataDensity: number): void {
-        const density = this.fromAtaDensity(ataDensity, depth);
+    private applyHigher(result: HighestDensity, sourceGas: Gas, depth: number, isAscent: boolean): void {
+        const gas = this.breathing.inspiredGas(sourceGas, depth, isAscent);
+        const density = this.atDepth(gas, depth);
         result.applyHigher(gas, depth, density);
     }
 

@@ -271,6 +271,10 @@ describe('Url Serialization', () => {
                 assertSkipped('&r=9,10,1');
             });
 
+            it('Circuit not supported yet', () => {
+                assertSkipped('&r=3,10,1');
+            });
+
             it('Injection ratio out of range', () => {
                 assertSkipped('&r=2,50,1');
             });

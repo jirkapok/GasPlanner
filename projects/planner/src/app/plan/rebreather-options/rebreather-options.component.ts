@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -23,7 +23,8 @@ interface RebreatherForm {
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, TranslatePipe]
 })
-export class RebreatherOptionsComponent extends Streamed implements OnInit {
+export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDestroy {
+    private static readonly formName = 'rebreatherOptions';
     @Input() public rootForm!: FormGroup;
     public rebreatherForm!: FormGroup<RebreatherForm>;
 
@@ -70,7 +71,14 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit {
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
 
-        this.rootForm.addControl('rebreatherOptions', this.rebreatherForm);
+        // replaces the form of previous instance, addControl would keep the old one
+        this.rootForm.setControl(RebreatherOptionsComponent.formName, this.rebreatherForm);
+    }
+
+    /** The component is created only when the tab is shown, so it can't leave invalid form in the root form */
+    public override ngOnDestroy(): void {
+        super.ngOnDestroy();
+        this.rootForm.removeControl(RebreatherOptionsComponent.formName);
     }
 
     public applyOptions(): void {

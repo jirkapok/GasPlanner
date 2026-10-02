@@ -165,6 +165,12 @@ export interface RangeConstants {
     tankHeLabel: string;
     diverRmv: [number, number];
     diverRmvLabel: string;
+    /** pSCR ratio of breathed to dumped volume, without units */
+    injectionRatio: [number, number];
+    injectionRatioLabel: string;
+    /** Rebreather diver oxygen consumption in volume per minute */
+    metabolicO2: [number, number];
+    metabolicO2Label: string;
     ppO2: [number, number];
     /** Number of decimal places to round rmv values */
     rmvRounding: number;
@@ -208,6 +214,10 @@ class MetricRanges implements RangeConstants {
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [5, 90];
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
+    public readonly injectionRatio: [number, number] = [4, 20];
+    public readonly injectionRatioLabel: string = toLabel(this.injectionRatio, '');
+    public readonly metabolicO2: [number, number] = [0.5, 3];
+    public readonly metabolicO2Label: string = toLabel(this.metabolicO2, this.units.volumeShortcut + perMinute);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [1, 10];
@@ -251,6 +261,10 @@ class ImperialRanges implements RangeConstants {
     public readonly depthLabel: string = toLabel(this.depth, this.units.lengthShortcut);
     public readonly diverRmv: [number, number] = [0.17, 3.178];
     public readonly diverRmvLabel: string = toLabel(this.diverRmv, this.units.volumeShortcut + perMinute);
+    public readonly injectionRatio: [number, number] = [4, 20];
+    public readonly injectionRatioLabel: string = toLabel(this.injectionRatio, '');
+    public readonly metabolicO2: [number, number] = [0.018, 0.106];
+    public readonly metabolicO2Label: string = toLabel(this.metabolicO2, this.units.volumeShortcut + perMinute);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [0.0624, 0.624];

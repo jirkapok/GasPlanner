@@ -39,6 +39,8 @@ export interface AppOptionsDto {
     imperialUnits: boolean;
     isComplex: boolean;
     consumptionInLiters: boolean;
+    /** optional because of upgrade, rebreather tab is selected in the tanks card */
+    rebreatherTab?: boolean;
     language: string;
     maxDensity: number;
     primaryTankReserve: number;

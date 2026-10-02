@@ -73,6 +73,14 @@ export class SettingsNormalizationService {
         options.maxEND = this.fitUnit(u => u, v => v, options.maxEND, this.ranges.narcoticDepth);
         options.lastStopDepth = this.fitUnit(u => u, v => v, options.lastStopDepth, this.ranges.lastStopDepth);
         options.decoStopDistance = this.fitUnit(u => u, v => v, options.decoStopDistance, this.ranges.decoStopDistance);
+        this.normalizeRebreather(options);
+    }
+
+    private normalizeRebreather(options: OptionsService): void {
+        const rebreather = options.getOptions().rebreather;
+        rebreather.injectionRatio = this.fitUnit(u => u, v => v, rebreather.injectionRatio, this.ranges.injectionRatio, 1);
+        rebreather.metabolicO2 = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
+            rebreather.metabolicO2, this.ranges.metabolicO2, this.units.ranges.rmvRounding);
     }
 
     private normalizeTanks(tanksService: TanksService): void {

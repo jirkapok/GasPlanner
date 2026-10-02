@@ -47,6 +47,20 @@ describe('SettingsNormalizationService', () => {
         tankService = firstDive.tanksService;
     });
 
+    describe('Rebreather', () => {
+        it('Injection ratio is normalized', () => {
+            optionsService.injectionRatio = 50;
+            service.apply();
+            expect(optionsService.injectionRatio).toBe(20);
+        });
+
+        it('Metabolic O2 is normalized', () => {
+            optionsService.metabolicO2 = 10;
+            service.apply();
+            expect(optionsService.metabolicO2).toBe(3);
+        });
+    });
+
     describe('Diver', () => {
         it('RMV is normalized', () => {
             diverOptions.rmv = 100;

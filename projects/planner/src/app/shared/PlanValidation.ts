@@ -1,9 +1,9 @@
 import {
     AppPreferencesDto, DiverDto, GasDto,
-    OptionsDto, SegmentDto, TankDto, DiveDto
+    OptionsDto, RebreatherDto, SegmentDto, TankDto, DiveDto
 } from './serialization.model';
 import _ from 'lodash';
-import { Precision, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
+import { CircuitType, Precision, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
@@ -132,7 +132,20 @@ export class PlanValidation {
         this.isInRange(options.maxDecoPpO2, this.ranges.ppO2) &&
         this.isInRange(options.problemSolvingDuration, [1, 100]) &&
         options.safetyStop in SafetyStop &&
-        options.salinity in Salinity;
+        options.salinity in Salinity &&
+        this.rebreatherValid(options.rebreather);
+    }
+
+    /** Missing rebreather means open circuit */
+    private rebreatherValid(rebreather: RebreatherDto | undefined): boolean {
+        if (!rebreather) {
+            return true;
+        }
+
+        const metabolicO2 = this.units.fromLiter(rebreather.metabolicO2);
+        return rebreather.circuit in CircuitType &&
+            this.isInRange(rebreather.injectionRatio, this.ranges.injectionRatio) &&
+            this.isInRange(metabolicO2, this.ranges.metabolicO2);
     }
 
     private diverValid(diver: DiverDto): boolean {
@@ -144,7 +157,12 @@ export class PlanValidation {
     }
 
     private allDivesSimple(dives: DiveDto[]): boolean {
-        return _(dives).every(d => d.plan.length === 2 && d.tanks.length === 1);
+        return _(dives).every(d => d.plan.length === 2 && d.tanks.length === 1 && this.isOpenCircuit(d.options));
+    }
+
+    /** rebreathers are available only in complex view */
+    private isOpenCircuit(options: OptionsDto): boolean {
+        return !options.rebreather || options.rebreather.circuit === CircuitType.oc;
     }
 
     private isRmvValid(rmvLiters: number): boolean {

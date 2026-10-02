@@ -1503,7 +1503,7 @@ Decisions made while detailing (from reading the planner code):
 - Export both; specs `PscrBreathing.spec.ts`, `BreathingModelFactory.spec.ts`, `BuhlmannAlgorithm.pscr.spec.ts` (no air breaks, loop gas loads tissues → different deco than OC on the supply gas), `consumption.pscr.spec.ts`.
 
 ##### Task 2.2: ConsumptionByGas uses the breathing model (lib)
-- [ ] Status
+- [x] Status
 - `new ConsumptionByGas(depthConverter, breathing?)`: plan consumption via the model, reserve OC. Specs: explicit OC equals no model; pSCR consumes supply rate.
 
 ##### Task 2.3: Planner state, DTOs and workers

@@ -82,6 +82,7 @@
       "plan": {
         "title": "Dive Plan",
         "tanks": "Tanks",
+        "rebreather": "Rebreather",
         "standardGases": "Standard gases",
         "depths": "Depths",
         "surfaceInterval": "Surface interval"

@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "应用程序", "usage": "应用程序使用说明", "settings": "应用程序设置" },
-      "plan": { "title": "潜水计划", "tanks": "气瓶", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
+      "plan": { "title": "潜水计划", "tanks": "气瓶", "rebreather": "循环呼吸器", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
       "options": { "title": "潜水选项", "general": "常规", "environment": "环境", "conservatism": "保守度", "gases": "气体", "airBreaks": "纯氧间歇", "stops": "停留点", "speeds": "速度", "diver": "潜水员" },
       "results": { "title": "潜水结果", "diveInfoTable": "潜水信息表", "oxygenToxicity": "氧气毒性", "events": "导致错误和警告的事件", "consumedGasCharts": "气体消耗图表", "wayPointsTable": "潜水航点表", "profileChart": "潜水剖面图", "tissuesHeatMap": "组织热力图" },
       "calculators": { "title": "计算器", "sac": "RMV/SAC", "nitrox": "氮氧", "ndl": "免减压极限 (NDL) 表", "altitude": "海拔", "weight": "配重", "gasProperties": "气体属性", "redundancies": "气瓶平衡", "gasBlender": "气体混合" }

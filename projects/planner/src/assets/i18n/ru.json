@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "Приложение", "usage": "Использование приложения", "settings": "Настройки приложения" },
-      "plan": { "title": "План погружения", "tanks": "Баллоны", "standardGases": "Стандартные смеси", "depths": "Глубины", "surfaceInterval": "Поверхностный интервал" },
+      "plan": { "title": "План погружения", "tanks": "Баллоны", "rebreather": "Ребризер", "standardGases": "Стандартные смеси", "depths": "Глубины", "surfaceInterval": "Поверхностный интервал" },
       "options": { "title": "Параметры погружения", "general": "Общие", "environment": "Окружение", "conservatism": "Консерватизм", "gases": "Газы", "airBreaks": "Воздушные паузы", "stops": "Остановки", "speeds": "Скорости", "diver": "Дайвер" },
       "results": { "title": "Результаты погружения", "diveInfoTable": "Таблица информации о погружении", "oxygenToxicity": "Токсичность кислорода", "events": "События, вызывающие ошибки и предупреждения", "consumedGasCharts": "Графики расхода газа", "wayPointsTable": "Таблица точек погружения", "profileChart": "График профиля погружения", "tissuesHeatMap": "Тепловая карта тканей" },
       "calculators": { "title": "Калькуляторы", "sac": "RMV/SAC", "nitrox": "Нитрокс", "ndl": "Таблица бездекомпрессионных пределов (NDL)", "altitude": "Высота над уровнем моря", "weight": "Груз", "gasProperties": "Свойства газа", "redundancies": "Балансировка баллонов", "gasBlender": "Смеситель газов" }

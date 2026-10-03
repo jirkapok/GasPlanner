@@ -12,6 +12,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbModalModule, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
@@ -130,6 +131,7 @@ const MDB_MODULES = [
     MdbFormsModule,
     MdbTabsModule,
     MdbAccordionModule,
+    MdbModalModule,
 ];
 
 const STANDALONE = [
@@ -187,6 +189,7 @@ const STANDALONE = [
 ];
 
 const SERVICES = [
+    MdbModalService,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
     provideTranslateService({
         loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),

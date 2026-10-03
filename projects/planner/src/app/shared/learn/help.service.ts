@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HelpModalComponent } from '../../help-modal/help-modal.component';
-import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { BehaviorSubject } from 'rxjs';
+import { Urls } from '../navigation.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelpService {
-    private modalRef: MdbModalRef<HelpModalComponent> | null = null;
+    private readonly documentSubject = new BehaviorSubject<string>(this.urls.helpMarkdownUrl(Urls.notAvailable));
+    private readonly isOpenSubject = new BehaviorSubject<boolean>(false);
 
-    // TODO add support for scrolling to open/close the help using gestures side panel
-    //  https://hammerjs.github.io/tips/
-    constructor(private modalService: MdbModalService) {
+    public readonly document$ = this.documentSubject.asObservable();
+    public readonly isOpen$ = this.isOpenSubject.asObservable();
+
+    constructor(public urls: Urls) {
     }
 
     public openQuizHelp(): void {
@@ -22,10 +24,13 @@ export class HelpService {
     }
 
     public openHelp(helpDocument: string): void {
-        this.modalRef = this.modalService.open(HelpModalComponent, {
-            data: {
-                path: helpDocument
-            }
-        });
+        const path = this.urls.helpMarkdownUrl(helpDocument);
+
+        this.documentSubject.next(path);
+        this.isOpenSubject.next(true);
+    }
+
+    public closeHelp(): void {
+        this.isOpenSubject.next(false);
     }
 }

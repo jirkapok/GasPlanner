@@ -3,6 +3,7 @@ import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Urls } from '../navigation.service';
 import { HelpSidebarComponent } from '../../help-sidebar/help-sidebar.component';
+import { LayoutService } from '../layout.service';
 
 @Injectable({
     providedIn: 'root'
@@ -12,8 +13,9 @@ export class HelpService {
     private overlayRef: OverlayRef | null = null;
 
     constructor(
+        private overlay: Overlay,
         private urls: Urls,
-        private overlay: Overlay
+        private layoutService: LayoutService,
     ) {
     }
 
@@ -55,10 +57,12 @@ export class HelpService {
     }
 
     private createOverlayRef(): void {
-       const positionStrategy = this.overlay
+        const topOffset = this.layoutService.mainMenuHeight;
+
+        const positionStrategy = this.overlay
             .position()
             .global()
-            .top('0')
+            .top(`${topOffset}px`)
             .right('0');
 
         this.overlayRef = this.overlay.create({
@@ -66,7 +70,7 @@ export class HelpService {
 
             width: 'min(100vw, 475px)',
             height: 'auto',
-            maxHeight: '100vh',
+            maxHeight: `calc(100vh - ${topOffset}px)`,
 
             hasBackdrop: false,
             scrollStrategy: this.overlay.scrollStrategies.noop(),

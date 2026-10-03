@@ -1,13 +1,14 @@
 <aside
   #helpSidebar
-  [attr.aria-labelledby]="'help-sidebar-title'"
   class="bg-white border-start shadow-5 overflow-auto w-100 h-100"
+  [class.d-none]="!isInitialized()"
+  style="transform: translateX(100%);"
   tabindex="-1"
 >
   <header
     class="d-flex align-items-center justify-content-between p-4 border-bottom"
   >
-    <h4 id="help-sidebar-title" class="mb-0 text-body">
+    <h4 class="mb-0 text-body">
       {{ 'helpSidebar.title' | translate }}
     </h4>
 

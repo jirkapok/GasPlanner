@@ -8,11 +8,11 @@ import { HelpService } from '../shared/learn/help.service';
     selector: 'app-help-sidebar',
     imports: [NgxMdModule, TranslatePipe],
     providers: [MarkdownCustomization],
-    templateUrl: './help-modal.component.html',
-    styleUrl: './help-modal.component.scss'
+    templateUrl: './help-sidebar.component.html',
+    styleUrl: './help-sidebar.component.scss'
 })
 
-export class HelpModalComponent {
+export class HelpSidebarComponent {
     @ViewChild('helpSidebar')
     private sidebarPanel!: ElementRef<HTMLElement>;
 

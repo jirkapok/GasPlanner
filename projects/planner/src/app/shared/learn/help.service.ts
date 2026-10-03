@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { Urls } from '../navigation.service';
-import { HelpModalComponent } from '../../help-modal/help-modal.component';
+import { HelpSidebarComponent } from '../../help-sidebar/help-sidebar.component';
+
 
 @Injectable({
     providedIn: 'root'
@@ -76,7 +77,7 @@ export class HelpService {
 
     private attachSidebarToOverlay(): void {
         this.overlayRef?.attach(
-            new ComponentPortal(HelpModalComponent)
+            new ComponentPortal(HelpSidebarComponent)
         );
     }
 

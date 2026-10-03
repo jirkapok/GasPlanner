@@ -100,8 +100,10 @@ export class HelpService {
             return;
         }
 
-        this.overlayRef.detach();
-        this.overlayRef.dispose();
+        const overlayRef = this.overlayRef;
         this.overlayRef = null;
+
+        overlayRef.detach();
+        overlayRef.dispose();
     }
 }

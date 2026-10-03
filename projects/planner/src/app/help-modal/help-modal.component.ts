@@ -1,36 +1,38 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MdbModalRef } from 'mdb-angular-ui-kit/modal';
-import { NgxMdModule } from 'ngx-md';
-import { Urls } from '../shared/navigation.service';
-import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { NgxMdModule } from 'ngx-md';
+import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { HelpService } from '../shared/learn/help.service';
 
 @Component({
-    selector: 'app-help-modal',
+    selector: 'app-help-sidebar',
     imports: [NgxMdModule, TranslatePipe],
     providers: [MarkdownCustomization],
     templateUrl: './help-modal.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrl: './help-modal.component.scss'
 })
 
 export class HelpModalComponent {
-    private _path = this.urls.helpMarkdownUrl(Urls.notAvailable);
+    @ViewChild('helpSidebar')
+    private sidebarPanel!: ElementRef<HTMLElement>;
+
+    protected document = this.helpService.document;
 
     constructor(
-        public modalRef: MdbModalRef<HelpModalComponent>,
-        public urls: Urls,
-        private markdown: MarkdownCustomization
+        private markdown: MarkdownCustomization,
+        private helpService: HelpService
     ) {
         this.markdown.configure();
     }
 
-    public get path(): string {
-        return this._path;
+    // Focus upon creation
+    ngAfterViewInit(): void {
+        requestAnimationFrame(() => {
+            this.sidebarPanel.nativeElement.focus();
+        });
     }
 
-    @Input()
-    public set path(value: string) {
-        this._path  = this.urls.helpMarkdownUrl(value);
+    protected close(): void {
+        this.helpService.closeHelp();
     }
 }

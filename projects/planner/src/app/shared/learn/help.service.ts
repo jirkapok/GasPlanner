@@ -65,11 +65,11 @@ export class HelpService {
             positionStrategy,
 
             width: 'min(100vw, 475px)',
-            height: '100vh',
+            height: 'auto',
+            maxHeight: '100vh',
 
             hasBackdrop: false,
             scrollStrategy: this.overlay.scrollStrategies.noop(),
-
             disposeOnNavigation: true,
         })
     }

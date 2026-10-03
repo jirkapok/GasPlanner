@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "Невозможно рассчитать требуемую смесь, так как добавляемая смесь содержит больше кислорода или гелия, чем целевая смесь.",
     "unitPricesLabel": "Цены за единицу", "o2UnitPriceLabel": "Цена за единицу O2:", "heUnitPriceLabel": "Цена за единицу He:",
     "topMixUnitPriceLabel": "Цена за единицу добавляемой смеси:", "mixPriceLabel": "Стоимость смеси", "o2PriceLabel": "Стоимость O2",
-    "hePriceLabel": "Стоимость He", "topMixPriceLabel": "Стоимость добавляемой смеси", "totalPriceLabel": "Итоговая стоимость"
+    "hePriceLabel": "Стоимость He", "topMixPriceLabel": "Стоимость добавляемой смеси", "totalPriceLabel": "Итоговая стоимость",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Газовая смесь", "nitroxLabel": "Нитрокс", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Максимальная наркотическая глубина",

@@ -253,7 +253,17 @@
     "o2PriceLabel": "O2 price",
     "hePriceLabel": "He price",
     "topMixPriceLabel": "Top mix price",
-    "totalPriceLabel": "Total price"
+    "totalPriceLabel": "Total price",
+    "modeLabel": "Calculator mode",
+    "blendMode": "Blend",
+    "identifyMode": "Identify mix",
+    "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure",
+    "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]",
+    "resultHeLabel": "He [%]",
+    "resultN2Label": "N2 [%]",
+    "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Gas mixture",

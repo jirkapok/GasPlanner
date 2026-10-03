@@ -51,6 +51,25 @@ export interface TopRequest {
     topMix: TankMix;
 }
 
+export interface IdentifyRequest {
+    /** Tank start situation before topping */
+    source: TankMix;
+    /** Available topping mixture */
+    topMix: Mix;
+    /** Final pressure in the tank after topping in bars */
+    finalPressure: number;
+}
+
+/**
+ * Resulting mixture in the tank after topping.
+ * Fractions in range 0-1, pressures in bars.
+ */
+export interface IdentifyResult extends TankMix {
+    n2: number;
+    /** Pressure added to the source tank by topping */
+    addTop: number;
+}
+
 /** Gas mix blending math */
 export class GasBlender {
     /** Below this threshold a volume/pressure difference is treated as real-gas solver noise and snapped to 0. */
@@ -122,6 +141,37 @@ export class GasBlender {
             o2: finalGas.fO2,
             he: finalGas.fHe,
             pressure: finalPressure
+        };
+    }
+
+    /**
+     * Identifies resulting mixture, if you top up the source tank with topping mix up to the final pressure.
+     * @throws Error if final pressure is lower than source pressure.
+     */
+    public static identify(request: IdentifyRequest): IdentifyResult {
+        GasBlender.validate(request.source, 'Source');
+        GasBlender.validate(request.topMix, 'Top');
+
+        if (request.finalPressure < request.source.pressure) {
+            throw new Error('Final pressure needs to be higher or equal to the source pressure.');
+        }
+
+        const topPressure = GasBlender.findTopPressure(request);
+        const result = GasBlender.top({
+            source: request.source,
+            topMix: { o2: request.topMix.o2, he: request.topMix.he, pressure: topPressure }
+        });
+
+        if (result.pressure === 0) {
+            return { o2: 0, he: 0, n2: 0, pressure: 0, addTop: 0 };
+        }
+
+        return {
+            o2: result.o2,
+            he: result.he,
+            n2: GasMixtures.n2(result.o2, result.he),
+            pressure: result.pressure,
+            addTop: request.finalPressure - request.source.pressure
         };
     }
 
@@ -200,6 +250,40 @@ export class GasBlender {
             addTop: GasBlender.cleanDifference(request.target.pressure - pressureAfterO2),
             removeFromSource: 0
         };
+    }
+
+    /**
+     * Finds pressure of the top mix (as if it was in the tank alone) by bisection,
+     * so the real gas pressure after topping equals the required final pressure.
+     */
+    private static findTopPressure(request: IdentifyRequest): number {
+        if (request.finalPressure === request.source.pressure) {
+            return 0;
+        }
+
+        const finalPressure = (topPressure: number): number => GasBlender.top({
+            source: request.source,
+            topMix: { o2: request.topMix.o2, he: request.topMix.he, pressure: topPressure }
+        }).pressure;
+
+        let low = 0;
+        let high = request.finalPressure;
+        while (finalPressure(high) < request.finalPressure) {
+            low = high;
+            high *= 2;
+        }
+
+        const maxIterations = 100;
+        for (let iteration = 0; iteration < maxIterations && high - low > GasBlender.precision; iteration++) {
+            const middle = (low + high) / 2;
+            if (finalPressure(middle) < request.finalPressure) {
+                low = middle;
+            } else {
+                high = middle;
+            }
+        }
+
+        return (low + high) / 2;
     }
 
     private static mixByRemovingVolume(compressibility: Compressibility, request: MixRequest,

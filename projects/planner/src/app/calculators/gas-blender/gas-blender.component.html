@@ -7,6 +7,14 @@
           [headerIcon]="calcIcon"
           helpDocument="gas_blender"
           >
+          <div class="btn-group btn-group-sm" role="group" [attr.aria-label]="'gasBlender.modeLabel' | translate">
+            <button type="button" class="btn btn-sm" id="blendModeBtn" [class.btn-primary]="!calc.isIdentify"
+              [class.btn-secondary]="calc.isIdentify" [attr.aria-pressed]="!calc.isIdentify"
+              (click)="toBlend()">{{ 'gasBlender.blendMode' | translate }}</button>
+            <button type="button" class="btn btn-sm" id="identifyModeBtn" [class.btn-primary]="calc.isIdentify"
+              [class.btn-secondary]="!calc.isIdentify" [attr.aria-pressed]="calc.isIdentify"
+              (click)="toIdentify()">{{ 'gasBlender.identifyMode' | translate }}</button>
+          </div>
           <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': togglePricing }" type="button"
             id="pricingToggle" data-toggle="button" title="{{ 'gasBlender.showPricingTitle' | translate }}"
             [attr.aria-pressed]="togglePricing" autocomplete="off" (click)="togglePricing()">
@@ -63,14 +71,25 @@
                       </div>
                     </div>
                     <div class="col col-12 col-sm-4 mb-2">
-                      <div>{{ 'gasBlender.targetLabel' | translate }}</div>
-                      <div class="mb-2">
-                        <app-oxygen-dropdown [tank]="calc.targetTank" (gasChange)="applyChange()"
-                          [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="targetO2"
-                          [showTrimixGases]="true" [nitroxForm]="blenderForm" />
+                      @if (calc.isIdentify) {
+                        <div>{{ 'gasBlender.resultingMixLabel' | translate }}</div>
+                        <div class="mb-2">
+                          <label for="resultO2" class="form-label">{{ 'oxygenDropdown.o2Label' | translate }}</label>
+                          <input class="form-control" type="number" id="resultO2" readonly [value]="resultO2" />
                         </div>
                         <div class="mb-2">
-                          <label for="sourceHe" class="form-label">{{ 'gasBlender.heLabel' | translate }}</label>
+                          <label for="resultHe" class="form-label">{{ 'gasBlender.heLabel' | translate }}</label>
+                          <input class="form-control" type="number" id="resultHe" readonly [value]="resultHe" />
+                        </div>
+                      } @else {
+                        <div>{{ 'gasBlender.targetLabel' | translate }}</div>
+                        <div class="mb-2">
+                          <app-oxygen-dropdown [tank]="calc.targetTank" (gasChange)="applyChange()"
+                            [showBestMix]="false" (standardGasApplied)="applyTemplate()" controlName="targetO2"
+                            [showTrimixGases]="true" [nitroxForm]="blenderForm" />
+                        </div>
+                        <div class="mb-2">
+                          <label for="targetHe" class="form-label">{{ 'gasBlender.heLabel' | translate }}</label>
                           <input formControlName="targetHe" class="form-control" type="number"
                             (input)="applyChange()" [min]="ranges.tankHe[0]" [max]="ranges.tankHe[1]" step="1"
                             required [class.is-invalid]="targetHeInvalid" id="targetHe" />
@@ -78,17 +97,27 @@
                               <div class="text-danger">{{ 'validation.needsNumber' | translate }}
                               {{ranges.tankHeLabel}}</div>
                             }
-                          </div>
+                        </div>
+                      }
                           <div>
-                            <label for="sourcePressure" class="form-label">{{ 'gasBlender.pressureLabel' | translate }}
+                            <label for="targetPressure" class="form-label">
+                            @if (calc.isIdentify) {
+                              {{ 'gasBlender.finalPressureLabel' | translate }}
+                            } @else {
+                              {{ 'gasBlender.pressureLabel' | translate }}
+                            }
                             [{{units.pressure}}]:</label>
                             <input formControlName="targetPressure" class="form-control" type="number"
                               (input)="applyChange()" required [min]="ranges.tankPressure[0]"
                               [max]="ranges.tankPressure[1]" step="1" id="targetPressure"
-                              [class.is-invalid]="targetPressureInvalid" />
+                              [class.is-invalid]="targetPressureInvalid || finalPressureBelowSource" />
                               @if (targetPressureInvalid) {
                                 <div class="text-danger">
                                 {{ 'validation.needsNumber' | translate }} {{ranges.tankPressureLabel}}</div>
+                              }
+                              @if (finalPressureBelowSource) {
+                                <div class="text-danger" id="finalPressureBelowSource">
+                                {{ 'gasBlender.finalPressureBelowSourceMessage' | translate }}</div>
                               }
                             </div>
                           </div>
@@ -101,7 +130,29 @@
                           <span>{{ 'gasBlender.resultsLabel' | translate }}</span>
                         </div>
                         <div class="card-body">
-                          @if (!calc.unableToCalculate) {
+                          @if (!calc.unableToCalculate && calc.isIdentify) {
+                            <table class="table table-sm" >
+                              <tbody>
+                                <tr>
+                                  <td>{{ 'gasBlender.resultO2Label' | translate }}</td>
+                                  <td class="table-active" id="resultO2Value">{{ calc.resultO2 | number:'1.0-1' }}</td>
+                                </tr>
+                                <tr>
+                                  <td>{{ 'gasBlender.resultHeLabel' | translate }}</td>
+                                  <td class="table-active" id="resultHeValue">{{ calc.resultHe | number:'1.0-1' }}</td>
+                                </tr>
+                                <tr>
+                                  <td>{{ 'gasBlender.resultN2Label' | translate }}</td>
+                                  <td class="table-active" id="resultN2">{{ calc.resultN2 | number:'1.0-1' }}</td>
+                                </tr>
+                                <tr>
+                                  <td>{{ 'gasBlender.addedPressureLabel' | translate }} [{{units.pressure}}]</td>
+                                  <td class="table-active" id="addedPressure">{{ calc.addTop | number:'1.0-1' }}</td>
+                                </tr>
+                              </tbody>
+                            </table>
+                          }
+                          @if (!calc.unableToCalculate && !calc.isIdentify) {
                             <table class="table table-sm" >
                               <tbody>
                                 @if (calc.needsRemove) {
@@ -112,7 +163,7 @@
                                 }
                                 <tr>
                                   <td>{{ 'gasBlender.addO2Label' | translate }} [{{units.pressure}}]</td>
-                                  <td class="table-active">{{ calc.addO2 | number:'1.0-1' }}</td>
+                                  <td class="table-active" id="addO2Result">{{ calc.addO2 | number:'1.0-1' }}</td>
                                 </tr>
                                 <tr>
                                   <td>{{ 'gasBlender.addHeLabel' | translate }} [{{units.pressure}}]</td>
@@ -128,7 +179,11 @@
                           @if (calc.unableToCalculate) {
                             <div class="alert alert-danger">
                               <fa-icon [icon]="exclamationIcon" class="me-2"></fa-icon>
-                              <span>{{ 'gasBlender.unableToCalculateMessage' | translate }}</span>
+                              @if (finalPressureBelowSource) {
+                                <span>{{ 'gasBlender.finalPressureBelowSourceMessage' | translate }}</span>
+                              } @else {
+                                <span>{{ 'gasBlender.unableToCalculateMessage' | translate }}</span>
+                              }
                             </div>
                           }
                         </div>

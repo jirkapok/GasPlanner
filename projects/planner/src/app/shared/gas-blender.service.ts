@@ -1,12 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
-    GasBlender, MixRequest, MixResult, Tank
+    GasBlender, IdentifyRequest, IdentifyResult, MixRequest, MixResult, Tank
 } from 'scuba-physics';
 import { TankBound } from './models';
+import { BlenderMode } from './views.model';
 import { UnitConversion } from './UnitConversion';
+
+const emptyIdentify = (): IdentifyResult => ({ o2: 0, he: 0, n2: 0, pressure: 0, addTop: 0 });
 
 @Injectable()
 export class GasBlenderService {
+    /** In identify mode, target tank pressure is used as final pressure and target mix is the result */
+    public mode = BlenderMode.blend;
     private readonly _sourceTank: TankBound;
     private readonly _topMix: TankBound;
     private readonly _targetTank: TankBound;
@@ -15,6 +20,7 @@ export class GasBlenderService {
     private _addTop = 0;
     private _removeFromSource = 0;
     private _unableToCalculate = false;
+    private _identified: IdentifyResult = emptyIdentify();
 
     constructor(private units: UnitConversion) {
         // we don't need to create default tank based on units, because all values are always within ranges
@@ -63,10 +69,40 @@ export class GasBlenderService {
         return this._unableToCalculate;
     }
 
+    public get isIdentify(): boolean {
+        return this.mode === BlenderMode.identify;
+    }
+
+    /** Identified O2 content in % */
+    public get resultO2(): number {
+        return this._identified.o2 * 100;
+    }
+
+    /** Identified He content in % */
+    public get resultHe(): number {
+        return this._identified.he * 100;
+    }
+
+    /** Identified N2 content in % */
+    public get resultN2(): number {
+        return this._identified.n2 * 100;
+    }
+
+    public get finalPressureBelowSource(): boolean {
+        return this.isIdentify && this._targetTank.startPressure < this._sourceTank.startPressure;
+    }
+
     /**
      *  Needs to be applied, when any field changes.
      **/
     public calculate(): void {
+        if (this.isIdentify) {
+            this.identify();
+            return;
+        }
+
+        this._identified = emptyIdentify();
+
         try {
             const request: MixRequest = this.createRequest();
             const results = GasBlender.mix(request);
@@ -77,6 +113,37 @@ export class GasBlenderService {
             this.applyResults(results);
             this._unableToCalculate = true;
         }
+    }
+
+    private identify(): void {
+        try {
+            const request = this.createIdentifyRequest();
+            this._identified = GasBlender.identify(request);
+            this.applyResults({ addHe: 0, addO2: 0, addTop: this._identified.addTop, removeFromSource: 0 });
+            this._unableToCalculate = false;
+        } catch {
+            this._identified = emptyIdentify();
+            this.applyResults({ addHe: 0, addO2: 0, addTop: 0, removeFromSource: 0 });
+            this._unableToCalculate = true;
+        }
+    }
+
+    private createIdentifyRequest(): IdentifyRequest {
+        const sourceMetric = this._sourceTank.tank;
+        const topMetric = this.topMix.tank;
+
+        return {
+            source: {
+                pressure: sourceMetric.startPressure,
+                o2: sourceMetric.gas.fO2,
+                he: sourceMetric.gas.fHe
+            },
+            topMix: {
+                o2: topMetric.gas.fO2,
+                he: topMetric.gas.fHe
+            },
+            finalPressure: this.targetTank.tank.startPressure
+        };
     }
 
     private createRequest(): MixRequest {

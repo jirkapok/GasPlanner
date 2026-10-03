@@ -24,7 +24,14 @@ export interface RedundanciesViewState extends ViewState {
     secondTank: TankFillState;
 }
 
+export enum BlenderMode {
+    blend = 'blend',
+    identify = 'identify'
+}
+
 export interface BlenderViewState extends ViewState {
+    /** added with identify mix use case, does not have to be present, defaults to blend */
+    mode?: BlenderMode;
     source: TankMix;
     target: TankMix;
     topMix: Mix;

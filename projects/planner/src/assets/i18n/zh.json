@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "无法计算所需的混合气体，因为加满气体中的氧气或氦气含量高于目标气体。",
     "unitPricesLabel": "单价", "o2UnitPriceLabel": "O2 单价：", "heUnitPriceLabel": "He 单价：",
     "topMixUnitPriceLabel": "加满气体单价：", "mixPriceLabel": "混合气体价格", "o2PriceLabel": "O2 价格",
-    "hePriceLabel": "He 价格", "topMixPriceLabel": "加满气体价格", "totalPriceLabel": "总价"
+    "hePriceLabel": "He 价格", "topMixPriceLabel": "加满气体价格", "totalPriceLabel": "总价",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "混合气体", "nitroxLabel": "氮氧", "heLabel": "He [%]：", "maxNarcoticDepthLabel": "最大氮醉深度",

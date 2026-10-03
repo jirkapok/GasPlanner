@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "Die erforderliche Mischung kann nicht berechnet werden, da die Auffüllmischung mehr Sauerstoff oder Helium enthält als die Zielmischung.",
     "unitPricesLabel": "Einzelpreise", "o2UnitPriceLabel": "Einzelpreis O2:", "heUnitPriceLabel": "Einzelpreis He:",
     "topMixUnitPriceLabel": "Einzelpreis Auffüllmischung:", "mixPriceLabel": "Mischungspreis", "o2PriceLabel": "O2-Preis",
-    "hePriceLabel": "He-Preis", "topMixPriceLabel": "Preis Auffüllmischung", "totalPriceLabel": "Gesamtpreis"
+    "hePriceLabel": "He-Preis", "topMixPriceLabel": "Preis Auffüllmischung", "totalPriceLabel": "Gesamtpreis",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Gasmischung", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Maximale narkotische Tiefe",

@@ -4,7 +4,6 @@ import { ComponentPortal } from '@angular/cdk/portal';
 import { Urls } from '../navigation.service';
 import { HelpSidebarComponent } from '../../help-sidebar/help-sidebar.component';
 
-
 @Injectable({
     providedIn: 'root'
 })

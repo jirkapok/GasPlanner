@@ -1,18 +1,24 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 import { Urls } from '../navigation.service';
+import { HelpModalComponent } from '../../help-modal/help-modal.component';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelpService {
-    private readonly documentSubject = new BehaviorSubject<string>(this.urls.helpMarkdownUrl(Urls.notAvailable));
-    private readonly isOpenSubject = new BehaviorSubject<boolean>(false);
+    private _document = this.urls.helpMarkdownUrl(Urls.notAvailable);
+    private overlayRef: OverlayRef | null = null;
 
-    public readonly document$ = this.documentSubject.asObservable();
-    public readonly isOpen$ = this.isOpenSubject.asObservable();
+    constructor(
+        private urls: Urls,
+        private overlay: Overlay
+    ) {
+    }
 
-    constructor(public urls: Urls) {
+    public get document(): string {
+        return this._document;
     }
 
     public openQuizHelp(): void {
@@ -24,13 +30,78 @@ export class HelpService {
     }
 
     public openHelp(helpDocument: string): void {
-        const path = this.urls.helpMarkdownUrl(helpDocument);
+        const newDocument = this.urls.helpMarkdownUrl(helpDocument);
 
-        this.documentSubject.next(path);
-        this.isOpenSubject.next(true);
+        this.closeHelp();
+        this._document = newDocument;
+        this.createOverlay();
     }
 
     public closeHelp(): void {
-        this.isOpenSubject.next(false);
+        this.destroyOverlay();
+    }
+
+    private createOverlay(): void {
+        if (this.overlayRef) {
+            return;
+        }
+
+        this.createOverlayRef();
+
+        this.attachSidebarToOverlay();
+
+        this.listenForEsc();
+        this.listenForDetach();
+    }
+
+    private createOverlayRef(): void {
+       const positionStrategy = this.overlay
+            .position()
+            .global()
+            .top('0')
+            .right('0');
+
+        this.overlayRef = this.overlay.create({
+            positionStrategy,
+
+            width: 'min(100vw, 500px)',
+            height: '100vh',
+
+            hasBackdrop: false,
+            scrollStrategy: this.overlay.scrollStrategies.noop(),
+
+            disposeOnNavigation: true,
+        })
+    }
+
+    private attachSidebarToOverlay(): void {
+        this.overlayRef?.attach(
+            new ComponentPortal(HelpModalComponent)
+        );
+    }
+
+    private listenForEsc(): void {
+        this.overlayRef?.keydownEvents().subscribe(event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.closeHelp();
+            }
+        });
+    }
+
+    private listenForDetach(): void {
+        this.overlayRef?.detachments().subscribe(() => {
+            this.overlayRef = null;
+        });
+    }
+
+    private destroyOverlay(): void {
+        if (!this.overlayRef) {
+            return;
+        }
+
+        this.overlayRef.detach();
+        this.overlayRef.dispose();
+        this.overlayRef = null;
     }
 }

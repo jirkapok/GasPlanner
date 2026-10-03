@@ -1,7 +1,7 @@
 @if (isInitialized()) {
-<aside #helpSidebar class="bg-white border-start shadow-5 overflow-auto w-100 h-100"
+<aside #helpSidebar class="d-flex flex-column bg-white border-start shadow-5 w-100 h-100"
     style="transform: translateX(100%);" tabindex="-1">
-    <header class="d-flex align-items-center justify-content-between p-4 border-bottom">
+    <header class="d-flex flex-shrink-0 align-items-center justify-content-between p-4 border-bottom">
         <h4 class="mb-0 text-body">
             {{ 'helpSidebar.title' | translate }}
         </h4>
@@ -10,11 +10,11 @@
             (click)="close()"></button>
     </header>
 
-    <main class="p-4 text-body">
+    <main class="flex-grow-1 overflow-auto p-4 text-body">
         <ngx-md [path]="document" [sanitizeHtml]="false"></ngx-md>
     </main>
 
-    <footer class="p-3 border-top bg-light">
+    <footer class="flex-shrink-0 p-3 border-top bg-light">
         <button type="button" class="btn btn-secondary" (click)="close()">
             {{ 'helpSidebar.close' | translate }}
         </button>

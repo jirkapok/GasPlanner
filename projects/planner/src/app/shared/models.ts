@@ -195,8 +195,9 @@ export class TankBound implements IGasContent, ITankSize {
         this.tank.id = newValue;
     }
 
+    /** Rounded to one decimal place in respective volume units */
     public set size(newValue: number) {
-        this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+        this.assignSize(Precision.round(newValue, 1));
     }
 
     public set startPressure(newValue: number) {
@@ -210,7 +211,7 @@ export class TankBound implements IGasContent, ITankSize {
 
         const sizeBackup = this.size;
         this._workingPressureBars = this.units.toBar(newValue);
-        this.size = sizeBackup;
+        this.assignSize(sizeBackup);
     }
 
     /**
@@ -240,6 +241,10 @@ export class TankBound implements IGasContent, ITankSize {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
+    }
+
+    private assignSize(newValue: number): void {
+        this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
     }
 }
 

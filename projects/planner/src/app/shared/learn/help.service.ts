@@ -64,7 +64,7 @@ export class HelpService {
         this.overlayRef = this.overlay.create({
             positionStrategy,
 
-            width: 'min(100vw, 500px)',
+            width: 'min(100vw, 475px)',
             height: '100vh',
 
             hasBackdrop: false,

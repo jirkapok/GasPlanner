@@ -1,29 +1,38 @@
 <aside
   #helpSidebar
-  class="
-  sidenav
-  bg-white
-  shadow-5
-  d-flex
-  flex-column
-  overflow-auto
-  w-100
-  h-100
-  "
-  tabindex="-1">
+  [attr.aria-labelledby]="'help-sidebar-title'"
+  class="bg-white border-start shadow-5 overflow-auto w-100 h-100"
+  tabindex="-1"
+>
+  <header
+    class="d-flex align-items-center justify-content-between p-4 border-bottom"
+  >
+    <h4 id="help-sidebar-title" class="mb-0 text-body">
+      {{ 'helpSidebar.title' | translate }}
+    </h4>
 
-    <header>
-        <h4 class="w-100">{{ 'helpSidebar.title' | translate }}</h4>
-        <button type="button" class="btn-close" aria-label="{{ 'helpSidebar.close' | translate }}" (click)="close()"></button>
-    </header>
+    <button
+      type="button"
+      class="btn-close ms-3"
+      [attr.aria-label]="'helpSidebar.close' | translate"
+      (click)="close()"
+    ></button>
+  </header>
 
-    <main>
-        <ngx-md [path]="document" [sanitizeHtml]="false"></ngx-md>
-    </main>
+  <main class="p-4 text-body">
+    <ngx-md
+      [path]="document"
+      [sanitizeHtml]="false"
+    ></ngx-md>
+  </main>
 
-    <footer>
-        <button type="button" class="btn btn-secondary" (click)="close()">
-            {{ 'helpSidebar.close' | translate }}
-        </button>
-    </footer>
+  <footer class="p-3 border-top bg-light">
+    <button
+      type="button"
+      class="btn btn-secondary"
+      (click)="close()"
+    >
+      {{ 'helpSidebar.close' | translate }}
+    </button>
+  </footer>
 </aside>

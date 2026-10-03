@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
@@ -21,6 +21,7 @@ import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LanguageDropdownComponent } from '../language-dropdown/language-dropdown.component';
+import { LayoutService } from '../shared/layout.service';
 
 @Component({
     selector: 'app-mainmenu',
@@ -36,7 +37,7 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
         LanguageDropdownComponent
     ]
 })
-export class MainMenuComponent extends Streamed {
+export class MainMenuComponent extends Streamed implements AfterViewInit {
     public isNavbarCollapsed = true;
     public iconMenu = faBars;
     public iconAltitude = faMountainSun;
@@ -52,11 +53,15 @@ export class MainMenuComponent extends Streamed {
     public iconDelete = faTrashCan;
     public inPlanner = false;
 
+    @ViewChild('mainMenu', { static: true })
+    private mainMenuElement!: ElementRef<HTMLElement>;
+
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private schedules: ManagedDiveSchedules,
         private share: ShareDiveService,
+        private layoutService: LayoutService,
         public urls: Urls) {
         super();
         this.router.events.pipe(
@@ -66,6 +71,22 @@ export class MainMenuComponent extends Streamed {
             filter((r: ActivatedRoute) => r.outlet === 'primary'),
         ).subscribe((currentRoute: ActivatedRoute) => {
             this.inPlanner = currentRoute.snapshot.url.length === 0;
+        });
+    }
+
+    // Register component's height with LayoutService
+    ngAfterViewInit(): void {
+        const element = this.mainMenuElement.nativeElement;
+
+        const resizeObserver = new ResizeObserver(([entry]) =>
+            this.layoutService.mainMenuHeight = element.getBoundingClientRect().height
+        );
+
+        resizeObserver.observe(element);
+
+        this.unsubscribe$.subscribe(() => {
+            resizeObserver.disconnect();
+            this.layoutService.mainMenuHeight = 0;
         });
     }
 

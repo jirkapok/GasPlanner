@@ -46,7 +46,7 @@
     "githubProject": "Github 项目"
   },
   "cardHeader": { "showHelp": "显示帮助" },
-  "helpModal": { "title": "帮助", "close": "关闭" },
+  "helpSidebar": { "title": "帮助", "close": "关闭" },
   "appinfo": { "version": "版本" },
   "ppo2": { "maxPpo2Label": "最大ppO2：", "maxDecoPpo2Label": "最大减压ppO2：" },
   "diver": { "rmvLabel": "RMV", "stressRmvLabel": "压力RMV" },

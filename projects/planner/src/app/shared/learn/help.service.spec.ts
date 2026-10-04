@@ -90,4 +90,19 @@ describe('HelpService', () => {
         expect(overlayRef.detach).toHaveBeenCalledTimes(1);
         expect(overlayRef.dispose).toHaveBeenCalledTimes(1);
     });
+
+    it('closes the help overlay when Escape is pressed', () => {
+        service.openHelp('quiz-help');
+
+        const event = {
+            key: 'Escape',
+            preventDefault: jasmine.createSpy('preventDefault')
+        } as unknown as KeyboardEvent;
+
+        keydownEvents.next(event);
+
+        expect(event.preventDefault).toHaveBeenCalled();
+        expect(overlayRef.detach).toHaveBeenCalledTimes(1);
+        expect(overlayRef.dispose).toHaveBeenCalledTimes(1);
+    });
 });

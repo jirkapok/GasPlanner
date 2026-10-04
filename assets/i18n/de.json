@@ -46,7 +46,7 @@
     "githubProject": "GitHub-Projekt"
   },
   "cardHeader": { "showHelp": "Hilfe anzeigen" },
-  "helpModal": { "title": "Hilfe", "close": "Schließen" },
+  "helpSidebar": { "title": "Hilfe", "close": "Schließen" },
   "appinfo": { "version": "Version" },
   "ppo2": { "maxPpo2Label": "Maximale ppO2:", "maxDecoPpo2Label": "Maximale Deko-ppO2:" },
   "diver": { "rmvLabel": "RMV", "stressRmvLabel": "Stress-RMV" },

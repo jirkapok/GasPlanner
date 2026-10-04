@@ -46,7 +46,7 @@
     "githubProject": "Projekt na Githubu"
   },
   "cardHeader": { "showHelp": "Zobrazit nápovědu" },
-  "helpModal": { "title": "Nápověda", "close": "Zavřít" },
+  "helpSidebar": { "title": "Nápověda", "close": "Zavřít" },
   "appinfo": { "version": "Verze" },
   "ppo2": { "maxPpo2Label": "Maximální ppO2:", "maxDecoPpo2Label": "Maximální dekompresní ppO2:" },
   "diver": { "rmvLabel": "RMV", "stressRmvLabel": "Stresové RMV" },

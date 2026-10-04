@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MainMenuComponent } from './mainmenu.component';
 import { ManagedDiveSchedules } from '../shared/managedDiveSchedules';
 import { ShareDiveService } from '../shared/ShareDiveService';
@@ -8,7 +9,7 @@ import { PreferencesStore } from '../shared/preferencesStore';
 import { LanguageService } from '../shared/language.service';
 import { Urls } from '../shared/navigation.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
-import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { LayoutService } from '../shared/layout.service';
 
 describe('Main menu component', () => {
     let fixture: ComponentFixture<MainMenuComponent>;
@@ -31,7 +32,9 @@ describe('Main menu component', () => {
             providers: [
                 provideRouter([]),
                 provideTestTranslate(), provideNoopAnimations(),
-                LanguageService, Urls,
+                LanguageService,
+                LayoutService,
+                Urls,
                 { provide: ManagedDiveSchedules, useValue: schedules },
                 { provide: ShareDiveService, useValue: jasmine.createSpyObj<ShareDiveService>('ShareDiveService', ['sharePlan']) },
                 { provide: PreferencesStore, useValue: jasmine.createSpyObj<PreferencesStore>('PreferencesStore', ['save']) }
@@ -41,6 +44,14 @@ describe('Main menu component', () => {
         fixture = TestBed.createComponent(MainMenuComponent);
         fixture.componentInstance.inPlanner = true;
         fixture.detectChanges();
+    });
+
+    it('Sets LayoutService\'s mainMenuHeight correctly', () => {
+        const layout = TestBed.inject(LayoutService);
+
+        const componentHeight = fixture.nativeElement.getBoundingClientRect().height;
+
+        expect(layout.mainMenuHeight).toBe(componentHeight);
     });
 
     describe('Dive menu', () => {

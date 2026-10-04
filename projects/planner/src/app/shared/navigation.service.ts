@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root',
+})
 export class Urls {
     public static readonly notAvailable = 'not-available';
     private static readonly rootUrl = 'https://github.com/jirkapok/GasPlanner';

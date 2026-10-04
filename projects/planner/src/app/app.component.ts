@@ -7,7 +7,7 @@ import { MainMenuComponent } from './mainmenu/mainmenu.component';
     selector: 'app-root',
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss'],
-    imports: [MainMenuComponent,  AppFooterComponent, RouterOutlet],
+    imports: [MainMenuComponent, AppFooterComponent, RouterOutlet],
     changeDetection: ChangeDetectionStrategy.Eager,
     standalone: true
 })

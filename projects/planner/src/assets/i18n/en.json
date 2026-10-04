@@ -150,7 +150,7 @@
   "cardHeader": {
     "showHelp": "Show Help"
   },
-  "helpModal": {
+  "helpSidebar": {
     "title": "Help",
     "close": "Close"
   },

@@ -1,16 +1,26 @@
 import { Injectable } from '@angular/core';
-import { HelpModalComponent } from '../../help-modal/help-modal.component';
-import { MdbModalRef, MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
+import { Urls } from '../navigation.service';
+import { HelpSidebarComponent } from '../../help-sidebar/help-sidebar.component';
+import { LayoutService } from '../layout.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class HelpService {
-    private modalRef: MdbModalRef<HelpModalComponent> | null = null;
+    private _document = this.urls.helpMarkdownUrl(Urls.notAvailable);
+    private overlayRef: OverlayRef | null = null;
 
-    // TODO add support for scrolling to open/close the help using gestures side panel
-    //  https://hammerjs.github.io/tips/
-    constructor(private modalService: MdbModalService) {
+    constructor(
+        private overlay: Overlay,
+        private urls: Urls,
+        private layoutService: LayoutService,
+    ) {
+    }
+
+    public get document(): string {
+        return this._document;
     }
 
     public openQuizHelp(): void {
@@ -22,10 +32,82 @@ export class HelpService {
     }
 
     public openHelp(helpDocument: string): void {
-        this.modalRef = this.modalService.open(HelpModalComponent, {
-            data: {
-                path: helpDocument
+        const newDocument = this.urls.helpMarkdownUrl(helpDocument);
+
+        this.closeHelp();
+        this._document = newDocument;
+        this.createOverlay();
+    }
+
+    public closeHelp(): void {
+        this.destroyOverlay();
+    }
+
+    private createOverlay(): void {
+        if (this.overlayRef) {
+            return;
+        }
+
+        this.createOverlayRef();
+
+        this.attachSidebarToOverlay();
+
+        this.listenForEsc();
+        this.listenForDetach();
+    }
+
+    private createOverlayRef(): void {
+        const topOffset = this.layoutService.mainMenuHeight;
+
+        const positionStrategy = this.overlay
+            .position()
+            .global()
+            .top(`${topOffset}px`)
+            .right('0');
+
+        this.overlayRef = this.overlay.create({
+            positionStrategy,
+
+            width: 'min(100vw, 475px)',
+            height: 'auto',
+            maxHeight: `calc(100vh - ${topOffset}px)`,
+
+            hasBackdrop: false,
+            scrollStrategy: this.overlay.scrollStrategies.noop(),
+            disposeOnNavigation: true,
+        });
+    }
+
+    private attachSidebarToOverlay(): void {
+        this.overlayRef?.attach(
+            new ComponentPortal(HelpSidebarComponent)
+        );
+    }
+
+    private listenForEsc(): void {
+        this.overlayRef?.keydownEvents().subscribe(event => {
+            if (event.key === 'Escape') {
+                event.preventDefault();
+                this.closeHelp();
             }
         });
+    }
+
+    private listenForDetach(): void {
+        this.overlayRef?.detachments().subscribe(() => {
+            this.overlayRef = null;
+        });
+    }
+
+    private destroyOverlay(): void {
+        if (!this.overlayRef) {
+            return;
+        }
+
+        const overlayRef = this.overlayRef;
+        this.overlayRef = null;
+
+        overlayRef.detach();
+        overlayRef.dispose();
     }
 }

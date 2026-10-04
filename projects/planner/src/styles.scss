@@ -1,6 +1,9 @@
 @use "@fortawesome/fontawesome-svg-core/styles.css";
 @use "mdb-angular-ui-kit/assets/scss/mdb.scss";
 
+// Required for Angular CDK's Overlay module
+@import '@angular/cdk/overlay-prebuilt.css';
+
 .table-noheader > tbody > tr:first-child > td {
     border: none;
 }
@@ -9,7 +12,7 @@
     min-height: 500px;
 }
 
-// Fix for mdb dropdown, since ti doesn't respect parent element
+// Fix for mdb dropdown, since it doesn't respect parent element
 .dropdown-menu {
     position: relative !important;
 }

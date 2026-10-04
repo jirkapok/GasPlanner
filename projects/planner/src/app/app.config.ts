@@ -12,6 +12,7 @@ import { ClipboardModule } from 'ngx-clipboard';
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
+import { MdbModalModule, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
@@ -37,7 +38,7 @@ import { OxygenComponent } from './controls/oxygen/oxygen.component';
 import { TankSizeComponent } from './controls/tank.size/tank.size.component';
 import { GradientsComponent } from './controls/gradients/gradients.component';
 import { PpO2Component } from './controls/pp-o2/pp-o2.component';
-import { HelpModalComponent } from './help-modal/help-modal.component';
+import { HelpSidebarComponent } from './help-sidebar/help-sidebar.component';
 import { HelpComponent } from './help/help.component';
 
 import { SurfaceIntervalComponent } from './plan/surface-interval/surface-interval.component';
@@ -110,7 +111,6 @@ import { ResamplingService } from './shared/ResamplingService';
 import { ApplicationSettingsService } from './shared/ApplicationSettings';
 import { IgnoredIssuesService } from './shared/IgnoredIssues.service';
 import { BlendPricingService } from './shared/blend-pricing.service';
-import { MdbModalModule, MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { ShareDiveService } from './shared/ShareDiveService';
 import { CardHeaderComponent } from './card-header/card-header.component';
 import { AppFooterComponent } from './footer/footer.component';
@@ -132,7 +132,6 @@ const MDB_MODULES = [
     MdbTabsModule,
     MdbAccordionModule,
     MdbModalModule,
-    MdbModalService,
 ];
 
 const STANDALONE = [
@@ -173,7 +172,7 @@ const STANDALONE = [
     GasConsumedDifferenceComponent,
     GasConsumedDifferenceTankComponent,
     SurfaceIntervalComponent,
-    HelpModalComponent,
+    HelpSidebarComponent,
     HelpComponent,
     CardHeaderComponent,
     AppFooterComponent,

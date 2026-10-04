@@ -38,6 +38,9 @@ import { LayoutService } from '../shared/layout.service';
     ]
 })
 export class MainMenuComponent extends Streamed implements AfterViewInit {
+    @ViewChild('mainMenu', { static: true })
+    private mainMenuElement!: ElementRef<HTMLElement>;
+
     public isNavbarCollapsed = true;
     public iconMenu = faBars;
     public iconAltitude = faMountainSun;
@@ -52,9 +55,6 @@ export class MainMenuComponent extends Streamed implements AfterViewInit {
     public iconClone = faClone;
     public iconDelete = faTrashCan;
     public inPlanner = false;
-
-    @ViewChild('mainMenu', { static: true })
-    private mainMenuElement!: ElementRef<HTMLElement>;
 
     constructor(
         private router: Router,
@@ -78,7 +78,7 @@ export class MainMenuComponent extends Streamed implements AfterViewInit {
     ngAfterViewInit(): void {
         const element = this.mainMenuElement.nativeElement;
 
-        const resizeObserver = new ResizeObserver(([entry]) =>
+        const resizeObserver = new ResizeObserver(() =>
             this.layoutService.mainMenuHeight = element.getBoundingClientRect().height
         );
 

@@ -75,7 +75,7 @@ export class HelpService {
             hasBackdrop: false,
             scrollStrategy: this.overlay.scrollStrategies.noop(),
             disposeOnNavigation: true,
-        })
+        });
     }
 
     private attachSidebarToOverlay(): void {

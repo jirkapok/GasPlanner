@@ -1,3 +1,10 @@
+# [0.10.0](https://github.com/jirkapok/GasPlanner/compare/v0.9.0...v0.10.0) (2026-10-04)
+
+
+### Features
+
+* [#108](https://github.com/jirkapok/GasPlanner/issues/108) Replace help popup by sidebar ([#113](https://github.com/jirkapok/GasPlanner/issues/113)) ([1b33b51](https://github.com/jirkapok/GasPlanner/commit/1b33b51430ca0c879e0ba9ed3393b4c019d91b89))
+
 # [0.9.0](https://github.com/jirkapok/GasPlanner/compare/v0.8.2...v0.9.0) (2026-10-02)
 
 

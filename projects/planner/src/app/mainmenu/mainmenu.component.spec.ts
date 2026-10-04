@@ -46,7 +46,7 @@ describe('Main menu component', () => {
         fixture.detectChanges();
     });
 
-    it('Sets LayoutService\'s mainMenuHeight correctly', () => {
+    it('sets LayoutService\'s mainMenuHeight correctly', () => {
         const layout = TestBed.inject(LayoutService);
 
         const componentHeight = fixture.nativeElement.getBoundingClientRect().height;

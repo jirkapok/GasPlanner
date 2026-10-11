@@ -7,7 +7,6 @@ import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
-import { WayPoint } from '../../shared/wayPoint';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
@@ -32,7 +31,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
 
 
-    // TODO: Switch from ms to s in service
     // TODO: Add translated checkbox text
     // TODO: Heat maps
     // REMEMBER: Ask whether the end alignment should be part of the url or storage or something
@@ -65,7 +63,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
-            .withTimeOffset(this.timeOffsetA)
+            .withTimeOffset(() => this.timeOffsetA)
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -74,7 +72,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
-            .withTimeOffset(this.timeOffsetB)
+            .withTimeOffset(() => this.timeOffsetB)
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,

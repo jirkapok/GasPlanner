@@ -21,7 +21,7 @@ export class ChartPlotterFactory {
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
-    private timeOffset = 0;
+    private timeOffset = () => 0;
 
     constructor(
         private resampling: ResamplingService,
@@ -119,8 +119,8 @@ export class ChartPlotterFactory {
     }
 
     /** Set time (x axis) offset in seconds */
-    public withTimeOffset(offset: number): ChartPlotterFactory {
-        this.timeOffset = offset;
+    public withTimeOffset(offsetFn: () => number): ChartPlotterFactory {
+        this.timeOffset = offsetFn;
         return this;
     }
 
@@ -130,13 +130,13 @@ export class ChartPlotterFactory {
             this.resampling,
             this.units,
             this.translate,
+            this.timeOffset,
             this.namePrefixKey,
             this.averageDepthLineColor,
             this.depthLineColor,
             this.ceilingLineColor,
             this.eventLineColor,
             this.eventFillColor,
-            this.timeOffset
         );
     }
 }
@@ -148,7 +148,6 @@ export class DiveTracesBuilder {
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
     private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
-    private readonly timeOffset: number = 0;
     public showEmergencyAscent = false;
 
     constructor(
@@ -156,13 +155,13 @@ export class DiveTracesBuilder {
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string,
+        private timeOffset: () => number,
         namePrefixKey: string | null,
         averageDepthLineColor: string,
         depthLineColor: string,
         ceilingLineColor: string,
         eventLineColor: string,
         eventFillColor: string,
-        timeOffset: number
     ) {
         this.namePrefixKey = namePrefixKey;
         this.averageDepthLineColor = averageDepthLineColor;
@@ -170,7 +169,6 @@ export class DiveTracesBuilder {
         this.ceilingLineColor = ceilingLineColor;
         this.eventLineColor = eventLineColor;
         this.eventFillColor = eventFillColor;
-        this.timeOffset = timeOffset;
     }
 
     /** Re-resolved on every trace build so a language switch updates it without recreating the builder. */
@@ -303,7 +301,7 @@ export class DiveTracesBuilder {
 
     private applyTimeOffset(timestamps: Date[]): Date[] {
         return timestamps.map(date =>
-            new Date(date.getTime() + this.timeOffset * 1000) // Convert seconds to ms
+            new Date(date.getTime() + this.timeOffset() * 1000) // Convert seconds to ms
         );
     }
 }

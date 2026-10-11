@@ -33,7 +33,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     // TODO: Add translated checkbox text
     // TODO: Heat maps
-    // REMEMBER: Ask whether the end alignment should be part of the url or storage or something
+    // TODO: Ask whether the end alignment should be part of the url or storage or something
+    //      (implementation would be in diffOptions service)
 
 
 

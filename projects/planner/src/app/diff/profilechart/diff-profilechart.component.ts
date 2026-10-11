@@ -7,6 +7,7 @@ import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
+import { WayPoint } from '../../shared/wayPoint';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
@@ -15,6 +16,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { NgClass } from '@angular/common';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { DiffOptions } from '../../shared/diff/diff-options.service';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -24,24 +26,46 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
+
+
+
+
+
+
+    // TODO: Switch from ms to s in service
+    // TODO: Add translated checkbox text
+    // TODO: Heat maps
+    // REMEMBER: Ask whether the end alignment should be part of the url or storage or something
+
+
+
+
+
+
+
     public icon = faChartArea;
     protected readonly heatmapIcon = faFire;
     public showHeatMap = true;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;
+    // Offsets on the x axis (in seconds)
+    private timeOffsetA = 0;
+    private timeOffsetB = 0;
 
     constructor(
         units: UnitConversion,
         resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService,
+        private options: DiffOptions,
         private reloadDispatcher: ReloadDispatcher,
         private translate: TranslateService) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
+            .withTimeOffset(this.timeOffsetA)
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -50,6 +74,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
+            .withTimeOffset(this.timeOffsetB)
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
@@ -57,40 +82,24 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
-        this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.plotCharts();
-                }
-            });
-
-        this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((selected: ComparedWaypoint) => {
-                this.selectWayPoint(selected);
-            });
-
-        this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.plotCharts();
-                    this.plotlyHoverLeave();
-                }
-            });
-
-        this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.plotCharts();
-                }
-            });
+        this.subscribeToObservables();
     }
 
-    public get profilesCalculated(): boolean {
+    protected get profilesCalculated(): boolean {
         return this.profileComparatorService.profilesCalculated;
+    }
+
+    protected get alignByEnd(): boolean {
+        return this.options.alignChartByEnd;
+    }
+
+    protected set alignByEnd(value: boolean) {
+        this.options.alignChartByEnd = value;
     }
 
     public ngOnInit(): void {
         if (this.profilesCalculated) {
+            this.updateOffsets();
             this.plotCharts();
             this.hookChartEvents();
         }
@@ -106,6 +115,21 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.showHeatMap = !this.showHeatMap;
     }
 
+    private updateOffsets(): void {
+        if (!this.alignByEnd) {
+            this.timeOffsetA = 0;
+            this.timeOffsetB = 0;
+            return;
+        }
+
+        const totalDuration = this.profileComparatorService.totalDuration;
+        const durationA = this.profileComparatorService.profileAResults.totalDuration;
+        const durationB = this.profileComparatorService.profileBResults.totalDuration;
+
+        this.timeOffsetA = totalDuration - durationA;
+        this.timeOffsetB = totalDuration - durationB;
+    }
+
     private plotlyHoverLeave() {
         this.selectedWaypoints.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
@@ -117,7 +141,21 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             return;
         }
 
-        const wayPoint = selected.durationA ? selected.wayPointA : selected.wayPointB;
+        const { wayPoint, offset } = selected.durationA
+        ? {
+            wayPoint: selected.wayPointA,
+            offset: this.timeOffsetA,
+          }
+        : {
+            wayPoint: selected.wayPointB,
+            offset: this.timeOffsetB,
+          };
+
+        if (wayPoint) {
+            wayPoint.startTime += offset;
+            wayPoint.endTime += offset;
+        }
+
         this.plotter.plotCursor(wayPoint);
     }
 
@@ -137,5 +175,44 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
         chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
         chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
+    }
+
+    private subscribeToObservables(): void {
+        this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.updateOffsets();
+                    this.plotCharts();
+                }
+            });
+
+        this.options.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.updateOffsets();
+                    this.plotCharts();
+                }
+            })
+
+        this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((selected: ComparedWaypoint) => {
+                this.selectWayPoint(selected);
+            });
+
+        this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.updateOffsets();
+                    this.plotCharts();
+                    this.plotlyHoverLeave();
+                }
+            });
+
+        this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.plotCharts();
+                }
+            });
     }
 }

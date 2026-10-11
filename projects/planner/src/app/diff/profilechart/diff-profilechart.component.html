@@ -1,16 +1,24 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header align-items-center">
         <div class="float-start">
             <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
             <span>{{ 'diffProfileChart.cardTitle' | translate }}</span>
         </div>
-        <div class="float-end me-1">
+
+        <div class="float-end d-flex align-items-center gap-2 me-1">
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="isComplex" [checked]="alignByEnd"
+                    (change)="alignByEnd = !alignByEnd" mdbCheckbox />
+                <label class="custom-control-label" for="isComplex">{{ 'Align dives by their ends' }}</label>
+            </div>
+
             <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
                     data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>
     </div>
+
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
         <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{

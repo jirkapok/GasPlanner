@@ -7,6 +7,7 @@ import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
+import { DiffOptions } from '../../shared/diff/diff-options.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ProfileDifferenceChartComponent', () => {
@@ -22,6 +23,7 @@ describe('ProfileDifferenceChartComponent', () => {
                 ProfileComparatorService,
                 ResamplingService,
                 DiveSchedules,
+                DiffOptions,
                 ReloadDispatcher,
                 SelectedDiffWaypoint,
                 provideTestTranslate()

@@ -1442,10 +1442,10 @@ Each stage starts from the latest master and is a full vertical slice:
    - worker wiring that passes the breathing model and `startAscentIndex` to the algorithm, `Consumption`, CNS/OTU/daily, density and `ProfileEvents` (`workers/planning.tasks.ts`, keeping both worker factories in sync)
    - service specs
 3. **UI**: ranges in `UnitConversion.ts` (Metric/Imperial) + `ValidatorGroups.ts`, form controls with `[class.is-invalid]` + sibling message, `col-12 col-sm-* col-md-*` grid, i18n keys in all 7 `assets/i18n/*.json`, component specs.
-4. **Saving and loading** of every new tanks-card control (circuit dropdown, rebreather options, selected tanks-card tab):
+4. **Saving and loading** of every new tanks-card control (circuit dropdown, rebreather options; the selected tanks-card tab is not saved):
    - Values go through `Preferences` (`shared/preferences.ts` `toDiveFrom`/`loadDive`, `DiveDto` → `OptionsDto.rebreather`) into `PreferencesStore`.
-   - The selected tab is stored like the other view states (`ViewStates`/`SubViewStorage`).
-   - Older stored data loads with defaults (OC, first tab).
+   - The selected tanks-card tab is local component state only, not saved.
+   - Older stored data loads with defaults (OC).
    - Specs: a round-trip per field, and legacy JSON without the fields.
 5. **URL validation** of the new `r` parameters in `shared/PlanValidation.ts`:
    - every value is numeric
@@ -1492,7 +1492,7 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
 Decisions made while detailing (from reading the planner code):
 - pSCR loop gas needs the diver RMV also in profile/dive info workers, so `PlanRequestDto` gets `diver: DiverDto`.
 - Rebreather options travel in `OptionsDto.rebreather?` (optional "because of upgrade"), so preferences save/load them through the existing `fromOptions`/`toOptions`.
-- The selected tanks-card tab is persisted like `consumptionInLiters`: `ViewSwitchService.rebreatherTab` + optional `AppOptionsDto.rebreatherTab`.
+- The selected tanks-card tab is only local state of the tanks component (not saved). The Rebreather tab is shown only for a non-OC circuit and closes when switched back to OC.
 - The emergency ascent stays open circuit (user decision); `ConsumptionByGas` gets the model (Stage 1 review finding).
 
 ##### Task 2.1: pSCR breathing model and factory (lib)
@@ -1518,12 +1518,12 @@ Decisions made while detailing (from reading the planner code):
 - `PlanUrlSerialization`: optional `r=<circuit>,<injectionRatio>,<metabolicO2>`, written only for non-OC; missing → OC defaults; missing trailing values → defaults.
 - `UnitConversion` ranges `injectionRatio` [4, 20], `metabolicO2` metric [0.5, 3] L/min, imperial [0.018, 0.106] cuft/min (+ labels), `ValidatorGroups` getters.
 - `PlanValidation`: numeric values, `circuit in CircuitType`, ranges, simple dives must be OC. `SettingsNormalizationService` clamps the values.
-- `ViewSwitchService.rebreatherTab`, `AppOptionsDto.rebreatherTab?`, `Preferences` save/load (legacy → false).
+- `Preferences` save/load the rebreather options (legacy without them → OC). The tanks-card tab is not saved.
 - Specs: URL round-trip, "URL without `r` falls back to OC dive configuration", partial/invalid `r`, preferences round-trip + legacy JSON.
 
 ##### Task 2.5: Tanks card UI (dropdown + tabs + pSCR options)
 - [x] Status
-- `tanks-complex`: circuit dropdown (OC / pSCR) projected into the card header; body with "Tanks" / "Rebreather" tabs (Bootstrap `nav-tabs` toggling visibility: moving the body into `mdb-tabs` rebuilt the tanks accordion and broke change detection) (Rebreather tab only when not OC); selected tab synced with `ViewSwitchService.rebreatherTab`.
+- `tanks-complex`: circuit dropdown (OC / pSCR) projected into the card header; body with "Tanks" / "Rebreather" tabs (Bootstrap `nav-tabs` toggling visibility: moving the body into `mdb-tabs` rebuilt the tanks accordion and broke change detection) (Rebreather tab only when not OC); selected tab is local component state, closed when switched to OC.
 - New `RebreatherOptionsComponent` (`plan/rebreather-options/`, `app-rebreather-options`, registered in `app.config.ts`): injection ratio + metabolic O2 inputs, reactive form, `[class.is-invalid]` + sibling message, `col-12 col-sm-6 col-md-*` grid, thin handlers → `OptionsService` → `sendOptionsChanged`.
 - i18n keys in all 7 `assets/i18n/*.json`. Component specs.
 
@@ -1536,7 +1536,6 @@ Decisions made while detailing (from reading the planner code):
 - [x] Status
 - Fixed: stale invalid rebreather form blocked all planner inputs; unsupported circuits (mCCR/eCCR) loaded from url as OC; imperial metabolic O2 minimum; hypoxic loop now raises the existing `Low ppO2` warning.
 - Deferred minors (pick up in Stage 3):
-  - `PlanUrlSerialization.fromAppSettingsParam` doesn't carry `rebreatherTab`, so opening any shared url resets the selected tanks-card tab.
   - Tanks card header keeps `helpDocument="tanks"` also on the Rebreather tab (should open `rebreather`).
   - Metabolic O2 input `step="0.01"` is coarse in imperial units.
   - `ValidatorGroups` `required` wrapper comment wording.

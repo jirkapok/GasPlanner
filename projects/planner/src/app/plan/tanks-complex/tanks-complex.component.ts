@@ -2,7 +2,6 @@ import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity, CircuitType } from 'scuba-physics';
-import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { RebreatherOptionsComponent } from '../rebreather-options/rebreather-options.component';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -61,6 +60,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public plusIcon = faPlus;
     public minusIcon = faMinus;
     public tanksForm!: FormGroup<TanksForm>;
+    /** Only local state, the tab is not part of the saved preferences */
+    private rebreatherTabSelected = false;
 
     constructor(
         public units: UnitConversion,
@@ -68,8 +69,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules,
-        private viewSwitch: ViewSwitchService) {
+        private schedules: DiveSchedules) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -96,7 +96,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     /** Rebreather options are shown instead of tanks, only for rebreathers */
     public get rebreatherTab(): boolean {
-        return this.isRebreather && this.viewSwitch.rebreatherTab;
+        return this.isRebreather && this.rebreatherTabSelected;
     }
 
     private get tanksService(): TanksService {
@@ -131,11 +131,11 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public showTanksTab(): void {
-        this.viewSwitch.rebreatherTab = false;
+        this.rebreatherTabSelected = false;
     }
 
     public showRebreatherTab(): void {
-        this.viewSwitch.rebreatherTab = true;
+        this.rebreatherTabSelected = true;
     }
 
     public gasSac(index: number): number {
@@ -228,6 +228,10 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     private applyCircuit(circuit: CircuitType): void {
+        if (circuit === CircuitType.oc) {
+            this.rebreatherTabSelected = false;
+        }
+
         this.schedules.selectedOptions.circuit = circuit;
         this.dispatcher.sendOptionsChanged();
     }

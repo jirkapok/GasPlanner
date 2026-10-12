@@ -6,9 +6,6 @@ export class ViewSwitchService {
     /** Consumed gas is shown grouped by gas in liters instead of per tank in bars */
     public consumptionInLiters = false;
 
-    /** Rebreather tab is selected in the tanks card */
-    public rebreatherTab = false;
-
     private _isComplex = false;
 
     constructor(private schedules: DiveSchedules) {

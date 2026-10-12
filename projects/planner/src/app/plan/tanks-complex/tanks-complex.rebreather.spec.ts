@@ -22,21 +22,70 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
+class RebreatherTabPage {
+    constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
+
+    public get circuitTypeBtn(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#circuitType')).nativeElement as HTMLButtonElement;
+    }
+
+    public get tanksTabBtn(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#tanksTab')).nativeElement as HTMLButtonElement;
+    }
+
+    public get rebreatherTabBtn(): HTMLButtonElement {
+        return this.fixture.debugElement.query(By.css('#rebreatherTab')).nativeElement as HTMLButtonElement;
+    }
+
+    public get injectionRatioInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('#injectionRatio')).nativeElement as HTMLInputElement;
+    }
+
+    /** Undefined, when the rebreather tab isn't shown */
+    public get rebreatherOptions(): HTMLElement | undefined {
+        return this.fixture.debugElement.query(By.css('app-rebreather-options'))?.nativeElement as HTMLElement | undefined;
+    }
+
+    public selectPscr(): void {
+        this.selectCircuit(() => document.querySelector('#circuitPscr') as HTMLElement);
+    }
+
+    public selectOpenCircuit(): void {
+        this.selectCircuit(() => document.querySelector('#circuitOc') as HTMLElement);
+    }
+
+    public showTanksTab(): void {
+        this.click(this.tanksTabBtn);
+    }
+
+    public showRebreatherTab(): void {
+        this.click(this.rebreatherTabBtn);
+    }
+
+    public typeInjectionRatio(value: string): void {
+        const input = this.injectionRatioInput;
+        input.value = value;
+        input.dispatchEvent(new Event('input'));
+        this.fixture.detectChanges();
+    }
+
+    /** dropdown item is resolved only after the dropdown is opened */
+    private selectCircuit(circuitItem: () => HTMLElement): void {
+        this.click(this.circuitTypeBtn);
+        this.click(circuitItem());
+    }
+
+    private click(element: HTMLElement): void {
+        element.click();
+        this.fixture.detectChanges();
+    }
+}
+
 describe('Tanks Complex component - Rebreather', () => {
     let fixture: ComponentFixture<TanksComplexComponent>;
     let schedules: DiveSchedules;
     let optionsChangedSpy: jasmine.Spy<() => void>;
-
-    const element = (selector: string): HTMLElement | undefined =>
-        fixture.debugElement.query(By.css(selector))?.nativeElement as HTMLElement | undefined;
-
-    /** dropdown menu is rendered into overlay only after it is opened */
-    const selectCircuit = (itemId: string): void => {
-        element('#circuitType')?.click();
-        fixture.detectChanges();
-        (document.querySelector(itemId) as HTMLElement).click();
-        fixture.detectChanges();
-    };
+    let rebreatherPage: RebreatherTabPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -55,64 +104,63 @@ describe('Tanks Complex component - Rebreather', () => {
         schedules = TestBed.inject(DiveSchedules);
         optionsChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
         fixture = TestBed.createComponent(TanksComplexComponent);
+        rebreatherPage = new RebreatherTabPage(fixture);
         fixture.detectChanges();
     });
 
     it('open circuit has no rebreather options', () => {
-        expect(element('app-rebreather-options')).toBeUndefined();
+        expect(rebreatherPage.rebreatherOptions).toBeUndefined();
     });
 
     it('selecting pSCR switches circuit and fires options change', () => {
-        selectCircuit('#circuitPscr');
+        rebreatherPage.selectPscr();
 
         expect(schedules.selectedOptions.circuit).toBe(CircuitType.pscr);
         expect(optionsChangedSpy).toHaveBeenCalledWith();
     });
 
     it('rebreather shows tanks and rebreather tabs', () => {
-        selectCircuit('#circuitPscr');
+        rebreatherPage.selectPscr();
 
-        expect(element('#tanksTab')).toBeDefined();
-        expect(element('#rebreatherTab')).toBeDefined();
-        expect(element('app-rebreather-options')).toBeUndefined();
+        expect(rebreatherPage.tanksTabBtn).toBeDefined();
+        expect(rebreatherPage.rebreatherTabBtn).toBeDefined();
+        expect(rebreatherPage.rebreatherOptions).toBeUndefined();
     });
 
-    it('rebreather tab shows options and remembers the selection', () => {
-        selectCircuit('#circuitPscr');
-        element('#rebreatherTab')?.click();
-        fixture.detectChanges();
+    it('rebreather tab shows options', () => {
+        rebreatherPage.selectPscr();
+        rebreatherPage.showRebreatherTab();
 
-        expect(element('app-rebreather-options')).toBeDefined();
-        expect(TestBed.inject(ViewSwitchService).rebreatherTab).toBeTrue();
+        expect(rebreatherPage.rebreatherOptions).toBeDefined();
+        expect(fixture.componentInstance.rebreatherTab).toBeTrue();
+    });
+
+    it('rebreather tab is closed, when switched back to open circuit', () => {
+        rebreatherPage.selectPscr();
+        rebreatherPage.showRebreatherTab();
+        rebreatherPage.selectOpenCircuit();
+        rebreatherPage.selectPscr();
+
+        expect(fixture.componentInstance.rebreatherTab).toBeFalse();
     });
 
     it('invalid rebreather value does not block the form after leaving the tab', () => {
-        const typeRatio = (value: string): void => {
-            const input = element('#injectionRatio') as HTMLInputElement;
-            input.value = value;
-            input.dispatchEvent(new Event('input'));
-            fixture.detectChanges();
-        };
-
-        selectCircuit('#circuitPscr');
-        element('#rebreatherTab')?.click();
-        fixture.detectChanges();
-        typeRatio('2');
+        rebreatherPage.selectPscr();
+        rebreatherPage.showRebreatherTab();
+        rebreatherPage.typeInjectionRatio('2');
         expect(fixture.componentInstance.rootForm.valid).toBeFalse();
 
-        element('#tanksTab')?.click();
-        fixture.detectChanges();
+        rebreatherPage.showTanksTab();
         expect(fixture.componentInstance.rootForm.valid).toBeTrue();
 
-        element('#rebreatherTab')?.click();
-        fixture.detectChanges();
-        typeRatio('10');
+        rebreatherPage.showRebreatherTab();
+        rebreatherPage.typeInjectionRatio('10');
         expect(schedules.selectedOptions.injectionRatio).toBe(10);
     });
 
     it('selecting open circuit switches back', () => {
-        selectCircuit('#circuitPscr');
-        selectCircuit('#circuitOc');
+        rebreatherPage.selectPscr();
+        rebreatherPage.selectOpenCircuit();
 
         expect(schedules.selectedOptions.isRebreather).toBeFalse();
     });

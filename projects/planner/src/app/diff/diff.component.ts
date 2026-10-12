@@ -56,14 +56,17 @@ export class DiffComponent extends Streamed implements OnInit {
             state = {
                 id: KnownViews.diff,
                 profileA: 0,
-                profileB: 0
+                profileB: 0,
+                alignByEnd: false
             };
         }
 
         const profileA = this.resolveValidProfile(state.profileA);
-        this.diff.selectProfile(profileA);
         const profileB = this.resolveValidProfile(state.profileB);
+
+        this.diff.selectProfile(profileA);
         this.diff.selectProfile(profileB);
+        this.diff.alignByEnd = state.alignByEnd;
     }
 
     private resolveValidProfile(current: number): number {
@@ -71,10 +74,11 @@ export class DiffComponent extends Streamed implements OnInit {
     }
 
     private saveState(): void {
-        const state = {
+        const state: DiffViewState = {
             id: KnownViews.diff,
             profileA: this.diff.profileAIndex,
-            profileB: this.diff.profileBIndex
+            profileB: this.diff.profileBIndex,
+            alignByEnd: this.diff.alignByEnd
         };
 
         this.viewStates.saveView(state);

@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { takeUntil } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
+import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
 import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
@@ -11,11 +14,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgClass } from '@angular/common';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
-import { DiffOptions } from '../../shared/diff/diff-options.service';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -31,10 +30,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
 
 
+    // TODO: Move offsets to diff service
+    // TODO: Consider whether alignByEnd change shouldn't be its own observable
     // TODO: Add translated checkbox text
     // TODO: Heat maps
-    // TODO: Ask whether the end alignment should be part of the url or storage or something
-    //      (implementation would be in diffOptions service)
 
 
 
@@ -57,7 +56,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         resampling: ResamplingService,
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService,
-        private options: DiffOptions,
         private reloadDispatcher: ReloadDispatcher,
         private translate: TranslateService) {
         super();
@@ -89,11 +87,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     protected get alignByEnd(): boolean {
-        return this.options.alignChartByEnd;
+        return this.profileComparatorService.alignByEnd;
     }
 
     protected set alignByEnd(value: boolean) {
-        this.options.alignChartByEnd = value;
+        this.profileComparatorService.alignByEnd = value;
     }
 
     public ngOnInit(): void {
@@ -184,14 +182,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                     this.plotCharts();
                 }
             });
-
-        this.options.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (this.profilesCalculated) {
-                    this.updateOffsets();
-                    this.plotCharts();
-                }
-            })
 
         this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((selected: ComparedWaypoint) => {

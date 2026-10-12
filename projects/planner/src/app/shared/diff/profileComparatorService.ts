@@ -21,6 +21,7 @@ export interface SaturationComparison {
 export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
+    private _alignByEnd = false;
     private _onSelectionChanged: Subject<void> = new Subject<void>();
     private _selectionChanged$: Observable<void>;
     private _wayPoints: ComparedWaypoint[] = [];
@@ -145,6 +146,18 @@ export class ProfileComparatorService extends Streamed {
 
     private get wayPointsB(): WayPoint[]{
         return this.profileBResults.wayPoints;
+    }
+
+    public get alignByEnd(): boolean {
+        return this._alignByEnd;
+    }
+
+    public set alignByEnd(value: boolean) {
+        this._alignByEnd = value;
+        // This should perhaps be a standalone observable
+        // (profiles to compare !== how specifically chart should be displayed)
+        // But right now it's fine enough
+        this._onSelectionChanged.next();
     }
 
     public selectProfile(index: number): void {

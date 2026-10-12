@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { CircuitType } from 'scuba-physics';
 import { RebreatherOptionsComponent } from './rebreather-options.component';
@@ -56,6 +56,16 @@ describe('RebreatherOptionsComponent', () => {
     it('applies metabolic oxygen', () => {
         typeValue('#metabolicO2', '1.5');
         expect(options.metabolicO2).toBeCloseTo(1.5, 6);
+    });
+
+    it('valid value is not applied, when other planner field is invalid', () => {
+        // e.g. invalid tank in the same planner form
+        const invalidTank = new FormControl<number | null>(null, (control) => Validators.required(control));
+        fixture.componentInstance.rootForm.addControl('tanks', invalidTank);
+        typeValue('#injectionRatio', '10');
+
+        expect(options.injectionRatio).toBe(8);
+        expect(changedSpy).not.toHaveBeenCalled();
     });
 
     it('invalid value is marked and not applied', () => {

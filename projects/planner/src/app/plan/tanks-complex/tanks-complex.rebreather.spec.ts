@@ -202,6 +202,45 @@ describe('Tanks Complex component - Rebreather', () => {
         expect(fixture.componentInstance.rootForm.valid).toBeTrue();
     });
 
+    describe('Invalid values prevent recalculation', () => {
+        it('switch to pSCR with invalid tank', () => {
+            rebreatherPage.typeTankPressure(0, '9999');
+            optionsChangedSpy.calls.reset();
+            rebreatherPage.selectPscr();
+
+            expect(optionsChangedSpy).not.toHaveBeenCalled();
+        });
+
+        it('switch to open circuit with invalid tank', () => {
+            rebreatherPage.selectPscr();
+            rebreatherPage.typeTankPressure(0, '9999');
+            optionsChangedSpy.calls.reset();
+            rebreatherPage.selectOpenCircuit();
+
+            expect(optionsChangedSpy).not.toHaveBeenCalled();
+        });
+
+        it('tank template applied with invalid rebreather value', () => {
+            const tankChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendTankChanged');
+            rebreatherPage.selectPscr();
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeInjectionRatio('2');
+            fixture.componentInstance.assignTankTemplate(0, { name: '12 L', size: 12, workingPressure: 0 });
+
+            expect(tankChangedSpy).not.toHaveBeenCalled();
+        });
+
+        it('switch to open circuit with only invalid rebreather value recalculates, because it is reset', () => {
+            rebreatherPage.selectPscr();
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeInjectionRatio('2');
+            optionsChangedSpy.calls.reset();
+            rebreatherPage.selectOpenCircuit();
+
+            expect(optionsChangedSpy).toHaveBeenCalledWith();
+        });
+    });
+
     it('selecting open circuit switches back', () => {
         rebreatherPage.selectPscr();
         rebreatherPage.selectOpenCircuit();

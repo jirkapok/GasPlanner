@@ -205,6 +205,12 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const bound = this.tanks[index];
         bound.assignTemplate(template);
         this.reload(bound, index);
+
+        // checked after reload, because the template may fix invalid tank values
+        if (this.rootForm.invalid) {
+            return;
+        }
+
         this.dispatcher.sendTankChanged();
     }
 
@@ -239,11 +245,19 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     private applyCircuit(circuit: CircuitType): void {
+        const options = this.schedules.selectedOptions;
+        options.circuit = circuit;
+
         if (circuit === CircuitType.oc) {
             this.rebreatherTabSelected = false;
+            // hidden rebreather form reloads stored values, otherwise its invalid values block the planner without visible reason
+            this.dispatcher.sendOptionsReloaded(options);
         }
 
-        this.schedules.selectedOptions.circuit = circuit;
+        if (this.rootForm.invalid) {
+            return;
+        }
+
         this.dispatcher.sendOptionsChanged();
     }
 

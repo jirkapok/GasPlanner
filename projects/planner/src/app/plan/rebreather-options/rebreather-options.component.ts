@@ -72,14 +72,6 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
 
-        // form is hidden for open circuit, so invalid values would block the planner without any visible reason
-        this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                if (!this.options.isRebreather) {
-                    this.reload();
-                }
-            });
-
         // replaces the form of previous instance, addControl would keep the old one
         this.rootForm.setControl(RebreatherOptionsComponent.formName, this.rebreatherForm);
     }
@@ -91,7 +83,8 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
     }
 
     public applyOptions(): void {
-        if (this.rebreatherForm.invalid) {
+        // also other parts of the planner (e.g. tanks) need to be valid to calculate
+        if (this.rootForm.invalid) {
             return;
         }
 

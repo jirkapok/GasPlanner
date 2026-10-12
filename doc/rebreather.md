@@ -23,7 +23,7 @@ The gas you breathe from the loop is leaner than the supply gas, because your bo
 `fO2 loop = (fO2 supply × V − VO2) / (V − VO2)`, where `V = RMV × ambient pressure / injection ratio`.
 
 * `Injection ratio`: Ratio of breathed volume to dumped volume. E.g. 8 means 1/8 of each breath is replaced with fresh supply gas. Range 4 - 20, default 8.
-* `Metabolic O2 [l/min]`: Oxygen consumed by your body. Range 0.5 - 3 l/min, default 1 l/min.
+* `Metabolic O2 [l/min]`: Oxygen consumed by your body. Range 0.5 - 4 l/min, default 1 l/min.
 
 The loop gas gets leaner when you ascend, because less fresh gas is added at lower ambient pressure. At shallow depths the loop may become hypoxic, even with a nitrox supply gas. In such case the planner shows `Low ppO2` warning.
 The decompression, oxygen toxicity (CNS, OTU), gas density and narcotic depth are calculated from the loop gas.

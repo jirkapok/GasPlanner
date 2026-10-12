@@ -39,7 +39,7 @@ describe('ValidatorGroups', () => {
 
         it('Metabolic O2 out of range is invalid', () => {
             expect(isValid(1, sut.metabolicO2)).toBeTrue();
-            expect(isValid(4, sut.metabolicO2)).toBeFalse();
+            expect(isValid(5, sut.metabolicO2)).toBeFalse();
         });
 
         it('Metric metabolic O2 limits are valid in imperial units', () => {
@@ -48,7 +48,7 @@ describe('ValidatorGroups', () => {
             const imperialValidators = new ValidatorGroups(imperial);
             const rounding = imperial.ranges.rmvRounding;
             const minimum = Precision.round(imperial.fromLiter(0.5), rounding);
-            const maximum = Precision.round(imperial.fromLiter(3), rounding);
+            const maximum = Precision.round(imperial.fromLiter(4), rounding);
             expect(isValid(minimum, imperialValidators.metabolicO2)).toBeTrue();
             expect(isValid(maximum, imperialValidators.metabolicO2)).toBeTrue();
         });

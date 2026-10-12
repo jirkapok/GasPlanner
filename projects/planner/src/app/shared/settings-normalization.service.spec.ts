@@ -57,7 +57,7 @@ describe('SettingsNormalizationService', () => {
         it('Metabolic O2 is normalized', () => {
             optionsService.metabolicO2 = 10;
             service.apply();
-            expect(optionsService.metabolicO2).toBe(3);
+            expect(optionsService.metabolicO2).toBe(4);
         });
     });
 

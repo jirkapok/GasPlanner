@@ -34,7 +34,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     // TODO: Consider whether alignByEnd change shouldn't be its own observable
     //       (This change would affect this component and the ViewState handlers in ../diff.component)
     // TODO: Add translated checkbox text
-    // TODO: Heat maps (also rename method from switch to toggle for readability)
+    // TODO: Heat maps
 
 
 
@@ -105,7 +105,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
     }
 
-    public switchHeatMap(): void {
+    protected toggleHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
     }
 

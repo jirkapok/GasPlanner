@@ -24,7 +24,8 @@ interface RebreatherForm {
     imports: [ReactiveFormsModule, TranslatePipe]
 })
 export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDestroy {
-    private static readonly formName = 'rebreatherOptions';
+    /** Name of this form in the root form */
+    public static readonly formName = 'rebreatherOptions';
     @Input() public rootForm!: FormGroup;
     public rebreatherForm!: FormGroup<RebreatherForm>;
 
@@ -71,11 +72,19 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
 
+        // form is hidden for open circuit, so invalid values would block the planner without any visible reason
+        this.dispatcher.optionsChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (!this.options.isRebreather) {
+                    this.reload();
+                }
+            });
+
         // replaces the form of previous instance, addControl would keep the old one
         this.rootForm.setControl(RebreatherOptionsComponent.formName, this.rebreatherForm);
     }
 
-    /** The component is created only when the tab is shown, so it can't leave invalid form in the root form */
+    /** Removes the form from the root form, so it can't block the planner after the component is gone */
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.rootForm.removeControl(RebreatherOptionsComponent.formName);

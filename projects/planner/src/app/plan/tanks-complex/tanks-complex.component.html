@@ -23,11 +23,19 @@
     <ul class="nav nav-tabs mt-2 px-2">
       <li class="nav-item">
         <button id="tanksTab" type="button" class="nav-link" [class.active]="!rebreatherTab"
-          (click)="showTanksTab()">{{ 'tanksComplex.tanksTab' | translate }}</button>
+          (click)="showTanksTab()">{{ 'tanksComplex.tanksTab' | translate }}
+          @if (tanksInvalid) {
+            <fa-icon id="tanksTabError" [icon]="errorIcon" class="ms-2 text-danger"></fa-icon>
+          }
+        </button>
       </li>
       <li class="nav-item">
         <button id="rebreatherTab" type="button" class="nav-link" [class.active]="rebreatherTab"
-          (click)="showRebreatherTab()">{{ 'tanksComplex.rebreatherTab' | translate }}</button>
+          (click)="showRebreatherTab()">{{ 'tanksComplex.rebreatherTab' | translate }}
+          @if (rebreatherInvalid) {
+            <fa-icon id="rebreatherTabError" [icon]="errorIcon" class="ms-2 text-danger"></fa-icon>
+          }
+        </button>
       </li>
     </ul>
   }
@@ -250,9 +258,8 @@
               </div>
   </div>
 
-  @if (rebreatherTab) {
-    <div class="card-body">
-      <app-rebreather-options [rootForm]="rootForm"></app-rebreather-options>
-    </div>
-  }
-            </div>
+  <!-- kept rendered, so its invalid values are shown also on the tanks tab -->
+  <div class="card-body" [hidden]="!rebreatherTab">
+    <app-rebreather-options [rootForm]="rootForm"></app-rebreather-options>
+  </div>
+</div>

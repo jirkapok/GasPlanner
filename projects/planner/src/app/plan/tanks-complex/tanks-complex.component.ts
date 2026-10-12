@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
-import { faBatteryHalf, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { faBatteryHalf, faPlus, faMinus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity, CircuitType } from 'scuba-physics';
 import { RebreatherOptionsComponent } from '../rebreather-options/rebreather-options.component';
 import { takeUntil } from 'rxjs';
@@ -57,6 +57,7 @@ interface TanksForm {
 export class TanksComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;
     public icon = faBatteryHalf;
+    public errorIcon = faExclamationTriangle;
     public plusIcon = faPlus;
     public minusIcon = faMinus;
     public tanksForm!: FormGroup<TanksForm>;
@@ -97,6 +98,16 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     /** Rebreather options are shown instead of tanks, only for rebreathers */
     public get rebreatherTab(): boolean {
         return this.isRebreather && this.rebreatherTabSelected;
+    }
+
+    /** Shows error mark on tanks tab */
+    public get tanksInvalid(): boolean {
+        return this.tanksForm.invalid;
+    }
+
+    /** Shows error mark on rebreather tab, the rebreather form is part of the root form only for rebreathers */
+    public get rebreatherInvalid(): boolean {
+        return this.rootForm.get(RebreatherOptionsComponent.formName)?.invalid ?? false;
     }
 
     private get tanksService(): TanksService {

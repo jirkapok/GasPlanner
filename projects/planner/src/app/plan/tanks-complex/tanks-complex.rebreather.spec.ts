@@ -46,6 +46,20 @@ class RebreatherTabPage {
         return this.fixture.debugElement.query(By.css('app-rebreather-options'))?.nativeElement as HTMLElement | undefined;
     }
 
+    /** Undefined, when all tanks are valid */
+    public get tanksTabError(): HTMLElement | undefined {
+        return this.fixture.debugElement.query(By.css('#tanksTabError'))?.nativeElement as HTMLElement | undefined;
+    }
+
+    /** Undefined, when all rebreather options are valid */
+    public get rebreatherTabError(): HTMLElement | undefined {
+        return this.fixture.debugElement.query(By.css('#rebreatherTabError'))?.nativeElement as HTMLElement | undefined;
+    }
+
+    public tankPressureInput(index: number): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css(`#pressureItem-${index}`)).nativeElement as HTMLInputElement;
+    }
+
     public selectPscr(): void {
         this.selectCircuit(() => document.querySelector('#circuitPscr') as HTMLElement);
     }
@@ -63,7 +77,14 @@ class RebreatherTabPage {
     }
 
     public typeInjectionRatio(value: string): void {
-        const input = this.injectionRatioInput;
+        this.type(this.injectionRatioInput, value);
+    }
+
+    public typeTankPressure(index: number, value: string): void {
+        this.type(this.tankPressureInput(index), value);
+    }
+
+    private type(input: HTMLInputElement, value: string): void {
         input.value = value;
         input.dispatchEvent(new Event('input'));
         this.fixture.detectChanges();
@@ -102,14 +123,14 @@ describe('Tanks Complex component - Rebreather', () => {
         }).compileComponents();
 
         schedules = TestBed.inject(DiveSchedules);
-        optionsChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
+        optionsChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callThrough();
         fixture = TestBed.createComponent(TanksComplexComponent);
         rebreatherPage = new RebreatherTabPage(fixture);
         fixture.detectChanges();
     });
 
-    it('open circuit has no rebreather options', () => {
-        expect(rebreatherPage.rebreatherOptions).toBeUndefined();
+    it('rebreather options render also in open circuit', () => {
+        expect(rebreatherPage.rebreatherOptions).toBeDefined();
     });
 
     it('selecting pSCR switches circuit and fires options change', () => {
@@ -124,7 +145,6 @@ describe('Tanks Complex component - Rebreather', () => {
 
         expect(rebreatherPage.tanksTabBtn).toBeDefined();
         expect(rebreatherPage.rebreatherTabBtn).toBeDefined();
-        expect(rebreatherPage.rebreatherOptions).toBeUndefined();
     });
 
     it('rebreather tab shows options', () => {
@@ -144,18 +164,42 @@ describe('Tanks Complex component - Rebreather', () => {
         expect(fixture.componentInstance.rebreatherTab).toBeFalse();
     });
 
-    it('invalid rebreather value does not block the form after leaving the tab', () => {
+    it('invalid tank marks tanks tab with error', () => {
+        rebreatherPage.selectPscr();
+        rebreatherPage.typeTankPressure(0, '9999');
+
+        expect(rebreatherPage.tanksTabError).toBeDefined();
+        expect(rebreatherPage.rebreatherTabError).toBeUndefined();
+    });
+
+    it('invalid rebreather value marks rebreather tab with error also after leaving the tab', () => {
         rebreatherPage.selectPscr();
         rebreatherPage.showRebreatherTab();
         rebreatherPage.typeInjectionRatio('2');
-        expect(fixture.componentInstance.rootForm.valid).toBeFalse();
-
         rebreatherPage.showTanksTab();
-        expect(fixture.componentInstance.rootForm.valid).toBeTrue();
 
+        expect(rebreatherPage.rebreatherTabError).toBeDefined();
+        expect(rebreatherPage.tanksTabError).toBeUndefined();
+        expect(fixture.componentInstance.rootForm.valid).toBeFalse();
+    });
+
+    it('fixed rebreather value removes the error', () => {
+        rebreatherPage.selectPscr();
         rebreatherPage.showRebreatherTab();
+        rebreatherPage.typeInjectionRatio('2');
         rebreatherPage.typeInjectionRatio('10');
+
+        expect(rebreatherPage.rebreatherTabError).toBeUndefined();
         expect(schedules.selectedOptions.injectionRatio).toBe(10);
+    });
+
+    it('switch to open circuit with invalid rebreather value unblocks the form', () => {
+        rebreatherPage.selectPscr();
+        rebreatherPage.showRebreatherTab();
+        rebreatherPage.typeInjectionRatio('2');
+        rebreatherPage.selectOpenCircuit();
+
+        expect(fixture.componentInstance.rootForm.valid).toBeTrue();
     });
 
     it('selecting open circuit switches back', () => {

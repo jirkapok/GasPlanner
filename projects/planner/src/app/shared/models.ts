@@ -328,9 +328,9 @@ export class BoundEvent {
             case EventType.error:
             case EventType.brokenCeiling:
             case EventType.lowPpO2:
+            case EventType.highPpO2:
                 return EventSeverity.error;
 
-            case EventType.highPpO2:
             case EventType.highAscentSpeed:
             case EventType.highDescentSpeed:
             case EventType.maxEndExceeded:

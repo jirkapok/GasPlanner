@@ -44,8 +44,8 @@
       </div>
     }
     @if (event.isHighPpO2) {
-      <div class="alert alert-warning">
-        <fa-icon [icon]="warning" class="me-2"></fa-icon>
+      <div class="alert alert-danger">
+        <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
         <strong>{{ event.timeStamp | duration:event.timeStamp
         }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
         <span>{{ 'diveIssues.highPpo2' | translate }}</span>

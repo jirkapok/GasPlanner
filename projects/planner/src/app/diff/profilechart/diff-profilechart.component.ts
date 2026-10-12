@@ -30,10 +30,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
 
 
-    // TODO: Move offsets to diff service
+    // TODO: Implement/Fix selectWayPoint
     // TODO: Consider whether alignByEnd change shouldn't be its own observable
+    //       (This change would affect this component and the ViewState handlers in ../diff.component)
     // TODO: Add translated checkbox text
-    // TODO: Heat maps
+    // TODO: Heat maps (also rename method from switch to toggle for readability)
 
 
 
@@ -47,9 +48,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;
-    // Offsets on the x axis (in seconds)
-    private timeOffsetA = 0;
-    private timeOffsetB = 0;
 
     constructor(
         units: UnitConversion,
@@ -62,7 +60,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
-            .withTimeOffset(() => this.timeOffsetA)
+            .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -71,7 +69,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
-            .withTimeOffset(() => this.timeOffsetB)
+            .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
@@ -96,7 +94,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     public ngOnInit(): void {
         if (this.profilesCalculated) {
-            this.updateOffsets();
             this.plotCharts();
             this.hookChartEvents();
         }
@@ -110,21 +107,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     public switchHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
-    }
-
-    private updateOffsets(): void {
-        if (!this.alignByEnd) {
-            this.timeOffsetA = 0;
-            this.timeOffsetB = 0;
-            return;
-        }
-
-        const totalDuration = this.profileComparatorService.totalDuration;
-        const durationA = this.profileComparatorService.profileAResults.totalDuration;
-        const durationB = this.profileComparatorService.profileBResults.totalDuration;
-
-        this.timeOffsetA = totalDuration - durationA;
-        this.timeOffsetB = totalDuration - durationB;
     }
 
     private plotlyHoverLeave() {
@@ -141,11 +123,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         const { wayPoint, offset } = selected.durationA
         ? {
             wayPoint: selected.wayPointA,
-            offset: this.timeOffsetA,
+            offset: this.profileComparatorService.profileATimeOffset,
           }
         : {
             wayPoint: selected.wayPointB,
-            offset: this.timeOffsetB,
+            offset: this.profileComparatorService.profileBTimeOffset,
           };
 
         if (wayPoint) {
@@ -178,7 +160,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.updateOffsets();
                     this.plotCharts();
                 }
             });
@@ -191,7 +172,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.updateOffsets();
                     this.plotCharts();
                     this.plotlyHoverLeave();
                 }

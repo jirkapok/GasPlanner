@@ -21,8 +21,10 @@ export interface SaturationComparison {
 export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
+    private _profileATimeOffset = 0;
+    private _profileBTimeOffset = 0;
     private _alignByEnd = false;
-    private _onSelectionChanged: Subject<void> = new Subject<void>();
+    private _onSelectionChanged = new Subject<void>();
     private _selectionChanged$: Observable<void>;
     private _wayPoints: ComparedWaypoint[] = [];
 
@@ -40,6 +42,10 @@ export class ProfileComparatorService extends Streamed {
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.resetSelection());
+
+        // Update chart offsets when this.alignByEnd changes
+        this.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateOffsets());
     }
 
     public get profileAIndex(): number {
@@ -62,6 +68,11 @@ export class ProfileComparatorService extends Streamed {
         return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
     }
 
+    /** In seconds */
+    public get profileATimeOffset(): number {
+        return this._profileATimeOffset;
+    }
+
     public get profileBIndex(): number {
         return this._profileBIndex;
     }
@@ -80,6 +91,11 @@ export class ProfileComparatorService extends Streamed {
 
     public get profileBConsumed(): IConsumedMix[] {
         return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
+    }
+
+    /** In seconds */
+    public get profileBTimeOffset(): number {
+        return this._profileBTimeOffset;
     }
 
     public get selectionChanged$(): Observable<void> {
@@ -200,6 +216,21 @@ export class ProfileComparatorService extends Streamed {
             this._wayPoints.unshift(row);
             context.next();
         }
+    }
+
+    private updateOffsets(): void {
+        if (!this.alignByEnd) {
+            this._profileATimeOffset = 0;
+            this._profileBTimeOffset = 0;
+            return;
+        }
+
+        const totalDuration = this.totalDuration;
+        const durationA = this.profileAResults.totalDuration;
+        const durationB = this.profileBResults.totalDuration;
+
+        this._profileATimeOffset = totalDuration - durationA;
+        this._profileBTimeOffset = totalDuration - durationB;
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {

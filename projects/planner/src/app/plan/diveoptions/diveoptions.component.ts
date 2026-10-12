@@ -141,16 +141,16 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         return this.options.airBreaks;
     }
 
+    public get decoStopDistanceInvalid(): boolean {
+        const control = this.optionsForm.controls.decoStopDistance;
+        return this.inputs.controlInValid(control);
+    }
+
     private get rmv(): number {
         const roundTo = this.units.ranges.rmvRounding;
         const rmvMetric = this.options.diverOptions.rmv;
         const rmv = this.units.fromLiter(rmvMetric);
         return Precision.round(rmv, roundTo);
-    }
-
-    public get decoStopDistanceInvalid(): boolean {
-        const control = this.optionsForm.controls.decoStopDistance;
-        return this.inputs.controlInValid(control);
     }
 
     public set isComplex(newValue: boolean) {
@@ -160,11 +160,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
         // we don't need to propagate the calculation, because it is triggered by depths
         this.viewSwitch.isComplex = newValue;
-
-        if(newValue) {
-            // no data changed, we don't need to trigger calculation
-            this.preferences.save();
-        }
+        // switch to simple view also resets all dives (e.g. to open circuit), so it needs to be saved too
+        this.preferences.save();
     }
 
     public ngOnInit(): void {

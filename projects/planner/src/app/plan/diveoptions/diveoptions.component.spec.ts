@@ -64,6 +64,21 @@ describe('Dive options component', () => {
     }
     ));
 
+    describe('View switch saves preferences', () => {
+        it('Switch to complex view saves preferences', inject([PreferencesStore], (preferences: PreferencesStore) => {
+            const saveSpy = spyOn(preferences, 'save');
+            component.isComplex = true;
+            expect(saveSpy).toHaveBeenCalledWith();
+        }));
+
+        it('Switch to simple view saves preferences', inject([PreferencesStore], (preferences: PreferencesStore) => {
+            component.isComplex = true;
+            const saveSpy = spyOn(preferences, 'save');
+            component.isComplex = false;
+            expect(saveSpy).toHaveBeenCalledWith();
+        }));
+    });
+
     it('should call switchAirBreaks on selectedOptions', () => {
         const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
         const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged');

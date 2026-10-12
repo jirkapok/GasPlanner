@@ -13,7 +13,7 @@
     <label for="metabolicO2" class="form-label">{{ 'rebreatherOptions.metabolicO2' | translate }}
       [{{ units.volume }}/min]:</label>
     <input id="metabolicO2" class="form-control" type="number" formControlName="metabolicO2"
-      required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" step="0.01"
+      required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" [step]="metabolicO2Step"
       (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
     @if (metabolicO2Invalid) {
       <div class="text-danger form-text position-absolute">

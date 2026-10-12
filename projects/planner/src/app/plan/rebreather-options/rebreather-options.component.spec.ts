@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { CircuitType } from 'scuba-physics';
+import { CircuitType, Precision } from 'scuba-physics';
 import { RebreatherOptionsComponent } from './rebreather-options.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
@@ -85,6 +85,32 @@ describe('RebreatherOptionsComponent', () => {
 
         expect(options.injectionRatio).toBe(8);
         expect(changedSpy).not.toHaveBeenCalled();
+    });
+
+    describe('Steps', () => {
+        it('metabolic O2 step changes when switching to imperial units', () => {
+            const component = fixture.componentInstance;
+            expect(component.metabolicO2Step).toBe(0.1);
+            TestBed.inject(UnitConversion).imperialUnits = true;
+            fixture.detectChanges();
+            expect(component.metabolicO2Step).toBe(0.001);
+            expect(optionsPage.metabolicO2Input.step).toBe('0.001');
+        });
+
+        it('metabolic O2 starts with imperial step', () => {
+            TestBed.inject(UnitConversion).imperialUnits = true;
+            const imperialFixture = TestBed.createComponent(RebreatherOptionsComponent);
+            imperialFixture.detectChanges();
+            expect(imperialFixture.componentInstance.metabolicO2Step).toBe(0.001);
+        });
+
+        it('metabolic O2 value is converted when switching to imperial units', () => {
+            const units = TestBed.inject(UnitConversion);
+            units.imperialUnits = true;
+            fixture.detectChanges();
+            const expected = Precision.round(units.fromLiter(1), units.ranges.rmvRounding);
+            expect(Number(optionsPage.metabolicO2Input.value)).toBeCloseTo(expected, 6);
+        });
     });
 
     it('invalid value is marked and not applied', () => {

@@ -28,6 +28,7 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
     public static readonly formName = 'rebreatherOptions';
     @Input() public rootForm!: FormGroup;
     public rebreatherForm!: FormGroup<RebreatherForm>;
+    private _metabolicO2Step = 0.1;
 
     constructor(
         public units: UnitConversion,
@@ -52,6 +53,11 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
         return this.inputs.controlInValid(this.rebreatherForm.controls.metabolicO2);
     }
 
+    /** Volume per minute the same as diver rmv */
+    public get metabolicO2Step(): number {
+        return this._metabolicO2Step;
+    }
+
     private get options(): OptionsService {
         return this.schedules.selectedOptions;
     }
@@ -71,6 +77,9 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
 
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reload());
+
+        this.units.ranges$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((r) => this.rangeChanged(r));
 
         // replaces the form of previous instance, addControl would keep the old one
         this.rootForm.setControl(RebreatherOptionsComponent.formName, this.rebreatherForm);
@@ -97,6 +106,14 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
     private reload(): void {
         this.rebreatherForm.patchValue({
             injectionRatio: Precision.round(this.options.injectionRatio, 1),
+            metabolicO2: this.roundedMetabolicO2()
+        });
+    }
+
+    private rangeChanged(ranges: RangeConstants): void {
+        const exp = ranges.rmvRounding - 1;
+        this._metabolicO2Step = Math.pow(10, -exp);
+        this.rebreatherForm.patchValue({
             metabolicO2: this.roundedMetabolicO2()
         });
     }

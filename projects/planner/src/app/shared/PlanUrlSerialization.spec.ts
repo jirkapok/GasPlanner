@@ -259,6 +259,14 @@ describe('Url Serialization', () => {
             expect(rebreather.metabolicO2).toBe(RebreatherDefaults.metabolicO2);
         });
 
+        it('Redundant rebreather values are ignored', () => {
+            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,10,1.2,5,abc,5');
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.pscr);
+            expect(rebreather.injectionRatio).toBe(10);
+            expect(rebreather.metabolicO2).toBe(1.2);
+        });
+
         describe('Skips loading invalid rebreather group', () => {
             const assertSkipped = (rebreatherParam: string, appOptions = 'ao=1,0'): void => {
                 const current = createComplexSut();
@@ -285,10 +293,6 @@ describe('Url Serialization', () => {
 
             it('Not a number', () => {
                 assertSkipped('&r=2,abc,1');
-            });
-
-            it('Too many values', () => {
-                assertSkipped('&r=2,10,1,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5');
             });
 
             it('Rebreather in simple view', () => {

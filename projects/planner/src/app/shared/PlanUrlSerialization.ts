@@ -51,6 +51,11 @@ class ParseContext {
         return Number(toParse);
     }
 
+    /** Used for optional values, which may be missing in older urls */
+    public parseNumberOrDefault(index: number, defaultValue: number): number {
+        return this.paramValues.length > index ? this.parseNumber(index) : defaultValue;
+    }
+
     public parseEnum<TType>(index: number): TType {
         const toParse = this.paramValues[index];
         return <TType>(<unknown>Number(toParse));
@@ -165,21 +170,13 @@ export class PlanUrlSerialization {
             return undefined;
         }
 
+        // redundant values are ignored, as in other url parameters
         const context = new ParseContext(rebreatherParam, ',');
-        const values = context.paramValues;
-
-        // circuit + pSCR options; caught by fromUrl, which skips loading of invalid url
-        const maxValues = 3;
-        if (values.length > maxValues) {
-            throw new Error('Too many rebreather values.');
-        }
-        const valueOrDefault = (index: number, defaultValue: number): number =>
-            values.length > index ? context.parseNumber(index) : defaultValue;
 
         return {
             circuit: context.parseEnum<CircuitType>(0),
-            injectionRatio: valueOrDefault(1, RebreatherDefaults.injectionRatio),
-            metabolicO2: valueOrDefault(2, RebreatherDefaults.metabolicO2),
+            injectionRatio: context.parseNumberOrDefault(1, RebreatherDefaults.injectionRatio),
+            metabolicO2: context.parseNumberOrDefault(2, RebreatherDefaults.metabolicO2),
             loopVolume: RebreatherDefaults.loopVolume
         };
     }

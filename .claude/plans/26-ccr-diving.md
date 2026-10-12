@@ -1453,7 +1453,7 @@ Each stage starts from the latest master and is a full vertical slice:
    - options are within their `UnitConversion` ranges
    - stage cross-field rules hold (mCCR: tank 2 is O2; eCCR: descent ≤ bottom setpoint)
    - An invalid `r` → the URL is not loaded. Valid values are clamped by `SettingsNormalizationService`.
-   - Specs ("Skips loading" pattern): out-of-range, unknown circuit, non-numeric, too many values.
+   - Specs ("Skips loading" pattern): out-of-range, unknown circuit, non-numeric. Redundant values are silently ignored, as in other url parameters.
 6. **Docs**: a section in `doc/rebreather.md` + help menu anchor. **E2E**: one happy-path test per stage.
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
 

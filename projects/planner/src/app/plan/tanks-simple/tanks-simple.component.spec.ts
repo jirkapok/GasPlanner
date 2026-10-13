@@ -117,6 +117,30 @@ describe('Tanks Simple component', () => {
         });
     });
 
+    describe('Size with more than one decimal', () => {
+        beforeEach(() => {
+            fixture.detectChanges();
+            simplePage.sizeInput.value = '12.354';
+            simplePage.sizeInput.dispatchEvent(new Event('input'));
+        });
+
+        it('stores size rounded to one decimal', () => {
+            expect(component.firstTank.size).toBe(12.4);
+        });
+
+        it('shows rounded size after rebind', () => {
+            const reopened = TestBed.createComponent(TanksSimpleComponent);
+            reopened.detectChanges();
+            expect(new SimpleTanksPage(reopened).sizeInput.value).toBe('12.4');
+        });
+
+        it('keeps rounded size when start pressure changes', () => {
+            simplePage.startPressureInput.value = '150';
+            simplePage.startPressureInput.dispatchEvent(new Event('input'));
+            expect(component.firstTank.size).toBe(12.4);
+        });
+    });
+
     it('Assign best mix rebinds the control', () => {
         fixture.detectChanges();
         // can't call component.assignBestMix();, because it needs to be triggered by the dropdown

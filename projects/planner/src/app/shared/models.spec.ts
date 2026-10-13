@@ -21,6 +21,11 @@ describe('Bound tank', () => {
         expect(tank.workingPressure).not.toBeNaN();
     });
 
+    it('Rounds size to one decimal', () => {
+        tank.size = 12.354;
+        expect(tank.size).toBe(12.4);
+    });
+
     describe('Imperial units', () => {
         beforeEach(() => {
             units.imperialUnits = true;
@@ -29,6 +34,17 @@ describe('Bound tank', () => {
 
         it('Rounds label depending on units', () => {
             expect(tank.label).toBe('0. Air/125.7/2900.8');
+        });
+
+        it('Rounds size to one decimal in cuft', () => {
+            tank.size = 80.0789;
+            expect(tank.size).toBeCloseTo(80.1, 10);
+        });
+
+        it('Set Working pressure keeps unrounded size', () => {
+            const expectedSize = tank.size;
+            tank.workingPressure = 3000;
+            expect(tank.size).toBeCloseTo(expectedSize, 6);
         });
 
         it('Set Working pressure keeps target size', () => {

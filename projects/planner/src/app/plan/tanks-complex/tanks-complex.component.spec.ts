@@ -172,6 +172,30 @@ describe('Tanks Complex component', () => {
         });
     });
 
+    describe('Size with more than one decimal', () => {
+        beforeEach(() => {
+            fixture.detectChanges();
+            complexPage.sizeInput(0).value = '12.354';
+            complexPage.sizeInput(0).dispatchEvent(new Event('input'));
+        });
+
+        it('stores size rounded to one decimal', () => {
+            expect(component.tanks[0].size).toBe(12.4);
+        });
+
+        it('shows rounded size after rebind', () => {
+            const reopened = TestBed.createComponent(TanksComplexComponent);
+            reopened.detectChanges();
+            expect(new ComplexTanksPage(reopened).sizeInput(0).value).toBe('12.4');
+        });
+
+        it('keeps rounded size when start pressure changes', () => {
+            complexPage.pressureInput(0).value = '150';
+            complexPage.pressureInput(0).dispatchEvent(new Event('input'));
+            expect(component.tanks[0].size).toBe(12.4);
+        });
+    });
+
     it('Assign gas name tank rebinds new o2 value', () => {
         fixture.detectChanges();
         const applyEan36 = complexPage.applyGasButton(0, 'EAN36');

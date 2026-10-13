@@ -1,6 +1,6 @@
 <div class="input-group" [formGroup]="sizeForm" mdbDropdown>
   <input [formControlName]="this.controlName" class="form-control" type="number" (input)="sizeChanged()" required
-    [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="1" [class.is-invalid]="tankSizeInvalid"
+    [min]="ranges.tankSize[0]" [max]="ranges.tankSize[1]" step="0.1" [class.is-invalid]="tankSizeInvalid"
     id="tankSize" />
     <button class=" btn btn-default dropdown-toggle dropdown-toggle-split" id="sizeMenu" type="button"
     aria-expanded="false" data-mdb-toggle="dropdown" mdbDropdownToggle></button>

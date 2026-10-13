@@ -52,4 +52,22 @@ describe('Consumption - pSCR', () => {
 
         expect(pscrTank.consumedVolume).toBeLessThan(ocTank.consumedVolume);
     });
+
+    it('reserve is higher than open circuit, because the bottom before bailout is breathed from the leaner loop', () => {
+        // deep and long enough, so the bailout ascent needs decompression
+        const deepProfile = (tank: Tank, breathing?: PscrBreathing): Segment[] => {
+            const plan = PlanFactory.createPlan(30, 40, tank, options);
+            const parameters = AlgorithmParams.forMultilevelDive(plan, Tanks.toGases([tank]), options, undefined, breathing);
+            return new BuhlmannAlgorithm().decompression(parameters).segments;
+        };
+        const pscrTank = new Tank(15, 200, 32);
+        const ocTank = new Tank(15, 200, 32);
+        const pscrProfile = deepProfile(pscrTank, pscr);
+        const ocProfile = deepProfile(ocTank);
+
+        new Consumption(depthConverter, pscr).consumeFromTanks(pscrProfile, options, [pscrTank], consumptionOptions);
+        new Consumption(depthConverter).consumeFromTanks(ocProfile, options, [ocTank], consumptionOptions);
+
+        expect(pscrTank.reserveVolume).toBeGreaterThan(ocTank.reserveVolume);
+    });
 });

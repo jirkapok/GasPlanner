@@ -24,7 +24,7 @@ export class Consumption {
     /** Minimum bars to keep in stage tank, even for shallow dives */
     public static readonly defaultStageReserve = 20;
 
-    /** Emergency ascent is always breathed as open circuit */
+    /** Emergency ascent (bailout) gas is always consumed as open circuit */
     private reserveConsumption: SegmentsConsumption;
     private planConsumption: SegmentsConsumption;
 
@@ -63,8 +63,8 @@ export class Consumption {
             throw new Error('Profile needs to contain at least 2 segments.');
         }
 
-        // emergency (bailout) ascent is always open circuit
-        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval);
+        // bottom is breathed by the dive breathing model, the ascent from bailout gases as open circuit
+        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval, this.breathing);
         this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
 

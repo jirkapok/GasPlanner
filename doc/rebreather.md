@@ -32,9 +32,7 @@ Gas consumption of the supply tank is `RMV × ambient pressure / injection ratio
 
 ## Bailout and reserve
 
-The emergency ascent used to calculate the rock bottom reserve is always calculated as **open circuit** from the tanks, using the stress RMV and the same rules as for open circuit dives (see [Tanks](./tanks.md)).
-
-> The bottom part of the emergency ascent is also calculated as open circuit, not from the loop gas. For pSCR this may underestimate the decompression of the bailout ascent.
+The emergency ascent is used to calculate the rock bottom reserve. The user defined part of the dive, including the deepest point, is breathed from the loop. The diver bails out at the start of the generated ascent, and only this ascent is breathed as **open circuit** from the bailout tanks. Because the leaner loop gas loads the tissues more, the bailout ascent may need longer decompression than the same dive on open circuit. The ascent is consumed using the stress RMV and the same rules as for open circuit dives (see [Tanks](./tanks.md)).
 
 ## Limits
 

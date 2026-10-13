@@ -5,6 +5,8 @@ import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
+import { BailoutBreathing, BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { DepthConverterFactory } from '../physics/depth-converter';
 
 /** Creates skeleton for dive profile */
 export class PlanFactory {
@@ -40,8 +42,13 @@ export class PlanFactory {
         return Precision.ceil(estimate);
     }
 
+    /**
+     * Calculates ascent from the deepest part of the dive, in case of problem.
+     * @param breathing Optional breathing model of the dive, used for the user defined part of the dive.
+     * The calculated ascent is always breathed as open circuit from the tanks (bailout).
+     */
     public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[],
-        surfaceInterval?: RestingParameters): Segment[] {
+        surfaceInterval?: RestingParameters, breathing?: BreathingModel): Segment[] {
         const profile = Segments.fromCollection(originalPlan);
         const emergencySegments = profile.deepestPart();
         const issueSegmentIndex = emergencySegments.length;
@@ -57,11 +64,21 @@ export class PlanFactory {
         const emergencyPlan = Segments.fromCollection(emergencySegments);
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, surfaceInterval);
+        const bailout = PlanFactory.bailoutBreathing(options, breathing);
+        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, surfaceInterval, bailout);
         const calculatedProfile = algorithm.decompression(parameters);
         const emergencyProfile = calculatedProfile.segments;
         const ascent = emergencyProfile.slice(issueSegmentIndex, emergencyProfile.length);
         return ascent;
+    }
+
+    private static bailoutBreathing(options: Options, breathing?: BreathingModel): BreathingModel | undefined {
+        if (!breathing) {
+            return undefined;
+        }
+
+        const depthConverter = new DepthConverterFactory(options).create();
+        return new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter));
     }
 
     // in case of user defined gas switch without stay at depth (in ascent segment),

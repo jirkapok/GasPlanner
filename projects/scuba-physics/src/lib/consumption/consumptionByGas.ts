@@ -73,7 +73,7 @@ export class ConsumedGas implements IConsumedMix {
  * Calculates consumed gas and reserve grouped by gas mixture in liters, ignoring the tanks.
  */
 export class ConsumptionByGas {
-    /** Emergency ascent is always breathed as open circuit */
+    /** Emergency ascent (bailout) gas is always consumed as open circuit */
     private reserveConsumption: SegmentsConsumption;
     private planConsumption: SegmentsConsumption;
 

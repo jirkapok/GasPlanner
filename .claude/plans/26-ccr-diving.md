@@ -1458,7 +1458,7 @@ Each stage starts from the latest master and is a full vertical slice:
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
 
 ### Stage 2: pSCR (introduces the shared rebreather plumbing)
-- [ ] Status
+- [x] Status
 
 Tanks work exactly as in OC: one `TanksService` list, and any tank can be assigned to any depth level. In pSCR the assigned tank is that level's **supply gas**, and the same list defines the **bailout gases**. No separate diluent/oxygen tanks.
 - **Lib**:
@@ -1487,7 +1487,7 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
 - **Docs**: create `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve) + help menu entry.
 
 #### Stage 2 detailed tasks (branch `feat/26-ccr-pscr`)
-- [ ] Status
+- [x] Status
 
 Decisions made while detailing (from reading the planner code):
 - pSCR loop gas needs the diver RMV also in profile/dive info workers, so `PlanRequestDto` gets `diver: DiverDto`.
@@ -1533,7 +1533,7 @@ Decisions made while detailing (from reading the planner code):
 - E2E happy path: complex view → pSCR → results show a calculated dive.
 - Full verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
 ##### Task 2.7: Bailout breathing for the emergency ascent
-- [ ] Status
+- [x] Status
 
 Restores the bailout model from the first Stage 1 plan version, which was replaced by an always-OC emergency ascent. The emergency ascent breathes the user-defined part of the dive (including the deepest point and the problem solving time) from the dive's breathing model (the loop), and only the generated ascent from open-circuit bailout gases. For pSCR this loads the leaner loop gas before bailout, so the bailout decompression and the rock-bottom reserve aren't underestimated.
 
@@ -1552,17 +1552,17 @@ Restores the bailout model from the first Stage 1 plan version, which was replac
 - `Consumption.consumeFromTanks` passes its breathing model to `emergencyAscent`; `PlanningTasks.calculateConsumption` passes the dive's model too. The reserve liters stay open circuit (`reserveConsumption`).
 
 **Steps (TDD):**
-- [ ] `BreathingModel.spec.ts` "Bailout": with `PscrBreathing` as primary and `OpenCircuitBreathing` as bailout: loop gas before ascent, supply gas during ascent, gas switching from bailout (true), air breaks from bailout (true).
-- [ ] Implement `BailoutBreathing`, export it.
-- [ ] `PlanFactory.bailout.spec.ts`:
+- [x] `BreathingModel.spec.ts` "Bailout": with `PscrBreathing` as primary and `OpenCircuitBreathing` as bailout: loop gas before ascent, supply gas during ascent, gas switching from bailout (true), air breaks from bailout (true).
+- [x] Implement `BailoutBreathing`, export it.
+- [x] `PlanFactory.bailout.spec.ts`:
   - explicit `OpenCircuitBreathing` gives the same ascent as no model;
   - a pSCR dive needs longer bailout ascent than the same dive calculated as open circuit (leaner loop gas loaded at the bottom);
   - the generated ascent is breathed from the tank gas (last segment gas = tank gas).
-- [ ] Implement the optional `breathing` parameter in `PlanFactory.emergencyAscent`.
-- [ ] `consumption.pscr.spec.ts`: pSCR reserve from `consumeFromTanks` is at least the open circuit reserve of the same plan.
-- [ ] Pass the model from `Consumption.consumeFromTanks` and `PlanningTasks.calculateConsumption`; remove the "always open circuit" comments.
-- [ ] `doc/rebreather.md` "Bailout and reserve": the bottom part is breathed from the loop, only the ascent is open circuit; remove the limitation note.
-- [ ] Verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
+- [x] Implement the optional `breathing` parameter in `PlanFactory.emergencyAscent`.
+- [x] `consumption.pscr.spec.ts`: pSCR reserve from `consumeFromTanks` is at least the open circuit reserve of the same plan.
+- [x] Pass the model from `Consumption.consumeFromTanks` and `PlanningTasks.calculateConsumption`; remove the "always open circuit" comments.
+- [x] `doc/rebreather.md` "Bailout and reserve": the bottom part is breathed from the loop, only the ascent is open circuit; remove the limitation note.
+- [x] Verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
 
 ##### Stage 2 final review
 - [x] Status

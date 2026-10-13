@@ -33,7 +33,7 @@ export interface BreathingModel {
     consumedLiters(segment: Segment, rmvPerSecond: number): number;
 }
 
-/** Diver breathes directly from the tank. Used also for every emergency (bailout) ascent. */
+/** Diver breathes directly from the tank. Used also for the generated part of every emergency (bailout) ascent. */
 export class OpenCircuitBreathing implements BreathingModel {
     public readonly usesGasSwitching = true;
     public readonly usesAirBreaks = true;
@@ -53,5 +53,40 @@ export class OpenCircuitBreathing implements BreathingModel {
         const duration = Precision.roundTwoDecimals(segment.duration);
         const consumed = duration * averagePressure * rmvPerSecond;
         return consumed;
+    }
+}
+
+/**
+ * Emergency ascent: the user defined part of the dive (including the deepest point) is breathed using the primary model,
+ * the calculated ascent is breathed from the bailout model (open circuit).
+ */
+export class BailoutBreathing implements BreathingModel {
+    constructor(private primary: BreathingModel, private bailout: BreathingModel) { }
+
+    /** Gas switching happens only during the ascent */
+    public get usesGasSwitching(): boolean {
+        return this.bailout.usesGasSwitching;
+    }
+
+    /** Air breaks happen only during the ascent */
+    public get usesAirBreaks(): boolean {
+        return this.bailout.usesAirBreaks;
+    }
+
+    public inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean): Gas {
+        return this.modelFor(isAscent).inspiredGas(sourceGas, depth, isAscent);
+    }
+
+    public ppO2(sourceGas: Gas, depth: number, isAscent: boolean): number {
+        return this.modelFor(isAscent).ppO2(sourceGas, depth, isAscent);
+    }
+
+    /** Only the emergency ascent is consumed, which is always the bailout */
+    public consumedLiters(segment: Segment, rmvPerSecond: number): number {
+        return this.bailout.consumedLiters(segment, rmvPerSecond);
+    }
+
+    private modelFor(isAscent: boolean): BreathingModel {
+        return isAscent ? this.bailout : this.primary;
     }
 }

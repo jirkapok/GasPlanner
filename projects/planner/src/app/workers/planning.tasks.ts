@@ -121,8 +121,8 @@ export class PlanningTasks {
         // Max bottom changes tank consumed bars, so we need it calculate before real profile consumption
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options, surfaceInterval);
 
-        // emergency (bailout) ascent is always open circuit
-        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, surfaceInterval);
+        // bottom is breathed by the dive breathing model, the ascent from bailout gases as open circuit
+        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, surfaceInterval, breathing);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, consumptionOptions);

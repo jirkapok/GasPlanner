@@ -1,4 +1,6 @@
-import { BreathingModel, OpenCircuitBreathing } from './BreathingModel';
+import { BailoutBreathing, BreathingModel, OpenCircuitBreathing } from './BreathingModel';
+import { PscrBreathing } from './PscrBreathing';
+import { CircuitType, RebreatherOptions } from './RebreatherOptions';
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { StandardGases } from '../gases/StandardGases';
@@ -34,6 +36,36 @@ describe('Breathing model', () => {
         it('allows gas switching and air breaks', () => {
             expect(sut.usesGasSwitching).toBeTrue();
             expect(sut.usesAirBreaks).toBeTrue();
+        });
+    });
+
+    describe('Bailout', () => {
+        const loop = new PscrBreathing(new RebreatherOptions(CircuitType.pscr), 20, depthConverter);
+        const sut: BreathingModel = new BailoutBreathing(loop, new OpenCircuitBreathing(depthConverter));
+
+        it('breathes loop gas before ascent', () => {
+            const loopGas = loop.inspiredGas(StandardGases.ean32, 30);
+            expect(sut.inspiredGas(StandardGases.ean32, 30, false).fO2).toBeCloseTo(loopGas.fO2, 6);
+        });
+
+        it('breathes the tank gas during ascent', () => {
+            expect(sut.inspiredGas(StandardGases.ean32, 30, true)).toBe(StandardGases.ean32);
+        });
+
+        it('ppO2 of the loop before ascent and of the tank gas during ascent', () => {
+            expect(sut.ppO2(StandardGases.ean32, 30, false)).toBeCloseTo(loop.ppO2(StandardGases.ean32, 30), 6);
+            expect(sut.ppO2(StandardGases.ean32, 30, true)).toBeCloseTo(1.28, 6);
+        });
+
+        it('uses bailout gas switching and air breaks', () => {
+            expect(sut.usesGasSwitching).toBeTrue();
+            expect(sut.usesAirBreaks).toBeTrue();
+        });
+
+        it('consumes as open circuit', () => {
+            const segment = new Segment(30, 30, StandardGases.air, Time.oneMinute);
+            const rmvPerSecond = Time.toMinutes(20);
+            expect(sut.consumedLiters(segment, rmvPerSecond)).toBeCloseTo(80, 6);
         });
     });
 });

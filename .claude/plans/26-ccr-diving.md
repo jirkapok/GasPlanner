@@ -4,7 +4,7 @@
 
 **Goal:** Let Dugong plan pSCR, mCCR and eCCR dives (loop deco, O2 toxicity, loop/bailout gas consumption, CCR results UI), delivered in 5 isolated stages. This document has the **detailed, executable plan for Stage 1**. Stages 2–5 are kept as a roadmap and get their own detailed plan when each starts, because they build on Stage 1 code that doesn't exist yet.
 
-**Architecture:** Stage 1 adds a `BreathingModel` interface in `scuba-physics/src/lib/ccr`. Every place that today reads `segment.gas` as "what the diver breathes" asks the injected model instead: tissue loading, gas switching/air breaks, CNS/OTU, density/END events and plan consumption. The emergency (bailout) ascent is always calculated as open circuit (`OpenCircuitBreathing`). `OpenCircuitBreathing` is the default and reproduces today's numbers exactly. CCR physics formulas (`Rebreathers.ts`, `LoopGas.ts`) and `RebreatherOptions` are added but not wired to any UI.
+**Architecture:** Stage 1 adds a `BreathingModel` interface in `scuba-physics/src/lib/ccr`. Every place that today reads `segment.gas` as "what the diver breathes" asks the injected model instead: tissue loading, gas switching/air breaks, CNS/OTU, density/END events and plan consumption. The emergency (bailout) ascent is always calculated as open circuit (`OpenCircuitBreathing`); superseded in Stage 2 by `BailoutBreathing` (Task 2.7). `OpenCircuitBreathing` is the default and reproduces today's numbers exactly. CCR physics formulas (`Rebreathers.ts`, `LoopGas.ts`) and `RebreatherOptions` are added but not wired to any UI.
 
 **Tech Stack:** TypeScript, Angular workspace (`ng-packagr` library `scuba-physics`), Jasmine + Karma (ChromeHeadless).
 
@@ -1426,7 +1426,7 @@ git commit -m "feat(scuba-physics): #26 density and events by inspired gas, expo
 - [ ] Status
 
 - One tank list as in OC: tanks are assigned to depth levels as today, and the same list defines the bailout gases. The rebreather type dropdown sits in the tanks card header (complex view). Rebreather options go in a second tab of the tanks card.
-- Bailout = rock-bottom **reserve from an OC emergency ascent** (no separate bailout schedule UI in stages 2–4; the bailout profile is shown in Stage 5).
+- Bailout = rock-bottom **reserve from an emergency ascent**: the user-defined part (including the deepest point) is breathed from the loop, only the generated ascent from open-circuit bailout gases (`BailoutBreathing`, Task 2.7). No separate bailout schedule UI in stages 2–4; the bailout profile is shown in Stage 5.
 - mCCR deco/toxicity = manually held **setpoint**. O2 use = needle-valve flow.
 
 ### Shared rule for stages 2–5
@@ -1458,7 +1458,7 @@ Each stage starts from the latest master and is a full vertical slice:
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
 
 ### Stage 2: pSCR (introduces the shared rebreather plumbing)
-- [x] Status
+- [ ] Status
 
 Tanks work exactly as in OC: one `TanksService` list, and any tank can be assigned to any depth level. In pSCR the assigned tank is that level's **supply gas**, and the same list defines the **bailout gases**. No separate diluent/oxygen tanks.
 - **Lib**:
@@ -1469,7 +1469,7 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
     - `usesGasSwitching = true`, `usesAirBreaks = false`.
   - `BreathingModelFactory.create(options, diver, depthConverter)`.
   - `ConsumptionByGas` (`consumption/consumptionByGas.ts`): accept an optional `BreathingModel` like `Consumption` (plan consumption via the model, reserve always OC). Otherwise the by-gas chart and the "not enough gas" check would use `RMV × P` for pSCR (Stage 1 final review finding).
-  - Decide before enabling pSCR: the emergency ascent loads the bottom phase as open circuit on the supply gas, not as loop gas. That under-loads inert gas for pSCR (non-conservative reserve). See the Stage 1 final review.
+  - Emergency ascent: the bottom phase is breathed from the loop, the generated ascent from open-circuit bailout gases (`BailoutBreathing`, Task 2.7).
 - **Planner**:
   - `OptionsService` for `circuit`, `injectionRatio`, `metabolicO2`.
   - `RebreatherDto` (optional on `OptionsDto`), converters next to `fromAirBreaks`/`toAirBreaks`.
@@ -1487,13 +1487,13 @@ Tanks work exactly as in OC: one `TanksService` list, and any tank can be assign
 - **Docs**: create `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve) + help menu entry.
 
 #### Stage 2 detailed tasks (branch `feat/26-ccr-pscr`)
-- [x] Status
+- [ ] Status
 
 Decisions made while detailing (from reading the planner code):
 - pSCR loop gas needs the diver RMV also in profile/dive info workers, so `PlanRequestDto` gets `diver: DiverDto`.
 - Rebreather options travel in `OptionsDto.rebreather?` (optional "because of upgrade"), so preferences save/load them through the existing `fromOptions`/`toOptions`.
 - The selected tanks-card tab is only local state of the tanks component (not saved). The Rebreather tab is shown only for a non-OC circuit and closes when switched back to OC.
-- The emergency ascent stays open circuit (user decision); `ConsumptionByGas` gets the model (Stage 1 review finding).
+- The emergency ascent breathes the bottom phase from the loop and the generated ascent as open circuit (`BailoutBreathing`, Task 2.7; replaces the earlier always-OC decision). `ConsumptionByGas` gets the model (Stage 1 review finding).
 
 ##### Task 2.1: pSCR breathing model and factory (lib)
 - [x] Status
@@ -1532,6 +1532,38 @@ Decisions made while detailing (from reading the planner code):
 - `doc/rebreather.md` (overview, pSCR model, supply/bailout tanks, reserve, limits) + help menu entry + `helpDocument` on the Rebreather tab.
 - E2E happy path: complex view → pSCR → results show a calculated dive.
 - Full verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
+##### Task 2.7: Bailout breathing for the emergency ascent
+- [ ] Status
+
+Restores the bailout model from the first Stage 1 plan version, which was replaced by an always-OC emergency ascent. The emergency ascent breathes the user-defined part of the dive (including the deepest point and the problem solving time) from the dive's breathing model (the loop), and only the generated ascent from open-circuit bailout gases. For pSCR this loads the leaner loop gas before bailout, so the bailout decompression and the rock-bottom reserve aren't underestimated.
+
+**Files:**
+- Modify: `ccr/BreathingModel.ts`, `ccr/BreathingModel.spec.ts`
+- Modify: `depths/PlanFactory.ts`; Create: `depths/PlanFactory.bailout.spec.ts`
+- Modify: `consumption/consumption.ts`, `consumption/consumption.pscr.spec.ts`
+- Modify: `projects/planner/src/app/workers/planning.tasks.ts`, `doc/rebreather.md`
+
+**Interfaces:**
+- Produces: `new BailoutBreathing(primary: BreathingModel, bailout: BreathingModel)` implementing `BreathingModel`:
+  - `inspiredGas` / `ppO2` use `primary` while `isAscent` is false, `bailout` during the generated ascent.
+  - `usesGasSwitching` / `usesAirBreaks` come from `bailout`, because gas switches and air breaks happen only during the ascent.
+  - `consumedLiters` comes from `bailout`, the emergency ascent is consumed as open circuit.
+- Produces: `PlanFactory.emergencyAscent(originalPlan, options, tanks, surfaceInterval?, breathing?: BreathingModel)`. Without `breathing` the result is the same as today (open circuit). With it, the algorithm gets `new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter))`.
+- `Consumption.consumeFromTanks` passes its breathing model to `emergencyAscent`; `PlanningTasks.calculateConsumption` passes the dive's model too. The reserve liters stay open circuit (`reserveConsumption`).
+
+**Steps (TDD):**
+- [ ] `BreathingModel.spec.ts` "Bailout": with `PscrBreathing` as primary and `OpenCircuitBreathing` as bailout: loop gas before ascent, supply gas during ascent, gas switching from bailout (true), air breaks from bailout (true).
+- [ ] Implement `BailoutBreathing`, export it.
+- [ ] `PlanFactory.bailout.spec.ts`:
+  - explicit `OpenCircuitBreathing` gives the same ascent as no model;
+  - a pSCR dive needs longer bailout ascent than the same dive calculated as open circuit (leaner loop gas loaded at the bottom);
+  - the generated ascent is breathed from the tank gas (last segment gas = tank gas).
+- [ ] Implement the optional `breathing` parameter in `PlanFactory.emergencyAscent`.
+- [ ] `consumption.pscr.spec.ts`: pSCR reserve from `consumeFromTanks` is at least the open circuit reserve of the same plan.
+- [ ] Pass the model from `Consumption.consumeFromTanks` and `PlanningTasks.calculateConsumption`; remove the "always open circuit" comments.
+- [ ] `doc/rebreather.md` "Bailout and reserve": the bottom part is breathed from the loop, only the ascent is open circuit; remove the limitation note.
+- [ ] Verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
+
 ##### Stage 2 final review
 - [x] Status
 - Fixed: stale invalid rebreather form blocked all planner inputs; unsupported circuits (mCCR/eCCR) loaded from url as OC; imperial metabolic O2 minimum; hypoxic loop now raises the existing `Low ppO2` warning.
@@ -1547,7 +1579,7 @@ Decisions made while detailing (from reading the planner code):
 - **Lib**:
   - `RebreatherOptions.setpoint` (default 1.3, range 0.4–1.6) and `o2Flow` (default 0.8 L/min, range 0.3–3).
   - `MccrBreathing`: loop gas from `LoopGas.constantPpO2`; `usesGasSwitching = false`, `usesAirBreaks = false`.
-  - `MccrConsumption`: O2 = `Rebreathers.mccrO2Rate` × t from tank 2; diluent = `Rebreathers.diluentForDescent` over descending segments from tank 1; bailout reserve via the OC emergency ascent.
+  - `MccrConsumption`: O2 = `Rebreathers.mccrO2Rate` × t from tank 2; diluent = `Rebreathers.diluentForDescent` over descending segments from tank 1; bailout reserve via the bailout emergency ascent (`BailoutBreathing`).
 - **Tanks model** (single `TanksService` list, URL `t=`/`de=` unchanged): in mCCR the "Tanks" tab holds
   - **tank 1 = diluent**: gas fully editable
   - **tank 2 = oxygen**: gas fixed to 100 % O2, O2/He inputs and the standard-gas dropdown disabled; only size/pressure editable
@@ -1590,7 +1622,7 @@ Applies only when the circuit is not OC; OC views stay unchanged. Follows the sh
 
 - `plan/waypoints/waypoints.component.html`: when circuit ≠ OC, wrap the table in `mdb-tabs` "CCR profile" / "Bailout profile".
   - **CCR profile**: `stops.wayPoints`; the gas column shows the loop (diluent + setpoint; pSCR: supply gas).
-  - **Bailout profile**: plan waypoints up to `dive.emergencyAscentStart`, followed by `dive.emergencyAscent` (`shared/diveresults.ts:71,87,171`, filled in `planner.service.ts:205-218` from the open-circuit emergency ascent). Built in a service, not the component. The stops-only filter applies to both tabs.
+  - **Bailout profile**: plan waypoints up to `dive.emergencyAscentStart`, followed by `dive.emergencyAscent` (`shared/diveresults.ts:71,87,171`, filled in `planner.service.ts:205-218` from the bailout emergency ascent: loop until the deepest point, open-circuit ascent). Built in a service, not the component. The stops-only filter applies to both tabs.
 - Profile chart: the bailout tab switches on the existing emergency-ascent overlay (`showEmergencyAscent`, `shared/chartPlotter.ts:172`). Row highlighting works in both tabs.
 - The selected tab is persisted. Specs in `waypoints.component.spec.ts`.
 

@@ -1886,7 +1886,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Status
 
 ##### Stage 3 finish (issue #26 stays open)
-- [ ] Status
+- [x] Status
 
 Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
 
@@ -1895,7 +1895,7 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
   - Expected: no output.
   - Reword any match (scoped type, see shared rule 8) with my approval, because it rewrites published history if the branch was pushed.
 - [x] The PR body (if a PR is used) says `Part of #26`, never `Closes #26`. A local merge commit message gets the same check.
-- [ ] After the merge into `master` is pushed (pending: `gh` not authenticated on 2026-10-14):
+- [x] After the merge into `master` is pushed (done 2026-10-15: issue still OPEN, mCCR row ticked):
   - `gh issue view 26 --json state,body`. Expected state: `OPEN`. If GitHub closed it anyway, `gh issue reopen 26` and tell me which commit did it.
   - Tick the mCCR row in the issue description:
     1. Save the body to the scratchpad.

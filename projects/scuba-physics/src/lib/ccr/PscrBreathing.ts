@@ -3,6 +3,8 @@ import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';
 import { Precision } from '../common/precision';
 import { Time } from '../physics/Time';
+import { Tank } from '../consumption/Tanks';
+import { Event } from '../algorithm/CalculatedProfile';
 import { BreathingModel } from './BreathingModel';
 import { RebreatherOptions } from './RebreatherOptions';
 import { LoopGas } from './LoopGas';
@@ -15,6 +17,7 @@ import { Rebreathers } from './Rebreathers';
 export class PscrBreathing implements BreathingModel {
     public readonly usesGasSwitching = true;
     public readonly usesAirBreaks = false;
+    public readonly oxygenTank: Tank | undefined = undefined;
 
     /**
      * @param options rebreather options with injection ratio and metabolic oxygen consumption
@@ -39,5 +42,13 @@ export class PscrBreathing implements BreathingModel {
         const rmvPerMinute = Time.toSeconds(rmvPerSecond);
         const supplyPerMinute = Rebreathers.pscrSupplyRate(averagePressure, rmvPerMinute, this.options.injectionRatio);
         return Time.toMinutes(supplyPerMinute) * duration;
+    }
+
+    public oxygenLiters(): number {
+        return 0;
+    }
+
+    public validate(): Event[] {
+        return [];
     }
 }

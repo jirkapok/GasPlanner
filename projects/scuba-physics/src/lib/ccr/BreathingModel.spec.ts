@@ -1,5 +1,8 @@
 import { BailoutBreathing, BreathingModel, OpenCircuitBreathing } from './BreathingModel';
 import { PscrBreathing } from './PscrBreathing';
+import { MccrBreathing } from './MccrBreathing';
+import { Tank } from '../consumption/Tanks';
+import { EventType } from '../algorithm/CalculatedProfile';
 import { CircuitType, RebreatherOptions } from './RebreatherOptions';
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
@@ -37,6 +40,16 @@ describe('Breathing model', () => {
             expect(sut.usesGasSwitching).toBeTrue();
             expect(sut.usesAirBreaks).toBeTrue();
         });
+
+        it('has no oxygen source', () => {
+            const segment = new Segment(30, 30, StandardGases.air, Time.oneMinute);
+            expect(sut.oxygenTank).toBeUndefined();
+            expect(sut.oxygenLiters(segment)).toBeCloseTo(0, 6);
+        });
+
+        it('is always valid', () => {
+            expect(sut.validate()).toEqual([]);
+        });
     });
 
     describe('Bailout', () => {
@@ -66,6 +79,20 @@ describe('Breathing model', () => {
             const segment = new Segment(30, 30, StandardGases.air, Time.oneMinute);
             const rmvPerSecond = Time.toMinutes(20);
             expect(sut.consumedLiters(segment, rmvPerSecond)).toBeCloseTo(80, 6);
+        });
+
+        it('has no oxygen source, because ascent is open circuit', () => {
+            const segment = new Segment(30, 30, StandardGases.air, Time.oneMinute);
+            expect(sut.oxygenTank).toBeUndefined();
+            expect(sut.oxygenLiters(segment)).toBeCloseTo(0, 6);
+        });
+
+        it('validates the loop model', () => {
+            const tanks = [new Tank(12, 200, 21), new Tank(11, 200, 50)];
+            const mccr = new MccrBreathing(new RebreatherOptions(CircuitType.mccr), tanks, depthConverter);
+            const errors = new BailoutBreathing(mccr, depthConverter).validate();
+            expect(errors.length).toBe(1);
+            expect(errors[0].type).toBe(EventType.error);
         });
     });
 });

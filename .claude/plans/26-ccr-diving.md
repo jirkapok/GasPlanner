@@ -1653,7 +1653,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - In the UI the mCCR setpoint is called **"Target ppO2"**: the diver holds it manually, and the constant mass flow only defines the oxygen used.
 
 ##### Task 3.1: mCCR breathing model, oxygen interface and validation (lib)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `ccr/RebreatherOptions.ts`, `ccr/RebreatherOptions.spec.ts`
@@ -1686,8 +1686,8 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - `BuhlmannAlgorithm.validate(segments, gases, breathing)`: after the segment and gas validation, returns `breathing.validate()`. This applies to `decompression`, `decompressionStatistics` and `noDecoLimit`.
 
 **Steps (TDD):**
-- [ ] `RebreatherOptions.spec.ts`: defaults setpoint 1.3 / o2Flow 0.8; `loadFrom` copies both; `loadFrom` of a source with missing (0/undefined) values keeps the defaults (legacy data). Run, see it FAIL. Implement. PASS.
-- [ ] `MccrBreathing.spec.ts` (salt water `depthConverter`, tanks [air diluent, O2], setpoint 1.3, o2Flow 0.8, metabolicO2 1.0, loopVolume 6):
+- [x] `RebreatherOptions.spec.ts`: defaults setpoint 1.3 / o2Flow 0.8; `loadFrom` copies both; `loadFrom` of a source with missing (0/undefined) values keeps the defaults (legacy data). Run, see it FAIL. Implement. PASS.
+- [x] `MccrBreathing.spec.ts` (salt water `depthConverter`, tanks [air diluent, O2], setpoint 1.3, o2Flow 0.8, metabolicO2 1.0, loopVolume 6):
   - at 30 m: ppO2 is 1.3 (`toBeCloseTo(1.3, 6)`); the inspired gas keeps the diluent He/N2 ratio (trimix 21/35 diluent → fHe/fN2 ratio unchanged);
   - at 3 m: setpoint above ambient → ppO2 = ambient, the loop is pure oxygen, no exception;
   - at 100 m with air diluent: diluent ppO2 above setpoint → ppO2 = diluent ppO2 (diluent flush);
@@ -1698,20 +1698,20 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - `validate()`: [air, O2] → `[]`; [air, ean50] → one error event; [air] → one error event;
   - `usesGasSwitching`/`usesAirBreaks` are false.
   - Run, see it FAIL (missing class). Implement `RebreatherTanks`, `MccrBreathing`. PASS.
-- [ ] `BreathingModel.spec.ts` and `PscrBreathing.spec.ts`:
+- [x] `BreathingModel.spec.ts` and `PscrBreathing.spec.ts`:
   - OC and pSCR → `oxygenLiters` 0, `oxygenTank` undefined, `validate` empty;
   - Bailout with mCCR primary → `oxygenLiters` 0, `oxygenTank` undefined, `validate` returns the primary's error for [air, ean50].
   - Add the members to the interface and the three classes. PASS.
-- [ ] `BreathingModelFactory.spec.ts`: `CircuitType.mccr` → `MccrBreathing` whose `oxygenTank` is the passed `tanks[1]`. FAIL, implement (new `tanks` parameter; update `planning.tasks.ts` `breathingFor` and `calculateConsumption` to pass the deserialized tanks), PASS.
-- [ ] `BuhlmannAlgorithm.mccr.spec.ts`, 40 m / 25 min, tanks [air diluent, O2, ean50], GF 30/85:
+- [x] `BreathingModelFactory.spec.ts`: `CircuitType.mccr` → `MccrBreathing` whose `oxygenTank` is the passed `tanks[1]`. FAIL, implement (new `tanks` parameter; update `planning.tasks.ts` `breathingFor` and `calculateConsumption` to pass the deserialized tanks), PASS.
+- [x] `BuhlmannAlgorithm.mccr.spec.ts`, 40 m / 25 min, tanks [air diluent, O2, ean50], GF 30/85:
   - (a) the whole profile stays on the diluent (no gas switch even with EAN50/O2 available);
   - (b) no air break segments;
   - (c) total runtime differs from OC on air with the same gases;
   - (d) setpoint 1.3 gives a shorter runtime than setpoint 0.7;
   - (e) tanks [air, ean50] → `decompression` returns one `EventType.error` and no calculated ascent; `noDecoLimit` returns 0 like other validation errors.
   - Write down the real runtime number in the spec after the sanity check against a reference planner (Subsurface/MultiDeco 40 m/25 min, dil air, SP 1.3, GF 30/85, within one stop minute). If no reference is at hand, assert (c)/(d) only and ledger it.
-- [ ] Export `MccrBreathing`, `RebreatherTanks` in `public-api.ts`.
-- [ ] Verification: single specs, then `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci` (factory signature in the worker), lint of the changed files. Commit `feat(scuba-physics): #26 mCCR breathing model`.
+- [x] Export `MccrBreathing`, `RebreatherTanks` in `public-api.ts`.
+- [x] Verification: single specs, then `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci` (factory signature in the worker), lint of the changed files. Commit `feat(scuba-physics): #26 mCCR breathing model`.
 
 ##### Task 3.2: mCCR consumption (lib)
 - [ ] Status

@@ -2,6 +2,8 @@ import { Gas } from '../gases/Gases';
 import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';
 import { Precision } from '../common/precision';
+import { Tank } from '../consumption/Tanks';
+import { Event } from '../algorithm/CalculatedProfile';
 
 /**
  * Defines what the diver really breathes from the assigned gas source (tank or diluent).
@@ -12,6 +14,8 @@ export interface BreathingModel {
     readonly usesGasSwitching: boolean;
     /** True, if air breaks may be applied when breathing oxygen */
     readonly usesAirBreaks: boolean;
+    /** Tank from which the rebreather adds oxygen to the loop, undefined, if there is no separate oxygen source */
+    readonly oxygenTank: Tank | undefined;
     /**
      * Gas really breathed by the diver.
      * @param sourceGas gas assigned to the segment (tank gas, diluent or supply gas)
@@ -31,12 +35,17 @@ export interface BreathingModel {
      * @param rmvPerSecond liters/second
      */
     consumedLiters(segment: Segment, rmvPerSecond: number): number;
+    /** Liters consumed from the oxygen tank, doesn't depend on diver rmv */
+    oxygenLiters(segment: Segment): number;
+    /** Returns errors preventing calculation of the dive, empty if the model is usable */
+    validate(): Event[];
 }
 
 /** Diver breathes directly from the tank. Used also for the generated part of every emergency (bailout) ascent. */
 export class OpenCircuitBreathing implements BreathingModel {
     public readonly usesGasSwitching = true;
     public readonly usesAirBreaks = true;
+    public readonly oxygenTank: Tank | undefined = undefined;
 
     constructor(private depthConverter: DepthConverter) { }
 
@@ -53,6 +62,14 @@ export class OpenCircuitBreathing implements BreathingModel {
         const duration = Precision.roundTwoDecimals(segment.duration);
         const consumed = duration * averagePressure * rmvPerSecond;
         return consumed;
+    }
+
+    public oxygenLiters(): number {
+        return 0;
+    }
+
+    public validate(): Event[] {
+        return [];
     }
 }
 
@@ -78,6 +95,11 @@ export class BailoutBreathing implements BreathingModel {
         return this.bailout.usesAirBreaks;
     }
 
+    /** Only the emergency ascent is consumed, there is no rebreather oxygen source */
+    public get oxygenTank(): Tank | undefined {
+        return this.bailout.oxygenTank;
+    }
+
     public inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean): Gas {
         return this.modelFor(isAscent).inspiredGas(sourceGas, depth, isAscent);
     }
@@ -89,6 +111,15 @@ export class BailoutBreathing implements BreathingModel {
     /** Only the emergency ascent is consumed, which is always the bailout */
     public consumedLiters(segment: Segment, rmvPerSecond: number): number {
         return this.bailout.consumedLiters(segment, rmvPerSecond);
+    }
+
+    public oxygenLiters(segment: Segment): number {
+        return this.bailout.oxygenLiters(segment);
+    }
+
+    /** The loop part of the dive is breathed from the primary model */
+    public validate(): Event[] {
+        return this.primary.validate();
     }
 
     private modelFor(isAscent: boolean): BreathingModel {

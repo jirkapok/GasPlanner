@@ -1,3 +1,28 @@
+# [0.11.0](https://github.com/jirkapok/GasPlanner/compare/v0.10.1...v0.11.0) (2026-10-14)
+
+
+### Bug Fixes
+
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) dives recalculated with invalid tanks or rebreather options ([ad22d63](https://github.com/jirkapok/GasPlanner/commit/ad22d638a9e68b5e613c93e246609b747c37776e))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) high ppO2 shown as error in dive issues ([896a5e4](https://github.com/jirkapok/GasPlanner/commit/896a5e4c25f3cb83997a60582528b9cf81b763e7))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) ignore redundant rebreather url values ([389ede3](https://github.com/jirkapok/GasPlanner/commit/389ede3fe44067b4ace0160ede0d6410d4ff3516))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) metabolic O2 input step by units rounding ([50e640a](https://github.com/jirkapok/GasPlanner/commit/50e640a71f149bfd4683fa5ae20a9c0589d66a15))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) stale rebreather form, unsupported circuits in url and imperial metabolic O2 range ([703eb82](https://github.com/jirkapok/GasPlanner/commit/703eb82e62dc6675eb4cbe2f2c1f33448ca74645))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) switch to simple view not saved to preferences ([698c095](https://github.com/jirkapok/GasPlanner/commit/698c095a43439a22708cfb660a989190f467703f))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) emergency ascent breathes the loop until bailout ([b37d382](https://github.com/jirkapok/GasPlanner/commit/b37d382dc667b5afeb09d18e48023b307d82d0ba))
+
+
+### Features
+
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) calculate pSCR dives in planner workers ([cd47804](https://github.com/jirkapok/GasPlanner/commit/cd4780415f379a511f944d9fb97c9599c14cc9e4))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) error marks on tanks card tabs ([28754e0](https://github.com/jirkapok/GasPlanner/commit/28754e05a853cec31ce146ce2a932dc5f3923d94))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) metabolic O2 maximum 4 l/min ([6047e54](https://github.com/jirkapok/GasPlanner/commit/6047e549196b869afc573b66755f6a762785ffc0))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) rebreather type selection and pSCR options in tanks card ([92ab4a9](https://github.com/jirkapok/GasPlanner/commit/92ab4a93e1a163b8eba6c7b657b15f18c32e5dc2))
+* [#26](https://github.com/jirkapok/GasPlanner/issues/26) rebreather url group, validation and saved settings ([d79e04d](https://github.com/jirkapok/GasPlanner/commit/d79e04d0de4871ce4bd92c30c7be9a8aff806db8))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) consumption by gas uses breathing model ([4fe3f09](https://github.com/jirkapok/GasPlanner/commit/4fe3f091a98b8d9cea7652aeb9963fb96f89a705))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) low ppO2 warning for hypoxic rebreather loop ([36b4fe9](https://github.com/jirkapok/GasPlanner/commit/36b4fe9d63e32b7eedc6c660490524929b0b9810))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) pSCR breathing model ([c0b14af](https://github.com/jirkapok/GasPlanner/commit/c0b14afedfb400dd64f8c967c25c6b345f63ab3b))
+
 ## [0.10.1](https://github.com/jirkapok/GasPlanner/compare/v0.10.0...v0.10.1) (2026-10-13)
 
 

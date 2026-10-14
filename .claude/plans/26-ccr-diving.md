@@ -1458,6 +1458,10 @@ Each stage starts from the latest master and is a full vertical slice:
    - Specs ("Skips loading" pattern): out-of-range, unknown circuit, non-numeric. Redundant values are silently ignored, as in other url parameters.
 6. **Docs**: a section in `doc/rebreather.md` + help menu anchor. **E2E**: one happy-path test per stage.
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
+8. **Stages 3 (mCCR) and 4 (eCCR) don't close issue #26.** Finishing the stage ticks its row in the issue description instead (see "Stage 3 finish" / "Stage 4 finish"). Only Stage 5 may close the issue.
+   - **No GitHub closing keywords for #26** anywhere in the stage's commits, PR title/body or merge commit message: `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, each followed by `#26` or `: #26`.
+   - GitHub accepts the colon form, so a commit summary `fix: #26 …` merged into `master` **closes the issue**. In these stages always put a scope after the type, e.g. `fix(planner): #26 …`. This overrides the unscoped `fix: #123 …` example in CLAUDE.md.
+   - The PR body references the issue as `Part of #26`.
 
 ### Stage 2: pSCR (introduces the shared rebreather plumbing)
 - [x] Status
@@ -1881,6 +1885,27 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 ##### Stage 3 final review
 - [ ] Status
 
+##### Stage 3 finish (issue #26 stays open)
+- [ ] Status
+
+Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
+
+- [ ] Check the branch for closing keywords before the merge/PR:
+  - `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`
+  - Expected: no output.
+  - Reword any match (scoped type, see shared rule 8) with my approval, because it rewrites published history if the branch was pushed.
+- [ ] The PR body (if a PR is used) says `Part of #26`, never `Closes #26`. A local merge commit message gets the same check.
+- [ ] After the merge into `master` is pushed:
+  - `gh issue view 26 --json state,body`. Expected state: `OPEN`. If GitHub closed it anyway, `gh issue reopen 26` and tell me which commit did it.
+  - Tick the mCCR row in the issue description:
+    1. Save the body to the scratchpad.
+    2. Change exactly the one task-list row that mentions mCCR from `- [ ]` to `- [x]`.
+    3. Show me the diff of the body.
+    4. `gh issue edit 26 --body-file <file>`.
+  - If no row or more than one row matches mCCR, stop and ask me which row to tick.
+  - `gh` needs `gh auth login` (or `GH_TOKEN`) first; it isn't authenticated in this environment yet. Editing the issue is outward-facing, so confirm with me right before running it.
+- [ ] Mark `### Stage 3: mCCR` `- [x] Status` in this plan.
+
 ### Stage 4: eCCR
 - [ ] Status
 
@@ -1897,6 +1922,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   3. Rebreather tab: descent and bottom setpoints **1.1**, deco setpoint **1.4**.
   4. Depth **60 m** (default bottom time).
   5. Assert **only**: the Consumed tab shows the **CCR oxygen tank consumed value**, and the Results tab `#total-dive-time-value` shows the expected runtime. Hardcode both values, taken from `BuhlmannAlgorithm.eccr.spec.ts` / `consumption.eccr.spec.ts` with the same inputs, cross-checked against a reference planner.
+- **Stage 4 finish (issue #26 stays open)**: the same steps as "Stage 3 finish" (keyword check of the branch, `Part of #26` in the PR, issue still `OPEN` after the push), but tick the one task-list row of the issue description that mentions **eCCR**. When this stage gets its detailed tasks, copy them as a "Stage 4 finish" task with its own checkboxes.
 
 ### Stage 5: CCR results UI
 - [ ] Status

@@ -21,8 +21,6 @@ export interface SaturationComparison {
 export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
-    private _profileATimeOffset = 0;
-    private _profileBTimeOffset = 0;
     private _alignByEnd = false;
     private _onSelectionChanged = new Subject<void>();
     private _selectionChanged$: Observable<void>;
@@ -42,10 +40,6 @@ export class ProfileComparatorService extends Streamed {
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.resetSelection());
-
-        // Update chart offsets when this.alignByEnd changes
-        this.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.updateOffsets());
     }
 
     public get profileAIndex(): number {
@@ -70,7 +64,14 @@ export class ProfileComparatorService extends Streamed {
 
     /** In seconds */
     public get profileATimeOffset(): number {
-        return this._profileATimeOffset;
+        if (!this.alignByEnd) {
+            return 0;
+        }
+
+        const totalDuration = this.totalDuration;
+        const durationA = this.profileAResults.totalDuration;
+
+        return totalDuration - durationA;
     }
 
     public get profileBIndex(): number {
@@ -95,7 +96,14 @@ export class ProfileComparatorService extends Streamed {
 
     /** In seconds */
     public get profileBTimeOffset(): number {
-        return this._profileBTimeOffset;
+        if (!this.alignByEnd) {
+            return 0;
+        }
+
+        const totalDuration = this.totalDuration;
+        const durationB = this.profileBResults.totalDuration;
+
+        return totalDuration - durationB;
     }
 
     /** Emits upon changed selection of profiles or other diff component options */
@@ -214,21 +222,6 @@ export class ProfileComparatorService extends Streamed {
             this._wayPoints.unshift(row);
             context.next();
         }
-    }
-
-    private updateOffsets(): void {
-        if (!this.alignByEnd) {
-            this._profileATimeOffset = 0;
-            this._profileBTimeOffset = 0;
-            return;
-        }
-
-        const totalDuration = this.totalDuration;
-        const durationA = this.profileAResults.totalDuration;
-        const durationB = this.profileBResults.totalDuration;
-
-        this._profileATimeOffset = totalDuration - durationA;
-        this._profileBTimeOffset = totalDuration - durationB;
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {

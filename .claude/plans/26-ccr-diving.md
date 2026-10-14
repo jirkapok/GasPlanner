@@ -1861,7 +1861,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR tanks card and options components`.
 
 ##### Task 3.6: Docs, E2E and full verification
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `doc/rebreather.md` (mCCR section) and the help menu anchor. The mCCR section covers:
@@ -1874,13 +1874,13 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - Create: `e2e/mccr.spec.ts` (page-object style of `e2e/pscr.spec.ts`)
 
 **Steps:**
-- [ ] E2E happy path: complex view → `#circuitType` → `#circuitMccr` → the tanks card shows the oxygen tank 2 → `#rebreatherTab` → `#setpoint` = 1.2 → `#total-dive-time-value` differs from the OC runtime read before the switch.
-- [ ] Manual check (`npm start`):
+- [x] E2E happy path: complex view → `#circuitType` → `#circuitMccr` → the tanks card shows the oxygen tank 2 → `#rebreatherTab` → `#setpoint` = 1.2 → `#total-dive-time-value` differs from the OC runtime read before the switch.
+- [x] Manual check (`npm start`):
   - the profile, CNS/OTU and the O2/diluent consumed values update immediately on each input;
   - mobile width layout;
   - an mCCR URL round-trips;
   - an old URL/preferences load as OC.
-- [ ] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commit `docs: #26 mCCR rebreather documentation` and `test(e2e): #26 mCCR happy path`.
+- [x] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commit `docs: #26 mCCR rebreather documentation` and `test(e2e): #26 mCCR happy path`.
 
 ##### Stage 3 final review
 - [ ] Status

@@ -1611,7 +1611,7 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
 - Known: high ppO2 warning is still evaluated for the supply gas, not the loop (Stage 5c).
 
 ### Stage 3: mCCR
-- [ ] Status
+- [x] Status
 
 - **Lib**:
   - `RebreatherOptions.setpoint` (default 1.3, range 0.4–1.6) and `o2Flow` (default 0.8 L/min, range 0.3–3).
@@ -1635,7 +1635,7 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
 - **Docs**: mCCR section.
 
 #### Stage 3 detailed tasks (branch `feat/26-ccr-mccr`)
-- [ ] Status
+- [x] Status
 
 Decisions made while detailing (confirmed with the user 2026-10-14, or derived from the code):
 - **Bailout gases in mCCR** = all tanks, including the CCR oxygen tank 2 (changed by the user 2026-10-14; the first version excluded tank 2). The emergency ascent may switch to tank 2 oxygen, so its reserve includes the ascent oxygen. `PlanFactory.emergencyAscent` stays unchanged.
@@ -1883,19 +1883,19 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commit `docs: #26 mCCR rebreather documentation` and `test(e2e): #26 mCCR happy path`.
 
 ##### Stage 3 final review
-- [ ] Status
+- [x] Status
 
 ##### Stage 3 finish (issue #26 stays open)
 - [ ] Status
 
 Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
 
-- [ ] Check the branch for closing keywords before the merge/PR:
+- [x] Check the branch for closing keywords before the merge/PR:
   - `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`
   - Expected: no output.
   - Reword any match (scoped type, see shared rule 8) with my approval, because it rewrites published history if the branch was pushed.
-- [ ] The PR body (if a PR is used) says `Part of #26`, never `Closes #26`. A local merge commit message gets the same check.
-- [ ] After the merge into `master` is pushed:
+- [x] The PR body (if a PR is used) says `Part of #26`, never `Closes #26`. A local merge commit message gets the same check.
+- [ ] After the merge into `master` is pushed (pending: `gh` not authenticated on 2026-10-14):
   - `gh issue view 26 --json state,body`. Expected state: `OPEN`. If GitHub closed it anyway, `gh issue reopen 26` and tell me which commit did it.
   - Tick the mCCR row in the issue description:
     1. Save the body to the scratchpad.
@@ -1904,7 +1904,7 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
     4. `gh issue edit 26 --body-file <file>`.
   - If no row or more than one row matches mCCR, stop and ask me which row to tick.
   - `gh` needs `gh auth login` (or `GH_TOKEN`) first; it isn't authenticated in this environment yet. Editing the issue is outward-facing, so confirm with me right before running it.
-- [ ] Mark `### Stage 3: mCCR` `- [x] Status` in this plan.
+- [x] Mark `### Stage 3: mCCR` `- [x] Status` in this plan.
 
 ### Stage 4: eCCR
 - [ ] Status

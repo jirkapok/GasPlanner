@@ -1,7 +1,7 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
-import { Options, Tank, Salinity, SafetyStop, AirBreakOptions, CircuitType } from 'scuba-physics';
+import { Options, Tank, Salinity, SafetyStop, AirBreakOptions, CircuitType, RebreatherDefaults } from 'scuba-physics';
 import { AppPreferences } from './serialization.model';
 import { OptionExtensions } from './Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -313,6 +313,55 @@ describe('PreferencesStore', () => {
                 expect(loadedOptions.injectionRatio).toBe(12);
                 expect(loadedOptions.metabolicO2).toBeCloseTo(1.5, 6);
             }));
+
+        describe('mCCR', () => {
+            const useMccr = (viewSwitch: ViewSwitchService): void => {
+                viewSwitch.isComplex = true;
+                TestBed.inject(DiveSchedules).dives[0].tanksService.prepareForMccr();
+                options.circuit = CircuitType.mccr;
+                options.setpoint = 1.1;
+                options.o2Flow = 1.2;
+                options.loopVolume = 5;
+            };
+
+            const loadedOptions = (): OptionsService => TestBed.inject(DiveSchedules).dives[0].optionsService;
+
+            it('Options are loaded after save', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+                useMccr(viewSwitch);
+                sut.save();
+
+                options.circuit = CircuitType.oc;
+                options.setpoint = 1.3;
+                options.o2Flow = 0.8;
+                options.loopVolume = 6;
+                sut.load();
+
+                const loaded = loadedOptions();
+                expect(loaded.circuit).toBe(CircuitType.mccr);
+                expect(loaded.setpoint).toBeCloseTo(1.1, 6);
+                expect(loaded.o2Flow).toBeCloseTo(1.2, 6);
+                expect(loaded.loopVolume).toBeCloseTo(5, 6);
+            }));
+
+            it('Legacy rebreather without mCCR values loads defaults', inject([ViewSwitchService],
+                (viewSwitch: ViewSwitchService) => {
+                    useMccr(viewSwitch);
+                    sut.save();
+                    const stored = JSON.parse(localStorage.getItem('preferences') ?? '{}') as AppPreferences;
+                    stored.dives.forEach(d => {
+                        delete d.options.rebreather?.setpoint;
+                        delete d.options.rebreather?.o2Flow;
+                    });
+                    localStorage.setItem('preferences', JSON.stringify(stored));
+
+                    sut.load();
+
+                    const loaded = loadedOptions();
+                    expect(loaded.circuit).toBe(CircuitType.mccr);
+                    expect(loaded.setpoint).toBeCloseTo(RebreatherDefaults.setpoint, 6);
+                    expect(loaded.o2Flow).toBeCloseTo(RebreatherDefaults.o2Flow, 6);
+                }));
+        });
 
         it('Legacy preferences without rebreather load as open circuit', inject([ViewSwitchService],
             (viewSwitch: ViewSwitchService) => {

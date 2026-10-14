@@ -59,6 +59,42 @@ describe('SettingsNormalizationService', () => {
             service.apply();
             expect(optionsService.metabolicO2).toBe(4);
         });
+
+        it('Target ppO2 is normalized', () => {
+            optionsService.setpoint = 2;
+            service.apply();
+            expect(optionsService.setpoint).toBe(1.6);
+        });
+
+        it('Oxygen flow is normalized', () => {
+            optionsService.o2Flow = 0.1;
+            service.apply();
+            expect(optionsService.o2Flow).toBe(0.3);
+        });
+
+        it('Loop volume is normalized', () => {
+            optionsService.loopVolume = 50;
+            service.apply();
+            expect(optionsService.loopVolume).toBe(10);
+        });
+
+        describe('Imperial units', () => {
+            beforeEach(() => {
+                TestBed.inject(UnitConversion).imperialUnits = true;
+            });
+
+            it('Oxygen flow is normalized', () => {
+                optionsService.o2Flow = 1;
+                service.apply();
+                expect(optionsService.o2Flow).toBeCloseTo(0.106, 6);
+            });
+
+            it('Loop volume is normalized', () => {
+                optionsService.loopVolume = 0.01;
+                service.apply();
+                expect(optionsService.loopVolume).toBeCloseTo(0.07, 6);
+            });
+        });
     });
 
     describe('Diver', () => {

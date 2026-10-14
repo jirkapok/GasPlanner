@@ -38,6 +38,18 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.metabolicO2);
     }
 
+    public get setpoint(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.setpoint);
+    }
+
+    public get o2Flow(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.o2Flow);
+    }
+
+    public get loopVolume(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.loopVolume);
+    }
+
     public get depth(): ValidatorFn[] {
         return this.rangeFor(this.ranges.depth);
     }

@@ -224,6 +224,47 @@ describe('Url Serialization', () => {
             sut.options.metabolicO2 = 1.2;
         };
 
+        const mccrTanks = 't=1-12-0-200-0.21-0,2-3-0-200-1-0';
+        const useMccr = (sut: TestSut): void => {
+            sut.schedules.selected.tanksService.prepareForMccr();
+            sut.options.circuit = CircuitType.mccr;
+            sut.options.o2Flow = 1.1;
+            sut.options.loopVolume = 5;
+            sut.options.setpoint = 1.2;
+        };
+
+        it('Serializes mCCR with target ppO2 as last value', () => {
+            useMccr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            expect(url).toContain('&r=3,8,1,1.1,5,1.2&');
+        });
+
+        it('Round trips mCCR options', () => {
+            useMccr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            const current = createComplexSut();
+            current.urlSerialization.fromUrl(url);
+            expect(current.options.getOptions().rebreather).toEqual(complexSut.options.getOptions().rebreather);
+        });
+
+        it('Partial mCCR group falls back to defaults', () => {
+            const url = preCcrUrl.replace('t=1-18-0-200-0.209-0', mccrTanks) + '&r=3,8,1,1.2';
+            complexSut.urlSerialization.fromUrl(url);
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.mccr);
+            expect(rebreather.o2Flow).toBe(1.2);
+            expect(rebreather.loopVolume).toBe(RebreatherDefaults.loopVolume);
+            expect(rebreather.setpoint).toBe(RebreatherDefaults.setpoint);
+        });
+
+        it('Stage 2 pSCR url loads unchanged', () => {
+            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,8,1');
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.pscr);
+            expect(rebreather.injectionRatio).toBe(8);
+            expect(rebreather.metabolicO2).toBe(1);
+        });
+
         it('Open circuit url has no rebreather group', () => {
             expect(complexViewUrl).not.toContain('&r=');
         });
@@ -231,7 +272,8 @@ describe('Url Serialization', () => {
         it('Serializes pSCR as rebreather group', () => {
             usePscr(complexSut);
             const url = complexSut.urlSerialization.toUrl();
-            expect(url).toContain('&r=2,10,1.2&');
+            // all values written for every rebreather, so indexes stay stable
+            expect(url).toContain('&r=2,10,1.2,0.8,6,1.3&');
         });
 
         it('Round trips pSCR options', () => {
@@ -260,7 +302,7 @@ describe('Url Serialization', () => {
         });
 
         it('Redundant rebreather values are ignored', () => {
-            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,10,1.2,5,abc,5');
+            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,10,1.2,0.8,6,1.3,5,abc');
             const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
             expect(rebreather.circuit).toBe(CircuitType.pscr);
             expect(rebreather.injectionRatio).toBe(10);
@@ -268,9 +310,10 @@ describe('Url Serialization', () => {
         });
 
         describe('Skips loading invalid rebreather group', () => {
-            const assertSkipped = (rebreatherParam: string, appOptions = 'ao=1,0'): void => {
+            const assertSkipped = (rebreatherParam: string, tanksOrAppOptions = 'ao=1,0'): void => {
                 const current = createComplexSut();
-                const url = preCcrUrl.replace('ao=1,0', appOptions) + rebreatherParam;
+                const replaced = tanksOrAppOptions.startsWith('t=') ? 't=1-18-0-200-0.209-0' : 'ao=1,0';
+                const url = preCcrUrl.replace(replaced, tanksOrAppOptions) + rebreatherParam;
                 current.urlSerialization.fromUrl(url);
                 expectSelectedEquals(current, complexSut);
             };
@@ -280,7 +323,7 @@ describe('Url Serialization', () => {
             });
 
             it('Circuit not supported yet', () => {
-                assertSkipped('&r=3,10,1');
+                assertSkipped('&r=4,10,1');
             });
 
             it('Injection ratio out of range', () => {
@@ -293,6 +336,26 @@ describe('Url Serialization', () => {
 
             it('Not a number', () => {
                 assertSkipped('&r=2,abc,1');
+            });
+
+            it('Target ppO2 out of range', () => {
+                assertSkipped('&r=3,8,1,0.8,6,1.7', mccrTanks);
+            });
+
+            it('Oxygen flow out of range', () => {
+                assertSkipped('&r=3,8,1,0.1,6,1.3', mccrTanks);
+            });
+
+            it('Loop volume out of range', () => {
+                assertSkipped('&r=3,8,1,0.8,20,1.3', mccrTanks);
+            });
+
+            it('mCCR second tank is not oxygen', () => {
+                assertSkipped('&r=3,8,1,0.8,6,1.3', 't=1-12-0-200-0.21-0,2-3-0-200-0.5-0');
+            });
+
+            it('mCCR with single tank', () => {
+                assertSkipped('&r=3,8,1,0.8,6,1.3', 't=1-18-0-200-0.209-0');
             });
 
             it('Rebreather in simple view', () => {

@@ -162,8 +162,9 @@ export class PlanUrlSerialization {
     }
 
     /**
-     * Optional rebreather group: index 0 = circuit type, the rest are indexed rebreather options,
-     * starting with pSCR options. Missing values use defaults, missing group means open circuit.
+     * Optional rebreather group: index 0 = circuit type, the rest are indexed rebreather options:
+     * pSCR injection ratio, metabolic O2, mCCR oxygen flow, loop volume, setpoint.
+     * Missing values use defaults, missing group means open circuit.
      */
     private static fromRebreatherParam(rebreatherParam: string): RebreatherDto | undefined {
         if (!rebreatherParam) {
@@ -177,12 +178,16 @@ export class PlanUrlSerialization {
             circuit: context.parseEnum<CircuitType>(0),
             injectionRatio: context.parseNumberOrDefault(1, RebreatherDefaults.injectionRatio),
             metabolicO2: context.parseNumberOrDefault(2, RebreatherDefaults.metabolicO2),
-            loopVolume: RebreatherDefaults.loopVolume
+            o2Flow: context.parseNumberOrDefault(3, RebreatherDefaults.o2Flow),
+            loopVolume: context.parseNumberOrDefault(4, RebreatherDefaults.loopVolume),
+            setpoint: context.parseNumberOrDefault(5, RebreatherDefaults.setpoint)
         };
     }
 
     private static toRebreatherParam(rebreather: RebreatherOptions): string {
-        return `${rebreather.circuit},${rebreather.injectionRatio},${rebreather.metabolicO2}`;
+        // all values for every rebreather, so the indexes stay stable
+        return `${rebreather.circuit},${rebreather.injectionRatio},${rebreather.metabolicO2},` +
+            `${rebreather.o2Flow},${rebreather.loopVolume},${rebreather.setpoint}`;
     }
 
     private static fromDiverParam(parseParam: string): DiverDto {

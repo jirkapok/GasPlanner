@@ -1774,7 +1774,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR options and tanks preparation`.
 
 ##### Task 3.4: URL `r` group, validation, normalization, saving/loading
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `shared/PlanUrlSerialization.ts`, `shared/PlanValidation.ts`, `shared/settings-normalization.service.ts`, `shared/UnitConversion.ts`, `shared/ValidatorGroups.ts`
@@ -1797,13 +1797,13 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - Valid values are clamped by `SettingsNormalizationService`.
 
 **Steps (TDD):**
-- [ ] `PlanUrlSerialization.spec.ts`:
+- [x] `PlanUrlSerialization.spec.ts`:
   - an mCCR round-trip writes `r=3,8,1,0.8,6,1.3` and loads all six values back;
   - `r=3,8,1` → mCCR with the default o2Flow/loopVolume/setpoint;
   - `r=3,8,1,1.2` → o2Flow 1.2, default loopVolume and setpoint;
   - a pSCR URL from Stage 2 (`r=2,8,1`) still loads unchanged.
   - FAIL → implement → PASS.
-- [ ] `PlanValidation.spec.ts` ("Skips loading" pattern):
+- [x] `PlanValidation.spec.ts` ("Skips loading" pattern):
   - setpoint 1.7 → skipped;
   - o2Flow 0.1 → skipped;
   - loopVolume 20 → skipped;
@@ -1811,9 +1811,9 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - mCCR with a single tank → skipped;
   - a valid mCCR → loaded.
   - FAIL → implement → PASS.
-- [ ] `settings-normalization.service.spec.ts`: out-of-range setpoint/o2Flow/loopVolume are clamped (metric and imperial). FAIL → implement → PASS.
-- [ ] `preferences.spec.ts`: mCCR round-trip per field; legacy JSON without the new fields → defaults. Expected PASS after Task 3.3's DTO changes. Ledger it if it is green before the change.
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR url, validation and normalization`.
+- [x] `settings-normalization.service.spec.ts`: out-of-range setpoint/o2Flow/loopVolume are clamped (metric and imperial). FAIL → implement → PASS.
+- [x] `preferences.spec.ts`: mCCR round-trip per field; legacy JSON without the new fields → defaults. Expected PASS after Task 3.3's DTO changes. Ledger it if it is green before the change.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR url, validation and normalization`.
 
 ##### Task 3.5: Tanks card UI, pSCR/mCCR options components (+ Stage 2 deferred minors)
 - [ ] Status

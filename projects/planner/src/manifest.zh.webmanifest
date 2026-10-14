@@ -13,7 +13,7 @@
   "lang": "zh-Hans",
   "dir": "ltr",
   "display": "standalone",
-  "id": "0.10.1",
+  "id": "0.11.0",
   "scope": "./",
   "start_url": "./",
   "orientation": "portrait-primary",

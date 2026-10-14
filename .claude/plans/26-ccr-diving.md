@@ -1953,10 +1953,49 @@ Applies only when the circuit is not OC; OC views stay unchanged. Follows the sh
   - Spec `ProfileEvents.ccr.spec.ts`.
 - **Planner**: a `dive-issues` alert `@if (event.isPpO2OutOfRange)` showing time, depth, calculated ppO2 and the allowed range; event mapping in `diveresults.ts` / `IgnoredIssues`; i18n in 7 files; spec in `dive-issues.component.spec.ts`.
 
+#### 5d. Breathing type in dive titles
+- [ ] Status
+
+Unlike the rest of Stage 5, this applies to **every** circuit, open circuit included (`OC`). Then dives are easy to tell apart on all pages, including the profile A/B titles of a comparison between an OC and a rebreather dive.
+
+- **Short names** (i18n keys in all 7 `assets/i18n/*.json`, the same text in every language):
+  - `circuit.oc` = `OC`
+  - `circuit.pscr` = `pSCR`
+  - `circuit.mccr` = `mCCR`
+  - `circuit.eccr` = `eCCR`
+- **Translation in TypeScript** (user decision 2026-10-14, an exception to the CLAUDE.md rule that keeps user-facing text in templates):
+  - New injectable `CircuitNames` in `shared/circuit-names.service.ts`, registered in `SERVICES` in `app.config.ts`.
+  - It wraps `TranslateService`: `name(circuit: CircuitType): string` returns `translate.instant('circuit.<key>')`.
+- **`DiveSchedule.title` contains the localized circuit**: **`1. mCCR 40 m, 25 min`** (open circuit: `1. OC 40 m, 25 min`).
+  - `DiveSchedules` injects `CircuitNames` and passes it to every created dive: `new DiveSchedule(index, units, dispatcher, circuitNames)`.
+  - `DiveSchedule.circuit: CircuitType` getter (from its `OptionsService`).
+  - `DiveSchedule.circuitName: string` getter = `circuitNames.name(this.circuit)`.
+  - `title` = `${id}. ${circuitName} ${depth} ${depthUnits}, ${duration} min`.
+  - The getter translates on every read, so the title follows a language switch and a circuit switch immediately.
+  - There is no separate `summary` property: every place shows the whole `title`.
+- **All dive titles use `DiveSchedule.title`, no template changes needed**:
+  - planner page dive tab: `plan/plan.tabs/plan.tabs.component.html` (`dive.title`);
+  - compare dives page selection buttons: `diff/tabs/diff-tabs.component.html` → `app-diff-tabs-button [title]="dive.title"`;
+  - profile A/B titles in the comparison table header: `profilesDiff.profileATitle` / `profileBTitle` (= `profileA.title` / `profileB.title`).
+- **Specs**:
+  - `circuit-names.service.spec.ts`: every `CircuitType` returns its translated short name.
+  - `dives.schedule.spec.ts`:
+    - the 4 existing title expectations get the circuit (e.g. `1. OC 100 ft, 12 min`); the spec loads the `circuit.*` English texts with `TranslateService.setTranslation`, so titles read as in the app;
+    - an mCCR dive title is `1. mCCR 40 m, 25 min`;
+    - switching the circuit changes the title.
+  - `plan.tabs.component.spec.ts`: the dive tab shows `1. mCCR ...`.
+  - `diff-tabs.component.spec.ts`: the selection buttons show the circuit.
+  - The `diff-diveresults` table spec: the profile A/B header titles contain the circuit (`1. OC ...` / `2. mCCR ...`).
+  - The 12 specs that provide `DiveSchedules` without translations get `provideTestTranslate()`. Its no-op loader returns the key, so titles in those specs read e.g. `1. circuit.oc 30 m, 12 min`, which is acceptable where titles aren't asserted. The 2 `new DiveSchedule(...)` calls in `dives.schedule.spec.ts` get the `CircuitNames` argument.
+
 #### Stage 5 E2E
 - [ ] Status
 
-- Extend the eCCR scenario: both waypoints tabs are visible; the bailout tab lists rows ending at 0 m; the Consumed tab shows the "Diluent" and "Oxygen" labels.
+- Extend the eCCR scenario:
+  - both waypoints tabs are visible;
+  - the bailout tab lists rows ending at 0 m;
+  - the Consumed tab shows the "Diluent" and "Oxygen" labels;
+  - the planner dive title is `1. eCCR 60 m, ...` (circuit between the dive number and the depth).
 
 ## Verification
 - [ ] Status

@@ -1458,6 +1458,10 @@ Each stage starts from the latest master and is a full vertical slice:
    - Specs ("Skips loading" pattern): out-of-range, unknown circuit, non-numeric. Redundant values are silently ignored, as in other url parameters.
 6. **Docs**: a section in `doc/rebreather.md` + help menu anchor. **E2E**: one happy-path test per stage.
 7. `npm run lint`, `test-lib-ci`, `build-lib`, `test-ci`, `e2e` pass. Commit as `feat(scope): #26 summary`.
+8. **Stages 3 (mCCR) and 4 (eCCR) don't close issue #26.** Finishing the stage ticks its row in the issue description instead (see "Stage 3 finish" / "Stage 4 finish"). Only Stage 5 may close the issue.
+   - **No GitHub closing keywords for #26** anywhere in the stage's commits, PR title/body or merge commit message: `close`, `closes`, `closed`, `fix`, `fixes`, `fixed`, `resolve`, `resolves`, `resolved`, each followed by `#26` or `: #26`.
+   - GitHub accepts the colon form, so a commit summary `fix: #26 …` merged into `master` **closes the issue**. In these stages always put a scope after the type, e.g. `fix(planner): #26 …`. This overrides the unscoped `fix: #123 …` example in CLAUDE.md.
+   - The PR body references the issue as `Part of #26`.
 
 ### Stage 2: pSCR (introduces the shared rebreather plumbing)
 - [x] Status
@@ -1607,12 +1611,14 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
 - Known: high ppO2 warning is still evaluated for the supply gas, not the loop (Stage 5c).
 
 ### Stage 3: mCCR
-- [ ] Status
+- [x] Status
 
 - **Lib**:
   - `RebreatherOptions.setpoint` (default 1.3, range 0.4–1.6) and `o2Flow` (default 0.8 L/min, range 0.3–3).
   - `MccrBreathing`: loop gas from `LoopGas.constantPpO2`; `usesGasSwitching = false`, `usesAirBreaks = false`.
-  - `MccrConsumption`: O2 = `Rebreathers.mccrO2Rate` × t from tank 2; diluent = `Rebreathers.diluentForDescent` over descending segments from tank 1; bailout reserve via the bailout emergency ascent (`BailoutBreathing`).
+  - Consumption through the breathing model (no separate `MccrConsumption`, see Stage 3 detailed tasks): O2 = `Rebreathers.mccrO2Rate` × t from tank 2; diluent = `Rebreathers.diluentForDescent` over descending segments from tank 1; bailout reserve via the bailout emergency ascent (`BailoutBreathing`), which may use all tanks including the CCR oxygen tank.
+  - Algorithm validation: in mCCR, tank 2 must be oxygen, otherwise the algorithm returns an error.
+  - `RebreatherOptions.loopVolume` (default 6 L, range 2–10) becomes editable.
 - **Tanks model** (single `TanksService` list, URL `t=`/`de=` unchanged): in mCCR the "Tanks" tab holds
   - **tank 1 = diluent**: gas fully editable
   - **tank 2 = oxygen**: gas fixed to 100 % O2, O2/He inputs and the standard-gas dropdown disabled; only size/pressure editable
@@ -1623,10 +1629,282 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
     4. If the only tank was O2 → add an air diluent at position 1.
     - Then `sendTanksReloaded`. Switching back to OC keeps the order.
     - Specs in `tanks.service.spec.ts` cover every branch, including depth levels still pointing to the moved tank.
-  - Further tanks are bailout.
-- **Planner**: `TanksService` `diluentTank`/`oxygenTank` helpers; `removeTank` can't remove tanks 1–2 in mCCR; `PlanValidation`: tank 2 is O2 in mCCR. Setpoint and o2Flow are appended to `r` after the pSCR options.
-- **UI**: mCCR in the header dropdown; diluent/oxygen labels on rows 1–2, oxygen gas controls disabled; "Rebreather" tab gets setpoint + O2 flow (mCCR-only). Component spec: the oxygen gas can't be changed.
+  - All tanks (diluent, oxygen and further tanks) are available as bailout.
+- **Planner**: `TanksService` `diluentTank`/`oxygenTank` helpers; `removeTank` can't remove tanks 1–2 in mCCR; `PlanValidation`: tank 2 is O2 in mCCR. O2 flow, loop volume and setpoint are appended to `r` after the pSCR options (setpoint last).
+- **UI**: mCCR in the header dropdown; diluent/oxygen labels on rows 1–2, oxygen gas controls disabled; the "Rebreather" tab shows a separate options component per circuit: pSCR options (injection ratio, metabolic O2) or mCCR options (target ppO2, O2 flow, loop volume, metabolic O2). Component spec: the oxygen gas can't be changed.
 - **Docs**: mCCR section.
+
+#### Stage 3 detailed tasks (branch `feat/26-ccr-mccr`)
+- [x] Status
+
+Decisions made while detailing (confirmed with the user 2026-10-14, or derived from the code):
+- **Bailout gases in mCCR** = all tanks, including the CCR oxygen tank 2 (changed by the user 2026-10-14; the first version excluded tank 2). The emergency ascent may switch to tank 2 oxygen, so its reserve includes the ascent oxygen. `PlanFactory.emergencyAscent` stays unchanged.
+- **Algorithm validation** (user 2026-10-14): in mCCR, tank 2 must be 100 % O2 / 0 % He, otherwise the algorithm returns an error event (`EventType.error`) instead of a profile. To be able to check the tank, the mCCR model gets the dive tanks: `BreathingModelFactory.create(options, rmv, tanks, depthConverter)`. All breathing models get `validate(): Event[]`.
+- **Loop volume is editable** in the Rebreather tab (mCCR), and it is part of the `r` group. The default stays 6 L.
+- **URL order** (user 2026-10-14): `r=<circuit>,<injectionRatio>,<metabolicO2>,<o2Flow>,<loopVolume>,<setpoint>`. The setpoint is last.
+- **Separate options components** (user 2026-10-14): the Rebreather tab shows `app-pscr-options` for pSCR and `app-mccr-options` for mCCR.
+  - The existing `RebreatherOptionsComponent` is renamed to `PscrOptionsComponent` (`plan/pscr-options/`), so both names follow the circuit. Control ids stay the same, so the pSCR E2E test keeps working.
+  - Both components contain the metabolic O2 input. Only one is rendered at a time.
+- **No `MccrConsumption` class** (deviation from the roadmap). Since Task 2.8, the breathing model is the single consumption entry point for `Consumption` and `ConsumptionByGas`, so mCCR consumption goes through the model too (eCCR reuses it in Stage 4):
+  - `consumedLiters` = diluent taken from the segment source tank;
+  - new `oxygenLiters` = oxygen taken from the new `oxygenTank`.
+- The oxygen tank is identified by position (index 1 = tank 2), the same convention as the UI. The lib constant `RebreatherTanks.oxygenIndex = 1` names it.
+- A depth level assigned to any tank in mCCR treats that tank's gas as the loop diluent (no OC bailout segments in the plan). `depths-complex` stays unchanged.
+- In the UI the mCCR setpoint is called **"Target ppO2"**: the diver holds it manually, and the constant mass flow only defines the oxygen used.
+
+##### Task 3.1: mCCR breathing model, oxygen interface and validation (lib)
+- [x] Status
+
+**Files:**
+- Modify: `ccr/RebreatherOptions.ts`, `ccr/RebreatherOptions.spec.ts`
+- Modify: `ccr/BreathingModel.ts`, `ccr/BreathingModel.spec.ts`, `ccr/PscrBreathing.ts`, `ccr/PscrBreathing.spec.ts`
+- Create: `ccr/MccrBreathing.ts`, `ccr/MccrBreathing.spec.ts`, `ccr/RebreatherTanks.ts`
+- Modify: `ccr/BreathingModelFactory.ts`, `ccr/BreathingModelFactory.spec.ts`
+- Modify: `algorithm/BuhlmannAlgorithm.ts`; Create: `algorithm/BuhlmannAlgorithm.mccr.spec.ts`
+- Modify: `projects/scuba-physics/src/public-api.ts`
+- Modify (factory signature): `projects/planner/src/app/workers/planning.tasks.ts`, and the factory callers in specs
+
+**Interfaces:**
+- Produces:
+  - `RebreatherDefaults.setpoint = 1.3`, `RebreatherDefaults.o2Flow = 0.8` (L/min)
+  - `RebreatherOptions.setpoint`, `RebreatherOptions.o2Flow`, both included in `loadFrom`
+  - `BreathingModel.oxygenTank: Tank | undefined` (getter)
+  - `BreathingModel.oxygenLiters(segment: Segment): number`. Oxygen comes from a fixed-rate source, so it doesn't depend on the diver RMV.
+  - `BreathingModel.validate(): Event[]`. An empty array means the model can be used.
+  - `OpenCircuitBreathing`, `PscrBreathing`: `oxygenTank` → `undefined`, `oxygenLiters` → `0`, `validate` → `[]`.
+  - `BailoutBreathing`: `oxygenTank` → `undefined`, `oxygenLiters` → `0` (the emergency ascent is open circuit only); `validate` → `primary.validate()`.
+  - `RebreatherTanks.oxygenIndex = 1`; `RebreatherTanks.oxygen(tanks: Tank[]): Tank | undefined` → `tanks[1]`
+  - `new MccrBreathing(options: RebreatherOptions, tanks: Tank[], depthConverter: DepthConverter)`:
+    - `inspiredGas(source, depth)` = `LoopGas.constantPpO2(toBar(depth), source, options.setpoint)`
+    - `ppO2` = inspired fO2 × toBar(depth)
+    - `consumedLiters(segment)` = `Rebreathers.diluentForDescent(options.loopVolume, toBar(segment.startDepth), toBar(segment.endDepth))`
+    - `oxygenLiters(segment)` = `Rebreathers.mccrO2Rate(options.o2Flow, options.metabolicO2)` × `Time.toMinutes(roundTwoDecimals(segment.duration))`
+    - `oxygenTank` = `RebreatherTanks.oxygen(tanks)`
+    - `validate()` = `[Event.createError('mCCR needs oxygen in the second tank.')]` when `oxygenTank` is missing or its gas is not `compositionEquals(StandardGases.oxygen)`, otherwise `[]`
+    - `usesGasSwitching = false`, `usesAirBreaks = false`
+  - `BreathingModelFactory.create(options: Options, rmv: number, tanks: Tank[], depthConverter: DepthConverter)` → `MccrBreathing` for `CircuitType.mccr`. `tanks` is a new mandatory parameter: the planner worker passes the same deserialized `tanks` it gives to `Consumption`, so `oxygenTank` is the same instance that gets consumed.
+  - `BuhlmannAlgorithm.validate(segments, gases, breathing)`: after the segment and gas validation, returns `breathing.validate()`. This applies to `decompression`, `decompressionStatistics` and `noDecoLimit`.
+
+**Steps (TDD):**
+- [x] `RebreatherOptions.spec.ts`: defaults setpoint 1.3 / o2Flow 0.8; `loadFrom` copies both; `loadFrom` of a source with missing (0/undefined) values keeps the defaults (legacy data). Run, see it FAIL. Implement. PASS.
+- [x] `MccrBreathing.spec.ts` (salt water `depthConverter`, tanks [air diluent, O2], setpoint 1.3, o2Flow 0.8, metabolicO2 1.0, loopVolume 6):
+  - at 30 m: ppO2 is 1.3 (`toBeCloseTo(1.3, 6)`); the inspired gas keeps the diluent He/N2 ratio (trimix 21/35 diluent → fHe/fN2 ratio unchanged);
+  - at 3 m: setpoint above ambient → ppO2 = ambient, the loop is pure oxygen, no exception;
+  - at 100 m with air diluent: diluent ppO2 above setpoint → ppO2 = diluent ppO2 (diluent flush);
+  - the same results with `isAscent` true and false (mCCR has one setpoint);
+  - diluent: descent 0 → 30 m consumes `6 × (toBar(30) − toBar(0))`; flat 30 m and ascent 30 → 0 m consume 0;
+  - oxygen: a 10 min segment consumes 10 L (metabolic 1.0 > flow 0.8); with o2Flow 1.5, 15 L;
+  - `oxygenTank` with tanks [air, O2, ean50] is the second tank instance; with a single tank, `undefined`;
+  - `validate()`: [air, O2] → `[]`; [air, ean50] → one error event; [air] → one error event;
+  - `usesGasSwitching`/`usesAirBreaks` are false.
+  - Run, see it FAIL (missing class). Implement `RebreatherTanks`, `MccrBreathing`. PASS.
+- [x] `BreathingModel.spec.ts` and `PscrBreathing.spec.ts`:
+  - OC and pSCR → `oxygenLiters` 0, `oxygenTank` undefined, `validate` empty;
+  - Bailout with mCCR primary → `oxygenLiters` 0, `oxygenTank` undefined, `validate` returns the primary's error for [air, ean50].
+  - Add the members to the interface and the three classes. PASS.
+- [x] `BreathingModelFactory.spec.ts`: `CircuitType.mccr` → `MccrBreathing` whose `oxygenTank` is the passed `tanks[1]`. FAIL, implement (new `tanks` parameter; update `planning.tasks.ts` `breathingFor` and `calculateConsumption` to pass the deserialized tanks), PASS.
+- [x] `BuhlmannAlgorithm.mccr.spec.ts`, 40 m / 25 min, tanks [air diluent, O2, ean50], GF 30/85:
+  - (a) the whole profile stays on the diluent (no gas switch even with EAN50/O2 available);
+  - (b) no air break segments;
+  - (c) total runtime differs from OC on air with the same gases;
+  - (d) setpoint 1.3 gives a shorter runtime than setpoint 0.7;
+  - (e) tanks [air, ean50] → `decompression` returns one `EventType.error` and no calculated ascent; `noDecoLimit` returns 0 like other validation errors.
+  - Write down the real runtime number in the spec after the sanity check against a reference planner (Subsurface/MultiDeco 40 m/25 min, dil air, SP 1.3, GF 30/85, within one stop minute). If no reference is at hand, assert (c)/(d) only and ledger it.
+- [x] Export `MccrBreathing`, `RebreatherTanks` in `public-api.ts`.
+- [x] Verification: single specs, then `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci` (factory signature in the worker), lint of the changed files. Commit `feat(scuba-physics): #26 mCCR breathing model`.
+
+##### Task 3.2: mCCR consumption (lib)
+- [x] Status
+
+**Files:**
+- Modify: `consumption/consumptionCommon.ts`, `consumption/consumption.ts`, `consumption/consumptionByGas.ts`
+- Create: `consumption/consumption.mccr.spec.ts`, `consumption/consumptionByGas.mccr.spec.ts`
+- Modify: `depths/PlanFactory.bailout.spec.ts`
+
+**Interfaces:**
+- Consumes: `BreathingModel.oxygenTank`, `BreathingModel.oxygenLiters`, `MccrBreathing` (Task 3.1).
+- Produces:
+  - `SegmentsConsumption.oxygenLiters(segments: Segment[]): number` = sum of `breathing.oxygenLiters(s)`.
+  - `Consumption.consumeFromTanks2`: after the reserve and before the segment consumption, consumes `oxygenLiters(segments)` from `breathing.oxygenTank`. Like the other consumption, it first keeps the reserve, then drains.
+  - `ConsumptionByGas.consume`: adds the oxygen liters to the oxygen tank's gas `contentCode`.
+  - `PlanFactory.emergencyAscent` is unchanged: the bailout ascent may use every tank, the CCR oxygen tank included.
+
+**Steps (TDD):**
+- [x] `consumption.mccr.spec.ts` (tanks: 1 = air 12 L/200 bar diluent, 2 = O2 3 L/200 bar, 3 = air 11 L/200 bar bailout; profile from the algorithm with `MccrBreathing`, 30 m / 30 min):
+  - O2 tank consumed = mCCR O2 rate × total runtime minutes (`toBeCloseTo`, liters);
+  - diluent consumed = loop volume × descent pressure difference (only the descent consumes diluent);
+  - the bailout tank 3 consumes nothing from the plan, only reserve;
+  - the O2 tank reserve covers the oxygen breathed by the emergency ascent from 6 m (more than the minimal 20 bar stage reserve for a deco dive), and the plan oxygen is consumed on top of it.
+  - OC identity is guarded by the unchanged `consumption.spec.ts`.
+  - Run, see it FAIL. Implement in `SegmentsConsumption` + `Consumption`. PASS.
+- [x] `consumptionByGas.mccr.spec.ts`: oxygen gas consumed = the O2 liters, air consumed = diluent liters only, the reserves come from the emergency ascent. FAIL, implement, PASS.
+- [x] `PlanFactory.bailout.spec.ts`: mCCR with tanks [air, O2] → the emergency ascent switches to 100 % O2 from tank 2 at 6 m (pins the decision that the CCR oxygen is bailout too). Expected PASS without changes; it is a decision guard.
+- [x] Verification: `npm run test-lib-ci` (all existing OC/pSCR specs unchanged), `npm run build-lib`, lint. Commit `feat(scuba-physics): #26 mCCR oxygen and diluent consumption`.
+
+##### Task 3.3: Planner state, DTOs and the tanks model
+- [x] Status
+
+**Files:**
+- Modify: `projects/planner/src/app/shared/serialization.model.ts`, `dtoSerialization.ts`, `options.service.ts`, `tanks.service.ts`
+- Specs: `options.service.rebreather.spec.ts`, `tanks.service.spec.ts`, `dtoSerialization.spec.ts`, `planner.service.spec.ts`, `viewSwitchService.spec.ts`
+
+**Interfaces:**
+- Consumes: `RebreatherOptions.setpoint/o2Flow/loopVolume`, `RebreatherTanks.oxygenIndex`, `CircuitType.mccr`.
+- Produces:
+  - `RebreatherDto.setpoint?: number`, `RebreatherDto.o2Flow?: number` (optional because of upgrade; missing → defaults via `RebreatherOptions.loadFrom` semantics in `toRebreather`). `loopVolume` already exists.
+  - `OptionsService` getters/setters `setpoint` (bar, no unit conversion), `o2Flow` and `loopVolume` (imperial via `units.fromLiter`/`toLiter`), `isMccr`, `isPscr`.
+  - `TanksService.prepareForMccr(): void`, the `diluentTank`/`oxygenTank: TankBound | undefined` getters, and `canRemove(tank: TankBound, circuit: CircuitType): boolean`. `removeTank` itself stays unconditional. The UI hides the button using `canRemove`.
+
+**Steps (TDD):**
+- [x] `dtoSerialization.spec.ts`: an mCCR options round-trip keeps setpoint/o2Flow/loopVolume; a legacy `rebreather` DTO without setpoint/o2Flow loads the defaults. FAIL → implement → PASS.
+- [x] `options.service.rebreather.spec.ts`: metric/imperial setters convert o2Flow/loopVolume; setpoint is not converted; `isMccr`/`isPscr`; `resetToSimple` still forces OC. FAIL → implement → PASS.
+- [x] `tanks.service.spec.ts` `prepareForMccr`, one test per branch:
+  1. tank 2 is already O2 → nothing changes;
+  2. O2 at position 3 → moved to position 2, ids renumbered 1..n, and a depth level bound to the moved tank still references the same `Tank` instance;
+  3. O2 at position 1 with air at 2 → O2 becomes tank 2, air becomes tank 1 (diluent);
+  4. no O2 → a new 3 L/200 bar O2 tank inserted at position 2 (metric; the imperial size comes from `units.defaults`), the other tanks shift down and none is overwritten;
+  5. the only tank is O2 → an air diluent is inserted at position 1;
+  - also: `sendTanksReloaded` is fired once; `canRemove` returns false for tanks 1–2 in mCCR and true in OC/pSCR.
+  - FAIL → implement → PASS.
+- [x] `viewSwitchService.spec.ts` "switching mCCR dive to simple view": complex view, tanks [trimix 18/45 diluent, O2, EAN50 bailout], circuit mCCR → set `isComplex = false` → circuit is `CircuitType.oc`, only the first tank stays, and its helium is 0 %. It is expected to pass through the existing `DiveSchedules.setSimple` (`OptionsService.resetToSimple` + `TanksService.resetToSimple`). Ledger it if it is green on the first run; if it fails, fix `setSimple` the TDD way.
+- [x] `planner.service.spec.ts`:
+  - an mCCR dive calculates and has a different runtime than the same OC dive; the O2 tank consumed > 0;
+  - an mCCR dive with tank 2 = air ends with the profile error (no crash, no consumption), through the existing `calculatedProfile.errors` handling in `planner.service.ts`.
+  - These are expected to pass through the worker wiring from Task 3.1. Ledger it if they pass without changes.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR options and tanks preparation`.
+
+##### Task 3.4: URL `r` group, validation, normalization, saving/loading
+- [x] Status
+
+**Files:**
+- Modify: `shared/PlanUrlSerialization.ts`, `shared/PlanValidation.ts`, `shared/settings-normalization.service.ts`, `shared/UnitConversion.ts`, `shared/ValidatorGroups.ts`
+- Specs: `PlanUrlSerialization.spec.ts`, `PlanValidation.spec.ts`, `settings-normalization.service.spec.ts`, `preferences.spec.ts`
+
+**Interfaces:**
+- URL: `r=<circuit>,<injectionRatio>,<metabolicO2>,<o2Flow>,<loopVolume>,<setpoint>`.
+  - It is written for every rebreather (pSCR included, so the indexes stay stable).
+  - Missing trailing values → defaults.
+  - `loopVolume` is no longer hardcoded to the default.
+- `UnitConversion` ranges + labels:
+  - `setpoint` [0.4, 1.6] (both unit systems);
+  - `o2Flow` metric [0.3, 3] L/min, imperial [0.011, 0.106] cuft/min;
+  - `loopVolume` metric [2, 10] L, imperial [0.071, 0.353] cuft.
+  - `ValidatorGroups` getters `setpoint`, `o2Flow`, `loopVolume`.
+- `PlanValidation`:
+  - `supportedCircuits` adds `CircuitType.mccr`;
+  - setpoint/o2Flow/loopVolume are in range (when present);
+  - **mCCR needs ≥ 2 tanks, and tank 2 must be 100 % O2 / 0 % He**. An invalid URL is not loaded; the algorithm validation from Task 3.1 covers dives that get there another way.
+  - Valid values are clamped by `SettingsNormalizationService`.
+
+**Steps (TDD):**
+- [x] `PlanUrlSerialization.spec.ts`:
+  - an mCCR round-trip writes `r=3,8,1,0.8,6,1.3` and loads all six values back;
+  - `r=3,8,1` → mCCR with the default o2Flow/loopVolume/setpoint;
+  - `r=3,8,1,1.2` → o2Flow 1.2, default loopVolume and setpoint;
+  - a pSCR URL from Stage 2 (`r=2,8,1`) still loads unchanged.
+  - FAIL → implement → PASS.
+- [x] `PlanValidation.spec.ts` ("Skips loading" pattern):
+  - setpoint 1.7 → skipped;
+  - o2Flow 0.1 → skipped;
+  - loopVolume 20 → skipped;
+  - mCCR with tank 2 = air → skipped;
+  - mCCR with a single tank → skipped;
+  - a valid mCCR → loaded.
+  - FAIL → implement → PASS.
+- [x] `settings-normalization.service.spec.ts`: out-of-range setpoint/o2Flow/loopVolume are clamped (metric and imperial). FAIL → implement → PASS.
+- [x] `preferences.spec.ts`: mCCR round-trip per field; legacy JSON without the new fields → defaults. Expected PASS after Task 3.3's DTO changes. Ledger it if it is green before the change.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR url, validation and normalization`.
+
+##### Task 3.5: Tanks card UI, pSCR/mCCR options components (+ Stage 2 deferred minors)
+- [x] Status
+
+**Files:**
+- Modify: `plan/tanks-complex/tanks-complex.component.{html,ts}`, `tanks-complex.rebreather.spec.ts`
+- Rename: `plan/rebreather-options/rebreather-options.component.*` → `plan/pscr-options/pscr-options.component.*` (`PscrOptionsComponent`, selector `app-pscr-options`)
+- Create: `plan/mccr-options/mccr-options.component.{html,ts,spec.ts}` (`MccrOptionsComponent`, selector `app-mccr-options`)
+- Modify: `app.config.ts` (`STANDALONE`: rename and register the new component)
+- Modify: `assets/i18n/{cs,de,en,es,fr,ru,zh}.json`
+
+**Interfaces:**
+- Consumes: `OptionsService.isMccr/isPscr/setpoint/o2Flow/loopVolume`, `TanksService.prepareForMccr/canRemove/oxygenTank`, `ValidatorGroups.setpoint/o2Flow/loopVolume`, `UnitConversion` ranges (Tasks 3.3–3.4).
+- Produces:
+  - `PscrOptionsComponent` (form name `pscrOptions`): injection ratio + metabolic O2. Same behavior and control ids as the current `RebreatherOptionsComponent`.
+  - `MccrOptionsComponent` (form name `mccrOptions`): target ppO2 (`#setpoint`), O2 flow (`#o2Flow`), loop volume (`#loopVolume`), metabolic O2 (`#metabolicO2`).
+  - Each component adds its form group to the root form in `ngOnInit` and removes it in `ngOnDestroy`. The tanks card renders exactly one of them with `@if`. A form of the circuit that is no longer selected must not keep the root form invalid (this is the Stage 2 "stale invalid rebreather form" fix).
+  - UI ids for E2E: `#circuitMccr`, `#setpoint`, `#o2Flow`, `#loopVolume`.
+
+**Steps (TDD, component specs):**
+- [x] Rename `RebreatherOptionsComponent` → `PscrOptionsComponent` with its spec (`git mv`). Its spec passes unchanged except for the names. Run, PASS.
+- [x] `mccr-options.component.spec.ts`:
+  - it shows target ppO2 (label "Target ppO2"), O2 flow, loop volume and metabolic O2, and no injection ratio;
+  - an invalid target ppO2 (2.0) marks `is-invalid` and shows the sibling message with the range label; the same for O2 flow 0.1 and loop volume 20;
+  - a valid change calls `sendOptionsChanged` once, with o2Flow/loopVolume converted for imperial;
+  - it reloads its values on `optionsReloaded$` and `selectedChanged$`;
+  - after destroy, its form group is removed from the root form.
+  - FAIL → implement → PASS.
+- [x] `pscr-options.component.spec.ts`: after destroy, its form group is removed from the root form; the imperial metabolic O2 `step` is 0.001 (Stage 2 deferred minor). FAIL → implement → PASS.
+- [x] `tanks-complex.rebreather.spec.ts`:
+  - choosing mCCR (`useMccr()` → `tanks.prepareForMccr()` → `applyCircuit(CircuitType.mccr)`) inserts the O2 tank 2;
+  - the Rebreather tab renders `app-mccr-options` for mCCR and `app-pscr-options` for pSCR, never both;
+  - an invalid pSCR value followed by a switch to mCCR doesn't block the planner (the root form is valid);
+  - the header button text is "mCCR";
+  - rows 1–2 show the "Diluent"/"Oxygen" labels (small and large layouts);
+  - tank 2's O2/He inputs and standard-gas dropdown are disabled (**the oxygen gas can't be changed**), while size/pressure stay editable;
+  - the remove button is hidden for tanks 1–2;
+  - switching back to OC keeps the tank order and enables the controls again;
+  - the card header `helpDocument` is `rebreather` while the Rebreather tab is open, `tanks` otherwise (Stage 2 deferred minor).
+  - FAIL → implement → PASS.
+- [x] Layout: inputs in `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message, text in templates only.
+  - New i18n keys in all 7 files: `tanksComplex.mccr`, `tanksComplex.diluent`, `tanksComplex.oxygen`, `mccrOptions.setpoint` (en text "Target ppO2"; the UI never calls the mCCR value a setpoint, `setpoint` stays the internal name only), `mccrOptions.o2Flow`, `mccrOptions.loopVolume`, `mccrOptions.metabolicO2`.
+  - The existing `rebreatherOptions.*` keys are renamed to `pscrOptions.*`.
+- [x] `ValidatorGroups` `required` wrapper comment wording (Stage 2 deferred minor).
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR tanks card and options components`.
+
+##### Task 3.6: Docs, E2E and full verification
+- [x] Status
+
+**Files:**
+- Modify: `doc/rebreather.md` (mCCR section) and the help menu anchor. The mCCR section covers:
+  - target ppO2: the diver holds this ppO2 by adding O2 manually (flow below metabolic use) or flushing diluent (flow above it); the planner uses it for tissue loading and CNS/OTU;
+  - the constant mass flow only defines the O2 used (needle-valve O2 flow vs metabolic O2);
+  - the diluent and oxygen tanks; tank 2 must be oxygen, otherwise the plan shows an error;
+  - all tanks, including the CCR oxygen, are bailout gases;
+  - loop volume and the diluent used during descent;
+  - help anchors.
+- Create: `e2e/mccr.spec.ts` (page-object style of `e2e/pscr.spec.ts`)
+
+**Steps:**
+- [x] E2E happy path: complex view → `#circuitType` → `#circuitMccr` → the tanks card shows the oxygen tank 2 → `#rebreatherTab` → `#setpoint` = 1.2 → `#total-dive-time-value` differs from the OC runtime read before the switch.
+- [x] Manual check (`npm start`):
+  - the profile, CNS/OTU and the O2/diluent consumed values update immediately on each input;
+  - mobile width layout;
+  - an mCCR URL round-trips;
+  - an old URL/preferences load as OC.
+- [x] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commit `docs: #26 mCCR rebreather documentation` and `test(e2e): #26 mCCR happy path`.
+
+##### Stage 3 final review
+- [x] Status
+
+##### Stage 3 finish (issue #26 stays open)
+- [ ] Status
+
+Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
+
+- [x] Check the branch for closing keywords before the merge/PR:
+  - `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`
+  - Expected: no output.
+  - Reword any match (scoped type, see shared rule 8) with my approval, because it rewrites published history if the branch was pushed.
+- [x] The PR body (if a PR is used) says `Part of #26`, never `Closes #26`. A local merge commit message gets the same check.
+- [ ] After the merge into `master` is pushed (pending: `gh` not authenticated on 2026-10-14):
+  - `gh issue view 26 --json state,body`. Expected state: `OPEN`. If GitHub closed it anyway, `gh issue reopen 26` and tell me which commit did it.
+  - Tick the mCCR row in the issue description:
+    1. Save the body to the scratchpad.
+    2. Change exactly the one task-list row that mentions mCCR from `- [ ]` to `- [x]`.
+    3. Show me the diff of the body.
+    4. `gh issue edit 26 --body-file <file>`.
+  - If no row or more than one row matches mCCR, stop and ask me which row to tick.
+  - `gh` needs `gh auth login` (or `GH_TOKEN`) first; it isn't authenticated in this environment yet. Editing the issue is outward-facing, so confirm with me right before running it.
+- [x] Mark `### Stage 3: mCCR` `- [x] Status` in this plan.
 
 ### Stage 4: eCCR
 - [ ] Status
@@ -1644,6 +1922,7 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
   3. Rebreather tab: descent and bottom setpoints **1.1**, deco setpoint **1.4**.
   4. Depth **60 m** (default bottom time).
   5. Assert **only**: the Consumed tab shows the **CCR oxygen tank consumed value**, and the Results tab `#total-dive-time-value` shows the expected runtime. Hardcode both values, taken from `BuhlmannAlgorithm.eccr.spec.ts` / `consumption.eccr.spec.ts` with the same inputs, cross-checked against a reference planner.
+- **Stage 4 finish (issue #26 stays open)**: the same steps as "Stage 3 finish" (keyword check of the branch, `Part of #26` in the PR, issue still `OPEN` after the push), but tick the one task-list row of the issue description that mentions **eCCR**. When this stage gets its detailed tasks, copy them as a "Stage 4 finish" task with its own checkboxes.
 
 ### Stage 5: CCR results UI
 - [ ] Status
@@ -1674,10 +1953,120 @@ Applies only when the circuit is not OC; OC views stay unchanged. Follows the sh
   - Spec `ProfileEvents.ccr.spec.ts`.
 - **Planner**: a `dive-issues` alert `@if (event.isPpO2OutOfRange)` showing time, depth, calculated ppO2 and the allowed range; event mapping in `diveresults.ts` / `IgnoredIssues`; i18n in 7 files; spec in `dive-issues.component.spec.ts`.
 
+#### 5d. Breathing type in dive titles
+- [ ] Status
+
+Unlike the rest of Stage 5, this applies to **every** circuit, open circuit included (`OC`). Then dives are easy to tell apart on all pages, including the profile A/B titles of a comparison between an OC and a rebreather dive.
+
+- **Short names** (i18n keys in all 7 `assets/i18n/*.json`, the same text in every language):
+  - `circuit.oc` = `OC`
+  - `circuit.pscr` = `pSCR`
+  - `circuit.mccr` = `mCCR`
+  - `circuit.eccr` = `eCCR`
+- **Translation in TypeScript** (user decision 2026-10-14, an exception to the CLAUDE.md rule that keeps user-facing text in templates):
+  - New injectable `CircuitNames` in `shared/circuit-names.service.ts`, registered in `SERVICES` in `app.config.ts`.
+  - It wraps `TranslateService`: `name(circuit: CircuitType): string` returns `translate.instant('circuit.<key>')`.
+- **`DiveSchedule.title` contains the localized circuit**: **`1. mCCR 40 m, 25 min`** (open circuit: `1. OC 40 m, 25 min`).
+  - `DiveSchedules` injects `CircuitNames` and passes it to every created dive: `new DiveSchedule(index, units, dispatcher, circuitNames)`.
+  - `DiveSchedule.circuit: CircuitType` getter (from its `OptionsService`).
+  - `DiveSchedule.circuitName: string` getter = `circuitNames.name(this.circuit)`.
+  - `title` = `${id}. ${circuitName} ${depth} ${depthUnits}, ${duration} min`.
+  - The getter translates on every read, so the title follows a language switch and a circuit switch immediately.
+  - There is no separate `summary` property: every place shows the whole `title`.
+- **All dive titles use `DiveSchedule.title`, no template changes needed**:
+  - planner page dive tab: `plan/plan.tabs/plan.tabs.component.html` (`dive.title`);
+  - compare dives page selection buttons: `diff/tabs/diff-tabs.component.html` → `app-diff-tabs-button [title]="dive.title"`;
+  - profile A/B titles in the comparison table header: `profilesDiff.profileATitle` / `profileBTitle` (= `profileA.title` / `profileB.title`).
+- **Specs**:
+  - `circuit-names.service.spec.ts`: every `CircuitType` returns its translated short name.
+  - `dives.schedule.spec.ts`:
+    - the 4 existing title expectations get the circuit (e.g. `1. OC 100 ft, 12 min`); the spec loads the `circuit.*` English texts with `TranslateService.setTranslation`, so titles read as in the app;
+    - an mCCR dive title is `1. mCCR 40 m, 25 min`;
+    - switching the circuit changes the title.
+  - `plan.tabs.component.spec.ts`: the dive tab shows `1. mCCR ...`.
+  - `diff-tabs.component.spec.ts`: the selection buttons show the circuit.
+  - The `diff-diveresults` table spec: the profile A/B header titles contain the circuit (`1. OC ...` / `2. mCCR ...`).
+  - The 12 specs that provide `DiveSchedules` without translations get `provideTestTranslate()`. Its no-op loader returns the key, so titles in those specs read e.g. `1. circuit.oc 30 m, 12 min`, which is acceptable where titles aren't asserted. The 2 `new DiveSchedule(...)` calls in `dives.schedule.spec.ts` get the `CircuitNames` argument.
+
+#### 5e. Manual validation of all rebreather types against other software (user)
+- [ ] Status
+
+The user does this step. The agent prepares the inputs and records the results, then stops and waits for the user's values.
+
+- **Agent prepares** a validation table in this plan, one row per scenario:
+  - the inputs;
+  - a Dugong share URL (so the same dive opens in one click);
+  - the Dugong results: runtime, stops (depth/minutes), CNS, OTU, consumed liters per tank.
+- **Scenarios** (salt water, GF 30/85, app default speeds and RMV 20 l/min unless stated):
+  1. **pSCR**: 30 m / 40 min, supply EAN32, injection ratio 8, metabolic O2 1 l/min.
+  2. **mCCR**: 40 m / 25 min, diluent air, target ppO2 1.3, O2 flow 0.8 l/min, metabolic O2 1 l/min.
+  3. **eCCR**: 40 m / 25 min, diluent air, setpoints descent 0.7 / bottom 1.3 / deco 1.3, switch depth 20 m.
+  4. **eCCR deep** (the Stage 4 E2E dive): 60 m, diluent 18/45, bailout 18/45, EAN50, oxygen, setpoints 1.1 / 1.1 / 1.4.
+- **User fills in** the same results from reference planners (e.g. MultiDeco, Subsurface; any planner with that rebreather type), plus the software name and version.
+- **Acceptance**:
+  - each stop within ±1 min;
+  - total runtime within ±2 min;
+  - CNS/OTU within ±10 % relative.
+  - A larger difference is analysed (model difference vs. bug), and the user decides whether it is a bug or a documented model difference.
+- **Results** are also summarized in a "Validation" section of `doc/rebreather.md` (software, version, scenario, runtime difference).
+
+#### 5f. Absolute runtimes instead of relative OC comparisons
+- [ ] Status
+
+Depends on 5e: only values the user confirmed in 5e (or Dugong values the user accepts as equal within the 5e tolerances) are hardcoded.
+
+- **User step**: for each test below, the user confirms the expected runtime, taken from the 5e results or from an additional reference run of the test's exact inputs. The agent lists the test inputs and the current Dugong values, then stops and waits for the user's confirmation.
+- **Then the agent replaces** the relative runtime assertions (open circuit vs. rebreather) with the confirmed absolute values, `toBe(<seconds>)` / `toHaveText('<mm:ss>')`:
+  - `algorithm/BuhlmannAlgorithm.pscr.spec.ts` "needs longer decompression than open circuit on the same supply gas";
+  - `algorithm/BuhlmannAlgorithm.mccr.spec.ts` "needs different decompression than open circuit with the same gases" (its "higher setpoint shortens the decompression" compares two setpoints, not OC; it gets absolute values for both setpoints too);
+  - `depths/PlanFactory.bailout.spec.ts` "pSCR bottom loaded from the leaner loop gas needs longer ascent than open circuit" (emergency ascent duration);
+  - `shared/planner.service.rebreather.spec.ts` pSCR (`duration > openCircuit.duration`) and mCCR (`duration not open circuit duration`);
+  - `e2e/pscr.spec.ts` and `e2e/mccr.spec.ts` final `not.toHaveText(openCircuitTime)`;
+  - the eCCR equivalents added in Stage 4.
+- Consumption comparisons (`consumption.pscr.spec.ts`, consumed liters in `planner.service.rebreather.spec.ts`) are not runtime and stay relative.
+- An expected value is never changed to make a failing test pass. A difference found later goes back to 5e analysis.
+
+#### 5g. Default rebreather oxygen tank template (metric and imperial)
+- [ ] Status
+
+Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForMccr` (Stage 3 ruling and deferred minor: imperial shows about 25 cuft).
+
+- **Lib**: `StandardTanks.rebreatherOxygen: TankTemplate` in `consumption/StandardTanks.ts`, also listed in `available`:
+  - `MetricTanks`: `{ name: '3 L', size: 3, workingPressure: 0 }`, start pressure 200 bar;
+  - `ImperialTanks`: `{ name: 'AL19', size: 19, workingPressure: 3000 }`, start pressure 3000 psi.
+  - The imperial cylinder is a proposal; the user confirms the template (name/size/pressure) when the stage starts.
+  - Spec in `StandardTanks.spec.ts`.
+- **Planner**: `TanksService` creates the oxygen tank from `units.defaults.tanks.rebreatherOxygen` (size and working pressure in current units, like `addTankBy`, gas oxygen).
+  - It is used when switching to **mCCR and eCCR** (the eCCR switch reuses `prepareForMccr`, renamed to `prepareForClosedCircuit` in Stage 4 if not done there).
+  - Specs in `tanks.service.mccr.spec.ts`: metric 3 L/200 bar and imperial 19 cuft/3000 psi oxygen tank inserted; existing tanks unchanged.
+
+#### 5h. Clean E2E console
+- [ ] Status
+
+The `npm run e2e` log contains:
+- 2× `ERROR Error: Resize must be passed a displayed plot div element.` (plotly `Plots.resize` on a chart that isn't displayed);
+- 1× `NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2`.
+
+None of them fail a test today.
+
+- **Find the source** with `superpowers:systematic-debugging`:
+  - run the E2E specs one by one with the console captured;
+  - find the chart component calling resize while hidden (e.g. a chart on an inactive tab or page being left);
+  - find the `@for` with `track` by object identity that rebuilds the list.
+- **Fix**:
+  - guard the resize (call it only when the plot element is displayed, or skip it after the component is destroyed);
+  - track by a stable key (e.g. id/index) instead of identity where the items are recreated.
+- **Prevent regressions**: a shared E2E fixture (e.g. `e2e/fixtures.ts`) collects `console.error` messages and the Angular `NG0` warnings during each test, and fails the test when there are any. All E2E specs use it.
+- Verification: `npm run e2e` passes with an empty console log for errors and NG0 warnings.
+
 #### Stage 5 E2E
 - [ ] Status
 
-- Extend the eCCR scenario: both waypoints tabs are visible; the bailout tab lists rows ending at 0 m; the Consumed tab shows the "Diluent" and "Oxygen" labels.
+- Extend the eCCR scenario:
+  - both waypoints tabs are visible;
+  - the bailout tab lists rows ending at 0 m;
+  - the Consumed tab shows the "Diluent" and "Oxygen" labels;
+  - the planner dive title is `1. eCCR 60 m, ...` (circuit between the dive number and the depth).
 
 ## Verification
 - [ ] Status

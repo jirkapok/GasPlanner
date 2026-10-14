@@ -45,7 +45,8 @@ import { SurfaceIntervalComponent } from './plan/surface-interval/surface-interv
 import { PlanTabsComponent } from './plan/plan.tabs/plan.tabs.component';
 import { TanksSimpleComponent } from './plan/tanks-simple/tanks-simple.component';
 import { TanksComplexComponent } from './plan/tanks-complex/tanks-complex.component';
-import { RebreatherOptionsComponent } from './plan/rebreather-options/rebreather-options.component';
+import { PscrOptionsComponent } from './plan/pscr-options/pscr-options.component';
+import { MccrOptionsComponent } from './plan/mccr-options/mccr-options.component';
 import { DiverComponent } from './plan/diver/diver.component';
 import { DiveOptionsComponent } from './plan/diveoptions/diveoptions.component';
 import { DiveInfoComponent } from './plan/diveinfo/diveinfo.component';
@@ -136,7 +137,8 @@ const MDB_MODULES = [
 ];
 
 const STANDALONE = [
-    RebreatherOptionsComponent,
+    PscrOptionsComponent,
+    MccrOptionsComponent,
     AltitudeCalcComponent,
     DashboardComponent,
     DepthComponent,

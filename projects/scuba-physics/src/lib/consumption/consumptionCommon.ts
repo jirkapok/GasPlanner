@@ -135,4 +135,9 @@ export class SegmentsConsumption {
     public consumedBySegment(segment: Segment, rmvPerSecond: number): number {
         return this.breathing.consumedLiters(segment, rmvPerSecond);
     }
+
+    /** Returns liters consumed from the rebreather oxygen tank during all segments */
+    public oxygenLiters(segments: Segment[]): number {
+        return segments.reduce((sum, segment) => sum + this.breathing.oxygenLiters(segment), 0);
+    }
 }

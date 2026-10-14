@@ -140,8 +140,33 @@ export class OptionsService {
         return this.circuit !== CircuitType.oc;
     }
 
+    public get isPscr(): boolean {
+        return this.circuit === CircuitType.pscr;
+    }
+
+    public get isMccr(): boolean {
+        return this.circuit === CircuitType.mccr;
+    }
+
     public get injectionRatio(): number {
         return this.options.rebreather.injectionRatio;
+    }
+
+    /** mCCR target ppO2 in bars */
+    public get setpoint(): number {
+        return this.options.rebreather.setpoint;
+    }
+
+    /** In current volume units per minute */
+    public get o2Flow(): number {
+        const source = this.options.rebreather.o2Flow;
+        return this.units.fromLiter(source);
+    }
+
+    /** In current volume units */
+    public get loopVolume(): number {
+        const source = this.options.rebreather.loopVolume;
+        return this.units.fromLiter(source);
     }
 
     /** In current volume units per minute */
@@ -257,6 +282,18 @@ export class OptionsService {
 
     public set metabolicO2(newValue: number) {
         this.options.rebreather.metabolicO2 = this.units.toLiter(newValue);
+    }
+
+    public set setpoint(newValue: number) {
+        this.options.rebreather.setpoint = newValue;
+    }
+
+    public set o2Flow(newValue: number) {
+        this.options.rebreather.o2Flow = this.units.toLiter(newValue);
+    }
+
+    public set loopVolume(newValue: number) {
+        this.options.rebreather.loopVolume = this.units.toLiter(newValue);
     }
 
     public useRecreational(): void {

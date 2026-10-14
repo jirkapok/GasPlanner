@@ -1,8 +1,9 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { faBatteryHalf, faPlus, faMinus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { Precision, TankTemplate, GasToxicity, CircuitType } from 'scuba-physics';
-import { RebreatherOptionsComponent } from '../rebreather-options/rebreather-options.component';
+import { Precision, TankTemplate, GasToxicity, CircuitType, RebreatherTanks } from 'scuba-physics';
+import { PscrOptionsComponent } from '../pscr-options/pscr-options.component';
+import { MccrOptionsComponent } from '../mccr-options/mccr-options.component';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -13,6 +14,7 @@ import { TankBound } from '../../shared/models';
 import { TanksService } from '../../shared/tanks.service';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { OptionsService } from '../../shared/options.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
@@ -51,7 +53,8 @@ interface TanksForm {
         LocaleNumberPipe,
         TranslatePipe,
         MdbDropdownModule,
-        RebreatherOptionsComponent
+        PscrOptionsComponent,
+        MccrOptionsComponent
     ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
@@ -70,7 +73,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
-        private schedules: DiveSchedules) {
+        private schedules: DiveSchedules,
+        private cdr: ChangeDetectorRef) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -95,6 +99,19 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.schedules.selectedOptions.isRebreather;
     }
 
+    public get isMccr(): boolean {
+        return this.schedules.selectedOptions.isMccr;
+    }
+
+    public get isPscr(): boolean {
+        return this.schedules.selectedOptions.isPscr;
+    }
+
+    /** Help of the currently shown tab */
+    public get helpDocument(): string {
+        return this.rebreatherTab ? 'rebreather' : 'tanks';
+    }
+
     /** Rebreather options are shown instead of tanks, only for rebreathers */
     public get rebreatherTab(): boolean {
         return this.isRebreather && this.rebreatherTabSelected;
@@ -107,7 +124,9 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     /** Shows error mark on rebreather tab, the rebreather form is part of the root form only for rebreathers */
     public get rebreatherInvalid(): boolean {
-        return this.rootForm.get(RebreatherOptionsComponent.formName)?.invalid ?? false;
+        const pscrInvalid = this.rootForm.get(PscrOptionsComponent.formName)?.invalid ?? false;
+        const mccrInvalid = this.rootForm.get(MccrOptionsComponent.formName)?.invalid ?? false;
+        return pscrInvalid || mccrInvalid;
     }
 
     private get tanksService(): TanksService {
@@ -130,7 +149,15 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.reloadAll());
 
+        this.dispatcher.optionsReloaded$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((source: OptionsService) => {
+                if (this.schedules.selectedOptions === source) {
+                    this.lockOxygenGas();
+                }
+            });
+
         this.rootForm.addControl('tanksForm', this.tanksForm);
+        this.lockOxygenGas();
     }
 
     public useOpenCircuit(): void {
@@ -139,6 +166,26 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public usePscr(): void {
         this.applyCircuit(CircuitType.pscr);
+    }
+
+    public useMccr(): void {
+        this.tanksService.prepareForMccr();
+        this.applyCircuit(CircuitType.mccr);
+    }
+
+    /** mCCR diluent label */
+    public isDiluent(index: number): boolean {
+        return this.isMccr && index === 0;
+    }
+
+    /** mCCR oxygen label, its gas can't be changed */
+    public isOxygen(index: number): boolean {
+        return this.isMccr && index === RebreatherTanks.oxygenIndex;
+    }
+
+    public canRemove(index: number): boolean {
+        const circuit = this.schedules.selectedOptions.circuit;
+        return index !== 0 && this.tanksService.canRemove(this.tanks[index], circuit);
     }
 
     public showTanksTab(): void {
@@ -192,7 +239,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public removeTank(index: number): void {
-        if (this.rootForm.invalid || this.tanks.length <= 1) {
+        if (this.rootForm.invalid || !this.canRemove(index)) {
             return;
         }
 
@@ -222,7 +269,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         const tankControl = this.tanksGroup.at(index);
         const bound = this.tanks[index];
 
-        const values = tankControl.value;
+        // raw values, because the mCCR oxygen gas controls are disabled
+        const values = tankControl.getRawValue();
         bound.size = Number(values.tankSize);
         bound.workingPressure = Number(values.tankWorkPressure);
         bound.startPressure = Number(values.tankStartPressure);
@@ -247,12 +295,14 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     private applyCircuit(circuit: CircuitType): void {
         const options = this.schedules.selectedOptions;
         options.circuit = circuit;
+        this.lockOxygenGas();
 
         if (circuit === CircuitType.oc) {
             this.rebreatherTabSelected = false;
-            // hidden rebreather form reloads stored values, otherwise its invalid values block the planner without visible reason
-            this.dispatcher.sendOptionsReloaded(options);
         }
+
+        // hidden rebreather forms reload stored values, otherwise their invalid values block the planner without visible reason
+        this.dispatcher.sendOptionsReloaded(options);
 
         if (this.rootForm.invalid) {
             return;
@@ -262,9 +312,31 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     private reloadAll(): void {
-        // recreate all controls, because wo don't know which were removed/added as part of reload.
-        this.tanksGroup.clear();
-        this.createTankControls().forEach(c => this.tanksGroup.push(c));
+        // existing rows are only updated, recreating all of them rebuilds the accordion during change detection
+        while (this.tanksGroup.length > this.tanks.length) {
+            this.tanksGroup.removeAt(this.tanksGroup.length - 1);
+        }
+
+        this.tanks.forEach((bound, index) => {
+            if (index < this.tanksGroup.length) {
+                this.reload(bound, index);
+            } else {
+                this.tanksGroup.push(this.createTankControl(bound));
+            }
+        });
+
+        this.lockOxygenGas();
+        // reload comes from outside of this component (e.g. url, other dive or circuit switch)
+        this.cdr.markForCheck();
+    }
+
+    /** mCCR oxygen tank gas is fixed, only its size and pressure are editable */
+    private lockOxygenGas(): void {
+        this.tanksGroup.controls.forEach((tankControl, index) => {
+            const gasControls = [tankControl.controls.tankO2, tankControl.controls.tankHe];
+            const locked = this.isOxygen(index);
+            gasControls.forEach(c => locked ? c.disable({ emitEvent: false }) : c.enable({ emitEvent: false }));
+        });
     }
 
     private reloadGas(bound: TankBound, tankControl: FormGroup<TankRow>): void {

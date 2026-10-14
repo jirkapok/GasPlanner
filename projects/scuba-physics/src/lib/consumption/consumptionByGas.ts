@@ -80,7 +80,7 @@ export class ConsumptionByGas {
     /**
      * @param breathing Breathing model of the dive.
      */
-    constructor(depthConverter: DepthConverter, breathing: BreathingModel) {
+    constructor(depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
         this.reserveConsumption = SegmentsConsumption.createReserve(depthConverter);
         this.planConsumption = SegmentsConsumption.createPlan(breathing);
     }
@@ -110,6 +110,7 @@ export class ConsumptionByGas {
             (s) => rmvContext.stressRmvPerSecond(s), () => true);
         const consumed = this.planConsumption.toBeConsumedYet(segments, new GasVolumes(),
             () => rmvContext.rmvPerSecond, () => true);
+        this.addOxygen(segments, consumed);
 
         return this.groupByGas(tanks).map(gasTanks => {
             const gas = gasTanks[0].gas;
@@ -117,6 +118,16 @@ export class ConsumptionByGas {
             const total = gasTanks.reduce((sum, t) => sum + t.volume, 0);
             return new ConsumedGas(gas.copy(), total, consumed.get(gasCode), reserves.get(gasCode));
         });
+    }
+
+    /** Rebreather oxygen is added to the oxygen tank gas regardless of the gas assigned to segments */
+    private addOxygen(segments: Segment[], consumed: GasVolumes): void {
+        const oxygenTank = this.breathing.oxygenTank;
+
+        if (oxygenTank) {
+            const oxygenLiters = this.planConsumption.oxygenLiters(segments);
+            consumed.add(oxygenTank.gas.contentCode, oxygenLiters);
+        }
     }
 
     private groupByGas(tanks: Tank[]): Tank[][] {

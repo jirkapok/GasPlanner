@@ -21,6 +21,8 @@ export class OxygenDropDownComponent implements OnInit {
     @Input() public showBestMix = true;
     @Input() public showTitle = true;
     @Input() public showTrimixGases = false;
+    /** Disables the standard gases menu, the input is disabled by its form control */
+    @Input() public disabled = false;
     @Input() public controlName = 'o2';
     // cant use gas directly, since tank content properties contain pinning logic
     @Input() public tank: IGasContent = Tank.createDefault();

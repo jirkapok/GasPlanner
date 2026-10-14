@@ -171,6 +171,15 @@ export interface RangeConstants {
     /** Rebreather diver oxygen consumption in volume per minute */
     metabolicO2: [number, number];
     metabolicO2Label: string;
+    /** mCCR oxygen partial pressure held by the diver in bars */
+    setpoint: [number, number];
+    setpointLabel: string;
+    /** mCCR needle valve oxygen flow in volume per minute */
+    o2Flow: [number, number];
+    o2FlowLabel: string;
+    /** Rebreather breathing loop volume */
+    loopVolume: [number, number];
+    loopVolumeLabel: string;
     ppO2: [number, number];
     /** Number of decimal places to round rmv values */
     rmvRounding: number;
@@ -218,6 +227,12 @@ class MetricRanges implements RangeConstants {
     public readonly injectionRatioLabel: string = toLabel(this.injectionRatio, '');
     public readonly metabolicO2: [number, number] = [0.5, 4];
     public readonly metabolicO2Label: string = toLabel(this.metabolicO2, this.units.volumeShortcut + perMinute);
+    public readonly setpoint: [number, number] = [0.4, 1.6];
+    public readonly setpointLabel: string = toLabel(this.setpoint, 'bar');
+    public readonly o2Flow: [number, number] = [0.3, 3];
+    public readonly o2FlowLabel: string = toLabel(this.o2Flow, this.units.volumeShortcut + perMinute);
+    public readonly loopVolume: [number, number] = [2, 10];
+    public readonly loopVolumeLabel: string = toLabel(this.loopVolume, this.units.volumeShortcut);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [1, 10];
@@ -265,6 +280,13 @@ class ImperialRanges implements RangeConstants {
     public readonly injectionRatioLabel: string = toLabel(this.injectionRatio, '');
     public readonly metabolicO2: [number, number] = [0.017, 0.142];
     public readonly metabolicO2Label: string = toLabel(this.metabolicO2, this.units.volumeShortcut + perMinute);
+    public readonly setpoint: [number, number] = [0.4, 1.6];
+    public readonly setpointLabel: string = toLabel(this.setpoint, 'bar');
+    // rounded outwards, so the metric limits converted to imperial still fit
+    public readonly o2Flow: [number, number] = [0.01, 0.106];
+    public readonly o2FlowLabel: string = toLabel(this.o2Flow, this.units.volumeShortcut + perMinute);
+    public readonly loopVolume: [number, number] = [0.07, 0.354];
+    public readonly loopVolumeLabel: string = toLabel(this.loopVolume, this.units.volumeShortcut);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [0.0624, 0.624];

@@ -9,6 +9,30 @@ describe('Rebreather options', () => {
         expect(sut.loopVolume).toBeCloseTo(6, 6);
     });
 
+    it('defaults mCCR setpoint and oxygen flow', () => {
+        const sut = new RebreatherOptions();
+        expect(sut.setpoint).toBeCloseTo(1.3, 6);
+        expect(sut.o2Flow).toBeCloseTo(0.8, 6);
+    });
+
+    it('loads mCCR values', () => {
+        const sut = new RebreatherOptions();
+        const source = new RebreatherOptions(CircuitType.mccr);
+        source.setpoint = 1.1;
+        source.o2Flow = 1.5;
+        sut.loadFrom(source);
+        expect(sut.setpoint).toBeCloseTo(1.1, 6);
+        expect(sut.o2Flow).toBeCloseTo(1.5, 6);
+    });
+
+    it('keeps mCCR defaults when loading legacy values', () => {
+        const sut = new RebreatherOptions();
+        const legacy = { circuit: CircuitType.pscr, metabolicO2: 1, loopVolume: 6, injectionRatio: 8 } as RebreatherOptions;
+        sut.loadFrom(legacy);
+        expect(sut.setpoint).toBeCloseTo(1.3, 6);
+        expect(sut.o2Flow).toBeCloseTo(0.8, 6);
+    });
+
     it('loads all values', () => {
         const sut = new RebreatherOptions();
         const source = new RebreatherOptions(CircuitType.eccr, 1.5, 4);

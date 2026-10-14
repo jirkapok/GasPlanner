@@ -45,7 +45,7 @@ export class PlanningTasks {
         const noDecoLimit = algorithm.noDecoLimit(ndlParameters);
 
         const depthConverter = new DepthConverterFactory(task.options).create();
-        const breathing = PlanningTasks.breathingFor(task, parameters.options, depthConverter);
+        const breathing = PlanningTasks.breathingFor(task, parameters.options, tanks, depthConverter);
         const startAscentIndex = parameters.segments.startAscentIndex;
         const originalProfile = DtoSerialization.toSegments(task.calculatedProfile, tanks);
         const otu = new OtuCalculator(depthConverter, breathing).calculateForProfile(originalProfile, startAscentIndex);
@@ -107,7 +107,7 @@ export class PlanningTasks {
         const diver = new Diver(diverDto.rmv, diverDto.stressRmv);
 
         const options = DtoSerialization.toOptions(task.options);
-        const breathing = BreathingModelFactory.create(options, diver.rmv, depthConverter);
+        const breathing = BreathingModelFactory.create(options, diver.rmv, tanks, depthConverter);
         const consumption = new Consumption(depthConverter, breathing);
         const plan = PlanningTasks.selectConsumptionPlan(segments, task.isComplex);
         const consumptionOptions: ConsumptionOptions = {
@@ -158,11 +158,11 @@ export class PlanningTasks {
         const previousTissues = DtoSerialization.toTissues(task.previousTissues);
         const rest = new RestingParameters(previousTissues, task.surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const breathing = PlanningTasks.breathingFor(task, options, depthConverter);
+        const breathing = PlanningTasks.breathingFor(task, options, tanks, depthConverter);
         return AlgorithmParams.forMultilevelDive(segments, gases, options, breathing, rest);
     }
 
-    private static breathingFor(task: PlanRequestDto, options: Options, depthConverter: DepthConverter): BreathingModel {
-        return BreathingModelFactory.create(options, task.diver.rmv, depthConverter);
+    private static breathingFor(task: PlanRequestDto, options: Options, tanks: Tank[], depthConverter: DepthConverter): BreathingModel {
+        return BreathingModelFactory.create(options, task.diver.rmv, tanks, depthConverter);
     }
 }

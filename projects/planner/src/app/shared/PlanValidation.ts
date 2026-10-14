@@ -3,12 +3,12 @@ import {
     OptionsDto, RebreatherDto, SegmentDto, TankDto, DiveDto
 } from './serialization.model';
 import _ from 'lodash';
-import { CircuitType, Precision, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
+import { CircuitType, Precision, RebreatherTanks, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
     /** Only circuits, which the planner is able to calculate */
-    private static readonly supportedCircuits: CircuitType[] = [CircuitType.oc, CircuitType.pscr];
+    private static readonly supportedCircuits: CircuitType[] = [CircuitType.oc, CircuitType.pscr, CircuitType.mccr];
     private ranges: RangeConstants;
     private units: Units;
     private durationRange: [number, number];
@@ -52,7 +52,8 @@ export class PlanValidation {
         const segmentsValid = this.allSegmentsValid(plan.plan, maxTankId, contentRanges);
         const optionsValid = this.optionsValid(plan.options);
         const diverValid = this.diverValid(plan.diver);
-        return tanksValid && segmentsValid && optionsValid && diverValid;
+        const rebreatherTanksValid = this.rebreatherTanksValid(plan);
+        return tanksValid && segmentsValid && optionsValid && diverValid && rebreatherTanksValid;
     }
 
     private selectContentRanges(isComplex: boolean): [[number, number], [number, number]] {
@@ -147,7 +148,30 @@ export class PlanValidation {
         const metabolicO2 = this.units.fromLiter(rebreather.metabolicO2);
         return PlanValidation.supportedCircuits.includes(rebreather.circuit) &&
             this.isInRange(rebreather.injectionRatio, this.ranges.injectionRatio) &&
-            this.isInRange(metabolicO2, this.ranges.metabolicO2);
+            this.isInRange(metabolicO2, this.ranges.metabolicO2) &&
+            this.isOptionalInRange(rebreather.setpoint, this.ranges.setpoint) &&
+            this.isOptionalVolumeInRange(rebreather.o2Flow, this.ranges.o2Flow) &&
+            this.isOptionalVolumeInRange(rebreather.loopVolume, this.ranges.loopVolume);
+    }
+
+    /** missing values (older data) are replaced by defaults */
+    private isOptionalInRange(value: number | undefined, range: [number, number]): boolean {
+        return value === undefined || this.isInRange(value, range);
+    }
+
+    /** volume in liters, range in current units */
+    private isOptionalVolumeInRange(liters: number | undefined, range: [number, number]): boolean {
+        return liters === undefined || this.isInRange(this.units.fromLiter(liters), range);
+    }
+
+    /** mCCR needs the diluent and oxygen as the second tank */
+    private rebreatherTanksValid(plan: DiveDto): boolean {
+        if (plan.options.rebreather?.circuit !== CircuitType.mccr) {
+            return true;
+        }
+
+        const oxygen = plan.tanks[RebreatherTanks.oxygenIndex];
+        return !!oxygen && oxygen.gas.fO2 === 1 && oxygen.gas.fHe === 0;
     }
 
     private diverValid(diver: DiverDto): boolean {

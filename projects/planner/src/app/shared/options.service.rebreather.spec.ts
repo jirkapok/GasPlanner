@@ -40,6 +40,50 @@ describe('Options Service - Rebreather', () => {
         expect(service.metabolicO2).toBeCloseTo(0.05, 6);
     });
 
+    it('applies mCCR values', () => {
+        service.circuit = CircuitType.mccr;
+        service.setpoint = 1.2;
+        service.o2Flow = 1.1;
+        service.loopVolume = 5;
+
+        const rebreather = service.getOptions().rebreather;
+        expect(service.isMccr).toBeTrue();
+        expect(service.isPscr).toBeFalse();
+        expect(rebreather.setpoint).toBeCloseTo(1.2, 6);
+        expect(rebreather.o2Flow).toBeCloseTo(1.1, 6);
+        expect(rebreather.loopVolume).toBeCloseTo(5, 6);
+    });
+
+    it('identifies pSCR', () => {
+        service.circuit = CircuitType.pscr;
+        expect(service.isPscr).toBeTrue();
+        expect(service.isMccr).toBeFalse();
+    });
+
+    it('stores mCCR volumes in liters for imperial units', () => {
+        units.imperialUnits = true;
+        service.o2Flow = 0.04;
+        service.loopVolume = 0.2;
+        const rebreather = service.getOptions().rebreather;
+        expect(rebreather.o2Flow).toBeCloseTo(units.toLiter(0.04), 6);
+        expect(rebreather.loopVolume).toBeCloseTo(units.toLiter(0.2), 6);
+        expect(service.o2Flow).toBeCloseTo(0.04, 6);
+        expect(service.loopVolume).toBeCloseTo(0.2, 6);
+    });
+
+    it('setpoint isn\'t converted for imperial units', () => {
+        units.imperialUnits = true;
+        service.setpoint = 1.1;
+        expect(service.getOptions().rebreather.setpoint).toBeCloseTo(1.1, 6);
+        expect(service.setpoint).toBeCloseTo(1.1, 6);
+    });
+
+    it('reset to simple switches mCCR to open circuit', () => {
+        service.circuit = CircuitType.mccr;
+        service.resetToSimple();
+        expect(service.isRebreather).toBeFalse();
+    });
+
     it('reset to simple switches to open circuit', () => {
         service.circuit = CircuitType.pscr;
         service.resetToSimple();

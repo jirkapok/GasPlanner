@@ -1,4 +1,5 @@
 import { inject, TestBed } from '@angular/core/testing';
+import { CircuitType, Tank } from 'scuba-physics';
 import { TanksService } from './tanks.service';
 import { ViewSwitchService } from './viewSwitchService';
 import { UnitConversion } from './UnitConversion';
@@ -60,5 +61,20 @@ describe('View Switch service', () => {
 
             expect(schedulesSpy).toHaveBeenCalledWith();
         }));
+
+        it('Switches mCCR dive back to open circuit with first tank without helium', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                const options = schedules.selected.optionsService;
+                tanksService.loadFrom([new Tank(12, 200, 18), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+                tanksService.firstTank.he = 45;
+                options.circuit = CircuitType.mccr;
+                tanksService.prepareForMccr();
+
+                viewSwitch.isComplex = false;
+
+                expect(options.isRebreather).toBeFalse();
+                expect(tanksService.tanks.length).toBe(1);
+                expect(tanksService.firstTank.he).toBe(0);
+            }));
     });
 });

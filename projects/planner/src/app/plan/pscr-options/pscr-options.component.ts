@@ -11,23 +11,23 @@ import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 
-interface RebreatherForm {
+interface PscrForm {
     injectionRatio: FormControl<number>;
     metabolicO2: FormControl<number>;
 }
 
 /** pSCR options of the selected dive */
 @Component({
-    selector: 'app-rebreather-options',
-    templateUrl: './rebreather-options.component.html',
+    selector: 'app-pscr-options',
+    templateUrl: './pscr-options.component.html',
     changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, TranslatePipe]
 })
-export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDestroy {
+export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy {
     /** Name of this form in the root form */
-    public static readonly formName = 'rebreatherOptions';
+    public static readonly formName = 'pscrOptions';
     @Input() public rootForm!: FormGroup;
-    public rebreatherForm!: FormGroup<RebreatherForm>;
+    public rebreatherForm!: FormGroup<PscrForm>;
     private _metabolicO2Step = 0.1;
 
     constructor(
@@ -82,13 +82,13 @@ export class RebreatherOptionsComponent extends Streamed implements OnInit, OnDe
             .subscribe((r) => this.rangeChanged(r));
 
         // replaces the form of previous instance, addControl would keep the old one
-        this.rootForm.setControl(RebreatherOptionsComponent.formName, this.rebreatherForm);
+        this.rootForm.setControl(PscrOptionsComponent.formName, this.rebreatherForm);
     }
 
     /** Removes the form from the root form, so it can't block the planner after the component is gone */
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
-        this.rootForm.removeControl(RebreatherOptionsComponent.formName);
+        this.rootForm.removeControl(PscrOptionsComponent.formName);
     }
 
     public applyOptions(): void {

@@ -490,10 +490,19 @@
     "openCircuit": "Open circuit",
     "pscr": "pSCR",
     "tanksTab": "Tanks",
-    "rebreatherTab": "Rebreather"
+    "rebreatherTab": "Rebreather",
+    "mccr": "mCCR",
+    "diluent": "Diluent",
+    "oxygen": "Oxygen"
   },
-  "rebreatherOptions": {
+  "pscrOptions": {
     "injectionRatio": "Injection ratio",
+    "metabolicO2": "Metabolic O2"
+  },
+  "mccrOptions": {
+    "setpoint": "Target ppO2",
+    "o2Flow": "O2 flow",
+    "loopVolume": "Loop volume",
     "metabolicO2": "Metabolic O2"
   },
   "tanksSimple": {

@@ -3,7 +3,7 @@ import { Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 
-/** Bound wrapper, because the static method reference is unbound */
+/** Arrow function wrapper, because passing the static method reference breaks the unbound-method lint rule */
 const required: ValidatorFn = (control: AbstractControl): ValidationErrors | null => Validators.required(control);
 
 @Injectable()

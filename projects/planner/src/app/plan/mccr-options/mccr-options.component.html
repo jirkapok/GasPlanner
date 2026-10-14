@@ -1,0 +1,45 @@
+<div class="row" [formGroup]="mccrForm">
+  <div class="mb-4 col col-12 col-sm-6 col-md-3">
+    <label for="setpoint" class="form-label">{{ 'mccrOptions.setpoint' | translate }} [bar]:</label>
+    <input id="setpoint" class="form-control" type="number" formControlName="setpoint"
+      required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
+      (input)="applyOptions()" [class.is-invalid]="setpointInvalid" />
+    @if (setpointInvalid) {
+      <div id="setpointError" class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-3">
+    <label for="o2Flow" class="form-label">{{ 'mccrOptions.o2Flow' | translate }}
+      [{{ units.volume }}/min]:</label>
+    <input id="o2Flow" class="form-control" type="number" formControlName="o2Flow"
+      required [min]="ranges.o2Flow[0]" [max]="ranges.o2Flow[1]" [step]="volumeStep"
+      (input)="applyOptions()" [class.is-invalid]="o2FlowInvalid" />
+    @if (o2FlowInvalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.o2FlowLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-3">
+    <label for="loopVolume" class="form-label">{{ 'mccrOptions.loopVolume' | translate }}
+      [{{ units.volume }}]:</label>
+    <input id="loopVolume" class="form-control" type="number" formControlName="loopVolume"
+      required [min]="ranges.loopVolume[0]" [max]="ranges.loopVolume[1]" [step]="volumeStep"
+      (input)="applyOptions()" [class.is-invalid]="loopVolumeInvalid" />
+    @if (loopVolumeInvalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.loopVolumeLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-3">
+    <label for="metabolicO2" class="form-label">{{ 'mccrOptions.metabolicO2' | translate }}
+      [{{ units.volume }}/min]:</label>
+    <input id="metabolicO2" class="form-control" type="number" formControlName="metabolicO2"
+      required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" [step]="volumeStep"
+      (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
+    @if (metabolicO2Invalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.metabolicO2Label }}</div>
+    }
+  </div>
+</div>

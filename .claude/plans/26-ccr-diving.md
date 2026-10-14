@@ -1816,7 +1816,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR url, validation and normalization`.
 
 ##### Task 3.5: Tanks card UI, pSCR/mCCR options components (+ Stage 2 deferred minors)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `plan/tanks-complex/tanks-complex.component.{html,ts}`, `tanks-complex.rebreather.spec.ts`
@@ -1834,16 +1834,16 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - UI ids for E2E: `#circuitMccr`, `#setpoint`, `#o2Flow`, `#loopVolume`.
 
 **Steps (TDD, component specs):**
-- [ ] Rename `RebreatherOptionsComponent` → `PscrOptionsComponent` with its spec (`git mv`). Its spec passes unchanged except for the names. Run, PASS.
-- [ ] `mccr-options.component.spec.ts`:
+- [x] Rename `RebreatherOptionsComponent` → `PscrOptionsComponent` with its spec (`git mv`). Its spec passes unchanged except for the names. Run, PASS.
+- [x] `mccr-options.component.spec.ts`:
   - it shows target ppO2 (label "Target ppO2"), O2 flow, loop volume and metabolic O2, and no injection ratio;
   - an invalid target ppO2 (2.0) marks `is-invalid` and shows the sibling message with the range label; the same for O2 flow 0.1 and loop volume 20;
   - a valid change calls `sendOptionsChanged` once, with o2Flow/loopVolume converted for imperial;
   - it reloads its values on `optionsReloaded$` and `selectedChanged$`;
   - after destroy, its form group is removed from the root form.
   - FAIL → implement → PASS.
-- [ ] `pscr-options.component.spec.ts`: after destroy, its form group is removed from the root form; the imperial metabolic O2 `step` is 0.001 (Stage 2 deferred minor). FAIL → implement → PASS.
-- [ ] `tanks-complex.rebreather.spec.ts`:
+- [x] `pscr-options.component.spec.ts`: after destroy, its form group is removed from the root form; the imperial metabolic O2 `step` is 0.001 (Stage 2 deferred minor). FAIL → implement → PASS.
+- [x] `tanks-complex.rebreather.spec.ts`:
   - choosing mCCR (`useMccr()` → `tanks.prepareForMccr()` → `applyCircuit(CircuitType.mccr)`) inserts the O2 tank 2;
   - the Rebreather tab renders `app-mccr-options` for mCCR and `app-pscr-options` for pSCR, never both;
   - an invalid pSCR value followed by a switch to mCCR doesn't block the planner (the root form is valid);
@@ -1854,11 +1854,11 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - switching back to OC keeps the tank order and enables the controls again;
   - the card header `helpDocument` is `rebreather` while the Rebreather tab is open, `tanks` otherwise (Stage 2 deferred minor).
   - FAIL → implement → PASS.
-- [ ] Layout: inputs in `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message, text in templates only.
+- [x] Layout: inputs in `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message, text in templates only.
   - New i18n keys in all 7 files: `tanksComplex.mccr`, `tanksComplex.diluent`, `tanksComplex.oxygen`, `mccrOptions.setpoint` (en text "Target ppO2"; the UI never calls the mCCR value a setpoint, `setpoint` stays the internal name only), `mccrOptions.o2Flow`, `mccrOptions.loopVolume`, `mccrOptions.metabolicO2`.
   - The existing `rebreatherOptions.*` keys are renamed to `pscrOptions.*`.
-- [ ] `ValidatorGroups` `required` wrapper comment wording (Stage 2 deferred minor).
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR tanks card and options components`.
+- [x] `ValidatorGroups` `required` wrapper comment wording (Stage 2 deferred minor).
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR tanks card and options components`.
 
 ##### Task 3.6: Docs, E2E and full verification
 - [ ] Status

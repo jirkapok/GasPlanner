@@ -98,6 +98,7 @@ export class ProfileComparatorService extends Streamed {
         return this._profileBTimeOffset;
     }
 
+    /** Emits upon changed selection of profiles or other diff component options */
     public get selectionChanged$(): Observable<void> {
         return this._selectionChanged$;
     }
@@ -170,9 +171,6 @@ export class ProfileComparatorService extends Streamed {
 
     public set alignByEnd(value: boolean) {
         this._alignByEnd = value;
-        // This should perhaps be a standalone observable
-        // (profiles to compare !== how specifically chart should be displayed)
-        // But right now it's fine enough
         this._onSelectionChanged.next();
     }
 

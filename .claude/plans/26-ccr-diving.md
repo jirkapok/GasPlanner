@@ -1742,7 +1742,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: `npm run test-lib-ci` (all existing OC/pSCR specs unchanged), `npm run build-lib`, lint. Commit `feat(scuba-physics): #26 mCCR oxygen and diluent consumption`.
 
 ##### Task 3.3: Planner state, DTOs and the tanks model
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/planner/src/app/shared/serialization.model.ts`, `dtoSerialization.ts`, `options.service.ts`, `tanks.service.ts`
@@ -1756,9 +1756,9 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - `TanksService.prepareForMccr(): void`, the `diluentTank`/`oxygenTank: TankBound | undefined` getters, and `canRemove(tank: TankBound, circuit: CircuitType): boolean`. `removeTank` itself stays unconditional. The UI hides the button using `canRemove`.
 
 **Steps (TDD):**
-- [ ] `dtoSerialization.spec.ts`: an mCCR options round-trip keeps setpoint/o2Flow/loopVolume; a legacy `rebreather` DTO without setpoint/o2Flow loads the defaults. FAIL → implement → PASS.
-- [ ] `options.service.rebreather.spec.ts`: metric/imperial setters convert o2Flow/loopVolume; setpoint is not converted; `isMccr`/`isPscr`; `resetToSimple` still forces OC. FAIL → implement → PASS.
-- [ ] `tanks.service.spec.ts` `prepareForMccr`, one test per branch:
+- [x] `dtoSerialization.spec.ts`: an mCCR options round-trip keeps setpoint/o2Flow/loopVolume; a legacy `rebreather` DTO without setpoint/o2Flow loads the defaults. FAIL → implement → PASS.
+- [x] `options.service.rebreather.spec.ts`: metric/imperial setters convert o2Flow/loopVolume; setpoint is not converted; `isMccr`/`isPscr`; `resetToSimple` still forces OC. FAIL → implement → PASS.
+- [x] `tanks.service.spec.ts` `prepareForMccr`, one test per branch:
   1. tank 2 is already O2 → nothing changes;
   2. O2 at position 3 → moved to position 2, ids renumbered 1..n, and a depth level bound to the moved tank still references the same `Tank` instance;
   3. O2 at position 1 with air at 2 → O2 becomes tank 2, air becomes tank 1 (diluent);
@@ -1766,12 +1766,12 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   5. the only tank is O2 → an air diluent is inserted at position 1;
   - also: `sendTanksReloaded` is fired once; `canRemove` returns false for tanks 1–2 in mCCR and true in OC/pSCR.
   - FAIL → implement → PASS.
-- [ ] `viewSwitchService.spec.ts` "switching mCCR dive to simple view": complex view, tanks [trimix 18/45 diluent, O2, EAN50 bailout], circuit mCCR → set `isComplex = false` → circuit is `CircuitType.oc`, only the first tank stays, and its helium is 0 %. It is expected to pass through the existing `DiveSchedules.setSimple` (`OptionsService.resetToSimple` + `TanksService.resetToSimple`). Ledger it if it is green on the first run; if it fails, fix `setSimple` the TDD way.
-- [ ] `planner.service.spec.ts`:
+- [x] `viewSwitchService.spec.ts` "switching mCCR dive to simple view": complex view, tanks [trimix 18/45 diluent, O2, EAN50 bailout], circuit mCCR → set `isComplex = false` → circuit is `CircuitType.oc`, only the first tank stays, and its helium is 0 %. It is expected to pass through the existing `DiveSchedules.setSimple` (`OptionsService.resetToSimple` + `TanksService.resetToSimple`). Ledger it if it is green on the first run; if it fails, fix `setSimple` the TDD way.
+- [x] `planner.service.spec.ts`:
   - an mCCR dive calculates and has a different runtime than the same OC dive; the O2 tank consumed > 0;
   - an mCCR dive with tank 2 = air ends with the profile error (no crash, no consumption), through the existing `calculatedProfile.errors` handling in `planner.service.ts`.
   - These are expected to pass through the worker wiring from Task 3.1. Ledger it if they pass without changes.
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR options and tanks preparation`.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR options and tanks preparation`.
 
 ##### Task 3.4: URL `r` group, validation, normalization, saving/loading
 - [ ] Status

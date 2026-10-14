@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { CircuitType } from 'scuba-physics';
+import { CircuitType, Tank } from 'scuba-physics';
 import { PlannerService } from './planner.service';
 import { OptionExtensions } from './Options.spec';
 import { WorkersFactoryCommon } from './serial.workers.factory';
@@ -11,7 +11,7 @@ import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
 
-describe('PlannerService - pSCR', () => {
+describe('PlannerService - Rebreathers', () => {
     let planner: PlannerService;
     let dive: DiveSchedule;
 
@@ -51,5 +51,31 @@ describe('PlannerService - pSCR', () => {
         expect(pscr.duration).toBeGreaterThan(openCircuit.duration);
         expect(pscr.consumed).toBeLessThan(openCircuit.consumed);
         expect(dive.diveResult.calculated).toBeTrue();
+    });
+
+    describe('mCCR', () => {
+        const prepareMccr = (oxygenPercent: number): void => {
+            dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, oxygenPercent)]);
+            dive.optionsService.circuit = CircuitType.mccr;
+        };
+
+        it('calculates different profile than open circuit and consumes the oxygen tank', () => {
+            dive.tanksService.firstTank.o2 = 21;
+            const openCircuit = calculate();
+            prepareMccr(100);
+            const mccr = calculate();
+
+            expect(mccr.duration).not.toBe(openCircuit.duration);
+            expect(dive.tanksService.tanks[1].tank.consumed).toBeGreaterThan(0);
+            expect(dive.diveResult.hasErrors).toBeFalse();
+        });
+
+        it('second tank without oxygen ends with profile error', () => {
+            prepareMccr(50);
+            planner.calculate(dive.id);
+
+            expect(dive.diveResult.hasErrors).toBeTrue();
+            expect(dive.diveResult.calculated).toBeTrue();
+        });
     });
 });

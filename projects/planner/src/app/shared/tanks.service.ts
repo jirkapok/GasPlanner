@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
-import { DefaultValues, Precision, GasNames, Tank, Tanks } from 'scuba-physics';
+import {
+    CircuitType, DefaultValues, Precision, GasNames, RebreatherTanks, StandardGases, Tank, Tanks
+} from 'scuba-physics';
 import { TankBound } from './models';
 import { ConsumedDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
@@ -28,6 +30,16 @@ export class TanksService {
         return this._tanks[0];
     }
 
+    /** Closed circuit rebreather diluent */
+    public get diluentTank(): TankBound | undefined {
+        return this._tanks[0];
+    }
+
+    /** Closed circuit rebreather oxygen */
+    public get oxygenTank(): TankBound | undefined {
+        return this._tanks[RebreatherTanks.oxygenIndex];
+    }
+
     public get singleTank(): boolean {
         return this._tanks.length === 1;
     }
@@ -51,6 +63,39 @@ export class TanksService {
         this._tanks = this._tanks.filter(g => g !== tank);
         this.renumberIds();
         this.dispatcher.sendTanksRemoved(tank.tank);
+    }
+
+    /** Closed circuit rebreathers need the diluent and oxygen tanks, they can't be removed */
+    public canRemove(tank: TankBound, circuit: CircuitType): boolean {
+        if (circuit !== CircuitType.mccr) {
+            return true;
+        }
+
+        return this._tanks.indexOf(tank) > RebreatherTanks.oxygenIndex;
+    }
+
+    /**
+     * Ensures the second tank is oxygen without overwriting any existing tank.
+     * Existing oxygen tank is moved to the second position, otherwise new oxygen tank is inserted.
+     */
+    public prepareForMccr(): void {
+        const tanks = this._tanks.slice();
+        const oxygenIndex = RebreatherTanks.oxygenIndex;
+
+        if (!this.isOxygen(tanks[oxygenIndex])) {
+            const foundIndex = tanks.findIndex(t => this.isOxygen(t));
+            const oxygen = foundIndex >= 0 ? tanks.splice(foundIndex, 1)[0] : this.createOxygen();
+
+            if (tanks.length === 0) {
+                tanks.push(this.createDiluent());
+            }
+
+            tanks.splice(oxygenIndex, 0, oxygen);
+        }
+
+        this._tanks = tanks;
+        this.renumberIds();
+        this.dispatcher.sendTanksReloaded(this);
     }
 
     public loadFrom(tanks: Tank[]): void {
@@ -92,6 +137,24 @@ export class TanksService {
 
     public firstBy(tank: Tank): TankBound | undefined {
         return _(this._tanks).find(t => t.tank === tank);
+    }
+
+    private isOxygen(bound: TankBound | undefined): boolean {
+        return !!bound && bound.tank.gas.compositionEquals(StandardGases.oxygen);
+    }
+
+    /** Small rebreather oxygen cylinder 3 L/200 bar */
+    private createOxygen(): TankBound {
+        const oxygen = new Tank(3, 200, 100);
+        return new TankBound(oxygen, this.units);
+    }
+
+    private createDiluent(): TankBound {
+        const defaultTanks = this.units.defaults.tanks;
+        const bound = new TankBound(Tank.createDefault(), this.units);
+        bound.workingPressure = defaultTanks.primary.workingPressure;
+        bound.size = defaultTanks.primary.size;
+        return bound;
     }
 
     /** both arguments in respective units */

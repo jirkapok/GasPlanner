@@ -289,7 +289,9 @@ export class DtoSerialization {
             circuit: rebreather.circuit,
             metabolicO2: rebreather.metabolicO2,
             loopVolume: rebreather.loopVolume,
-            injectionRatio: rebreather.injectionRatio
+            injectionRatio: rebreather.injectionRatio,
+            setpoint: rebreather.setpoint,
+            o2Flow: rebreather.o2Flow
         };
     }
 
@@ -299,6 +301,8 @@ export class DtoSerialization {
             rebreather.metabolicO2 = rebreatherDto.metabolicO2;
             rebreather.loopVolume = rebreatherDto.loopVolume;
             rebreather.injectionRatio = rebreatherDto.injectionRatio;
+            rebreather.setpoint = rebreatherDto.setpoint ?? rebreather.setpoint;
+            rebreather.o2Flow = rebreatherDto.o2Flow ?? rebreather.o2Flow;
         }
     }
 

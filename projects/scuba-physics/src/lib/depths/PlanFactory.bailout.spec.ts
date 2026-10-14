@@ -4,6 +4,8 @@ import { Tank } from '../consumption/Tanks';
 import { OptionExtensions } from '../algorithm/Options.spec';
 import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { PscrBreathing } from '../ccr/PscrBreathing';
+import { MccrBreathing } from '../ccr/MccrBreathing';
+import { StandardGases } from '../gases/StandardGases';
 import { CircuitType, RebreatherOptions } from '../ccr/RebreatherOptions';
 import { DepthConverterFactory } from '../physics/depth-converter';
 import { Salinity } from '../physics/pressure-converter';
@@ -29,5 +31,16 @@ describe('Plan factory - Bailout emergency ascent', () => {
         const last = ascent[ascent.length - 1];
         expect(last.gas.compositionEquals(tank.gas)).toBeTrue();
         expect(last.endDepth).toBe(0);
+    });
+
+    it('mCCR bailout ascent may use the rebreather oxygen tank', () => {
+        const diluent = new Tank(12, 200, 21);
+        const oxygen = new Tank(3, 200, 100);
+        const tanks = [diluent, oxygen];
+        const mccrPlan = PlanFactory.createPlan(30, 40, diluent, options).items;
+        const mccr = new MccrBreathing(new RebreatherOptions(CircuitType.mccr), tanks, depthConverter);
+        const ascent = PlanFactory.emergencyAscent(mccrPlan, options, tanks, mccr);
+        const breathesOxygen = ascent.some(s => s.gas.compositionEquals(StandardGases.oxygen));
+        expect(breathesOxygen).toBeTrue();
     });
 });

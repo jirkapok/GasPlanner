@@ -1714,7 +1714,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [x] Verification: single specs, then `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci` (factory signature in the worker), lint of the changed files. Commit `feat(scuba-physics): #26 mCCR breathing model`.
 
 ##### Task 3.2: mCCR consumption (lib)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `consumption/consumptionCommon.ts`, `consumption/consumption.ts`, `consumption/consumptionByGas.ts`
@@ -1730,16 +1730,16 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - `PlanFactory.emergencyAscent` is unchanged: the bailout ascent may use every tank, the CCR oxygen tank included.
 
 **Steps (TDD):**
-- [ ] `consumption.mccr.spec.ts` (tanks: 1 = air 12 L/200 bar diluent, 2 = O2 3 L/200 bar, 3 = air 11 L/200 bar bailout; profile from the algorithm with `MccrBreathing`, 30 m / 30 min):
+- [x] `consumption.mccr.spec.ts` (tanks: 1 = air 12 L/200 bar diluent, 2 = O2 3 L/200 bar, 3 = air 11 L/200 bar bailout; profile from the algorithm with `MccrBreathing`, 30 m / 30 min):
   - O2 tank consumed = mCCR O2 rate × total runtime minutes (`toBeCloseTo`, liters);
   - diluent consumed = loop volume × descent pressure difference (only the descent consumes diluent);
   - the bailout tank 3 consumes nothing from the plan, only reserve;
   - the O2 tank reserve covers the oxygen breathed by the emergency ascent from 6 m (more than the minimal 20 bar stage reserve for a deco dive), and the plan oxygen is consumed on top of it.
   - OC identity is guarded by the unchanged `consumption.spec.ts`.
   - Run, see it FAIL. Implement in `SegmentsConsumption` + `Consumption`. PASS.
-- [ ] `consumptionByGas.mccr.spec.ts`: oxygen gas consumed = the O2 liters, air consumed = diluent liters only, the reserves come from the emergency ascent. FAIL, implement, PASS.
-- [ ] `PlanFactory.bailout.spec.ts`: mCCR with tanks [air, O2] → the emergency ascent switches to 100 % O2 from tank 2 at 6 m (pins the decision that the CCR oxygen is bailout too). Expected PASS without changes; it is a decision guard.
-- [ ] Verification: `npm run test-lib-ci` (all existing OC/pSCR specs unchanged), `npm run build-lib`, lint. Commit `feat(scuba-physics): #26 mCCR oxygen and diluent consumption`.
+- [x] `consumptionByGas.mccr.spec.ts`: oxygen gas consumed = the O2 liters, air consumed = diluent liters only, the reserves come from the emergency ascent. FAIL, implement, PASS.
+- [x] `PlanFactory.bailout.spec.ts`: mCCR with tanks [air, O2] → the emergency ascent switches to 100 % O2 from tank 2 at 6 m (pins the decision that the CCR oxygen is bailout too). Expected PASS without changes; it is a decision guard.
+- [x] Verification: `npm run test-lib-ci` (all existing OC/pSCR specs unchanged), `npm run build-lib`, lint. Commit `feat(scuba-physics): #26 mCCR oxygen and diluent consumption`.
 
 ##### Task 3.3: Planner state, DTOs and the tanks model
 - [ ] Status

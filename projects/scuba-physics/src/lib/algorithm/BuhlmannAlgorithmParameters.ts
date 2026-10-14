@@ -4,7 +4,8 @@ import { Gas, Gases } from '../gases/Gases';
 import { Options } from './Options';
 import { Tissues, TissuesValidator } from './Tissues';
 import { Time } from '../physics/Time';
-import { BreathingModel } from '../ccr/BreathingModel';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { DepthConverterFactory } from '../physics/depth-converter';
 
 // Speed in meters / min.
 export const durationFor = (depthDifference: number, speed: number): number => {
@@ -52,6 +53,8 @@ export class SurfaceIntervalParameters {
 
 export class AlgorithmParams {
     private readonly _surface: RestingParameters;
+    private readonly _breathing: BreathingModel;
+
     private constructor(
         private _segments: Segments,
         private _gases: Gases,
@@ -60,13 +63,14 @@ export class AlgorithmParams {
          * then first dive default tissues are created, ignoring surface interval.
          **/
         surface?: RestingParameters,
-        private _breathing?: BreathingModel
+        breathing?: BreathingModel
     ) {
         this._surface = this.resolveSurfaceParameters(surface);
+        this._breathing = breathing ?? new OpenCircuitBreathing(new DepthConverterFactory(_options).create());
     }
 
-    /** Breathing model used during the dive, undefined for open circuit */
-    public get breathing(): BreathingModel | undefined {
+    /** Breathing model used during the dive, open circuit if not provided */
+    public get breathing(): BreathingModel {
         return this._breathing;
     }
 

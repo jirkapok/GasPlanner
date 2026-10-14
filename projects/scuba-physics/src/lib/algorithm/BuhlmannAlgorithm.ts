@@ -35,9 +35,8 @@ export class BuhlmannAlgorithm {
      * usually at small depths (bellow 10 meters).
      */
     public noDecoLimit(algorithmParams: AlgorithmParams): number {
-        const { segments, gases, options, surfaceInterval } = algorithmParams;
+        const { segments, gases, options, surfaceInterval, breathing } = algorithmParams;
         const depthConverter = new DepthConverterFactory(options).create();
-        const breathing = this.breathingFor(algorithmParams, depthConverter);
         const rested = this.applySurfaceInterval(surfaceInterval);
         const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, breathing, rested.finalTissues);
         return this.swimNoDecoLimit(segments, gases, context);
@@ -96,12 +95,11 @@ export class BuhlmannAlgorithm {
      * @param algorithmParams Not null dive definition all parameters see container definition.
      */
     public decompressionStatistics(algorithmParams: AlgorithmParams): CalculatedProfileStatistics {
-        const { segments, gases, options, surfaceInterval } = algorithmParams;
+        const { segments, gases, options, surfaceInterval, breathing } = algorithmParams;
         // No validation here, since profile is already calculated
         const newSegments = segments.copy();
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const breathing = this.breathingFor(algorithmParams, depthConverter);
         const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, breathing,
             rested.finalTissues);
         this.swimPlan(context);
@@ -115,7 +113,7 @@ export class BuhlmannAlgorithm {
      * @param algorithmParams Not null dive definition all parameters see container definition.
      */
     public decompression(algorithmParams: AlgorithmParams): CalculatedProfile {
-        const { segments, gases, options, surfaceInterval } = algorithmParams;
+        const { segments, gases, options, surfaceInterval, breathing } = algorithmParams;
         const newSegments = segments.copy();
         const errors = this.validate(segments, gases);
         if (errors.length > 0) {
@@ -125,7 +123,6 @@ export class BuhlmannAlgorithm {
 
         const rested = this.applySurfaceInterval(surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
-        const breathing = this.breathingFor(algorithmParams, depthConverter);
         const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, breathing,
             rested.finalTissues);
         this.swimPlan(context);
@@ -144,10 +141,6 @@ export class BuhlmannAlgorithm {
         }
 
         return this.toSimpleProfile(context, algorithmParams);
-    }
-
-    private breathingFor(algorithmParams: AlgorithmParams, depthConverter: DepthConverter): BreathingModel {
-        return algorithmParams.breathing ?? new OpenCircuitBreathing(depthConverter);
     }
 
     private toFullProfile(context: AlgorithmContext, algorithmParams: AlgorithmParams): CalculatedProfileStatistics {

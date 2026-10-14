@@ -34,6 +34,17 @@ describe('Buhlmann Algorithm - Breathing model', () => {
 
     const openCircuit = (): OpenCircuitBreathing => new OpenCircuitBreathing(new DepthConverterFactory(options).create());
 
+    it('parameters without model breathe open circuit', () => {
+        const parameters = createParams(30, 25, [StandardGases.air]);
+        expect(parameters.breathing).toBeInstanceOf(OpenCircuitBreathing);
+    });
+
+    it('parameters keep the provided model', () => {
+        const breathing = openCircuit();
+        const parameters = createParams(30, 25, [StandardGases.air], breathing);
+        expect(parameters.breathing).toBe(breathing);
+    });
+
     it('explicit open circuit gives same profile as without model', () => {
         const gases = [StandardGases.air];
         expect(planDuration(30, 25, gases, openCircuit())).toBe(planDuration(30, 25, gases));

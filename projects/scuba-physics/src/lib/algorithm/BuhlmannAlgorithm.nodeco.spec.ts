@@ -12,7 +12,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         const depth = 0;
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
-        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options, OptionExtensions.openCircuit(options));
         const ndl = algorithm.noDecoLimit(simpleDive);
         expect(ndl).toBe(Infinity);
     });
@@ -30,7 +30,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         segments.addFlat(air, Time.oneMinute * 1440);
 
         const algorithm = new BuhlmannAlgorithm();
-        const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
         const ndl = algorithm.noDecoLimit(multilevelDive);
         expect(ndl).toBe(Infinity);
     });
@@ -39,7 +39,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         const depth = 60;
         const options = OptionExtensions.createOptions(1, 1, 1.4, 1.4, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
-        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+        const simpleDive = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options, OptionExtensions.openCircuit(options));
         const ndl = algorithm.noDecoLimit(simpleDive);
         expect(ndl).toBe(6);
     });
@@ -56,9 +56,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
             const multiLevelNdl = algorithm.noDecoLimit(multilevelDive);
-            const simpleDive = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const simpleDive = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
             const ndl = algorithm.noDecoLimit(simpleDive);
             expect(ndl).toBe(multiLevelNdl);
         });
@@ -71,7 +71,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute * 40);
 
             const algorithm = new BuhlmannAlgorithm();
-            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
             const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(39);
         });
@@ -84,7 +84,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute * 5);
 
             const algorithm = new BuhlmannAlgorithm();
-            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
             const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(39);
         });
@@ -98,7 +98,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 const algorithm = new BuhlmannAlgorithm();
                 const depth = testCase[0];
                 options.salinity = salinity;
-                const parameters = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options);
+                const parameters = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options, OptionExtensions.openCircuit(options));
                 const ndl = algorithm.noDecoLimit(parameters);
                 expect(ndl).toBe(testCase[1], `No deco limit for ${depth} failed`);
             });

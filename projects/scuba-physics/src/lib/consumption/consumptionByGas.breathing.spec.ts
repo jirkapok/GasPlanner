@@ -23,28 +23,22 @@ describe('Consumption by gas - Breathing model', () => {
         primaryTankReserve: Consumption.defaultPrimaryReserve,
         stageTankReserve: Consumption.defaultStageReserve
     };
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
     const tank = new Tank(11, 200, 32);
     const plan = PlanFactory.createPlan(20, 30, tank, options);
     const profile: Segment[] = new BuhlmannAlgorithm()
-        .decompression(AlgorithmParams.forMultilevelDive(plan, Tanks.toGases([tank]), options)).segments;
-    const emergencyAscent = PlanFactory.emergencyAscent(profile, options, [tank]);
-
-    it('explicit open circuit gives the same result as without model', () => {
-        const withModel = new ConsumptionByGas(depthConverter, new OpenCircuitBreathing(depthConverter))
-            .consume(profile, emergencyAscent, [tank], consumptionOptions);
-        const withoutModel = new ConsumptionByGas(depthConverter).consume(profile, emergencyAscent, [tank], consumptionOptions);
-        expect(withModel).toEqual(withoutModel);
-    });
+        .decompression(AlgorithmParams.forMultilevelDive(plan, Tanks.toGases([tank]), options, openCircuit)).segments;
+    const emergencyAscent = PlanFactory.emergencyAscent(profile, options, [tank], openCircuit);
 
     it('consumes by the breathing model, reserve stays open circuit', () => {
         const pscr = new PscrBreathing(new RebreatherOptions(CircuitType.pscr), 20, depthConverter);
         const rmvPerSecond = Time.toMinutes(consumptionOptions.diver.rmv);
         const expected = profile.reduce((sum, segment) => sum + pscr.consumedLiters(segment, rmvPerSecond), 0);
-        const openCircuit = new ConsumptionByGas(depthConverter).consume(profile, emergencyAscent, [tank], consumptionOptions);
+        const ocResult = new ConsumptionByGas(depthConverter, openCircuit).consume(profile, emergencyAscent, [tank], consumptionOptions);
 
         const pscrResult = new ConsumptionByGas(depthConverter, pscr).consume(profile, emergencyAscent, [tank], consumptionOptions);
 
         expect(pscrResult[0].consumed).toBeCloseTo(expected, 6);
-        expect(pscrResult[0].reserve).toBeCloseTo(openCircuit[0].reserve, 6);
+        expect(pscrResult[0].reserve).toBeCloseTo(ocResult[0].reserve, 6);
     });
 });

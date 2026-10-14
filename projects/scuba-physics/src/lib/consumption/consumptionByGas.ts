@@ -4,7 +4,7 @@ import { Segment } from '../depths/Segments';
 import { Tank } from './Tanks';
 import { IConsumedMix } from './consumptionByMix';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
-import { BreathingModel } from '../ccr/BreathingModel';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /**
  * Gas consumed during the dive by one gas mixture in liters, regardless of tanks.
@@ -78,11 +78,11 @@ export class ConsumptionByGas {
     private planConsumption: SegmentsConsumption;
 
     /**
-     * @param breathing Optional breathing model of the dive, open circuit if not provided.
+     * @param breathing Breathing model of the dive.
      */
-    constructor(depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.reserveConsumption = new SegmentsConsumption(depthConverter);
-        this.planConsumption = new SegmentsConsumption(depthConverter, breathing);
+    constructor(depthConverter: DepthConverter, breathing: BreathingModel) {
+        this.reserveConsumption = new SegmentsConsumption(new OpenCircuitBreathing(depthConverter));
+        this.planConsumption = new SegmentsConsumption(breathing);
     }
 
     /**

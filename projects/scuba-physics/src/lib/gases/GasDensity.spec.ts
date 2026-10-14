@@ -3,6 +3,7 @@ import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 describe('Gas Density', () => {
     describe('at 1 ATA', () => {
@@ -30,10 +31,12 @@ describe('Gas Density', () => {
     });
 
     describe('At depth', () => {
-        const sut = new DensityAtDepth(DepthConverter.simple());
+        const sutDepthConverter = DepthConverter.simple();
+        const sut = new DensityAtDepth(sutDepthConverter, new OpenCircuitBreathing(sutDepthConverter));
 
         it('Air at 30 m is 5', () => {
-            const calc = new DensityAtDepth(DepthConverter.forFreshWater());
+            const calcDepthConverter = DepthConverter.forFreshWater();
+            const calc = new DensityAtDepth(calcDepthConverter, new OpenCircuitBreathing(calcDepthConverter));
             const density = calc.atDepth(StandardGases.air, 30);
             expect(density).toBeCloseTo(5.094, 3);
         });

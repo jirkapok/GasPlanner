@@ -3,6 +3,7 @@ import { Gas } from './Gases';
 import { Tank } from '../consumption/Tanks';
 import { DepthConverter } from '../physics/depth-converter';
 import { GasMixtures } from './GasMixtures';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /** Calculator for gas properties of selected mix at defined depth. */
 export class GasProperties {
@@ -15,7 +16,7 @@ export class GasProperties {
     private _maxDensity = GasDensity.recommendedMaximum;
     private readonly _tank = Tank.createDefault();
     private readonly depthConverter = DepthConverter.simple();
-    private readonly densityCalc = new DensityAtDepth(this.depthConverter);
+    private readonly densityCalc = new DensityAtDepth(this.depthConverter, new OpenCircuitBreathing(this.depthConverter));
 
     // TODO replace the tank with interface since here we propagate only the gas
     public get tank(): Tank {

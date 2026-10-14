@@ -5,6 +5,7 @@ import { Consumption, ConsumptionOptions } from './consumption';
 import { Time } from '../physics/Time';
 import { Segment, Segments } from '../depths/Segments';
 import { OptionExtensions } from '../algorithm/Options.spec';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
 import { ProfileTissues } from '../algorithm/ProfileTissues';
@@ -16,7 +17,8 @@ describe('Consumption', () => {
         primaryTankReserve: Consumption.defaultPrimaryReserve,
         stageTankReserve: 0
     };
-    const consumption = new Consumption(DepthConverter.forFreshWater());
+    const depthConverter = DepthConverter.forFreshWater();
+    const consumption = new Consumption(depthConverter, new OpenCircuitBreathing(depthConverter));
     const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     options2.safetyStop = SafetyStop.never;
     options2.problemSolvingDuration = 2;

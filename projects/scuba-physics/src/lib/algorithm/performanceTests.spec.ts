@@ -8,6 +8,7 @@ import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
 import { Precision } from '../common/precision';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { Tank } from '../consumption/Tanks';
 import { Diver } from '../consumption/Diver';
 import { DepthConverter } from '../physics/depth-converter';
@@ -54,7 +55,7 @@ describe('Performance', () => {
         segments.addFlat(StandardGases.trimix1260, 5 * Time.oneMinute);
 
         const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
 
         assertDuration('Decompression calculation duration', 150,
             () => algorithm.decompression(parameters));
@@ -64,7 +65,7 @@ describe('Performance', () => {
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
         const algorithm = new BuhlmannAlgorithm();
 
-        const simpleDive = AlgorithmParams.forSimpleDive(6, StandardGases.air, options);
+        const simpleDive = AlgorithmParams.forSimpleDive(6, StandardGases.air, options, OptionExtensions.openCircuit(options));
 
         assertDuration('No Decompression Limit calculation duration', 50,
             () => algorithm.noDecoLimit(simpleDive));
@@ -76,7 +77,8 @@ describe('Performance', () => {
             primaryTankReserve: Consumption.defaultPrimaryReserve,
             stageTankReserve: 0
         };
-        const consumption = new Consumption(DepthConverter.forFreshWater());
+        const depthConverter = DepthConverter.forFreshWater();
+        const consumption = new Consumption(depthConverter, new OpenCircuitBreathing(depthConverter));
         const options2 = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
         options2.safetyStop = SafetyStop.never;
         options2.problemSolvingDuration = 2;

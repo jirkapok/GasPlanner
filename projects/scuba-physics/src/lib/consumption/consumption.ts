@@ -10,7 +10,7 @@ import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSea
 import { PlanFactory } from '../depths/PlanFactory';
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
-import { BreathingModel } from '../ccr/BreathingModel';
+import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 export type { ConsumptionOptions } from './consumptionCommon';
 
@@ -29,19 +29,19 @@ export class Consumption {
     private planConsumption: SegmentsConsumption;
 
     /**
-     * @param breathing Optional breathing model of the dive, open circuit if not provided.
+     * @param breathing Breathing model of the dive.
      */
-    constructor(depthConverter: DepthConverter, private readonly breathing?: BreathingModel) {
-        this.reserveConsumption = new SegmentsConsumption(depthConverter);
-        this.planConsumption = new SegmentsConsumption(depthConverter, breathing);
+    constructor(depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
+        this.reserveConsumption = new SegmentsConsumption(new OpenCircuitBreathing(depthConverter));
+        this.planConsumption = new SegmentsConsumption(breathing);
     }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[],
-        options: Options, surfaceInterval?: RestingParameters, breathing?: BreathingModel): CalculatedProfile {
+        options: Options, breathing: BreathingModel, surfaceInterval?: RestingParameters): CalculatedProfile {
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const segmentsCopy = segments.copy();
-        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, surfaceInterval, breathing);
+        const parameters = AlgorithmParams.forMultilevelDive(segmentsCopy, gases, options, breathing, surfaceInterval);
         const profile = algorithm.decompression(parameters);
         return profile;
     }
@@ -64,7 +64,7 @@ export class Consumption {
         }
 
         // bottom is breathed by the dive breathing model, the ascent from bailout gases as open circuit
-        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, surfaceInterval, this.breathing);
+        const emergencyAscent = PlanFactory.emergencyAscent(segments, options, tanks, this.breathing, surfaceInterval);
         this.consumeFromTanks2(segments, emergencyAscent, tanks, consumptionOptions);
     }
 
@@ -147,7 +147,7 @@ export class Consumption {
 
     private consumeFromProfile(testSegments: Segments, tanks: Tank[], consumptionOptions: ConsumptionOptions,
         options: Options, surfaceInterval?: RestingParameters) {
-        const profile = Consumption.calculateDecompression(testSegments, tanks, options, surfaceInterval, this.breathing);
+        const profile = Consumption.calculateDecompression(testSegments, tanks, options, this.breathing, surfaceInterval);
         this.consumeFromTanks(profile.segments, options, tanks, consumptionOptions, surfaceInterval);
     }
 

@@ -28,6 +28,8 @@
 4. **pSCR supply too small for metabolic O2** (shallow, low RMV): the loop must clamp to fO2 = 0, not go negative or divide by zero (Task 3 tests "hypoxic at surface" and "supply equal to metabolic consumption").
 5. **Explicitly passed `OpenCircuitBreathing`** must behave exactly like passing no model in every injection point: algorithm, statistics, NDL, consumption, max bottom time, CNS/OTU/daily, density and events (each task's "explicit open circuit ... same as without model" tests). Branches that only a rebreather model can reach (no gas switching, no air breaks, a loop gas different from the source gas) are pinned by the Stage 2 and Stage 3 specs.
 
+> **Superseded by Task 2.8:** the breathing model is now a mandatory parameter everywhere, so "no model" no longer exists. The optional `breathing?` signatures and the "explicit open circuit ... same as without model" specs below describe Stage 1 as it was implemented; OC identity is now proven by the existing specs passing `OpenCircuitBreathing` explicitly with unchanged expected values.
+
 ## File Structure (Stage 1)
 | File | Responsibility |
 |---|---|
@@ -1504,7 +1506,7 @@ Decisions made while detailing (from reading the planner code):
 
 ##### Task 2.2: ConsumptionByGas uses the breathing model (lib)
 - [x] Status
-- `new ConsumptionByGas(depthConverter, breathing?)`: plan consumption via the model, reserve OC. Specs: explicit OC equals no model; pSCR consumes supply rate.
+- `new ConsumptionByGas(depthConverter, breathing)`: plan consumption via the model, reserve OC. Specs: pSCR consumes supply rate, reserve stays OC. (Breathing made mandatory in Task 2.8.)
 
 ##### Task 2.3: Planner state, DTOs and workers
 - [x] Status
@@ -1548,21 +1550,45 @@ Restores the bailout model from the first Stage 1 plan version, which was replac
   - `inspiredGas` / `ppO2` use `primary` while `isAscent` is false, `bailout` during the generated ascent.
   - `usesGasSwitching` / `usesAirBreaks` come from `bailout`, because gas switches and air breaks happen only during the ascent.
   - `consumedLiters` comes from `bailout`, the emergency ascent is consumed as open circuit.
-- Produces: `PlanFactory.emergencyAscent(originalPlan, options, tanks, surfaceInterval?, breathing?: BreathingModel)`. Without `breathing` the result is the same as today (open circuit). With it, the algorithm gets `new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter))`.
+- Produces: `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing: BreathingModel, surfaceInterval?)` (mandatory since Task 2.8). The algorithm gets `new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter))`; for an open circuit dive this gives the same ascent as before.
 - `Consumption.consumeFromTanks` passes its breathing model to `emergencyAscent`; `PlanningTasks.calculateConsumption` passes the dive's model too. The reserve liters stay open circuit (`reserveConsumption`).
 
 **Steps (TDD):**
 - [x] `BreathingModel.spec.ts` "Bailout": with `PscrBreathing` as primary and `OpenCircuitBreathing` as bailout: loop gas before ascent, supply gas during ascent, gas switching from bailout (true), air breaks from bailout (true).
 - [x] Implement `BailoutBreathing`, export it.
 - [x] `PlanFactory.bailout.spec.ts`:
-  - explicit `OpenCircuitBreathing` gives the same ascent as no model;
   - a pSCR dive needs longer bailout ascent than the same dive calculated as open circuit (leaner loop gas loaded at the bottom);
   - the generated ascent is breathed from the tank gas (last segment gas = tank gas).
-- [x] Implement the optional `breathing` parameter in `PlanFactory.emergencyAscent`.
+- [x] Implement the `breathing` parameter in `PlanFactory.emergencyAscent`.
 - [x] `consumption.pscr.spec.ts`: pSCR reserve from `consumeFromTanks` is at least the open circuit reserve of the same plan.
 - [x] Pass the model from `Consumption.consumeFromTanks` and `PlanningTasks.calculateConsumption`; remove the "always open circuit" comments.
 - [x] `doc/rebreather.md` "Bailout and reserve": the bottom part is breathed from the loop, only the ascent is open circuit; remove the limitation note.
 - [x] Verification: `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
+
+##### Task 2.8: Mandatory breathing model
+- [x] Status
+
+The breathing model is passed explicitly everywhere, open circuit is no longer an implicit default. Every production entrypoint already received a model from the planner worker, except the open circuit calculators listed below.
+
+**Interfaces (all `breathing` parameters mandatory, no new optional parameters):**
+- `AlgorithmParams.forSimpleDive(depth, gas, options, breathing, surface?)`, `AlgorithmParams.forMultilevelDive(segments, gases, options, breathing, surface?)`: `breathing` moved before the already optional `surface`. Getter `breathing: BreathingModel`. The `BuhlmannAlgorithm.breathingFor` fallback is removed.
+- `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing, surfaceInterval?)`: always uses `BailoutBreathing(breathing, OC)`.
+- `new Consumption(depthConverter, breathing)`, `new ConsumptionByGas(depthConverter, breathing)`: reserve consumption gets `new SegmentsConsumption(new OpenCircuitBreathing(depthConverter))` explicitly.
+- `new SegmentsConsumption(breathing)`: the depth converter was only used for the default model and is removed.
+- `new CnsCalculator(depthConverter, breathing)`, `new OtuCalculator(depthConverter, breathing)`, `new CnsDailyCalculator(depthConverter, breathing)`, `new DensityAtDepth(depthConverter, breathing)`.
+- `EventOptions.breathing: BreathingModel`; the events density helper uses the same model.
+
+**Open circuit provided explicitly:**
+- NDL limits calculator: `NdlService` passes `OpenCircuitBreathing` from `DepthConverterFactory(options)`.
+- Gas properties calculator and learn quiz: through `GasProperties`, whose `DensityAtDepth` gets `OpenCircuitBreathing`.
+- Reserve (emergency ascent) consumption in `Consumption` and `ConsumptionByGas`.
+
+**Specs:**
+- Spec helper `OptionExtensions.openCircuit(options)` creates open circuit with the algorithm depth converter.
+- Existing specs pass open circuit explicitly with unchanged expected values (OC identity).
+- Removed the "explicit open circuit ... same as without model" comparisons, which can't be expressed anymore. Toxicity comparisons now check that open circuit does not depend on the ascent start.
+
+**Verification:** `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
 
 ##### Stage 2 final review
 - [x] Status

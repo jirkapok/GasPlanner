@@ -3,6 +3,7 @@ import { OtuCalculator } from './OtuCalculator';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 /**
  *  fresh water, sea level altitude, 1032 bar surface, 1000 density
@@ -57,7 +58,8 @@ export class ToxicityProfiles {
 }
 
 describe('OtuCalculatorService', () => {
-    const otuCalculator = new OtuCalculator(DepthConverter.simple());
+    const otuCalculatorDepthConverter = DepthConverter.simple();
+    const otuCalculator = new OtuCalculator(otuCalculatorDepthConverter, new OpenCircuitBreathing(otuCalculatorDepthConverter));
 
     describe('Segments', () => {
         it('0 OTU for empty segments', () => {
@@ -79,7 +81,8 @@ describe('OtuCalculatorService', () => {
         });
 
         it('Applies depth converter', () => {
-            const calculator = new OtuCalculator(DepthConverter.forSaltWater());
+            const calculatorDepthConverter = DepthConverter.forSaltWater();
+            const calculator = new OtuCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
             const otu = calculator.calculateForProfile(profile);
             expect(otu).toBeCloseTo(65.9177262, 7);
         });
@@ -145,7 +148,8 @@ describe('OtuCalculatorService', () => {
     });
 
     describe('Complex profiles', () => {
-        const calculator = new OtuCalculator(DepthConverter.forFreshWater());
+        const calculatorDepthConverter = DepthConverter.forFreshWater();
+        const calculator = new OtuCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
 
         it('Ean32 at 36 m - 64 OTU', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.ean32At36m);

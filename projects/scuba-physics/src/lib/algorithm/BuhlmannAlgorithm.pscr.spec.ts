@@ -17,18 +17,19 @@ describe('Buhlmann Algorithm - pSCR', () => {
     const rebreather = new RebreatherOptions(CircuitType.pscr);
     const pscr = new PscrBreathing(rebreather, 20, new DepthConverterFactory(options).create());
 
-    const planDuration = (gas: Gas, breathing?: BreathingModel): number => {
+    const planDuration = (gas: Gas, breathing: BreathingModel): number => {
         const segments = new Segments();
         segments.add(30, gas, Time.oneMinute * 2);
         segments.addFlat(gas, Time.oneMinute * 28);
         const gases = new Gases();
         gases.add(gas);
-        const params = AlgorithmParams.forMultilevelDive(segments, gases, options, undefined, breathing);
+        const params = AlgorithmParams.forMultilevelDive(segments, gases, options, breathing);
         return Segments.duration(algorithm.decompression(params).segments);
     };
 
     it('needs longer decompression than open circuit on the same supply gas', () => {
-        expect(planDuration(StandardGases.ean32, pscr)).toBeGreaterThan(planDuration(StandardGases.ean32));
+        const openCircuit = OptionExtensions.openCircuit(options);
+        expect(planDuration(StandardGases.ean32, pscr)).toBeGreaterThan(planDuration(StandardGases.ean32, openCircuit));
     });
 
     it('loop gets leaner during ascent, so the profile ends on the supply gas tank', () => {
@@ -37,7 +38,7 @@ describe('Buhlmann Algorithm - pSCR', () => {
         segments.addFlat(StandardGases.ean32, Time.oneMinute * 28);
         const gases = new Gases();
         gases.add(StandardGases.ean32);
-        const params = AlgorithmParams.forMultilevelDive(segments, gases, options, undefined, pscr);
+        const params = AlgorithmParams.forMultilevelDive(segments, gases, options, pscr);
         const profile = algorithm.decompression(params).segments;
         const last = profile[profile.length - 1];
         // segments keep the supply gas, the loop gas is only used for tissues loading

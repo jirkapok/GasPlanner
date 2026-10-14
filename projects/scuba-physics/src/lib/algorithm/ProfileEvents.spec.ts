@@ -28,7 +28,8 @@ describe('Profile Events', () => {
         startAscentIndex: startAscentIndex,
         profile: profile,
         ceilings: ceilings,
-        profileOptions: profileOptions
+        profileOptions: profileOptions,
+        breathing: OptionExtensions.openCircuit(profileOptions)
     });
 
     const calculateEvents = (gases: Gases, segments: Segments, salinity: Salinity, safetyStop: SafetyStop): Events => {
@@ -39,7 +40,8 @@ describe('Profile Events', () => {
 
     const calculateEventsByOptions = (gases: Gases, segments: Segments, algorithmOptions: Options): Events => {
         const algorithm = new BuhlmannAlgorithm();
-        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, algorithmOptions);
+        const openCircuit = OptionExtensions.openCircuit(algorithmOptions);
+        const parameters = AlgorithmParams.forMultilevelDive(segments, gases, algorithmOptions, openCircuit);
         const decoPlan = algorithm.decompressionStatistics(parameters);
         const eventOptions = createEventOption(3, decoPlan.segments, decoPlan.ceilings, algorithmOptions);
         const events = ProfileEvents.fromProfile(eventOptions);

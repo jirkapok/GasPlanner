@@ -1,7 +1,7 @@
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 /**
  * OTU - Oxygen Toxicity Units
@@ -13,10 +13,8 @@ import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 export class OtuCalculator {
     public static readonly dailyLimit = 300;
     private readonly minPressure = 0.5;
-    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    constructor(private depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
     }
 
     /**

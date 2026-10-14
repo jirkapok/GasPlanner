@@ -4,10 +4,11 @@ import { ToxicityProfiles } from './OtuCalculator.spec';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 describe('CNSCalculatorService', () => {
     const depthConverter = DepthConverter.simple();
-    const cnsCalculator = new CnsCalculator(depthConverter);
+    const cnsCalculator = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
     const ean32pO2 = 0.32;
 
     describe('Segments', () => {
@@ -55,7 +56,8 @@ describe('CNSCalculatorService', () => {
         });
 
         it('Applies depth converter', () => {
-            const calculator = new CnsCalculator(DepthConverter.forSaltWater());
+            const calculatorDepthConverter = DepthConverter.forSaltWater();
+            const calculator = new CnsCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
             const cns = calculator.calculateForProfile(profile);
             expect(cns).toBeCloseTo(27.65157, 6);
         });
@@ -146,7 +148,8 @@ describe('CNSCalculatorService', () => {
     });
 
     describe('Complex profiles', () => {
-        const calculator = new CnsCalculator(DepthConverter.forFreshWater());
+        const calculatorDepthConverter = DepthConverter.forFreshWater();
+        const calculator = new CnsCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
 
         it('Ean32 at 36 m - 25 %', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.ean32At36m);

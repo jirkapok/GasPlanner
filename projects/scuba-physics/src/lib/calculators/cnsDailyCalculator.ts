@@ -2,7 +2,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { CnsCalculator } from './cnsCalculator';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 /** Part of the oxygen exposure history, e.g. one profile segment or surface interval */
 export interface CnsExposure {
@@ -41,10 +41,8 @@ export class CnsDailyCalculator {
     ];
 
     private readonly singleExposure: CnsCalculator;
-    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    constructor(private depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
         this.singleExposure = new CnsCalculator(depthConverter, this.breathing);
     }
 

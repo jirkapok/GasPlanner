@@ -22,14 +22,13 @@ describe('Toxicity - Breathing model', () => {
         expect(sut.calculateForProfile(profile, 1)).toBeCloseTo(expected, 6);
     });
 
-    it('CNS with explicit open circuit equals CNS without model', () => {
-        const withModel = new CnsCalculator(depthConverter, openCircuit).calculateForProfile(profile, 1);
-        const withoutModel = new CnsCalculator(depthConverter).calculateForProfile(profile);
-        expect(withModel).toBeCloseTo(withoutModel, 10);
+    it('CNS of open circuit does not depend on the ascent start', () => {
+        const sut = new CnsCalculator(depthConverter, openCircuit);
+        expect(sut.calculateForProfile(profile, 1)).toBeCloseTo(sut.calculateForProfile(profile), 10);
     });
 
     it('CNS by ppO2 equals CNS by fO2 for open circuit', () => {
-        const sut = new CnsCalculator(depthConverter);
+        const sut = new CnsCalculator(depthConverter, openCircuit);
         expect(sut.calculateByPpO2(1.28, 600)).toBeCloseTo(sut.calculate(0.32, 30, 30, 600), 6);
     });
 
@@ -40,7 +39,7 @@ describe('Toxicity - Breathing model', () => {
     });
 
     it('OTU by ppO2 equals OTU by fO2 for open circuit', () => {
-        const sut = new OtuCalculator(depthConverter);
+        const sut = new OtuCalculator(depthConverter, openCircuit);
         expect(sut.calculateByPpO2(600, 1.28, 0.64)).toBeCloseTo(sut.calculate(600, 0.32, 30, 10), 6);
     });
 
@@ -51,9 +50,8 @@ describe('Toxicity - Breathing model', () => {
         expect(exposures[1].cns).toBeCloseTo(sut.calculateByPpO2(0.8, Time.oneMinute * 10), 6);
     });
 
-    it('Daily CNS with explicit open circuit equals daily CNS without model', () => {
-        const withModel = new CnsDailyCalculator(depthConverter, openCircuit).exposuresForProfile(profile, 1);
-        const withoutModel = new CnsDailyCalculator(depthConverter).exposuresForProfile(profile);
-        expect(withModel).toEqual(withoutModel);
+    it('Daily CNS of open circuit does not depend on the ascent start', () => {
+        const sut = new CnsDailyCalculator(depthConverter, openCircuit);
+        expect(sut.exposuresForProfile(profile, 1)).toEqual(sut.exposuresForProfile(profile));
     });
 });

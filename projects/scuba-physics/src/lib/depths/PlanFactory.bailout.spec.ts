@@ -13,18 +13,14 @@ describe('Plan factory - Bailout emergency ascent', () => {
     const depthConverter = new DepthConverterFactory(options).create();
     const tank = new Tank(15, 200, 32);
     const plan = PlanFactory.createPlan(30, 40, tank, options).items;
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
 
-    const emergencyAscent = (breathing?: BreathingModel): Segment[] =>
-        PlanFactory.emergencyAscent(plan, options, [tank], undefined, breathing);
-
-    it('explicit open circuit gives the same ascent as no model', () => {
-        const openCircuit = new OpenCircuitBreathing(depthConverter);
-        expect(Segments.duration(emergencyAscent(openCircuit))).toBe(Segments.duration(emergencyAscent()));
-    });
+    const emergencyAscent = (breathing: BreathingModel): Segment[] =>
+        PlanFactory.emergencyAscent(plan, options, [tank], breathing);
 
     it('pSCR bottom loaded from the leaner loop gas needs longer ascent than open circuit', () => {
         const pscr = new PscrBreathing(new RebreatherOptions(CircuitType.pscr), 20, depthConverter);
-        expect(Segments.duration(emergencyAscent(pscr))).toBeGreaterThan(Segments.duration(emergencyAscent()));
+        expect(Segments.duration(emergencyAscent(pscr))).toBeGreaterThan(Segments.duration(emergencyAscent(openCircuit)));
     });
 
     it('generated ascent is breathed from the tank gas', () => {

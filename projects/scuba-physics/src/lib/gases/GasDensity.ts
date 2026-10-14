@@ -3,7 +3,7 @@ import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';
 import { StandardGases } from './StandardGases';
 import { GasMixtures } from './GasMixtures';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 export class HighestDensity {
     constructor(
@@ -63,10 +63,8 @@ export class GasDensity {
 /** Calculates approximate gas density of oxygen, nitrogen, helium mixture at different depths. */
 export class DensityAtDepth {
     private density = new GasDensity();
-    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    constructor(private depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
     }
 
     /**

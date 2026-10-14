@@ -1,9 +1,8 @@
-import { DepthConverter } from '../physics/depth-converter';
 import { Diver } from './Diver';
 import { Segment } from '../depths/Segments';
 import { Tank } from './Tanks';
 import { Time } from '../physics/Time';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 export interface ConsumptionOptions {
     diver: Diver;
@@ -84,10 +83,7 @@ export class RmvContext {
 
 /** Shared validation and liters calculation of segments used by all consumption calculators */
 export class SegmentsConsumption {
-    private readonly breathing: BreathingModel;
-
-    constructor(depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    constructor(private readonly breathing: BreathingModel) {
     }
 
     public static validate(segments: Segment[], emergencyAscent: Segment[]): void {

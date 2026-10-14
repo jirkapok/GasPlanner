@@ -8,6 +8,7 @@ import { Time } from '../physics/Time';
 import { Segment } from '../depths/Segments';
 import { PlanFactory } from '../depths/PlanFactory';
 import { OptionExtensions } from '../algorithm/Options.spec';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
 import { Precision } from '../common/precision';
@@ -21,13 +22,14 @@ interface Calculated {
 describe('Consumption by gas', () => {
     const rmv = 20;
     const depthConverter = DepthConverter.forFreshWater();
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
     // no minimal tank reserves, so the tank based reserve is the emergency ascent only
     const consumptionOptions: ConsumptionOptions = {
         diver: new Diver(rmv),
         primaryTankReserve: 0,
         stageTankReserve: 0
     };
-    const sut = new ConsumptionByGas(depthConverter);
+    const sut = new ConsumptionByGas(depthConverter, openCircuit);
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     options.safetyStop = SafetyStop.never;
     options.problemSolvingDuration = 2;
@@ -40,14 +42,14 @@ describe('Consumption by gas', () => {
 
     // Emergency ascent is calculated only once per profile, because it isn't stable for repeated calls with the same profile.
     const calculate = (profile: Segment[], tanks: Tank[]): Calculated => {
-        const emergencyAscent = PlanFactory.emergencyAscent(profile, options, tanks);
+        const emergencyAscent = PlanFactory.emergencyAscent(profile, options, tanks, openCircuit);
         const gases = sut.consume(profile, emergencyAscent, tanks, consumptionOptions);
         return { gases, emergencyAscent };
     };
 
     /** Reference values from the tank based consumption, valid only, if there is enough gas in all tanks */
     const tankReference = (profile: Segment[], calculated: Calculated, tanks: Tank[]): void => {
-        new Consumption(depthConverter).consumeFromTanks2(profile, calculated.emergencyAscent, tanks, consumptionOptions);
+        new Consumption(depthConverter, openCircuit).consumeFromTanks2(profile, calculated.emergencyAscent, tanks, consumptionOptions);
     };
 
     const sumOf = (tanks: Tank[], volume: (t: Tank) => number): number => tanks.reduce((sum, t) => sum + volume(t), 0);

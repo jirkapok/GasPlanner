@@ -1,7 +1,7 @@
 import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 /**
  * Reference: https://www.shearwater.com/wp-content/uploads/2012/08/Oxygen_Toxicity_Calculations.pdf
@@ -16,10 +16,8 @@ export class CnsCalculator {
     /** Maximum CNS toxicity in % */
     public static readonly limit = 100;
     private readonly minimumPpO2 = 0.5;
-    private readonly breathing: BreathingModel;
 
-    constructor(private depthConverter: DepthConverter, breathing?: BreathingModel) {
-        this.breathing = breathing ?? new OpenCircuitBreathing(depthConverter);
+    constructor(private depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
     }
 
     /**

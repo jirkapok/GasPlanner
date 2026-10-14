@@ -4,8 +4,7 @@ import { Gas, Gases } from '../gases/Gases';
 import { Options } from './Options';
 import { Tissues, TissuesValidator } from './Tissues';
 import { Time } from '../physics/Time';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
-import { DepthConverterFactory } from '../physics/depth-converter';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 // Speed in meters / min.
 export const durationFor = (depthDifference: number, speed: number): number => {
@@ -53,23 +52,21 @@ export class SurfaceIntervalParameters {
 
 export class AlgorithmParams {
     private readonly _surface: RestingParameters;
-    private readonly _breathing: BreathingModel;
 
     private constructor(
         private _segments: Segments,
         private _gases: Gases,
         private _options: Options,
+        private _breathing: BreathingModel,
         /** If no valid tissues are provided from previous dive,
          * then first dive default tissues are created, ignoring surface interval.
          **/
-        surface?: RestingParameters,
-        breathing?: BreathingModel
+        surface?: RestingParameters
     ) {
         this._surface = this.resolveSurfaceParameters(surface);
-        this._breathing = breathing ?? new OpenCircuitBreathing(new DepthConverterFactory(_options).create());
     }
 
-    /** Breathing model used during the dive, open circuit if not provided */
+    /** Breathing model used during the dive */
     public get breathing(): BreathingModel {
         return this._breathing;
     }
@@ -95,11 +92,11 @@ export class AlgorithmParams {
      * @param depth depth below surface in meters
      * @param gas gas to use as the only one during the plan
      * @param options conservatism options to be used
+     * @param breathing breathing model used during the dive
      * @param surface Surface resting definition, in case on repetitive dives. Undefined for first dive.
-     * @param breathing Optional breathing model, open circuit if not provided.
      */
-    public static forSimpleDive(depth: number, gas: Gas, options: Options, surface?: RestingParameters,
-        breathing?: BreathingModel): AlgorithmParams {
+    public static forSimpleDive(depth: number, gas: Gas, options: Options, breathing: BreathingModel,
+        surface?: RestingParameters): AlgorithmParams {
         const gases = new Gases();
         gases.add(gas);
 
@@ -107,7 +104,7 @@ export class AlgorithmParams {
         const duration = durationFor(depth, options.descentSpeed);
         segments.add(depth, gas, duration);
 
-        return new AlgorithmParams(segments, gases, options, surface, breathing);
+        return new AlgorithmParams(segments, gases, options, breathing, surface);
     }
 
     /**
@@ -116,12 +113,12 @@ export class AlgorithmParams {
      * @param gases Gases used during the dive + additional gases to be considered during decompression ascent.
      * For nodeco limit only need to contain gases used in segments.
      * @param options conservatism options to be used
+     * @param breathing breathing model used during the dive
      * @param surface Surface resting definition, in case on repetitive dives. Undefined for first dive.
-     * @param breathing Optional breathing model, open circuit if not provided.
      */
-    public static forMultilevelDive(segments: Segments, gases: Gases, options: Options, surface?: RestingParameters,
-        breathing?: BreathingModel): AlgorithmParams {
-        return new AlgorithmParams(segments, gases, options, surface, breathing);
+    public static forMultilevelDive(segments: Segments, gases: Gases, options: Options, breathing: BreathingModel,
+        surface?: RestingParameters): AlgorithmParams {
+        return new AlgorithmParams(segments, gases, options, breathing, surface);
     }
 
     private resolveSurfaceParameters(provided?: RestingParameters): RestingParameters {

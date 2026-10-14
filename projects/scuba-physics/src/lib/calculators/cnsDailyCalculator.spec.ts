@@ -5,11 +5,12 @@ import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
 import { ToxicityProfiles } from './OtuCalculator.spec';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 describe('CNS daily calculator', () => {
     // simple converter: 1 bar at surface + 1 bar each 10 m
     const depthConverter = DepthConverter.simple();
-    const sut = new CnsDailyCalculator(depthConverter);
+    const sut = new CnsDailyCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
     const oxygen = StandardGases.oxygen.fO2;
     const ean32 = StandardGases.ean32.fO2;
 
@@ -46,7 +47,8 @@ describe('CNS daily calculator', () => {
 
         it('Uses single exposure limit above ppO2 1.6', () => {
             const cns = sut.calculate(oxygen, 7, 7, Time.oneMinute * 10);
-            const expected = new CnsCalculator(depthConverter).calculate(oxygen, 7, 7, Time.oneMinute * 10);
+            const singleExposure = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
+            const expected = singleExposure.calculate(oxygen, 7, 7, Time.oneMinute * 10);
             expect(cns).toBeCloseTo(expected, 6);
             expect(cns).toBeCloseTo(56.8998578, 6);
         });
@@ -137,7 +139,7 @@ describe('CNS daily calculator', () => {
             expect(cns).toBeCloseTo(111.1111111, 6);
 
             // compare with single dive limit applied with elimination during surface interval
-            const cnsCalculator = new CnsCalculator(depthConverter);
+            const cnsCalculator = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
             let singleCns = 0;
             dives(4, Time.oneHour * 2).forEach(d => {
                 singleCns = cnsCalculator.calculateForRepetitiveDive(d.profile, singleCns, d.surfaceInterval);
@@ -165,7 +167,8 @@ describe('CNS daily calculator', () => {
         });
 
         it('3 real profiles with ascent and descent', () => {
-            const calculator = new CnsDailyCalculator(DepthConverter.forFreshWater());
+            const calculatorDepthConverter = DepthConverter.forFreshWater();
+            const calculator = new CnsDailyCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
             const profile = ToxicityProfiles.ean32At36m;
             const singleDive = CnsDailyCalculator.total(calculator.exposuresForProfile(profile));
             const cns = calculator.calculateForDives([

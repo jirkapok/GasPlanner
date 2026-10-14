@@ -122,7 +122,7 @@ export class PlanningTasks {
         const maxTime = consumption.calculateMaxBottomTime(plan, tanks, consumptionOptions, options, surfaceInterval);
 
         // bottom is breathed by the dive breathing model, the ascent from bailout gases as open circuit
-        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, surfaceInterval, breathing);
+        const emergencyAscent = PlanFactory.emergencyAscent(originProfile, options, tanks, breathing, surfaceInterval);
         let timeToSurface = Segments.duration(emergencyAscent);
         timeToSurface = Time.toMinutes(timeToSurface);
         consumption.consumeFromTanks2(originProfile, emergencyAscent, tanks, consumptionOptions);
@@ -159,7 +159,7 @@ export class PlanningTasks {
         const rest = new RestingParameters(previousTissues, task.surfaceInterval);
         const depthConverter = new DepthConverterFactory(options).create();
         const breathing = PlanningTasks.breathingFor(task, options, depthConverter);
-        return AlgorithmParams.forMultilevelDive(segments, gases, options, rest, breathing);
+        return AlgorithmParams.forMultilevelDive(segments, gases, options, breathing, rest);
     }
 
     private static breathingFor(task: PlanRequestDto, options: Options, depthConverter: DepthConverter): BreathingModel {

@@ -6,6 +6,7 @@ import { Consumption, ConsumptionOptions } from './consumption';
 import { Diver } from './Diver';
 import { DepthConverter } from '../physics/depth-converter';
 import { OptionExtensions } from '../algorithm/Options.spec';
+import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from '../algorithm/Options';
 
@@ -16,7 +17,8 @@ describe('Consumption - Preserve reserved gas', ()=> {
         stageTankReserve: 25
     };
 
-    const consumption = new Consumption(DepthConverter.forFreshWater());
+    const depthConverter = DepthConverter.forFreshWater();
+    const consumption = new Consumption(depthConverter, new OpenCircuitBreathing(depthConverter));
     const options = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
     options.safetyStop = SafetyStop.never;
     options.problemSolvingDuration = 2;

@@ -299,9 +299,10 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
         if (circuit === CircuitType.oc) {
             this.rebreatherTabSelected = false;
-            // hidden rebreather form reloads stored values, otherwise its invalid values block the planner without visible reason
-            this.dispatcher.sendOptionsReloaded(options);
         }
+
+        // hidden rebreather forms reload stored values, otherwise their invalid values block the planner without visible reason
+        this.dispatcher.sendOptionsReloaded(options);
 
         if (this.rootForm.invalid) {
             return;

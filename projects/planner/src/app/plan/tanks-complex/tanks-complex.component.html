@@ -271,11 +271,8 @@
 
   <!-- kept rendered, so its invalid values are shown also on the tanks tab -->
   <div class="card-body" [hidden]="!rebreatherTab">
-    <!-- only the selected circuit options, so the other circuit invalid values can't block the planner -->
-    @if (isMccr) {
-      <app-mccr-options [rootForm]="rootForm"></app-mccr-options>
-    } @else {
-      <app-pscr-options [rootForm]="rootForm"></app-pscr-options>
-    }
+    <!-- both kept rendered, only the selected circuit options are shown -->
+    <app-pscr-options [rootForm]="rootForm" [hidden]="isMccr"></app-pscr-options>
+    <app-mccr-options [rootForm]="rootForm" [hidden]="!isMccr"></app-mccr-options>
   </div>
 </div>

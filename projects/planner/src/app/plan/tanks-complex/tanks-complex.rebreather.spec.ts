@@ -124,6 +124,11 @@ class RebreatherTabPage {
         this.type(this.injectionRatioInput, value);
     }
 
+    public typeSetpoint(value: string): void {
+        const input = this.fixture.debugElement.query(By.css('#setpoint')).nativeElement as HTMLInputElement;
+        this.type(input, value);
+    }
+
     public typeTankPressure(index: number, value: string): void {
         this.type(this.tankPressureInput(index), value);
     }
@@ -180,6 +185,7 @@ describe('Tanks Complex component - Rebreather', () => {
 
     it('rebreather options render also in open circuit', () => {
         expect(rebreatherPage.rebreatherOptions).toBeDefined();
+        expect(rebreatherPage.mccrOptions).toBeDefined();
     });
 
     it('selecting pSCR switches circuit and fires options change', () => {
@@ -312,14 +318,14 @@ describe('Tanks Complex component - Rebreather', () => {
 
         it('rebreather tab shows only mCCR options', () => {
             rebreatherPage.showRebreatherTab();
-            expect(rebreatherPage.mccrOptions).toBeDefined();
-            expect(rebreatherPage.rebreatherOptions).toBeUndefined();
+            expect(rebreatherPage.mccrOptions?.hidden).toBeFalse();
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBeTrue();
         });
 
         it('pSCR shows only pSCR options', () => {
             rebreatherPage.selectPscr();
-            expect(rebreatherPage.rebreatherOptions).toBeDefined();
-            expect(rebreatherPage.mccrOptions).toBeUndefined();
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBeFalse();
+            expect(rebreatherPage.mccrOptions?.hidden).toBeTrue();
         });
 
         it('invalid pSCR value doesn\'t block the planner after switch to mCCR', () => {
@@ -327,6 +333,28 @@ describe('Tanks Complex component - Rebreather', () => {
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeInjectionRatio('2');
             rebreatherPage.selectMccr();
+            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+        });
+
+        it('invalid mCCR value doesn\'t block the planner after switch to pSCR', () => {
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeSetpoint('2');
+            rebreatherPage.selectPscr();
+            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+            expect(schedules.selectedOptions.setpoint).toBeCloseTo(1.3, 6);
+        });
+
+        it('invalid mCCR value marks rebreather tab with error also after leaving the tab', () => {
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeSetpoint('2');
+            rebreatherPage.showTanksTab();
+            expect(rebreatherPage.rebreatherTabError).toBeDefined();
+        });
+
+        it('switch to open circuit with invalid mCCR value unblocks the form', () => {
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeSetpoint('2');
+            rebreatherPage.selectOpenCircuit();
             expect(fixture.componentInstance.rootForm.valid).toBeTrue();
         });
 

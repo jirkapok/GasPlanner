@@ -323,7 +323,7 @@ describe('Url Serialization', () => {
             });
 
             it('Circuit not supported yet', () => {
-                assertSkipped('&r=4,10,1');
+                assertSkipped('&r=10,10,1');
             });
 
             it('Injection ratio out of range', () => {

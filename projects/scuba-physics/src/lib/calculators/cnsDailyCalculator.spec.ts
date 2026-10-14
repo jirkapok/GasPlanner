@@ -10,7 +10,8 @@ import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 describe('CNS daily calculator', () => {
     // simple converter: 1 bar at surface + 1 bar each 10 m
     const depthConverter = DepthConverter.simple();
-    const sut = new CnsDailyCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
+    const sut = new CnsDailyCalculator(depthConverter, openCircuit);
     const oxygen = StandardGases.oxygen.fO2;
     const ean32 = StandardGases.ean32.fO2;
 
@@ -47,8 +48,7 @@ describe('CNS daily calculator', () => {
 
         it('Uses single exposure limit above ppO2 1.6', () => {
             const cns = sut.calculate(oxygen, 7, 7, Time.oneMinute * 10);
-            const singleExposure = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
-            const expected = singleExposure.calculate(oxygen, 7, 7, Time.oneMinute * 10);
+            const expected = new CnsCalculator(depthConverter, openCircuit).calculate(oxygen, 7, 7, Time.oneMinute * 10);
             expect(cns).toBeCloseTo(expected, 6);
             expect(cns).toBeCloseTo(56.8998578, 6);
         });
@@ -139,7 +139,7 @@ describe('CNS daily calculator', () => {
             expect(cns).toBeCloseTo(111.1111111, 6);
 
             // compare with single dive limit applied with elimination during surface interval
-            const cnsCalculator = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
+            const cnsCalculator = new CnsCalculator(depthConverter, openCircuit);
             let singleCns = 0;
             dives(4, Time.oneHour * 2).forEach(d => {
                 singleCns = cnsCalculator.calculateForRepetitiveDive(d.profile, singleCns, d.surfaceInterval);
@@ -167,8 +167,8 @@ describe('CNS daily calculator', () => {
         });
 
         it('3 real profiles with ascent and descent', () => {
-            const calculatorDepthConverter = DepthConverter.forFreshWater();
-            const calculator = new CnsDailyCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
+            const freshWater = DepthConverter.forFreshWater();
+            const calculator = new CnsDailyCalculator(freshWater, new OpenCircuitBreathing(freshWater));
             const profile = ToxicityProfiles.ean32At36m;
             const singleDive = CnsDailyCalculator.total(calculator.exposuresForProfile(profile));
             const cns = calculator.calculateForDives([
@@ -177,6 +177,24 @@ describe('CNS daily calculator', () => {
                 { profile: profile, surfaceInterval: Time.oneHour }
             ]);
             expect(cns).toBeCloseTo(singleDive * 3, 6);
+        });
+    });
+
+    describe('Breathing model', () => {
+        // EAN32: bottom ppO2 1.28 at 30 m, ascent average 15 m => ppO2 0.8
+        const ean32Profile = [
+            new Segment(30, 30, StandardGases.ean32, Time.oneMinute * 20),
+            new Segment(30, 0, StandardGases.ean32, Time.oneMinute * 10)
+        ];
+
+        it('uses breathed ppO2', () => {
+            const exposures = sut.exposuresForProfile(ean32Profile, 1);
+            expect(exposures[0].cns).toBeCloseTo(sut.calculateByPpO2(1.28, Time.oneMinute * 20), 6);
+            expect(exposures[1].cns).toBeCloseTo(sut.calculateByPpO2(0.8, Time.oneMinute * 10), 6);
+        });
+
+        it('open circuit does not depend on the ascent start', () => {
+            expect(sut.exposuresForProfile(ean32Profile, 1)).toEqual(sut.exposuresForProfile(ean32Profile));
         });
     });
 });

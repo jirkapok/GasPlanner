@@ -451,4 +451,19 @@ describe('Buhlmann Algorithm - Plan', () => {
         });
 
     });
+
+    describe('Algorithm parameters', () => {
+        const parameterOptions = OptionExtensions.createOptions(1, 1, 1.4, 1.6, Salinity.fresh);
+        const openCircuit = OptionExtensions.openCircuit(parameterOptions);
+
+        it('multilevel dive keeps the provided breathing model', () => {
+            const parameters = AlgorithmParams.forMultilevelDive(new Segments(), new Gases(), parameterOptions, openCircuit);
+            expect(parameters.breathing).toBe(openCircuit);
+        });
+
+        it('simple dive keeps the provided breathing model', () => {
+            const parameters = AlgorithmParams.forSimpleDive(30, StandardGases.air, parameterOptions, openCircuit);
+            expect(parameters.breathing).toBe(openCircuit);
+        });
+    });
 });

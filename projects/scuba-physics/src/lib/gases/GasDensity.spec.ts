@@ -31,12 +31,12 @@ describe('Gas Density', () => {
     });
 
     describe('At depth', () => {
-        const sutDepthConverter = DepthConverter.simple();
-        const sut = new DensityAtDepth(sutDepthConverter, new OpenCircuitBreathing(sutDepthConverter));
+        const depthConverter = DepthConverter.simple();
+        const sut = new DensityAtDepth(depthConverter, new OpenCircuitBreathing(depthConverter));
 
         it('Air at 30 m is 5', () => {
-            const calcDepthConverter = DepthConverter.forFreshWater();
-            const calc = new DensityAtDepth(calcDepthConverter, new OpenCircuitBreathing(calcDepthConverter));
+            const freshWater = DepthConverter.forFreshWater();
+            const calc = new DensityAtDepth(freshWater, new OpenCircuitBreathing(freshWater));
             const density = calc.atDepth(StandardGases.air, 30);
             expect(density).toBeCloseTo(5.094, 3);
         });

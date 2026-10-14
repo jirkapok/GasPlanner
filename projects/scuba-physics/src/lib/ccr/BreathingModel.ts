@@ -61,7 +61,12 @@ export class OpenCircuitBreathing implements BreathingModel {
  * the calculated ascent is breathed from the bailout model (open circuit).
  */
 export class BailoutBreathing implements BreathingModel {
-    constructor(private primary: BreathingModel, private bailout: BreathingModel) { }
+    private bailout: BreathingModel;
+
+    constructor(private primary: BreathingModel, depthConverter: DepthConverter) {
+        // bailout is always open circuit, when machine fails.
+        this.bailout = new OpenCircuitBreathing(depthConverter);
+    }
 
     /** Gas switching happens only during the ascent */
     public get usesGasSwitching(): boolean {

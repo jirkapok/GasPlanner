@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
-    AlgorithmParams, BuhlmannAlgorithm, DepthConverter, DepthConverterFactory, Gas, OpenCircuitBreathing, Options, Time
+    AlgorithmParams, BuhlmannAlgorithm, DepthConverterFactory, Gas, OpenCircuitBreathing, Options, Time
 } from 'scuba-physics';
 
 export class NdlLimit {
@@ -12,7 +12,7 @@ export class NdlLimit {
 export class NdlService {
     public calculate(gas: Gas, options: Options): NdlLimit[] {
         const results = [];
-        const depthConverter = DepthConverter.simple();
+        const depthConverter = new DepthConverterFactory(options).create();
         const maxDepthBars = gas.mod(options.maxPpO2);
         let mod = depthConverter.fromBar(maxDepthBars);
         if(mod > 42) {
@@ -20,7 +20,7 @@ export class NdlService {
         }
 
         const algorithm = new BuhlmannAlgorithm();
-        const breathing = new OpenCircuitBreathing(new DepthConverterFactory(options).create());
+        const breathing = new OpenCircuitBreathing(depthConverter);
 
         for(let depth = 12; depth <= mod; depth += options.decoStopDistance) {
             const parameters = AlgorithmParams.forSimpleDive(depth, gas, options, breathing);

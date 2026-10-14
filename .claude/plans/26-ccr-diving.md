@@ -28,7 +28,7 @@
 4. **pSCR supply too small for metabolic O2** (shallow, low RMV): the loop must clamp to fO2 = 0, not go negative or divide by zero (Task 3 tests "hypoxic at surface" and "supply equal to metabolic consumption").
 5. **Explicitly passed `OpenCircuitBreathing`** must behave exactly like passing no model in every injection point: algorithm, statistics, NDL, consumption, max bottom time, CNS/OTU/daily, density and events (each task's "explicit open circuit ... same as without model" tests). Branches that only a rebreather model can reach (no gas switching, no air breaks, a loop gas different from the source gas) are pinned by the Stage 2 and Stage 3 specs.
 
-> **Superseded by Task 2.8:** the breathing model is now a mandatory parameter everywhere, so "no model" no longer exists. The optional `breathing?` signatures and the "explicit open circuit ... same as without model" specs below describe Stage 1 as it was implemented; OC identity is now proven by the existing specs passing `OpenCircuitBreathing` explicitly with unchanged expected values.
+> **Superseded by Task 2.8:** the breathing model is now a mandatory parameter everywhere, so "no model" no longer exists. The optional `breathing?` signatures and the "explicit open circuit ... same as without model" specs below describe Stage 1 as it was implemented; OC identity is now proven by the existing specs passing `OpenCircuitBreathing` explicitly with unchanged expected values. The Stage 1 `*.breathing.spec.ts` files were dissolved into the regular specs (Task 2.8 "Specs").
 
 ## File Structure (Stage 1)
 | File | Responsibility |
@@ -1546,11 +1546,11 @@ Restores the bailout model from the first Stage 1 plan version, which was replac
 - Modify: `projects/planner/src/app/workers/planning.tasks.ts`, `doc/rebreather.md`
 
 **Interfaces:**
-- Produces: `new BailoutBreathing(primary: BreathingModel, bailout: BreathingModel)` implementing `BreathingModel`:
+- Produces: `new BailoutBreathing(primary: BreathingModel, depthConverter: DepthConverter)` implementing `BreathingModel`. The bailout is always `OpenCircuitBreathing(depthConverter)` created inside, because the diver bails out to open circuit when the rebreather fails:
   - `inspiredGas` / `ppO2` use `primary` while `isAscent` is false, `bailout` during the generated ascent.
   - `usesGasSwitching` / `usesAirBreaks` come from `bailout`, because gas switches and air breaks happen only during the ascent.
   - `consumedLiters` comes from `bailout`, the emergency ascent is consumed as open circuit.
-- Produces: `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing: BreathingModel, surfaceInterval?)` (mandatory since Task 2.8). The algorithm gets `new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter))`; for an open circuit dive this gives the same ascent as before.
+- Produces: `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing: BreathingModel, surfaceInterval?)` (mandatory since Task 2.8). The algorithm gets `new BailoutBreathing(breathing, depthConverter)`; for an open circuit dive this gives the same ascent as before.
 - `Consumption.consumeFromTanks` passes its breathing model to `emergencyAscent`; `PlanningTasks.calculateConsumption` passes the dive's model too. The reserve liters stay open circuit (`reserveConsumption`).
 
 **Steps (TDD):**
@@ -1572,14 +1572,14 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
 
 **Interfaces (all `breathing` parameters mandatory, no new optional parameters):**
 - `AlgorithmParams.forSimpleDive(depth, gas, options, breathing, surface?)`, `AlgorithmParams.forMultilevelDive(segments, gases, options, breathing, surface?)`: `breathing` moved before the already optional `surface`. Getter `breathing: BreathingModel`. The `BuhlmannAlgorithm.breathingFor` fallback is removed.
-- `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing, surfaceInterval?)`: always uses `BailoutBreathing(breathing, OC)`.
-- `new Consumption(depthConverter, breathing)`, `new ConsumptionByGas(depthConverter, breathing)`: reserve consumption gets `new SegmentsConsumption(new OpenCircuitBreathing(depthConverter))` explicitly.
-- `new SegmentsConsumption(breathing)`: the depth converter was only used for the default model and is removed.
+- `PlanFactory.emergencyAscent(originalPlan, options, tanks, breathing, surfaceInterval?)`: always uses `BailoutBreathing(breathing, depthConverter)`.
+- `new Consumption(depthConverter, breathing)`, `new ConsumptionByGas(depthConverter, breathing)`: plan consumption via `SegmentsConsumption.createPlan(breathing)`, reserve via `SegmentsConsumption.createReserve(depthConverter)` (always open circuit).
+- `new SegmentsConsumption(breathing)`: the depth converter was only used for the default model and is removed. Factories `createPlan(breathing)` and `createReserve(depthConverter)` name the two uses.
 - `new CnsCalculator(depthConverter, breathing)`, `new OtuCalculator(depthConverter, breathing)`, `new CnsDailyCalculator(depthConverter, breathing)`, `new DensityAtDepth(depthConverter, breathing)`.
 - `EventOptions.breathing: BreathingModel`; the events density helper uses the same model.
 
 **Open circuit provided explicitly:**
-- NDL limits calculator: `NdlService` passes `OpenCircuitBreathing` from `DepthConverterFactory(options)`.
+- NDL limits calculator: `NdlService` uses one `DepthConverterFactory(options)` converter for the MOD and for its `OpenCircuitBreathing`.
 - Gas properties calculator and learn quiz: through `GasProperties`, whose `DensityAtDepth` gets `OpenCircuitBreathing`.
 - Reserve (emergency ascent) consumption in `Consumption` and `ConsumptionByGas`.
 
@@ -1587,6 +1587,13 @@ The breathing model is passed explicitly everywhere, open circuit is no longer a
 - Spec helper `OptionExtensions.openCircuit(options)` creates open circuit with the algorithm depth converter.
 - Existing specs pass open circuit explicitly with unchanged expected values (OC identity).
 - Removed the "explicit open circuit ... same as without model" comparisons, which can't be expressed anymore. Toxicity comparisons now check that open circuit does not depend on the ascent start.
+- Dissolved the Stage 1 `*.breathing.spec.ts` files:
+  - toxicity tests moved to `Breathing model` blocks in `cnsCalculator.spec.ts`, `OtuCalculator.spec.ts`, `cnsDailyCalculator.spec.ts`;
+  - `AlgorithmParams` breathing getter tests moved to `BuhlmannAlgorithm.spec.ts` ("Algorithm parameters");
+  - `consumptionByGas.breathing.spec.ts` renamed to `consumptionByGas.pscr.spec.ts`;
+  - `ProfileEvents.breathing.spec.ts` and `consumption.breathing.spec.ts` deleted, their open circuit cases are covered by `ProfileEvents.spec.ts` and `consumption.spec.ts`.
+- Spec depth converters named by environment (`depthConverter`, `saltWater`, `freshWater`), one `openCircuit` per `describe` where shared.
+- Not covered by own specs yet: `SegmentsConsumption.createPlan` / `createReserve` (the reserve staying open circuit is covered by `consumptionByGas.pscr.spec.ts`).
 
 **Verification:** `test-lib-ci`, `build-lib`, `test-ci`, lint of changed files, `e2e`.
 

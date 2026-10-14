@@ -12,6 +12,7 @@ export class BreathingModelFactory {
      * @param depthConverter converter for the dive environment
      */
     public static create(options: Options, rmv: number, depthConverter: DepthConverter): BreathingModel {
+        // TODO consider send only rebreather options
         if (options.rebreather.circuit === CircuitType.pscr) {
             return new PscrBreathing(options.rebreather, rmv, depthConverter);
         }

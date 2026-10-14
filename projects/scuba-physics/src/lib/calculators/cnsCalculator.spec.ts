@@ -8,7 +8,8 @@ import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 describe('CNSCalculatorService', () => {
     const depthConverter = DepthConverter.simple();
-    const cnsCalculator = new CnsCalculator(depthConverter, new OpenCircuitBreathing(depthConverter));
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
+    const cnsCalculator = new CnsCalculator(depthConverter, openCircuit);
     const ean32pO2 = 0.32;
 
     describe('Segments', () => {
@@ -56,8 +57,8 @@ describe('CNSCalculatorService', () => {
         });
 
         it('Applies depth converter', () => {
-            const calculatorDepthConverter = DepthConverter.forSaltWater();
-            const calculator = new CnsCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
+            const saltWater = DepthConverter.forSaltWater();
+            const calculator = new CnsCalculator(saltWater, new OpenCircuitBreathing(saltWater));
             const cns = calculator.calculateForProfile(profile);
             expect(cns).toBeCloseTo(27.65157, 6);
         });
@@ -148,8 +149,8 @@ describe('CNSCalculatorService', () => {
     });
 
     describe('Complex profiles', () => {
-        const calculatorDepthConverter = DepthConverter.forFreshWater();
-        const calculator = new CnsCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
+        const freshWater = DepthConverter.forFreshWater();
+        const calculator = new CnsCalculator(freshWater, new OpenCircuitBreathing(freshWater));
 
         it('Ean32 at 36 m - 25 %', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.ean32At36m);
@@ -169,6 +170,28 @@ describe('CNSCalculatorService', () => {
         it('Trimix 18/45 at 50 m - 64 %', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.trimixAt50m);
             expect(otu).toBeCloseTo(41.0213067, 7);
+        });
+    });
+
+    describe('Breathing model', () => {
+        // EAN32: bottom ppO2 1.28 at 30 m, ascent average 15 m => ppO2 0.8
+        const ean32Profile = [
+            new Segment(30, 30, StandardGases.ean32, Time.oneMinute * 20),
+            new Segment(30, 0, StandardGases.ean32, Time.oneMinute * 10)
+        ];
+
+        it('uses breathed ppO2', () => {
+            const expected = cnsCalculator.calculateByPpO2(1.28, Time.oneMinute * 20) +
+                cnsCalculator.calculateByPpO2(0.8, Time.oneMinute * 10);
+            expect(cnsCalculator.calculateForProfile(ean32Profile, 1)).toBeCloseTo(expected, 6);
+        });
+
+        it('open circuit does not depend on the ascent start', () => {
+            expect(cnsCalculator.calculateForProfile(ean32Profile, 1)).toBeCloseTo(cnsCalculator.calculateForProfile(ean32Profile), 10);
+        });
+
+        it('by ppO2 equals by fO2 for open circuit', () => {
+            expect(cnsCalculator.calculateByPpO2(1.28, 600)).toBeCloseTo(cnsCalculator.calculate(0.32, 30, 30, 600), 6);
         });
     });
 });

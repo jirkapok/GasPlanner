@@ -49,6 +49,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
         const air = StandardGases.air;
         gases.add(air);
         const options = OptionExtensions.createOptions(1, 1, 1.4, 1.4, Salinity.fresh);
+        const openCircuit = OptionExtensions.openCircuit(options);
 
         it('No decompression limit for multilevel dive equals simple dive Ndl', () => {
             const segments = new Segments();
@@ -56,9 +57,9 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute);
 
             const algorithm = new BuhlmannAlgorithm();
-            const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
+            const multilevelDive = AlgorithmParams.forMultilevelDive(segments, gases, options, openCircuit);
             const multiLevelNdl = algorithm.noDecoLimit(multilevelDive);
-            const simpleDive = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
+            const simpleDive = AlgorithmParams.forMultilevelDive(segments, gases, options, openCircuit);
             const ndl = algorithm.noDecoLimit(simpleDive);
             expect(ndl).toBe(multiLevelNdl);
         });
@@ -71,7 +72,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute * 40);
 
             const algorithm = new BuhlmannAlgorithm();
-            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, openCircuit);
             const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(39);
         });
@@ -84,7 +85,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
             segments.addFlat(air, Time.oneMinute * 5);
 
             const algorithm = new BuhlmannAlgorithm();
-            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
+            const parameters = AlgorithmParams.forMultilevelDive(segments, gases, options, openCircuit);
             const ndl = algorithm.noDecoLimit(parameters);
             expect(ndl).toBe(39);
         });

@@ -15,7 +15,7 @@ import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { PscrBreathing } from '../ccr/PscrBreathing';
 import { CircuitType, RebreatherOptions } from '../ccr/RebreatherOptions';
 
-describe('Consumption by gas - Breathing model', () => {
+describe('Consumption by gas - pSCR', () => {
     const depthConverter = DepthConverter.simple();
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);
     const consumptionOptions: ConsumptionOptions = {

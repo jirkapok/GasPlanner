@@ -58,8 +58,9 @@ export class ToxicityProfiles {
 }
 
 describe('OtuCalculatorService', () => {
-    const otuCalculatorDepthConverter = DepthConverter.simple();
-    const otuCalculator = new OtuCalculator(otuCalculatorDepthConverter, new OpenCircuitBreathing(otuCalculatorDepthConverter));
+    const depthConverter = DepthConverter.simple();
+    const openCircuit = new OpenCircuitBreathing(depthConverter);
+    const otuCalculator = new OtuCalculator(depthConverter, openCircuit);
 
     describe('Segments', () => {
         it('0 OTU for empty segments', () => {
@@ -81,8 +82,8 @@ describe('OtuCalculatorService', () => {
         });
 
         it('Applies depth converter', () => {
-            const calculatorDepthConverter = DepthConverter.forSaltWater();
-            const calculator = new OtuCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
+            const saltWater = DepthConverter.forSaltWater();
+            const calculator = new OtuCalculator(saltWater, new OpenCircuitBreathing(saltWater));
             const otu = calculator.calculateForProfile(profile);
             expect(otu).toBeCloseTo(65.9177262, 7);
         });
@@ -148,8 +149,8 @@ describe('OtuCalculatorService', () => {
     });
 
     describe('Complex profiles', () => {
-        const calculatorDepthConverter = DepthConverter.forFreshWater();
-        const calculator = new OtuCalculator(calculatorDepthConverter, new OpenCircuitBreathing(calculatorDepthConverter));
+        const freshWater = DepthConverter.forFreshWater();
+        const calculator = new OtuCalculator(freshWater, new OpenCircuitBreathing(freshWater));
 
         it('Ean32 at 36 m - 64 OTU', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.ean32At36m);
@@ -169,6 +170,24 @@ describe('OtuCalculatorService', () => {
         it('Trimix 18/45 at 50 m - 62 OTU', () => {
             const otu = calculator.calculateForProfile(ToxicityProfiles.trimixAt50m);
             expect(otu).toBeCloseTo(62.4140139, 7);
+        });
+    });
+
+    describe('Breathing model', () => {
+        // EAN32: ppO2 1.28 at 30 m, 0.32 at surface
+        const ean32Profile = [
+            new Segment(30, 30, StandardGases.ean32, Time.oneMinute * 20),
+            new Segment(30, 0, StandardGases.ean32, Time.oneMinute * 10)
+        ];
+
+        it('uses breathed ppO2', () => {
+            const expected = otuCalculator.calculateByPpO2(Time.oneMinute * 20, 1.28, 1.28) +
+                otuCalculator.calculateByPpO2(Time.oneMinute * 10, 1.28, 0.32);
+            expect(otuCalculator.calculateForProfile(ean32Profile, 1)).toBeCloseTo(expected, 6);
+        });
+
+        it('by ppO2 equals by fO2 for open circuit', () => {
+            expect(otuCalculator.calculateByPpO2(600, 1.28, 0.64)).toBeCloseTo(otuCalculator.calculate(600, 0.32, 30, 10), 6);
         });
     });
 });

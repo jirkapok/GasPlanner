@@ -5,7 +5,7 @@ import { Precision } from '../common/precision';
 import { Segment, Segments } from './Segments';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
-import { BailoutBreathing, BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BailoutBreathing, BreathingModel } from '../ccr/BreathingModel';
 import { DepthConverterFactory } from '../physics/depth-converter';
 
 /** Creates skeleton for dive profile */
@@ -74,7 +74,7 @@ export class PlanFactory {
 
     private static bailoutBreathing(options: Options, breathing: BreathingModel): BreathingModel {
         const depthConverter = new DepthConverterFactory(options).create();
-        return new BailoutBreathing(breathing, new OpenCircuitBreathing(depthConverter));
+        return new BailoutBreathing(breathing, depthConverter);
     }
 
     // in case of user defined gas switch without stay at depth (in ascent segment),

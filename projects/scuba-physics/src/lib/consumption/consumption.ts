@@ -10,7 +10,7 @@ import { BinaryIntervalSearch, SearchContext } from '../common/BinaryIntervalSea
 import { PlanFactory } from '../depths/PlanFactory';
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { ConsumptionOptions, GasVolumes, RmvContext, SegmentsConsumption } from './consumptionCommon';
-import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
+import { BreathingModel } from '../ccr/BreathingModel';
 
 export type { ConsumptionOptions } from './consumptionCommon';
 
@@ -32,8 +32,8 @@ export class Consumption {
      * @param breathing Breathing model of the dive.
      */
     constructor(depthConverter: DepthConverter, private readonly breathing: BreathingModel) {
-        this.reserveConsumption = new SegmentsConsumption(new OpenCircuitBreathing(depthConverter));
-        this.planConsumption = new SegmentsConsumption(breathing);
+        this.reserveConsumption = SegmentsConsumption.createReserve(depthConverter);
+        this.planConsumption = SegmentsConsumption.createPlan(breathing);
     }
 
     private static calculateDecompression(segments: Segments, tanks: Tank[],

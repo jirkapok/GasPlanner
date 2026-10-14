@@ -41,7 +41,7 @@ describe('Breathing model', () => {
 
     describe('Bailout', () => {
         const loop = new PscrBreathing(new RebreatherOptions(CircuitType.pscr), 20, depthConverter);
-        const sut: BreathingModel = new BailoutBreathing(loop, new OpenCircuitBreathing(depthConverter));
+        const sut: BreathingModel = new BailoutBreathing(loop, depthConverter);
 
         it('breathes loop gas before ascent', () => {
             const loopGas = loop.inspiredGas(StandardGases.ean32, 30);

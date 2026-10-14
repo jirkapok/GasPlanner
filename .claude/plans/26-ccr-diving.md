@@ -1809,13 +1809,13 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
   - the card header `helpDocument` is `rebreather` while the Rebreather tab is open, `tanks` otherwise (Stage 2 deferred minor).
   - FAIL → implement → PASS.
 - [ ] `rebreather-options.component.spec.ts`:
-  - mCCR shows setpoint, O2 flow, loop volume and metabolic O2, and hides the injection ratio;
+  - mCCR shows the target ppO2 (label "Target ppO2", control `#setpoint`), O2 flow, loop volume and metabolic O2, and hides the injection ratio;
   - pSCR shows the injection ratio and metabolic O2 only;
-  - an invalid setpoint (2.0) marks `is-invalid` and shows the sibling message with the range label;
+  - an invalid target ppO2 (2.0) marks `is-invalid` and shows the sibling message with the range label;
   - a valid change calls `sendOptionsChanged` once, with the value converted for imperial;
   - imperial metabolic O2/O2 flow/loop volume `step` is 0.001 (Stage 2 deferred minor).
   - FAIL → implement → PASS.
-- [ ] Layout: inputs in `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message, text in templates only. i18n keys `tanksComplex.mccr`, `tanksComplex.diluent`, `tanksComplex.oxygen`, `rebreatherOptions.setpoint`, `rebreatherOptions.o2Flow`, `rebreatherOptions.loopVolume` in all 7 files.
+- [ ] Layout: inputs in `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message, text in templates only. i18n keys `tanksComplex.mccr`, `tanksComplex.diluent`, `tanksComplex.oxygen`, `rebreatherOptions.setpoint` (en text "Target ppO2"; the UI never calls the mCCR value a setpoint, `setpoint` stays the internal name only), `rebreatherOptions.o2Flow`, `rebreatherOptions.loopVolume` in all 7 files.
 - [ ] `ValidatorGroups` `required` wrapper comment wording (Stage 2 deferred minor).
 - [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 mCCR tanks card and rebreather options`.
 
@@ -1823,7 +1823,7 @@ Decisions made while detailing (confirmed with the user 2026-10-14, or derived f
 - [ ] Status
 
 **Files:**
-- Modify: `doc/rebreather.md` (mCCR section: setpoint, needle-valve O2 flow vs metabolic O2, diluent/oxygen tanks, the CCR O2 cylinder is not bailout, loop volume and descent diluent, help anchors), the help menu anchor
+- Modify: `doc/rebreather.md` (mCCR section: target ppO2 — the diver holds this ppO2 by adding O2 manually (flow below metabolic use) or flushing diluent (flow above it), the planner uses it for tissue loading and CNS/OTU; the constant mass flow only defines the O2 used, needle-valve O2 flow vs metabolic O2, diluent/oxygen tanks, the CCR O2 cylinder is not bailout, loop volume and descent diluent, help anchors), the help menu anchor
 - Create: `e2e/mccr.spec.ts` (page-object style of `e2e/pscr.spec.ts`)
 
 **Steps:**

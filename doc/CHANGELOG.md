@@ -1,3 +1,19 @@
+# [0.12.0](https://github.com/jirkapok/GasPlanner/compare/v0.11.0...v0.12.0) (2026-10-14)
+
+
+### Bug Fixes
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR options kept rendered like pSCR options ([5f17cf2](https://github.com/jirkapok/GasPlanner/commit/5f17cf21960fdbc314665fdf0f2e47247e30d7d3))
+
+
+### Features
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR options and tanks preparation ([62e9145](https://github.com/jirkapok/GasPlanner/commit/62e9145676ab6a9b724ce50bdf34c9624d26a3ee))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR tanks card and options components ([2214c30](https://github.com/jirkapok/GasPlanner/commit/2214c30e0c0c5b2e67ec6ef86b0e89ca2969d3c2))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR url, validation and normalization ([e50a542](https://github.com/jirkapok/GasPlanner/commit/e50a54213e6c33d3dfd972ae4ad3fad45e290b88))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR breathing model ([a52dc20](https://github.com/jirkapok/GasPlanner/commit/a52dc2017276a1a9351b3fc3291476aa35eb96f2))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) mCCR oxygen and diluent consumption ([610a6e9](https://github.com/jirkapok/GasPlanner/commit/610a6e95022079a220feeee356db71c60add39b2))
+
 # [0.11.0](https://github.com/jirkapok/GasPlanner/compare/v0.10.1...v0.11.0) (2026-10-14)
 
 

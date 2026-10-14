@@ -15,10 +15,13 @@ Following list of external sources was used to develop this application and can 
 
 ## Alternatives
 
+* <https://divetools.app>
+* <https://diving.sitepark.cz/planner>
 * <https://diveplanner.online/planner>
 * <https://play.google.com/store/apps/details?id=com.techdeco.mcp>
 * <https://play.google.com/store/apps/details?id=com.hhssoftware.multideco>
 * <https://play.google.com/store/apps/details?id=com.diveprome.avlasov.diveprome>
+* <https://divekit.app/deco-planner/>
 
 ## Based on following references:
 

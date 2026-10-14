@@ -1,3 +1,4 @@
+import { CircuitType, StandardGases } from 'scuba-physics';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { TestBed, inject } from '@angular/core/testing';
 import { UnitConversion } from './UnitConversion';
@@ -157,6 +158,51 @@ describe('Managed Schedules', () => {
 
         it('Calls scheduler after add', () => {
             expect(dispatcherSpy).toHaveBeenCalledTimes(1);
+        });
+    });
+
+    describe('Clone rebreather dive', () => {
+        const cloned = (): DiveSchedule => schedules.dives[schedules.dives.length - 1];
+
+        it('Copies pSCR options', () => {
+            const options = schedules.selected.optionsService;
+            options.circuit = CircuitType.pscr;
+            options.injectionRatio = 12;
+            options.metabolicO2 = 1.5;
+
+            sut.cloneSelected();
+
+            expect(cloned()).not.toBe(schedules.dives[0]);
+            expect(cloned().optionsService.getOptions().rebreather).toEqual(options.getOptions().rebreather);
+        });
+
+        it('Copies mCCR options and tanks', () => {
+            const source = schedules.selected;
+            source.tanksService.prepareForMccr();
+            const options = source.optionsService;
+            options.circuit = CircuitType.mccr;
+            options.setpoint = 1.1;
+            options.o2Flow = 1.2;
+            options.loopVolume = 5;
+            options.metabolicO2 = 1.4;
+
+            sut.cloneSelected();
+
+            const clonedRebreather = cloned().optionsService.getOptions().rebreather;
+            expect(clonedRebreather).toEqual(options.getOptions().rebreather);
+            expect(clonedRebreather).not.toBe(options.getOptions().rebreather);
+            const oxygen = cloned().tanksService.oxygenTank;
+            expect(oxygen?.tank.gas.compositionEquals(StandardGases.oxygen)).toBeTrue();
+        });
+
+        it('Clone keeps own options', () => {
+            const options = schedules.selected.optionsService;
+            options.circuit = CircuitType.pscr;
+            sut.cloneSelected();
+
+            cloned().optionsService.injectionRatio = 15;
+
+            expect(options.injectionRatio).toBe(8);
         });
     });
 

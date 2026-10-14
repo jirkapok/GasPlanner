@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { CircuitType, Precision } from 'scuba-physics';
-import { RebreatherOptionsComponent } from './rebreather-options.component';
+import { PscrOptionsComponent } from './pscr-options.component';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -12,8 +12,8 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { OptionsService } from '../../shared/options.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
-class RebreatherOptionsPage {
-    constructor(private fixture: ComponentFixture<RebreatherOptionsComponent>) { }
+class PscrOptionsPage {
+    constructor(private fixture: ComponentFixture<PscrOptionsComponent>) { }
 
     public get injectionRatioInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('#injectionRatio')).nativeElement as HTMLInputElement;
@@ -38,15 +38,15 @@ class RebreatherOptionsPage {
     }
 }
 
-describe('RebreatherOptionsComponent', () => {
-    let fixture: ComponentFixture<RebreatherOptionsComponent>;
+describe('PscrOptionsComponent', () => {
+    let fixture: ComponentFixture<PscrOptionsComponent>;
     let options: OptionsService;
     let changedSpy: jasmine.Spy<() => void>;
-    let optionsPage: RebreatherOptionsPage;
+    let optionsPage: PscrOptionsPage;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, RebreatherOptionsComponent],
+            imports: [ReactiveFormsModule, PscrOptionsComponent],
             providers: [
                 InputControls, ValidatorGroups, UnitConversion, DecimalPipe,
                 DiveSchedules, ReloadDispatcher, provideTestTranslate()
@@ -56,8 +56,8 @@ describe('RebreatherOptionsComponent', () => {
         options = TestBed.inject(DiveSchedules).selectedOptions;
         options.circuit = CircuitType.pscr;
         changedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
-        fixture = TestBed.createComponent(RebreatherOptionsComponent);
-        optionsPage = new RebreatherOptionsPage(fixture);
+        fixture = TestBed.createComponent(PscrOptionsComponent);
+        optionsPage = new PscrOptionsPage(fixture);
         fixture.detectChanges();
     });
 
@@ -99,7 +99,7 @@ describe('RebreatherOptionsComponent', () => {
 
         it('metabolic O2 starts with imperial step', () => {
             TestBed.inject(UnitConversion).imperialUnits = true;
-            const imperialFixture = TestBed.createComponent(RebreatherOptionsComponent);
+            const imperialFixture = TestBed.createComponent(PscrOptionsComponent);
             imperialFixture.detectChanges();
             expect(imperialFixture.componentInstance.metabolicO2Step).toBe(0.001);
         });

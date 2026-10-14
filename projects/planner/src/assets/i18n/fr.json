@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "Application", "usage": "Utilisation de l'application", "settings": "Paramètres de l'application" },
-      "plan": { "title": "Plan de plongée", "tanks": "Blocs", "rebreather": "Recycleur", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
+      "plan": { "title": "Plan de plongée", "tanks": "Blocs", "rebreather": "Recycleur", "mccr": "mCCR", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
       "options": { "title": "Options de plongée", "general": "Général", "environment": "Environnement", "conservatism": "Conservatisme", "gases": "Gaz", "airBreaks": "Pauses O2", "stops": "Paliers", "speeds": "Vitesses", "diver": "Plongeur" },
       "results": { "title": "Résultats de plongée", "diveInfoTable": "Tableau des informations de plongée", "oxygenToxicity": "Toxicité de l'oxygène", "events": "Événements causant des erreurs et avertissements", "consumedGasCharts": "Graphiques de gaz consommé", "wayPointsTable": "Tableau des points de passage", "profileChart": "Graphique du profil de plongée", "tissuesHeatMap": "Carte thermique des tissus" },
       "calculators": { "title": "Calculatrices", "sac": "RMV/SAC", "nitrox": "Nitrox", "ndl": "Table des limites de non-décompression (NDL)", "altitude": "Altitude", "weight": "Poids", "gasProperties": "Propriétés du gaz", "redundancies": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz" }
@@ -163,8 +163,9 @@
   "surfaceInterval": { "label": "Intervalle de surface", "firstDive": "Première plongée", "thirtyMinutes": "30 minutes", "oneHour": "1 heure", "twoHours": "2 heures", "invalidFormat": "Doit être un texte au format hh:mm" },
   "tankChart": { "gasRemaining": "Gaz restant :", "rockBottom": "Réserve :" },
   "gasChart": { "reserve": "Réserve :", "consumed": "Consommé :", "available": "Disponible :" },
-  "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ", "openCircuit": "Circuit ouvert", "pscr": "pSCR", "tanksTab": "Blocs", "rebreatherTab": "Recycleur" },
-  "rebreatherOptions": { "injectionRatio": "Rapport d'injection", "metabolicO2": "O2 métabolique" },
+  "tanksComplex": { "cardTitle": "Blocs", "size": "Taille", "workPressure": "Press. serv.", "pressure": "Pression", "he": "He", "o2": "O2", "sac": "SAC :", "workingPressureLabel": "Pression de service", "startPressureLabel": "Pression de départ", "openCircuit": "Circuit ouvert", "pscr": "pSCR", "tanksTab": "Blocs", "rebreatherTab": "Recycleur", "mccr": "mCCR", "diluent": "Diluant", "oxygen": "Oxygène" },
+  "pscrOptions": { "injectionRatio": "Rapport d'injection", "metabolicO2": "O2 métabolique" },
+  "mccrOptions": { "setpoint": "ppO2 cible", "o2Flow": "Débit d'O2", "loopVolume": "Volume de la boucle", "metabolicO2": "O2 métabolique" },
   "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
   "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
   "learn": {

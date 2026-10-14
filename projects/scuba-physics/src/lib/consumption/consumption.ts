@@ -86,6 +86,7 @@ export class Consumption {
         // Reserve needs to be first to be able to preserve it, when possible.
         this.updateReserve(emergencyAscent, tanks, rmvContext);
         const tankMinimum = (t: Tank) => t.reserveVolume;
+        this.consumeOxygen(segments, tankMinimum);
         const getRmvPerSecond = () => rmvContext.rmvPerSecond;
         const consumedBySegmentRmv = (s: Segment) => this.planConsumption.consumedBySegment(s, rmvContext.rmvPerSecond);
 
@@ -173,6 +174,20 @@ export class Consumption {
             tank.reserveVolume = rmvContext.ensureMinimalReserve(tank, consumedLiters);
             gasesConsumed.subtract(gasCode, tank.reserveVolume);
         }
+    }
+
+    /** Rebreather oxygen is consumed from its tank regardless of the gas assigned to segments */
+    private consumeOxygen(segments: Segment[], tankMinimum: (t: Tank) => number): void {
+        const oxygenTank = this.breathing.oxygenTank;
+
+        if (!oxygenTank) {
+            return;
+        }
+
+        const oxygenLiters = this.planConsumption.oxygenLiters(segments);
+        const consumed = this.consumeFromTank(oxygenTank, oxygenLiters, tankMinimum);
+        // if more consumed, drain the tank
+        this.consumeFromTank(oxygenTank, oxygenLiters - consumed, () => 0);
     }
 
     private consumeByGases(tanks: Tank[], remainToConsume: GasVolumes, minimumVolume: (t: Tank) => number): GasVolumes {

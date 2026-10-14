@@ -31,4 +31,14 @@ describe('pSCR breathing', () => {
         expect(sut.usesGasSwitching).toBeTrue();
         expect(sut.usesAirBreaks).toBeFalse();
     });
+
+    it('has no oxygen source', () => {
+        const segment = new Segment(30, 30, StandardGases.ean32, Time.oneMinute);
+        expect(sut.oxygenTank).toBeUndefined();
+        expect(sut.oxygenLiters(segment)).toBeCloseTo(0, 6);
+    });
+
+    it('is always valid', () => {
+        expect(sut.validate()).toEqual([]);
+    });
 });

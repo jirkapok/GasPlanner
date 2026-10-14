@@ -257,6 +257,10 @@ export interface RebreatherDto {
     /** liters */
     loopVolume: number;
     injectionRatio: number;
+    /** mCCR target ppO2 in bars, optional because of upgrade */
+    setpoint?: number;
+    /** mCCR oxygen flow in liters/minute, optional because of upgrade */
+    o2Flow?: number;
 }
 
 export interface QuizSessionDto {

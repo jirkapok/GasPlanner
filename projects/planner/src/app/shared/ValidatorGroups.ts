@@ -3,7 +3,7 @@ import { Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
 
-/** Bound wrapper, because the static method reference is unbound */
+/** Arrow function wrapper, because passing the static method reference breaks the unbound-method lint rule */
 const required: ValidatorFn = (control: AbstractControl): ValidationErrors | null => Validators.required(control);
 
 @Injectable()
@@ -36,6 +36,18 @@ export class ValidatorGroups {
 
     public get metabolicO2(): ValidatorFn[] {
         return this.rangeFor(this.ranges.metabolicO2);
+    }
+
+    public get setpoint(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.setpoint);
+    }
+
+    public get o2Flow(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.o2Flow);
+    }
+
+    public get loopVolume(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.loopVolume);
     }
 
     public get depth(): ValidatorFn[] {

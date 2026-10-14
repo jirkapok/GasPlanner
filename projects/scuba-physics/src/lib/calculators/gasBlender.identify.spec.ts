@@ -74,6 +74,24 @@ describe('Gas Blender Identify mix', () => {
         expect(result.pressure).toBeCloseTo(topped.pressure, 6);
     });
 
+    it('Helium topped to high pressure is consistent with topping the same amount', () => {
+        const source = { o2: .21, he: 0, pressure: 50 };
+        const topMix = { o2: 0, he: 1 };
+        const topped = GasBlender.top({
+            source,
+            topMix: { ...topMix, pressure: 250 }
+        });
+
+        const result = GasBlender.identify({
+            source,
+            topMix,
+            finalPressure: topped.pressure
+        });
+
+        expect(result.o2).toBeCloseTo(topped.o2, 6);
+        expect(result.he).toBeCloseTo(topped.he, 6);
+    });
+
     it('Final pressure lower than source pressure throws error', () => {
         expect(() => GasBlender.identify({
             source: { o2: .21, he: 0, pressure: 100 },

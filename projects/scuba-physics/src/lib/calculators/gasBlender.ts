@@ -156,21 +156,16 @@ export class GasBlender {
             throw new Error('Final pressure needs to be higher or equal to the source pressure.');
         }
 
-        const topPressure = GasBlender.findTopPressure(request);
-        const result = GasBlender.top({
-            source: request.source,
-            topMix: { o2: request.topMix.o2, he: request.topMix.he, pressure: topPressure }
-        });
-
-        if (result.pressure === 0) {
+        if (request.finalPressure === 0) {
             return { o2: 0, he: 0, n2: 0, pressure: 0, addTop: 0 };
         }
 
+        const finalGas = GasBlender.identifyFinalGas(request);
         return {
-            o2: result.o2,
-            he: result.he,
-            n2: GasMixtures.n2(result.o2, result.he),
-            pressure: result.pressure,
+            o2: finalGas.fO2,
+            he: finalGas.fHe,
+            n2: GasMixtures.n2(finalGas.fO2, finalGas.fHe),
+            pressure: request.finalPressure,
             addTop: request.finalPressure - request.source.pressure
         };
     }
@@ -253,37 +248,36 @@ export class GasBlender {
     }
 
     /**
-     * Finds pressure of the top mix (as if it was in the tank alone) by bisection,
-     * so the real gas pressure after topping equals the required final pressure.
+     * Finds final gas by iterating, since compressibility depends on the final gas,
+     * which depends on the amount of top mix added up to the known final pressure.
      */
-    private static findTopPressure(request: IdentifyRequest): number {
-        if (request.finalPressure === request.source.pressure) {
-            return 0;
+    private static identifyFinalGas(request: IdentifyRequest): Gas {
+        const compressibility = new Compressibility();
+        const sourceGas = new Gas(request.source.o2, request.source.he);
+        const sourceVolume = compressibility.normalVolume(request.source.pressure, sourceGas);
+        const topGas = new Gas(request.topMix.o2, request.topMix.he);
+        const mixFinalGas = (finalVolume: number): Gas => {
+            const topVolume = finalVolume - sourceVolume;
+            const o2Volume = sourceGas.fO2 * sourceVolume + topGas.fO2 * topVolume;
+            const heVolume = sourceGas.fHe * sourceVolume + topGas.fHe * topVolume;
+            return new Gas(o2Volume / finalVolume, heVolume / finalVolume);
+        };
+
+        // ideal gas partial pressures as first estimate
+        const topPressure = request.finalPressure - request.source.pressure;
+        let finalGas = new Gas(
+            (sourceGas.fO2 * request.source.pressure + topGas.fO2 * topPressure) / request.finalPressure,
+            (sourceGas.fHe * request.source.pressure + topGas.fHe * topPressure) / request.finalPressure
+        );
+        let foundGas = mixFinalGas(compressibility.normalVolume(request.finalPressure, finalGas));
+
+        while (Math.abs(foundGas.fO2 - finalGas.fO2) > GasBlender.precision ||
+               Math.abs(foundGas.fHe - finalGas.fHe) > GasBlender.precision) {
+            finalGas = foundGas;
+            foundGas = mixFinalGas(compressibility.normalVolume(request.finalPressure, finalGas));
         }
 
-        const finalPressure = (topPressure: number): number => GasBlender.top({
-            source: request.source,
-            topMix: { o2: request.topMix.o2, he: request.topMix.he, pressure: topPressure }
-        }).pressure;
-
-        let low = 0;
-        let high = request.finalPressure;
-        while (finalPressure(high) < request.finalPressure) {
-            low = high;
-            high *= 2;
-        }
-
-        const maxIterations = 100;
-        for (let iteration = 0; iteration < maxIterations && high - low > GasBlender.precision; iteration++) {
-            const middle = (low + high) / 2;
-            if (finalPressure(middle) < request.finalPressure) {
-                low = middle;
-            } else {
-                high = middle;
-            }
-        }
-
-        return (low + high) / 2;
+        return foundGas;
     }
 
     private static mixByRemovingVolume(compressibility: Compressibility, request: MixRequest,

@@ -1988,6 +1988,77 @@ Unlike the rest of Stage 5, this applies to **every** circuit, open circuit incl
   - The `diff-diveresults` table spec: the profile A/B header titles contain the circuit (`1. OC ...` / `2. mCCR ...`).
   - The 12 specs that provide `DiveSchedules` without translations get `provideTestTranslate()`. Its no-op loader returns the key, so titles in those specs read e.g. `1. circuit.oc 30 m, 12 min`, which is acceptable where titles aren't asserted. The 2 `new DiveSchedule(...)` calls in `dives.schedule.spec.ts` get the `CircuitNames` argument.
 
+#### 5e. Manual validation of all rebreather types against other software (user)
+- [ ] Status
+
+The user does this step. The agent prepares the inputs and records the results, then stops and waits for the user's values.
+
+- **Agent prepares** a validation table in this plan, one row per scenario:
+  - the inputs;
+  - a Dugong share URL (so the same dive opens in one click);
+  - the Dugong results: runtime, stops (depth/minutes), CNS, OTU, consumed liters per tank.
+- **Scenarios** (salt water, GF 30/85, app default speeds and RMV 20 l/min unless stated):
+  1. **pSCR**: 30 m / 40 min, supply EAN32, injection ratio 8, metabolic O2 1 l/min.
+  2. **mCCR**: 40 m / 25 min, diluent air, target ppO2 1.3, O2 flow 0.8 l/min, metabolic O2 1 l/min.
+  3. **eCCR**: 40 m / 25 min, diluent air, setpoints descent 0.7 / bottom 1.3 / deco 1.3, switch depth 20 m.
+  4. **eCCR deep** (the Stage 4 E2E dive): 60 m, diluent 18/45, bailout 18/45, EAN50, oxygen, setpoints 1.1 / 1.1 / 1.4.
+- **User fills in** the same results from reference planners (e.g. MultiDeco, Subsurface; any planner with that rebreather type), plus the software name and version.
+- **Acceptance**:
+  - each stop within ±1 min;
+  - total runtime within ±2 min;
+  - CNS/OTU within ±10 % relative.
+  - A larger difference is analysed (model difference vs. bug), and the user decides whether it is a bug or a documented model difference.
+- **Results** are also summarized in a "Validation" section of `doc/rebreather.md` (software, version, scenario, runtime difference).
+
+#### 5f. Absolute runtimes instead of relative OC comparisons
+- [ ] Status
+
+Depends on 5e: only values the user confirmed in 5e (or Dugong values the user accepts as equal within the 5e tolerances) are hardcoded.
+
+- **User step**: for each test below, the user confirms the expected runtime, taken from the 5e results or from an additional reference run of the test's exact inputs. The agent lists the test inputs and the current Dugong values, then stops and waits for the user's confirmation.
+- **Then the agent replaces** the relative runtime assertions (open circuit vs. rebreather) with the confirmed absolute values, `toBe(<seconds>)` / `toHaveText('<mm:ss>')`:
+  - `algorithm/BuhlmannAlgorithm.pscr.spec.ts` "needs longer decompression than open circuit on the same supply gas";
+  - `algorithm/BuhlmannAlgorithm.mccr.spec.ts` "needs different decompression than open circuit with the same gases" (its "higher setpoint shortens the decompression" compares two setpoints, not OC; it gets absolute values for both setpoints too);
+  - `depths/PlanFactory.bailout.spec.ts` "pSCR bottom loaded from the leaner loop gas needs longer ascent than open circuit" (emergency ascent duration);
+  - `shared/planner.service.rebreather.spec.ts` pSCR (`duration > openCircuit.duration`) and mCCR (`duration not open circuit duration`);
+  - `e2e/pscr.spec.ts` and `e2e/mccr.spec.ts` final `not.toHaveText(openCircuitTime)`;
+  - the eCCR equivalents added in Stage 4.
+- Consumption comparisons (`consumption.pscr.spec.ts`, consumed liters in `planner.service.rebreather.spec.ts`) are not runtime and stay relative.
+- An expected value is never changed to make a failing test pass. A difference found later goes back to 5e analysis.
+
+#### 5g. Default rebreather oxygen tank template (metric and imperial)
+- [ ] Status
+
+Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForMccr` (Stage 3 ruling and deferred minor: imperial shows about 25 cuft).
+
+- **Lib**: `StandardTanks.rebreatherOxygen: TankTemplate` in `consumption/StandardTanks.ts`, also listed in `available`:
+  - `MetricTanks`: `{ name: '3 L', size: 3, workingPressure: 0 }`, start pressure 200 bar;
+  - `ImperialTanks`: `{ name: 'AL19', size: 19, workingPressure: 3000 }`, start pressure 3000 psi.
+  - The imperial cylinder is a proposal; the user confirms the template (name/size/pressure) when the stage starts.
+  - Spec in `StandardTanks.spec.ts`.
+- **Planner**: `TanksService` creates the oxygen tank from `units.defaults.tanks.rebreatherOxygen` (size and working pressure in current units, like `addTankBy`, gas oxygen).
+  - It is used when switching to **mCCR and eCCR** (the eCCR switch reuses `prepareForMccr`, renamed to `prepareForClosedCircuit` in Stage 4 if not done there).
+  - Specs in `tanks.service.mccr.spec.ts`: metric 3 L/200 bar and imperial 19 cuft/3000 psi oxygen tank inserted; existing tanks unchanged.
+
+#### 5h. Clean E2E console
+- [ ] Status
+
+The `npm run e2e` log contains:
+- 2× `ERROR Error: Resize must be passed a displayed plot div element.` (plotly `Plots.resize` on a chart that isn't displayed);
+- 1× `NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2`.
+
+None of them fail a test today.
+
+- **Find the source** with `superpowers:systematic-debugging`:
+  - run the E2E specs one by one with the console captured;
+  - find the chart component calling resize while hidden (e.g. a chart on an inactive tab or page being left);
+  - find the `@for` with `track` by object identity that rebuilds the list.
+- **Fix**:
+  - guard the resize (call it only when the plot element is displayed, or skip it after the component is destroyed);
+  - track by a stable key (e.g. id/index) instead of identity where the items are recreated.
+- **Prevent regressions**: a shared E2E fixture (e.g. `e2e/fixtures.ts`) collects `console.error` messages and the Angular `NG0` warnings during each test, and fails the test when there are any. All E2E specs use it.
+- Verification: `npm run e2e` passes with an empty console log for errors and NG0 warnings.
+
 #### Stage 5 E2E
 - [ ] Status
 

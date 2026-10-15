@@ -34,11 +34,6 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     // TODO: Heat maps
     // TODO: Tests
 
-    // Remember to note: selectionChanged is not a bad name. The only issue *might* be that
-    // it outputs for both profile and alignByEnd, which might lead to rerendering in components
-    // unrelated to DiffChart (but this is a web app, so I guess it's whatever)
-    // Also, remember translated text.
-
 
 
 

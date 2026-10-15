@@ -10,7 +10,7 @@ import {
     ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, ComputerStartedDto
 } from '../serialization.model';
-import { ComputerData } from './computer.model';
+import { ComputerData, RunTimePoint, StopEvent } from './computer.model';
 import { ComputerProfile } from './computerProfile';
 
 /**
@@ -156,7 +156,14 @@ export class ComputerProfileService extends Streamed {
 
     private pointCalculated(message: ComputerPointDto): void {
         const data = this.onComputerData.value;
-        data.profile.push(message.point);
+        const { nextStopIndex, ...values } = message.point;
+        const point: RunTimePoint = { ...values };
+
+        if (nextStopIndex !== undefined) {
+            point.nextStop = data.events[nextStopIndex] as StopEvent;
+        }
+
+        data.profile.push(point);
         this.onProgress.next(Math.round(data.profile.length * 100 / this.total));
     }
 

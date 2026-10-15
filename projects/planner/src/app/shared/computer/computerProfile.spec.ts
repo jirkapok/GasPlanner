@@ -235,4 +235,51 @@ describe('ComputerProfile', () => {
             expect(runTimes).toEqual([900, 990, 990, 1000]);
         });
     });
+
+    describe('Next stop', () => {
+        // safety stop at 3 m overlaps the last deco stop 990 - 1170
+        const safetyStop = EventsFactory.createSafetyStopStart(990, 3);
+
+        const calculateDeco = (ceilings: Ceiling[]) => {
+            const results = createResults(decoDive, ceilings, 0, new UnitConversion(), [safetyStop]);
+            return ComputerProfile.calculate(results, decoParameters);
+        };
+
+        it('Points to first stop before it starts', () => {
+            const data = calculateDeco(decoCeilings);
+            const stops = data.events.filter(isStop);
+            expect(data.profile[0].nextStop).toBe(stops[0] as StopEvent);
+        });
+
+        it('Points to current stop while at the stop', () => {
+            const data = calculateDeco(decoCeilings);
+            const stops = data.events.filter(isStop);
+            expect(data.profile[930].nextStop).toBe(stops[0] as StopEvent);
+        });
+
+        it('Points to following stop after stop finished', () => {
+            const data = calculateDeco(decoCeilings);
+            const stops = data.events.filter(isStop);
+            expect(data.profile[960].nextStop).toBe(stops[1] as StopEvent);
+        });
+
+        it('Points to stop, not to overlapping safety stop', () => {
+            const profile = calculateDeco(decoCeilings).profile;
+            expect(profile[980].nextStop?.type).toEqual(ComputerEventType.stop);
+            expect(profile[1000].nextStop?.type).toEqual(ComputerEventType.stop);
+        });
+
+        it('Points to safety stop when there is no deco stop', () => {
+            const noCeilings = ceilingsFrom(Array.from({ length: 1200 }, () => 0));
+            const point = calculateDeco(noCeilings).profile[500];
+            expect(point.nextStop?.type).toEqual(ComputerEventType.safetyStop);
+            expect(point.nextStop?.duration).toEqual(180);
+        });
+
+        it('No next stop after last stop finished', () => {
+            const profile = calculateDeco(decoCeilings).profile;
+            expect(profile[1170].nextStop).toBeUndefined();
+            expect(profile[1200].nextStop).toBeUndefined();
+        });
+    });
 });

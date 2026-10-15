@@ -84,6 +84,7 @@ export class ComputerProfile {
         const stops = parameters ? ComputerProfile.stopsFrom(wayPoints, profile, parameters.userSegments) : [];
         const events = [...ComputerProfile.eventsFrom(source), ...stops]
             .sort((a, b) => a.runTime - b.runTime);
+        ComputerProfile.assignNextStop(profile, events);
 
         return {
             profile: profile,
@@ -117,6 +118,37 @@ export class ComputerProfile {
         }
 
         return stops;
+    }
+
+    private static assignNextStop(profile: RunTimePoint[], events: ComputerEvent[]): void {
+        const stops = ComputerProfile.stopsToFollow(events);
+        let stopIndex = 0;
+
+        profile.forEach((point) => {
+            while (stopIndex < stops.length && ComputerProfile.stopEnd(stops[stopIndex]) <= point.runTime) {
+                stopIndex++;
+            }
+
+            point.nextStop = stops[stopIndex];
+        });
+    }
+
+    /** Stops and safety stops sorted by time, safety stop overlapping any stop is replaced by the stop */
+    private static stopsToFollow(events: ComputerEvent[]): StopEvent[] {
+        const allStops = events.filter((e): e is StopEvent =>
+            e.type === ComputerEventType.stop || e.type === ComputerEventType.safetyStop);
+        const decoStops = allStops.filter(s => s.type === ComputerEventType.stop);
+
+        return allStops.filter(s => s.type === ComputerEventType.stop ||
+            !decoStops.some(decoStop => ComputerProfile.overlaps(decoStop, s)));
+    }
+
+    private static overlaps(first: StopEvent, second: StopEvent): boolean {
+        return first.runTime < ComputerProfile.stopEnd(second) && second.runTime < ComputerProfile.stopEnd(first);
+    }
+
+    private static stopEnd(stop: StopEvent): number {
+        return stop.runTime + stop.duration;
     }
 
     /** Index of the last way point which reaches the maximum depth */

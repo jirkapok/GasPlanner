@@ -71,7 +71,7 @@ Tiered, each tier gated on the previous, later tiers restricted to `master`:
 Use the Superpowers plugin skills for feature and bug-fix work:
 
 1. `superpowers:brainstorming` — clarify the feature and get the design/spec approved before planning.
-2. `superpowers:writing-plans` — write the implementation plan into `docs/superpowers/plans/`. Give every task a `- [ ] Status` checkbox.
+2. `superpowers:writing-plans` — write the implementation plan into `.claude/plans/` (not the skill's default `docs/superpowers/plans/`); all plans live there. Give every task a `- [ ] Status` checkbox.
 3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement the plan, but override their continuous execution:
    implement ONE task per request, run its verification (tests + `npm run lint`), tick its `- [ ] Status` checkbox, then STOP for my review.
    Don't continue to the next task or run `superpowers:finishing-a-development-branch` without my explicit go-ahead.

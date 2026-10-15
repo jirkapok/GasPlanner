@@ -653,7 +653,7 @@ git commit -m "feat: #106 computer profile service for selected dive"
 
 ### Task 3: Maximum and average depth per second (Stage 2, R6/R7)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

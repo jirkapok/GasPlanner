@@ -6,6 +6,10 @@ export interface RunTimePoint {
     runTime: number;
     /** current depth in meters */
     depth: number;
+    /** current maximum depth at this moment in meters, the deepest depth reached so far */
+    maxDepth: number;
+    /** current average depth at this moment in meters, time weighted from start of the dive */
+    averageDepth: number;
     /** current ceiling in meters */
     ceiling: number;
     /** remaining no decompression time in seconds */

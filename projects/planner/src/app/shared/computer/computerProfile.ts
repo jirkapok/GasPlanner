@@ -25,6 +25,10 @@ export class ComputerProfile {
         let ceilingIndex = 0;
         let ceiling = 0;
 
+        let maxDepth = 0;
+        let depthArea = 0; // meters * seconds
+        let previousDepth = 0;
+
         for (let runTime = 0; runTime <= duration; runTime++) {
             while (wayPointIndex < wayPoints.length - 1 && wayPoints[wayPointIndex].endTime < runTime) {
                 wayPointIndex++;
@@ -35,9 +39,21 @@ export class ComputerProfile {
                 ceilingIndex++;
             }
 
+            const depth = ComputerProfile.depthAt(wayPoints[wayPointIndex], runTime);
+            maxDepth = Math.max(maxDepth, depth);
+
+            if (runTime > 0) {
+                // trapezoid of the last second, exact for linear depth change
+                depthArea += (previousDepth + depth) / 2;
+            }
+
+            previousDepth = depth;
+
             profile.push({
                 runTime: runTime,
-                depth: ComputerProfile.depthAt(wayPoints[wayPointIndex], runTime),
+                depth: depth,
+                maxDepth: maxDepth,
+                averageDepth: runTime > 0 ? depthArea / runTime : 0,
                 ceiling: ceiling,
                 ndl: 0,
                 tts: 0

@@ -79,4 +79,34 @@ describe('ComputerProfile', () => {
         // no more samples, last known ceiling is kept
         expect(profile[100].ceiling).toEqual(3.5);
     });
+
+    describe('Depth statistics', () => {
+        // 0 -> 30 m in 60 s, 60 s at 30 m, ascent 30 -> 10 m in 60 s
+        const diveWithAscent = [
+            new Segment(0, 30, air, 60),
+            new Segment(30, 30, air, 60),
+            new Segment(30, 10, air, 60)
+        ];
+
+        it('Maximum depth is current maximum depth at the moment', () => {
+            const profile = ComputerProfile.calculate(createResults(diveWithAscent)).profile;
+            expect(profile[0].maxDepth).toBeCloseTo(0, 6);
+            expect(profile[30].maxDepth).toBeCloseTo(15, 6);
+            expect(profile[150].depth).toBeCloseTo(20, 6);
+            expect(profile[150].maxDepth).toBeCloseTo(30, 6);
+        });
+
+        it('Average depth is zero at start', () => {
+            const profile = ComputerProfile.calculate(createResults(simpleDive)).profile;
+            expect(profile[0].averageDepth).toEqual(0);
+        });
+
+        it('Average depth is current time weighted average depth at the moment', () => {
+            const profile = ComputerProfile.calculate(createResults(simpleDive)).profile;
+            // descent 0 -> 10 m in 60 s: area 300 m*s / 60 s
+            expect(profile[60].averageDepth).toBeCloseTo(5, 6);
+            // + 60 s at 10 m: (300 + 600) / 120 s
+            expect(profile[120].averageDepth).toBeCloseTo(7.5, 6);
+        });
+    });
 });

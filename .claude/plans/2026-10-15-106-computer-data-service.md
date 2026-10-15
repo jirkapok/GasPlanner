@@ -2109,7 +2109,7 @@ git commit -m "feat: #106 stream computer no decompression limit"
 
 ### Task 7: Events from dive results (Stage 3, R9/R10)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

@@ -1,3 +1,10 @@
+# [0.13.0](https://github.com/jirkapok/GasPlanner/compare/v0.12.0...v0.13.0) (2026-10-15)
+
+
+### Features
+
+* [#36](https://github.com/jirkapok/GasPlanner/issues/36) identify mix in gas blender when only adding top mix ([#118](https://github.com/jirkapok/GasPlanner/issues/118)) ([af5273a](https://github.com/jirkapok/GasPlanner/commit/af5273a4d401136502a2223a9353d3c694480cbc))
+
 # [0.12.0](https://github.com/jirkapok/GasPlanner/compare/v0.11.0...v0.12.0) (2026-10-14)
 
 

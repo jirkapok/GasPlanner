@@ -48,6 +48,13 @@ Stage 4: background calculation
 - R15: A selected dive change, or the selected dive being calculated, interrupts the running calculation. The service then resets its computer data to empty and starts a new calculation.
 - R16: The service has a new observable `progress$` with the percentage of `RunTimePoint`s already calculated. It is reset to 0 whenever a new calculation starts, updated for every point the worker reports, and ends at 100 when the calculation finishes.
 
+Stage 5: performance
+
+- R17: A final performance test measures, for each of three dives, how long the complete `ComputerData` calculation takes and how much memory it consumes during the execution:
+  1. 30 m for 30 min on air;
+  2. 60 m for 200 min on air;
+  3. 80 m for 30 min with trimix 12/65, EAN50, oxygen, trimix 21/35 and trimix 35/25.
+
 ## Global Constraints
 
 - Branch: `feat/106-computer-simulator` (renamed from `computer_simulator`), rebased on the latest `origin/master`.
@@ -2867,4 +2874,216 @@ Expected: no lint errors, all specs pass, build succeeds.
 ```bash
 git add projects/planner/src/app/shared/computer projects/planner/src/app/shared/serialization.model.ts projects/planner/src/app/workers
 git commit -m "feat: #106 computer next stop"
+```
+
+---
+
+### Task 10: Computer data performance test (Stage 5, R17)
+
+- [ ] Status
+
+**Files:**
+
+- Create: `projects/planner/src/app/workers/computer.performance.spec.ts`
+- Create: `projects/planner/karma.performance.conf.js` (Chrome flags for memory measurement, long inactivity timeout)
+- Modify: `package.json` (new `test-performance` script; `test-ci` excludes the performance spec)
+
+**Interfaces:**
+
+- Consumes: `ComputerTasks.calculate` (Tasks 4, 6, 8, 9: the complete computer data procedure the worker runs); `PlanRequestFactory.create` (Task 4); `DiveSchedules`, `DiveSchedule.depths.plannedDepth / planDuration`, `TanksService.firstTank / addTank / tanks`, `TankBound.o2 / he / assignStandardGas`; `GasNames.oxygenName`.
+- Produces:
+  - `npm run test-performance`. It runs only `**/*.performance.spec.ts` in a headless Chrome started with `--enable-precise-memory-info` and `--js-flags=--expose-gc`.
+  - One console line per dive: `<dive>: <duration> ms, <points> points, peak heap +<MB> MB, retained heap +<MB> MB`.
+  - `npm run test-ci` no longer runs the performance spec. This is the same approach as `test-lib-ci`, which excludes `performanceTests.spec.ts`.
+
+**Measurement:**
+
+- **Duration:** the wall-clock time from the start of `ComputerTasks.calculate` until the `finished` message, using `performance.now()`. That is the whole procedure for the complete `ComputerData`: decompression profile, dive info, points, events, stops, next stops and NDL.
+- **Peak heap:** the highest `performance.memory.usedJSHeapSize` (Chrome only) sampled at every posted message, minus the heap just before the calculation (after a forced GC).
+  - It includes garbage that hasn't been collected yet, so it's an approximation of the memory needed during the calculation.
+  - The heap is sampled only between messages, so a short peak inside a single NDL prediction can be missed.
+- **Retained heap:** the heap after the calculation and a forced GC, minus the starting heap. It is the memory still held by the collected messages, which represent the complete computer data.
+- **No limits:** the request gave no targets, so the test only measures and reports. It asserts only that each calculation completed (`finished` was posted, and the number of points equals `total`) and that memory measurement is available. Limits can be added once the first numbers are known.
+
+**Dives**, each built through the planner model like a user would (`DiveSchedules` → `PlanRequestFactory`) with default options:
+
+1. 30 m for 30 min on air (the default tank).
+2. 60 m for 200 min on air.
+3. 80 m for 30 min:
+   - bottom gas trimix 12/65 in the first tank;
+   - added tanks with EAN50, oxygen, trimix 21/35 and trimix 35/25.
+
+- [ ] **Step 1: Add the Karma configuration and npm scripts**
+
+`projects/planner/karma.performance.conf.js`:
+
+```js
+// Karma configuration for the performance tests, see "npm run test-performance"
+const baseConfig = require('./karma.conf.js');
+
+module.exports = function (config) {
+  baseConfig(config);
+  config.set({
+    browsers: ['ChromeHeadlessPerformance'],
+    customLaunchers: {
+      ChromeHeadlessPerformance: {
+        base: 'ChromeHeadless',
+        // precise heap sizes and manual garbage collection for the memory measurement
+        flags: ['--enable-precise-memory-info', '--js-flags=--expose-gc']
+      }
+    },
+    singleRun: true,
+    autoWatch: false,
+    restartOnFileChange: false,
+    // the longest dive is calculated synchronously for minutes without reporting any progress
+    browserNoActivityTimeout: 30 * 60 * 1000
+  });
+};
+```
+
+In `package.json`:
+
+- add the script `"test-performance": "ng test --project planner --karma-config projects/planner/karma.performance.conf.js --no-watch --include=**/*.performance.spec.ts"`;
+- append ` --exclude **/*.performance.spec.ts` to the existing `test-ci` script.
+
+- [ ] **Step 2: Write the performance test**
+
+`projects/planner/src/app/workers/computer.performance.spec.ts`:
+
+```ts
+import { GasNames } from 'scuba-physics';
+import { DiveSchedules } from '../shared/dive.schedules';
+import { ReloadDispatcher } from '../shared/reloadDispatcher';
+import { UnitConversion } from '../shared/UnitConversion';
+import { PlanRequestFactory } from '../shared/planRequestFactory';
+import { TanksService } from '../shared/tanks.service';
+import { ComputerRequestDto, ComputerResultDto, ComputerStartedDto } from '../shared/serialization.model';
+import { ComputerTasks } from './computer.tasks';
+
+/** Chrome only, precise values require --enable-precise-memory-info, see karma.performance.conf.js */
+interface ChromeMemory {
+    usedJSHeapSize: number;
+}
+
+interface Measurement {
+    durationMs: number;
+    points: number;
+    peakHeapMb: number;
+    retainedHeapMb: number;
+}
+
+/** in bytes, NaN if not supported by the browser */
+const usedHeap = (): number => {
+    const memory = (performance as unknown as { memory?: ChromeMemory }).memory;
+    return memory?.usedJSHeapSize ?? Number.NaN;
+};
+
+/** Requires --js-flags=--expose-gc, see karma.performance.conf.js */
+const garbageCollector = (): (() => void) | undefined => (globalThis as unknown as { gc?: () => void }).gc;
+
+const collectGarbage = (): void => {
+    garbageCollector()?.();
+};
+
+const toMegaBytes = (bytes: number): number => Math.round(bytes / 1024 / 1024 * 100) / 100;
+
+describe('Computer data performance', () => {
+    const createRequest = (depth: number, duration: number, configureTanks?: (tanks: TanksService) => void): ComputerRequestDto => {
+        const schedules = new DiveSchedules(new UnitConversion(), new ReloadDispatcher());
+        const dive = schedules.selected;
+        configureTanks?.(dive.tanksService);
+        dive.depths.plannedDepth = depth;
+        dive.depths.planDuration = duration;
+        const request = PlanRequestFactory.create(dive, schedules.previousDiveTissues(dive.id));
+        return { ...request, calculationId: 1 };
+    };
+
+    /** Bottom gas trimix 12/65, deco gases EAN50, oxygen, trimix 21/35 and trimix 35/25 */
+    const trimixTanks = (tanks: TanksService): void => {
+        // helium first, so the oxygen isn't limited by the previous helium content
+        tanks.firstTank.he = 65;
+        tanks.firstTank.o2 = 12;
+
+        ['EAN50', GasNames.oxygenName, 'Helitrox 21/35', 'Helitrox 35/25'].forEach((gasName) => {
+            tanks.addTank();
+            const added = tanks.tanks[tanks.tanks.length - 1];
+            added.assignStandardGas(gasName);
+        });
+    };
+
+    /** Calculates complete computer data the same way as the worker and measures it */
+    const measure = (name: string, request: ComputerRequestDto): Measurement => {
+        const messages: ComputerResultDto[] = [];
+        collectGarbage();
+        const heapBefore = usedHeap();
+        let peakHeap = heapBefore;
+        const start = performance.now();
+
+        ComputerTasks.calculate(request, (message) => {
+            messages.push(message);
+            peakHeap = Math.max(peakHeap, usedHeap());
+        });
+
+        const durationMs = performance.now() - start;
+        collectGarbage();
+        // messages are still referenced, so the retained heap contains the complete computer data
+        const retainedHeap = usedHeap();
+        const started = messages[0] as ComputerStartedDto;
+        const result: Measurement = {
+            durationMs: Math.round(durationMs),
+            points: messages.filter(m => m.type === 'point').length,
+            peakHeapMb: toMegaBytes(peakHeap - heapBefore),
+            retainedHeapMb: toMegaBytes(retainedHeap - heapBefore)
+        };
+
+        console.log(`${name}: ${result.durationMs} ms, ${result.points} points, ` +
+            `peak heap +${result.peakHeapMb} MB, retained heap +${result.retainedHeapMb} MB`);
+
+        expect(messages[messages.length - 1].type).toEqual('finished');
+        expect(result.points).toEqual(started.total);
+        expect(result.points).toBeGreaterThan(0);
+        return result;
+    };
+
+    it('Memory measurement is available', () => {
+        expect(usedHeap()).not.toBeNaN();
+        expect(garbageCollector()).toBeDefined();
+    });
+
+    it('30 m for 30 min on air', () => {
+        measure('30 m / 30 min, air', createRequest(30, 30));
+    });
+
+    it('60 m for 200 min on air', () => {
+        measure('60 m / 200 min, air', createRequest(60, 200));
+    });
+
+    it('80 m for 30 min on trimix 12/65 with EAN50, oxygen, trimix 21/35 and trimix 35/25', () => {
+        measure('80 m / 30 min, trimix 12/65 + EAN50, O2, 21/35, 35/25', createRequest(80, 30, trimixTanks));
+    });
+});
+```
+
+- [ ] **Step 3: Check the test can fail**
+
+Temporarily change `expect(result.points).toBeGreaterThan(0);` to `expect(result.points).toBeLessThan(0);`.
+
+Run: `npm run test-performance`
+Expected: 3 dive specs FAIL with "Expected <points> to be less than 0." This proves that the dives were calculated and the assertions run. Then revert the change.
+
+- [ ] **Step 4: Run the performance test**
+
+Run: `npm run test-performance`
+Expected: 4 specs, 0 failures. The console shows one measurement line per dive. Copy the three lines into the task report.
+
+- [ ] **Step 5: Check CI excludes it, lint**
+
+Run: `npm run test-ci`. Expected: all specs pass, and the spec count doesn't include the 4 performance specs.
+Run: `npx eslint -c projects/planner/eslint.config.mjs projects/planner/src/app/workers/computer.performance.spec.ts`. Expected: no errors.
+
+- [ ] **Step 6: Commit**
+
+```bash
+git add projects/planner/src/app/workers/computer.performance.spec.ts projects/planner/karma.performance.conf.js package.json
+git commit -m "test: #106 computer data performance test"
 ```

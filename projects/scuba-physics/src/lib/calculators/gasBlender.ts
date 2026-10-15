@@ -51,6 +51,25 @@ export interface TopRequest {
     topMix: TankMix;
 }
 
+export interface IdentifyRequest {
+    /** Tank start situation before topping */
+    source: TankMix;
+    /** Available topping mixture */
+    topMix: Mix;
+    /** Final pressure in the tank after topping in bars */
+    finalPressure: number;
+}
+
+/**
+ * Resulting mixture in the tank after topping.
+ * Fractions in range 0-1, pressures in bars.
+ */
+export interface IdentifyResult extends TankMix {
+    n2: number;
+    /** Pressure added to the source tank by topping */
+    addTop: number;
+}
+
 /** Gas mix blending math */
 export class GasBlender {
     /** Below this threshold a volume/pressure difference is treated as real-gas solver noise and snapped to 0. */
@@ -122,6 +141,32 @@ export class GasBlender {
             o2: finalGas.fO2,
             he: finalGas.fHe,
             pressure: finalPressure
+        };
+    }
+
+    /**
+     * Identifies resulting mixture, if you top up the source tank with topping mix up to the final pressure.
+     * @throws Error if final pressure is lower than source pressure.
+     */
+    public static identify(request: IdentifyRequest): IdentifyResult {
+        GasBlender.validate(request.source, 'Source');
+        GasBlender.validate(request.topMix, 'Top');
+
+        if (request.finalPressure < request.source.pressure) {
+            throw new Error('Final pressure needs to be higher or equal to the source pressure.');
+        }
+
+        if (request.finalPressure === 0) {
+            return { o2: 0, he: 0, n2: 0, pressure: 0, addTop: 0 };
+        }
+
+        const finalGas = GasBlender.identifyFinalGas(request);
+        return {
+            o2: finalGas.fO2,
+            he: finalGas.fHe,
+            n2: GasMixtures.n2(finalGas.fO2, finalGas.fHe),
+            pressure: request.finalPressure,
+            addTop: request.finalPressure - request.source.pressure
         };
     }
 
@@ -200,6 +245,39 @@ export class GasBlender {
             addTop: GasBlender.cleanDifference(request.target.pressure - pressureAfterO2),
             removeFromSource: 0
         };
+    }
+
+    /**
+     * Finds final gas by iterating, since compressibility depends on the final gas,
+     * which depends on the amount of top mix added up to the known final pressure.
+     */
+    private static identifyFinalGas(request: IdentifyRequest): Gas {
+        const compressibility = new Compressibility();
+        const sourceGas = new Gas(request.source.o2, request.source.he);
+        const sourceVolume = compressibility.normalVolume(request.source.pressure, sourceGas);
+        const topGas = new Gas(request.topMix.o2, request.topMix.he);
+        const mixFinalGas = (finalVolume: number): Gas => {
+            const topVolume = finalVolume - sourceVolume;
+            const o2Volume = sourceGas.fO2 * sourceVolume + topGas.fO2 * topVolume;
+            const heVolume = sourceGas.fHe * sourceVolume + topGas.fHe * topVolume;
+            return new Gas(o2Volume / finalVolume, heVolume / finalVolume);
+        };
+
+        // ideal gas partial pressures as first estimate
+        const topPressure = request.finalPressure - request.source.pressure;
+        let finalGas = new Gas(
+            (sourceGas.fO2 * request.source.pressure + topGas.fO2 * topPressure) / request.finalPressure,
+            (sourceGas.fHe * request.source.pressure + topGas.fHe * topPressure) / request.finalPressure
+        );
+        let foundGas = mixFinalGas(compressibility.normalVolume(request.finalPressure, finalGas));
+
+        while (Math.abs(foundGas.fO2 - finalGas.fO2) > GasBlender.precision ||
+               Math.abs(foundGas.fHe - finalGas.fHe) > GasBlender.precision) {
+            finalGas = foundGas;
+            foundGas = mixFinalGas(compressibility.normalVolume(request.finalPressure, finalGas));
+        }
+
+        return foundGas;
     }
 
     private static mixByRemovingVolume(compressibility: Compressibility, request: MixRequest,

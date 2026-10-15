@@ -8,7 +8,7 @@ import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { GasBlenderService } from '../../shared/gas-blender.service';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { InputControls } from '../../shared/inputcontrols';
-import { BlenderViewState, TankMix } from '../../shared/views.model';
+import { BlenderMode, BlenderViewState, TankMix } from '../../shared/views.model';
 import { KnownViews } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { BlendPricingService } from '../../shared/blend-pricing.service';
@@ -88,6 +88,18 @@ export class GasBlenderComponent implements OnInit {
         return this.inputs.controlInValid(control);
     }
 
+    public get finalPressureBelowSource(): boolean {
+        return this.calc.finalPressureBelowSource;
+    }
+
+    public get resultO2(): number {
+        return Precision.round(this.calc.resultO2, 1);
+    }
+
+    public get resultHe(): number {
+        return Precision.round(this.calc.resultHe, 1);
+    }
+
     public get o2UnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.o2UnitPrice;
         return this.inputs.controlInValid(control);
@@ -147,6 +159,14 @@ export class GasBlenderComponent implements OnInit {
         this.saveState();
     }
 
+    public toBlend(): void {
+        this.applyMode(BlenderMode.blend);
+    }
+
+    public toIdentify(): void {
+        this.applyMode(BlenderMode.identify);
+    }
+
     public togglePricing(): void {
         this.showPricing = !this.showPricing;
     }
@@ -179,7 +199,14 @@ export class GasBlenderComponent implements OnInit {
         this.calculate();
     }
 
+    private applyMode(mode: BlenderMode): void {
+        this.calc.mode = mode;
+        this.calculate();
+        this.saveState();
+    }
+
     private applyState(state: BlenderViewState) {
+        this.calc.mode = state.mode ?? BlenderMode.blend; // added with identify mix, does not have to be present
         this.loadTankState(this.calc.sourceTank.tank, state.source);
         this.loadTankState(this.calc.targetTank.tank, state.target);
         this.calc.topMix.o2 = state.topMix.o2;
@@ -193,8 +220,9 @@ export class GasBlenderComponent implements OnInit {
     }
 
     private saveState(): void {
-        const viewState = {
+        const viewState: BlenderViewState = {
             id: KnownViews.blender,
+            mode: this.calc.mode,
             source: this.toTankState(this.calc.sourceTank.tank),
             target: this.toTankState(this.calc.targetTank.tank),
             topMix: {
@@ -214,6 +242,7 @@ export class GasBlenderComponent implements OnInit {
     private createDefaultState(): BlenderViewState {
         return {
             id: KnownViews.blender,
+            mode: BlenderMode.blend,
             source: {
                 o2: GasMixtures.o2InAir * 100,
                 he: 0,

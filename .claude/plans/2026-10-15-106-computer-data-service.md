@@ -1690,7 +1690,7 @@ git commit -m "feat: #106 calculate computer data in background worker"
 
 ### Task 5: Per-second NDL prediction in `scuba-physics` (Stage 2, R8)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

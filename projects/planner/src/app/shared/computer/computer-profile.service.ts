@@ -3,25 +3,47 @@ import { BehaviorSubject, Observable, takeUntil } from 'rxjs';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
+import { PlanRequestFactory } from '../planRequestFactory';
+import { WorkersFactoryCommon } from '../serial.workers.factory';
+import { IRestartableTask } from '../../workers/background-task';
+import {
+    ComputerPointDto, ComputerRequestDto,
+    ComputerResultDto, ComputerStartedDto
+} from '../serialization.model';
 import { ComputerData } from './computer.model';
 import { ComputerProfile } from './computerProfile';
 
 /**
  * Source data for the dive computer simulator.
- * Keeps its own dive selection (first dive by default), independent of the planner selected dive,
- * and keeps computer data of the selected dive up to date.
+ * Keeps its own dive selection (first dive by default), independent of the planner selected dive.
+ * The computer data of the selected dive are calculated in background and streamed point by point.
  */
 @Injectable()
 export class ComputerProfileService extends Streamed {
     public readonly computerData$: Observable<ComputerData>;
+    /** Percents (0 - 100) of already calculated points of the current calculation */
+    public readonly progress$: Observable<number>;
     private _selectedDive: DiveSchedule;
-    private readonly onComputerData: BehaviorSubject<ComputerData>;
+    private readonly onComputerData = new BehaviorSubject<ComputerData>(ComputerProfile.empty());
+    private readonly onProgress = new BehaviorSubject<number>(0);
+    private readonly task: IRestartableTask<ComputerRequestDto, ComputerResultDto>;
+    private calculationId = 0;
+    private running = false;
+    private total = 0;
 
-    constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher) {
+    constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher, workers: WorkersFactoryCommon) {
         super();
         this._selectedDive = this.schedules.dives[0];
-        this.onComputerData = new BehaviorSubject<ComputerData>(this.calculate());
         this.computerData$ = this.onComputerData.asObservable();
+        this.progress$ = this.onProgress.asObservable();
+        this.task = workers.createComputerWorker();
+
+        // subscribe before the first calculation, the serial worker reports synchronously
+        this.task.calculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((message) => this.processMessage(message));
+
+        this.task.failed$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.calculationFailed());
 
         this.dispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId) => this.diveCalculated(diveId));
@@ -29,9 +51,11 @@ export class ComputerProfileService extends Streamed {
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.resetIfRemoved());
+
+        this.refresh();
     }
 
-    /** The dive selected within this service, the current computer data was calculated from */
+    /** The dive selected within this service, the current computer data are calculated from */
     public get selectedDive(): DiveSchedule {
         return this._selectedDive;
     }
@@ -40,6 +64,7 @@ export class ComputerProfileService extends Streamed {
         return this._selectedDive.index;
     }
 
+    /** Contains also already received points of running calculation */
     public get computerData(): ComputerData {
         return this.onComputerData.value;
     }
@@ -82,17 +107,68 @@ export class ComputerProfileService extends Streamed {
         this.refresh();
     }
 
+    /** Interrupts running calculation, resets the data and starts new calculation */
     private refresh(): void {
-        this.onComputerData.next(this.calculate());
-    }
+        if (this.running) {
+            this.task.cancel();
+        }
 
-    private calculate(): ComputerData {
+        this.calculationId++;
+        this.running = false;
+        this.total = 0;
+        this.onComputerData.next(ComputerProfile.empty());
+        this.onProgress.next(0);
         const results = this._selectedDive.diveResult;
 
         if (results.failed || !results.profileCalculated || !results.diveInfoCalculated) {
-            return ComputerProfile.empty();
+            return;
         }
 
-        return ComputerProfile.calculate(results);
+        const dive = this._selectedDive;
+        const request = PlanRequestFactory.create(dive, this.schedules.previousDiveTissues(dive.id));
+        this.running = true;
+        this.task.calculate({ ...request, calculationId: this.calculationId });
+    }
+
+    private processMessage(message: ComputerResultDto): void {
+        // message of interrupted calculation
+        if (message.calculationId !== this.calculationId) {
+            return;
+        }
+
+        switch (message.type) {
+            case 'started':
+                this.started(message);
+                break;
+            case 'point':
+                this.pointCalculated(message);
+                break;
+            case 'finished':
+                this.finished();
+                break;
+        }
+    }
+
+    private started(message: ComputerStartedDto): void {
+        this.total = message.total;
+        this.onComputerData.next({ profile: [], events: message.events });
+    }
+
+    private pointCalculated(message: ComputerPointDto): void {
+        const data = this.onComputerData.value;
+        data.profile.push(message.point);
+        this.onProgress.next(Math.round(data.profile.length * 100 / this.total));
+    }
+
+    private finished(): void {
+        this.running = false;
+        this.onComputerData.next({ ...this.onComputerData.value });
+        this.onProgress.next(100);
+    }
+
+    private calculationFailed(): void {
+        this.running = false;
+        this.onComputerData.next(ComputerProfile.empty());
+        this.onProgress.next(100);
     }
 }

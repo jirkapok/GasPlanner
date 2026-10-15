@@ -1,6 +1,14 @@
-import { DiveResults } from '../diveresults';
+import { Ceiling } from 'scuba-physics';
+import { BoundEvent } from '../models';
 import { WayPoint } from '../wayPoint';
 import { ComputerData, RunTimePoint } from './computer.model';
+
+/** Calculated dive data needed by the computer, the dive results are one of them */
+export interface ComputerSource {
+    readonly wayPoints: WayPoint[];
+    readonly ceilings: Ceiling[];
+    readonly events: BoundEvent[];
+}
 
 /** Samples calculated dive results for every second of the dive. */
 export class ComputerProfile {
@@ -11,14 +19,14 @@ export class ComputerProfile {
         };
     }
 
-    public static calculate(dive: DiveResults): ComputerData {
-        const wayPoints = dive.wayPoints;
+    public static calculate(source: ComputerSource): ComputerData {
+        const wayPoints = source.wayPoints;
 
         if (wayPoints.length === 0) {
             return ComputerProfile.empty();
         }
 
-        const ceilings = dive.ceilings;
+        const ceilings = source.ceilings;
         const duration = Math.floor(wayPoints[wayPoints.length - 1].endTime);
         const profile: RunTimePoint[] = [];
         let wayPointIndex = 0;

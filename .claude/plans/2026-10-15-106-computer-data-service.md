@@ -778,7 +778,7 @@ git commit -m "feat: #106 computer profile maximum and average depth"
 
 ### Task 4: Calculate computer data in a worker with streaming and progress (Stage 4, R13–R16)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

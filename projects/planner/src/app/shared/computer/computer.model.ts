@@ -1,25 +1,25 @@
 import { EventType } from 'scuba-physics';
-import { DiveResults } from './diveresults';
 
+/** One sample of the dive computer readings */
 export interface RunTimePoint {
-    /** in seconds**/
+    /** in seconds since start of the dive */
     runTime: number;
-    /** in meters **/
+    /** current depth in meters */
     depth: number;
-    /** in meters **/
+    /** current ceiling in meters */
     ceiling: number;
-    /** in seconds **/
+    /** remaining no decompression time in seconds */
     ndl: number;
     /**
      * Not the total runtime to end of the dive, but current time to surface at this point in the dive profile.
      * This will require calculate the profile for every second of the dive - performance hit maybe not feasible.
      * in seconds.
-    **/
+     **/
     tts: number;
 }
 
 export interface Warning {
-    /** in seconds**/
+    /** in seconds */
     runTime: number;
     eventType: EventType;
     message: string;
@@ -32,24 +32,4 @@ export interface Warning {
 export interface ComputerData {
     profile: RunTimePoint[];
     events: Warning[];
-}
-
-
-export class ComputerProfile {
-    public static calculate(dive: DiveResults): ComputerData {
-        const profile: RunTimePoint[] = dive.ceilings.map(c => {
-            return {
-                runTime: c.time,
-                depth: c.depth,
-                ceiling: c.depth,
-                ndl: 0, // TODO NDL and TTS
-                tts: 0
-            };
-        });
-
-        return {
-            profile: profile,
-            events: []
-        };
-    }
 }

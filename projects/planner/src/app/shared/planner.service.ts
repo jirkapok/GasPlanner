@@ -21,8 +21,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
-import { BoundEvent } from "./models";
-import { ComputerProfile } from "./serialization.model.computer";
+import { BoundEvent } from './models';
 
 
 @Injectable()
@@ -187,9 +186,6 @@ export class PlannerService extends Streamed {
             diveInfoResult.dailyCns,
             diveInfoResult.cnsExposures
         );
-
-        const computerProfile = ComputerProfile.calculate(diveResult);
-        const serializedProfile = JSON.stringify(computerProfile);
         this.fireFinishedEvents(dive);
     }
 

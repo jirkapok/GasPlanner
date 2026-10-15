@@ -1,4 +1,6 @@
 import {
+    ComputerRequestDto,
+    ComputerResultDto,
     ConsumptionRequestDto,
     ConsumptionResultDto,
     DiveInfoRequestDto,
@@ -6,9 +8,10 @@ import {
     ProfileRequestDto,
     ProfileResultDto
 } from './serialization.model';
-import { IBackgroundTask } from '../workers/background-task';
+import { IBackgroundTask, IRestartableTask } from '../workers/background-task';
 import { Subject } from 'rxjs';
 import { PlanningTasks } from '../workers/planning.tasks';
+import { ComputerTasks } from '../workers/computer.tasks';
 
 /** Used to avoid parallelism in tests */
 export class WorkersFactoryCommon {
@@ -45,6 +48,25 @@ export class WorkersFactoryCommon {
                 this.tryAction((r) => PlanningTasks.calculateConsumption(r), request, subject, failedSubject);
             },
             failed$: failedSubject,
+        };
+    }
+
+    public createComputerWorker(): IRestartableTask<ComputerRequestDto, ComputerResultDto> {
+        const subject = new Subject<ComputerResultDto>();
+        const failedSubject = new Subject<void>();
+        return {
+            calculated$: subject,
+            calculate: (request: ComputerRequestDto): void => {
+                try {
+                    ComputerTasks.calculate(request, (message) => subject.next(message));
+                } catch {
+                    failedSubject.next();
+                }
+            },
+            failed$: failedSubject,
+            cancel: (): void => {
+                // synchronous calculation is always finished, nothing to interrupt
+            }
         };
     }
 

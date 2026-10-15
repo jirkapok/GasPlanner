@@ -7,10 +7,11 @@ import {
 } from 'scuba-physics';
 import {
     ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto,
-    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto, ITankBound,
+    ProfileRequestDto, ProfileResultDto, DiveInfoResultDto,
     DiveInfoRequestDto, CalculatedProfileDto, PlanRequestDto
 } from './serialization.model';
 import { DtoSerialization } from './dtoSerialization';
+import { PlanRequestFactory } from './planRequestFactory';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
@@ -131,16 +132,7 @@ export class PlannerService extends Streamed {
 
     private createPlanRequest(dive: DiveSchedule): PlanRequestDto {
         const previousTissues = this.schedules.previousDiveTissues(dive.id);
-        const serializableTanks = dive.tanksService.tanks as ITankBound[];
-        return {
-            diveId: dive.id,
-            tanks: DtoSerialization.fromTanks(serializableTanks),
-            plan: DtoSerialization.fromSegments(dive.depths.segments),
-            options: DtoSerialization.fromOptions(dive.optionsService.getOptions()),
-            diver: DtoSerialization.fromDiver(dive.optionsService.getDiver()),
-            previousTissues: DtoSerialization.fromTissues(previousTissues),
-            surfaceInterval: dive.surfaceInterval
-        };
+        return PlanRequestFactory.create(dive, previousTissues);
     }
 
     private wayPointsFromResult(calculatedProfile: CalculatedProfile): WayPoint[] {

@@ -4,6 +4,7 @@ import {
     TissueOverPressures
 } from 'scuba-physics';
 import { ViewState } from './views.model';
+import { ComputerData, RunTimePoint } from './computer/computer.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
@@ -270,3 +271,30 @@ export interface QuizSessionDto {
     totalScore: number;
     trophyGained: boolean;
 }
+
+export interface ComputerRequestDto extends PlanRequestDto {
+    /** Identifies the calculation, messages of interrupted calculations are ignored */
+    calculationId: number;
+}
+
+export interface ComputerStartedDto {
+    calculationId: number;
+    type: 'started';
+    /** Count of points, which will follow */
+    total: number;
+    events: ComputerData['events'];
+}
+
+export interface ComputerPointDto {
+    calculationId: number;
+    type: 'point';
+    index: number;
+    point: RunTimePoint;
+}
+
+export interface ComputerFinishedDto {
+    calculationId: number;
+    type: 'finished';
+}
+
+export type ComputerResultDto = ComputerStartedDto | ComputerPointDto | ComputerFinishedDto;

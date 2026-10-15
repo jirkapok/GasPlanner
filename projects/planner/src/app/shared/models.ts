@@ -313,6 +313,21 @@ export class BoundEvent {
         return this.units.fromMeters(this.event.depth);
     }
 
+    public get type(): EventType {
+        return this.event.type;
+    }
+
+    /** in meters */
+    public get depthMeters(): number {
+        return this.event.depth;
+    }
+
+    /** Name of the gas associated with the event, empty if the event has no gas */
+    public get gasName(): string {
+        const gas = this.event.gas;
+        return gas ? GasNames.nameFor(gas.fO2, gas.fHe) : '';
+    }
+
     public get showInProfileChart(): boolean {
         switch (this.event.type) {
             case EventType.gasSwitch:
@@ -355,15 +370,8 @@ export class BoundEvent {
 
     public get chartEventText(): string {
         switch (this.event.type) {
-            case EventType.gasSwitch: {
-                const gas = this.event.gas;
-                if (gas) {
-                    const gasName = GasNames.nameFor(gas.fO2, gas.fHe);
-                    return gasName;
-                }
-
-                return '';
-            }
+            case EventType.gasSwitch:
+                return this.gasName;
             case EventType.noDecoEnd:
                 return 'events.deco';
             case EventType.safetyStop:

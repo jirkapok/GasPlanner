@@ -1,7 +1,10 @@
-import { Ceiling } from 'scuba-physics';
+import { Ceiling, EventType, Time } from 'scuba-physics';
 import { BoundEvent } from '../models';
 import { WayPoint } from '../wayPoint';
-import { ComputerData, RunTimePoint } from './computer.model';
+import {
+    ComputerData, ComputerEvent, ComputerEventType,
+    GasSwitchEvent, RunTimePoint, StopEvent
+} from './computer.model';
 
 /** Calculated dive data needed by the computer, the dive results are one of them */
 export interface ComputerSource {
@@ -70,8 +73,50 @@ export class ComputerProfile {
 
         return {
             profile: profile,
-            events: []
+            events: ComputerProfile.eventsFrom(source)
         };
+    }
+
+    private static eventsFrom(source: ComputerSource): ComputerEvent[] {
+        const events: ComputerEvent[] = [];
+
+        source.events.forEach((event) => {
+            const converted = ComputerProfile.toComputerEvent(event);
+
+            if (converted) {
+                events.push(converted);
+            }
+        });
+
+        return events;
+    }
+
+    private static toComputerEvent(event: BoundEvent): ComputerEvent | undefined {
+        const runTime = event.timeStamp;
+        const depth = event.depthMeters;
+
+        switch (event.type) {
+            case EventType.highPpO2:
+                return { type: ComputerEventType.highPpO2, runTime: runTime, depth: depth };
+            case EventType.lowPpO2:
+                return { type: ComputerEventType.lowPpO2, runTime: runTime, depth: depth };
+            case EventType.brokenCeiling:
+                return { type: ComputerEventType.brokenCeiling, runTime: runTime, depth: depth };
+            case EventType.gasSwitch: {
+                const gasSwitch: GasSwitchEvent = {
+                    type: ComputerEventType.gasSwitch, runTime: runTime, depth: depth, gasName: event.gasName
+                };
+                return gasSwitch;
+            }
+            case EventType.safetyStop: {
+                const safetyStop: StopEvent = {
+                    type: ComputerEventType.safetyStop, runTime: runTime, depth: depth, duration: Time.safetyStopDuration
+                };
+                return safetyStop;
+            }
+            default:
+                return undefined;
+        }
     }
 
     /** Linear interpolation of the depth in meters within the way point */

@@ -1,7 +1,12 @@
-import { Ceiling, HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import {
+    Ceiling, Event, EventsFactory, HighestDensity,
+    ProfileTissues, Segment, StandardGases
+} from 'scuba-physics';
 import { DiveResults } from '../diveresults';
+import { BoundEvent } from '../models';
 import { UnitConversion } from '../UnitConversion';
 import { WayPoint } from '../wayPoint';
+import { ComputerEvent, ComputerEventType } from './computer.model';
 import { ComputerProfile } from './computerProfile';
 
 describe('ComputerProfile', () => {
@@ -11,7 +16,7 @@ describe('ComputerProfile', () => {
     const ceilingsFrom = (depths: number[]): Ceiling[] => depths.map((depth, index) => new Ceiling(index + 1, depth));
 
     const createResults = (segments: Segment[], ceilings: Ceiling[] = [], noDecoTime = 0,
-        units = new UnitConversion()): DiveResults => {
+        units = new UnitConversion(), events: Event[] = []): DiveResults => {
         const results = new DiveResults();
         let offset = 0;
         const wayPoints = segments.map((segment) => {
@@ -19,8 +24,9 @@ describe('ComputerProfile', () => {
             offset += segment.duration;
             return wayPoint;
         });
+        const boundEvents = events.map(e => new BoundEvent(units, e));
         results.updateProfile(wayPoints, tissues);
-        results.updateDiveInfo(noDecoTime, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), ceilings, [], []);
+        results.updateDiveInfo(noDecoTime, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), ceilings, [], boundEvents);
         return results;
     };
 
@@ -107,6 +113,53 @@ describe('ComputerProfile', () => {
             expect(profile[60].averageDepth).toBeCloseTo(5, 6);
             // + 60 s at 10 m: (300 + 600) / 120 s
             expect(profile[120].averageDepth).toBeCloseTo(7.5, 6);
+        });
+    });
+
+    describe('Dive results events', () => {
+        const eventsOf = (events: Event[], units = new UnitConversion()) =>
+            ComputerProfile.calculate(createResults(simpleDive, [], 0, units, events)).events;
+
+        it('Copies high ppO2, low ppO2 and broken ceiling', () => {
+            const events = eventsOf([
+                EventsFactory.createLowPpO2(5, 1),
+                EventsFactory.createHighPpO2(60, 10),
+                EventsFactory.createBrokenCeiling(100, 10)
+            ]);
+            expect(events).toEqual([
+                { type: ComputerEventType.lowPpO2, runTime: 5, depth: 1 },
+                { type: ComputerEventType.highPpO2, runTime: 60, depth: 10 },
+                { type: ComputerEventType.brokenCeiling, runTime: 100, depth: 10 }
+            ]);
+        });
+
+        it('Copies gas switch with gas name', () => {
+            const events = eventsOf([EventsFactory.createGasSwitch(70, 10, StandardGases.ean50)]);
+            expect(events).toEqual([
+                { type: ComputerEventType.gasSwitch, runTime: 70, depth: 10, gasName: 'EAN50' } as ComputerEvent
+            ]);
+        });
+
+        it('Converts safety stop to stop with 3 minutes duration', () => {
+            const events = eventsOf([EventsFactory.createSafetyStopStart(80, 3)]);
+            expect(events).toEqual([
+                { type: ComputerEventType.safetyStop, runTime: 80, depth: 3, duration: 180 } as ComputerEvent
+            ]);
+        });
+
+        it('Ignores other events', () => {
+            const events = eventsOf([
+                EventsFactory.createNoDecoEnd(50, 10),
+                EventsFactory.createHighAscentSpeed(60, 10)
+            ]);
+            expect(events).toEqual([]);
+        });
+
+        it('Event depth in meters with imperial units', () => {
+            const units = new UnitConversion();
+            units.imperialUnits = true;
+            const events = eventsOf([EventsFactory.createHighPpO2(60, 10)], units);
+            expect(events[0].depth).toEqual(10);
         });
     });
 });

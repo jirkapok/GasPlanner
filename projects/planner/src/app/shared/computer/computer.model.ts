@@ -1,5 +1,3 @@
-import { EventType } from 'scuba-physics';
-
 /** One sample of the dive computer readings */
 export interface RunTimePoint {
     /** in seconds since start of the dive */
@@ -26,11 +24,35 @@ export interface RunTimePoint {
     tts: number;
 }
 
-export interface Warning {
-    /** in seconds */
+/** Events shown by the dive computer, the stops exist only in the computer data */
+export enum ComputerEventType {
+    highPpO2 = 0,
+    lowPpO2 = 1,
+    brokenCeiling = 2,
+    gasSwitch = 3,
+    /** decompression stop */
+    stop = 4,
+    safetyStop = 5
+}
+
+export interface ComputerEvent {
+    type: ComputerEventType;
+    /** in seconds since start of the dive */
     runTime: number;
-    eventType: EventType;
-    message: string;
+    /** in meters */
+    depth: number;
+}
+
+export interface GasSwitchEvent extends ComputerEvent {
+    type: ComputerEventType.gasSwitch;
+    /** name of the gas switched to, e.g. EAN50 */
+    gasName: string;
+}
+
+export interface StopEvent extends ComputerEvent {
+    type: ComputerEventType.stop | ComputerEventType.safetyStop;
+    /** in seconds */
+    duration: number;
 }
 
 /**
@@ -39,5 +61,5 @@ export interface Warning {
  */
 export interface ComputerData {
     profile: RunTimePoint[];
-    events: Warning[];
+    events: ComputerEvent[];
 }

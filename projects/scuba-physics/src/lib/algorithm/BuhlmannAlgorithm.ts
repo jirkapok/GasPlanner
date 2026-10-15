@@ -29,6 +29,9 @@ type CreateAlgorithmContext = (
 ) => AlgorithmContext;
 
 export class BuhlmannAlgorithm {
+    /** Prediction of no decompression limit is not calculated beyond this limit in seconds */
+    private static readonly maxPredictedNdl = Time.oneMinute * 1000;
+
     /**
      * Calculates no decompression limit in minutes.
      * Returns positive number or Infinity, in case there is no more tissues loading
@@ -40,6 +43,56 @@ export class BuhlmannAlgorithm {
         const rested = this.applySurfaceInterval(surfaceInterval);
         const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, breathing, rested.finalTissues);
         return this.swimNoDecoLimit(segments, gases, breathing, context);
+    }
+
+    /**
+     * Calculates no decompression limit for every second of the dive, as a dive computer shows it.
+     * New limit is predicted when depth or gas changes, ceiling was cleared or before any ceiling,
+     * expecting the diver stays at current depth breathing current gas. Otherwise it counts down.
+     * This method is slow.
+     * @param algorithmParams Not null plan definition, the same as for the decompression method.
+     * @returns Seconds remaining till the ceiling isn't at surface for every second of the calculated profile
+     * (index is runtime in seconds). 0 while the ceiling isn't at surface. Infinity at surface or for more than 1000 minutes.
+     * Empty, if the profile can't be calculated.
+     */
+    public noDecoLimits(algorithmParams: AlgorithmParams): number[] {
+        return Array.from(this.noDecoLimitsSequence(algorithmParams));
+    }
+
+    /**
+     * The same as noDecoLimits, but yields the limit of every second as soon as it is calculated.
+     * Allows to stream the results of this slow calculation.
+     */
+    public *noDecoLimitsSequence(algorithmParams: AlgorithmParams): Generator<number> {
+        const profile = this.decompression(algorithmParams);
+
+        if (profile.errors.length > 0) {
+            return;
+        }
+
+        const { gases, options, surfaceInterval, breathing } = algorithmParams;
+        const depthConverter = new DepthConverterFactory(options).create();
+        const rested = this.applySurfaceInterval(surfaceInterval);
+        const context = AlgorithmContext.createWithoutStatistics(gases, Segments.fromCollection(profile.segments),
+            options, depthConverter, breathing, rested.finalTissues);
+        let previous: number | undefined;
+
+        for (const segment of profile.segments) {
+            let depth = segment.startDepth;
+
+            for (let elapsed = 0; elapsed < segment.duration; elapsed += Time.oneSecond) {
+                const sameLevel = elapsed > 0 && segment.speed === 0;
+                previous = this.noDecoLimitAt(context, depth, segment.gas, sameLevel ? previous : undefined);
+                yield previous;
+                const endDepth = Segment.depthAt(depth, segment.speed, Time.oneSecond);
+                this.swimPart(context, new Segment(depth, endDepth, segment.gas, Time.oneSecond));
+                depth = endDepth;
+            }
+        }
+
+        // the final moment at end of the profile, usually at surface
+        const last = profile.segments[profile.segments.length - 1];
+        yield this.noDecoLimitAt(context, last.endDepth, last.gas, last.speed === 0 ? previous : undefined);
     }
 
     /**
@@ -362,6 +415,62 @@ export class BuhlmannAlgorithm {
 
         context = context.withoutStatistics();
         return this.predictNoDecoLimit(segments, context);
+    }
+
+    /**
+     * @param previous no decompression limit of previous second at the same level, undefined if depth or gas changed
+     */
+    private noDecoLimitAt(context: AlgorithmContext, depth: number, gas: Gas, previous?: number): number {
+        if (context.ceiling() > 0) {
+            return 0;
+        }
+
+        // zero means the ceiling was just cleared, so new prediction is needed
+        if (previous !== undefined && previous > 0) {
+            return previous - 1;
+        }
+
+        return this.predictNoDecoLimitAt(context, depth, gas);
+    }
+
+    /** Seconds till the ceiling isn't at surface, when staying at the depth. Context is restored after the prediction. */
+    private predictNoDecoLimitAt(context: AlgorithmContext, depth: number, gas: Gas): number {
+        if (depth <= 0) {
+            return Number.POSITIVE_INFINITY;
+        }
+
+        const start = context.createMemento();
+        const startTime = context.runTime;
+        const minuteHover = new Segment(depth, depth, gas, Time.oneMinute);
+        const minuteLoad = this.toLoadSegment(context.depthConverter, minuteHover);
+        const inspired = context.inspiredGas(minuteHover);
+        let beforeMinute = start;
+        let change = 1;
+
+        // fast search by minutes
+        while (context.ceiling() <= 0 && change > 0 && context.runTime - startTime < BuhlmannAlgorithm.maxPredictedNdl) {
+            beforeMinute = context.createMemento();
+            change = context.loadTissues(minuteLoad, inspired);
+            context.runTime += Time.oneMinute;
+        }
+
+        let result = Number.POSITIVE_INFINITY;
+
+        if (context.ceiling() > 0) {
+            // exact second within the last minute
+            context.restore(beforeMinute);
+            const secondLoad = this.toLoadSegment(context.depthConverter, new Segment(depth, depth, gas, Time.oneSecond));
+
+            while (context.ceiling() <= 0) {
+                context.loadTissues(secondLoad, inspired);
+                context.runTime += Time.oneSecond;
+            }
+
+            result = context.runTime - startTime;
+        }
+
+        context.restore(start);
+        return result;
     }
 
     private predictNoDecoLimit(segments: Segments, context: AlgorithmContext): number {

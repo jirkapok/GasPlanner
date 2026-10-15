@@ -1,7 +1,7 @@
 import { DtoSerialization } from '../shared/dtoSerialization';
 import { BoundEvent } from '../shared/models';
 import {
-    CalculatedProfileDto, ComputerRequestDto,
+    CalculatedProfileDto, ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, EventOptionsDto
 } from '../shared/serialization.model';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -29,11 +29,35 @@ export class ComputerTasks {
         const data = ComputerTasks.calculateData(task, profile);
         post({ calculationId: calculationId, type: 'started', total: data.profile.length, events: data.events });
 
-        data.profile.forEach((point, index) => {
-            post({ calculationId: calculationId, type: 'point', index: index, point: point });
-        });
+        let index = 0;
+        let lastLimit = 0;
+
+        // NDL is the slow part, so every point is posted as soon as its limit is calculated
+        for (const limit of PlanningTasks.noDecoLimitsSequence(task)) {
+            if (index >= data.profile.length) {
+                break;
+            }
+
+            lastLimit = limit;
+            post(ComputerTasks.toPointMessage(calculationId, data, index, limit));
+            index++;
+        }
+
+        // limits may be shorter in case of fractional segment durations
+        for (; index < data.profile.length; index++) {
+            post(ComputerTasks.toPointMessage(calculationId, data, index, lastLimit));
+        }
 
         post({ calculationId: calculationId, type: 'finished' });
+    }
+
+    private static toPointMessage(calculationId: number, data: ComputerData, index: number, ndl: number): ComputerPointDto {
+        return {
+            calculationId: calculationId,
+            type: 'point',
+            index: index,
+            point: { ...data.profile[index], ndl: ndl }
+        };
     }
 
     private static calculateData(task: ComputerRequestDto, profile: CalculatedProfileDto): ComputerData {

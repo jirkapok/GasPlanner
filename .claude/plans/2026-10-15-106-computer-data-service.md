@@ -1976,7 +1976,7 @@ git commit -m "feat: #106 no decompression limit for every second of the dive"
 
 ### Task 6: Stream NDL from the worker (Stage 2, R8)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

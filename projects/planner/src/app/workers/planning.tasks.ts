@@ -28,6 +28,18 @@ export class PlanningTasks {
         };
     }
 
+    /** No decompression limit in seconds for every second of the calculated profile */
+    public static noDecoLimits(task: PlanRequestDto): number[] {
+        return Array.from(PlanningTasks.noDecoLimitsSequence(task));
+    }
+
+    /** The same as noDecoLimits, but yields every limit as soon as it is calculated */
+    public static noDecoLimitsSequence(task: PlanRequestDto): Iterable<number> {
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const parameters = this.profileParametersFromTask(task, tanks, task.plan);
+        return new BuhlmannAlgorithm().noDecoLimitsSequence(parameters);
+    }
+
     /** 2.A calculate dive results */
     public static diveInfo(task: DiveInfoRequestDto): DiveInfoResultDto {
         const tanks = DtoSerialization.toTanks(task.tanks);

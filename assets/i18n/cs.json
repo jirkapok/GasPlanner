@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "Nelze vypočítat požadovanou směs, protože doplňovací směs obsahuje více kyslíku nebo helia než cílová směs.",
     "unitPricesLabel": "Jednotkové ceny", "o2UnitPriceLabel": "Jednotková cena O2:", "heUnitPriceLabel": "Jednotková cena He:",
     "topMixUnitPriceLabel": "Jednotková cena doplňovací směsi:", "mixPriceLabel": "Cena směsi", "o2PriceLabel": "Cena O2",
-    "hePriceLabel": "Cena He", "topMixPriceLabel": "Cena doplňovací směsi", "totalPriceLabel": "Celková cena"
+    "hePriceLabel": "Cena He", "topMixPriceLabel": "Cena doplňovací směsi", "totalPriceLabel": "Celková cena",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Plynová směs", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Maximální narkotická hloubka",

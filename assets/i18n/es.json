@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "No es posible calcular la mezcla necesaria, porque la mezcla de relleno contiene más oxígeno o helio que la mezcla objetivo.",
     "unitPricesLabel": "Precios unitarios", "o2UnitPriceLabel": "Precio unitario O2:", "heUnitPriceLabel": "Precio unitario He:",
     "topMixUnitPriceLabel": "Precio unitario mezcla de relleno:", "mixPriceLabel": "Precio de la mezcla", "o2PriceLabel": "Precio O2",
-    "hePriceLabel": "Precio He", "topMixPriceLabel": "Precio mezcla de relleno", "totalPriceLabel": "Precio total"
+    "hePriceLabel": "Precio He", "topMixPriceLabel": "Precio mezcla de relleno", "totalPriceLabel": "Precio total",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Mezcla de gas", "nitroxLabel": "Nitrox", "heLabel": "He [%]:", "maxNarcoticDepthLabel": "Profundidad narcótica máxima",

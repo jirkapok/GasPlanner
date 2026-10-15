@@ -77,7 +77,10 @@
     "unableToCalculateMessage": "Impossible de calculer le mélange requis, car le mélange de complément contient plus d'oxygène ou d'hélium que le mélange cible.",
     "unitPricesLabel": "Prix unitaires", "o2UnitPriceLabel": "Prix unitaire O2 :", "heUnitPriceLabel": "Prix unitaire He :",
     "topMixUnitPriceLabel": "Prix unitaire mélange de complément :", "mixPriceLabel": "Prix du mélange", "o2PriceLabel": "Prix O2",
-    "hePriceLabel": "Prix He", "topMixPriceLabel": "Prix mélange de complément", "totalPriceLabel": "Prix total"
+    "hePriceLabel": "Prix He", "topMixPriceLabel": "Prix mélange de complément", "totalPriceLabel": "Prix total",
+    "modeLabel": "Calculator mode", "blendMode": "Blend", "identifyMode": "Identify mix", "resultingMixLabel": "Resulting mix",
+    "finalPressureLabel": "Final pressure", "finalPressureBelowSourceMessage": "Final pressure needs to be higher or equal to the source pressure.",
+    "resultO2Label": "O2 [%]", "resultHeLabel": "He [%]", "resultN2Label": "N2 [%]", "addedPressureLabel": "Pressure added"
   },
   "gasProps": {
     "cardTitle": "Mélange gazeux", "nitroxLabel": "Nitrox", "heLabel": "He [%] :", "maxNarcoticDepthLabel": "Profondeur narcotique maximale",

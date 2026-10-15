@@ -73,7 +73,7 @@ Stage 4: background calculation
 
 ### Task 1: Data model + per-second `ComputerProfile` calculator (Stage 1, R1/R4/R5)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

@@ -343,7 +343,7 @@ git commit -m "feat: #106 sample computer profile for every second of the dive"
 
 ### Task 2: `ComputerProfileService` with its own dive selection (Stage 1, R1/R2/R3)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

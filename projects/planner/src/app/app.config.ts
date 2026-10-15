@@ -106,6 +106,7 @@ import { ReloadDispatcher } from './shared/reloadDispatcher';
 import { ManagedDiveSchedules } from './shared/managedDiveSchedules';
 import { GasBlenderService } from './shared/gas-blender.service';
 import { ProfileComparatorService } from './shared/diff/profileComparatorService';
+import { ComputerProfileService } from './shared/computer/computer-profile.service';
 import { GasesComparisonService } from './shared/diff/gases-comparison.service';
 import { ResultsComparison } from './shared/diff/results-comparison.service';
 import { SelectedDiffWaypoint } from './shared/diff/selected-diff-waypoint.service';
@@ -241,6 +242,7 @@ const SERVICES = [
     ViewSwitchService,
     WayPointsService,
     ProfileComparatorService,
+    ComputerProfileService,
     GasesComparisonService,
     ResultsComparison,
     ResamplingService,

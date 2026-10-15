@@ -22,6 +22,12 @@ export interface RunTimePoint {
      * in seconds.
      **/
     tts: number;
+    /**
+     * Next stop (decompression or safety stop) not finished yet at this moment, including the stop in progress.
+     * A decompression stop takes precedence over an overlapping safety stop.
+     * Undefined after the last stop.
+     */
+    nextStop?: StopEvent;
 }
 
 /** Events shown by the dive computer, the stops exist only in the computer data */

@@ -285,11 +285,16 @@ export interface ComputerStartedDto {
     events: ComputerData['events'];
 }
 
+/** Object references can't be transferred, so next stop is index in the events */
+export interface RunTimePointDto extends Omit<RunTimePoint, 'nextStop'> {
+    nextStopIndex?: number;
+}
+
 export interface ComputerPointDto {
     calculationId: number;
     type: 'point';
     index: number;
-    point: RunTimePoint;
+    point: RunTimePointDto;
 }
 
 export interface ComputerFinishedDto {

@@ -73,4 +73,14 @@ describe('ComputerTasks', () => {
         const started = calculate(createRequest())[0] as ComputerStartedDto;
         expect(started.events.some(e => e.type === ComputerEventType.stop)).toBeTrue();
     });
+
+    it('Next stop is sent as index of the stop event', () => {
+        const messages = calculate(createRequest());
+        const started = messages[0] as ComputerStartedDto;
+        const withStop = pointsOf(messages).find(p => p.point.nextStopIndex !== undefined);
+        const stopIndex = withStop?.point.nextStopIndex ?? -1;
+        expect(stopIndex).toBeGreaterThanOrEqual(0);
+        expect([ComputerEventType.stop, ComputerEventType.safetyStop]).toContain(started.events[stopIndex]?.type);
+        expect('nextStop' in (withStop?.point ?? {})).toBeFalse();
+    });
 });

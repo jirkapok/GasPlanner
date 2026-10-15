@@ -7,8 +7,8 @@ import { UnitConversion } from '../UnitConversion';
 import { WayPoint } from '../wayPoint';
 import { WorkersFactoryCommon } from '../serial.workers.factory';
 import { IRestartableTask } from '../../workers/background-task';
-import { ComputerRequestDto, ComputerResultDto } from '../serialization.model';
-import { ComputerData, RunTimePoint } from './computer.model';
+import { ComputerRequestDto, ComputerResultDto, RunTimePointDto } from '../serialization.model';
+import { ComputerData, ComputerEventType, StopEvent } from './computer.model';
 import { ComputerProfileService } from './computer-profile.service';
 
 /** Replaces the worker, the test decides what the worker reports */
@@ -61,14 +61,16 @@ describe('ComputerProfileService', () => {
         dispatcher.sendInfoCalculated(dive.id);
     };
 
-    const point = (runTime: number): RunTimePoint => ({
-        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ndl: 0, tts: 0
+    const stop: StopEvent = { type: ComputerEventType.stop, runTime: 5, depth: 3, duration: 60 };
+
+    const point = (runTime: number, nextStopIndex?: number): RunTimePointDto => ({
+        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ndl: 0, tts: 0, nextStopIndex: nextStopIndex
     });
 
     /** Reports started with given total, then the points, for the last request */
-    const report = (total: number, points: RunTimePoint[], finish: boolean): void => {
+    const report = (total: number, points: RunTimePointDto[], finish: boolean): void => {
         const calculationId = worker.lastRequest.calculationId;
-        worker.calculated.next({ calculationId: calculationId, type: 'started', total: total, events: [] });
+        worker.calculated.next({ calculationId: calculationId, type: 'started', total: total, events: [stop] });
         points.forEach((p, index) => worker.calculated.next({ calculationId: calculationId, type: 'point', index: index, point: p }));
 
         if (finish) {
@@ -184,6 +186,14 @@ describe('ComputerProfileService', () => {
     });
 
     describe('Calculation', () => {
+        it('Resolves next stop to the reported event', () => {
+            calculate(schedules.dives[0], 10);
+            report(2, [point(0, 0), point(1)], true);
+            const profile = sut.computerData.profile;
+            expect(profile[0].nextStop).toBe(sut.computerData.events[0] as StopEvent);
+            expect(profile[1].nextStop).toBeUndefined();
+        });
+
         it('Does not calculate not calculated dive', () => {
             expect(worker.requests.length).toEqual(0);
             expect(lastPublished().profile).toEqual([]);

@@ -52,11 +52,14 @@ export class ComputerTasks {
     }
 
     private static toPointMessage(calculationId: number, data: ComputerData, index: number, ndl: number): ComputerPointDto {
+        const { nextStop, ...values } = data.profile[index];
+        const nextStopIndex = nextStop ? data.events.indexOf(nextStop) : undefined;
+
         return {
             calculationId: calculationId,
             type: 'point',
             index: index,
-            point: { ...data.profile[index], ndl: ndl }
+            point: { ...values, ndl: ndl, nextStopIndex: nextStopIndex }
         };
     }
 

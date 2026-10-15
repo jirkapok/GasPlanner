@@ -6,8 +6,8 @@ import { DiveResults } from '../diveresults';
 import { BoundEvent } from '../models';
 import { UnitConversion } from '../UnitConversion';
 import { WayPoint } from '../wayPoint';
-import { ComputerEvent, ComputerEventType } from './computer.model';
-import { ComputerProfile } from './computerProfile';
+import { ComputerEvent, ComputerEventType, StopEvent } from './computer.model';
+import { ComputerProfile, ComputerProfileParameters } from './computerProfile';
 
 describe('ComputerProfile', () => {
     const tissues = ProfileTissues.createAtSurface(0);
@@ -160,6 +160,79 @@ describe('ComputerProfile', () => {
             units.imperialUnits = true;
             const events = eventsOf([EventsFactory.createHighPpO2(60, 10)], units);
             expect(events[0].depth).toEqual(10);
+        });
+    });
+
+    // user defined: 0 -> 30 m, 600 s at 30 m; calculated ascent with stops at 6 m and 3 m
+    const decoDive = [
+        new Segment(0, 30, air, 60), // 0 - 60
+        new Segment(30, 30, air, 600), // 60 - 660
+        new Segment(30, 6, air, 240), // 660 - 900
+        new Segment(6, 6, air, 60), // 900 - 960 stop
+        new Segment(6, 3, air, 30), // 960 - 990
+        new Segment(3, 3, air, 180), // 990 - 1170 stop
+        new Segment(3, 0, air, 30) // 1170 - 1200
+    ];
+    const decoParameters: ComputerProfileParameters = {
+        userSegments: 2
+    };
+    // ceiling 2 m up to 999 s, cleared from 1000 s
+    const decoCeilings = ceilingsFrom([...Array.from({ length: 999 }, () => 2), ...Array.from({ length: 201 }, () => 0)]);
+    const isStop = (e: ComputerEvent): boolean => e.type === ComputerEventType.stop;
+
+    describe('Stops', () => {
+        const noCeilings = ceilingsFrom(Array.from({ length: 1200 }, () => 0));
+
+        const stopsOf = (results: DiveResults, parameters?: ComputerProfileParameters): ComputerEvent[] =>
+            ComputerProfile.calculate(results, parameters).events.filter(isStop);
+
+        /** Marks the 6 m way point (900 - 960 s) as gas switch */
+        const withSwitchAtSixMeters = (ceilings: Ceiling[]): DiveResults => {
+            const results = createResults(decoDive, ceilings);
+            results.wayPoints[3].asGasSwitch();
+            return results;
+        };
+
+        it('Creates stop for every calculated flat ascent segment with ceiling', () => {
+            expect(stopsOf(createResults(decoDive, decoCeilings), decoParameters)).toEqual([
+                { type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent,
+                { type: ComputerEventType.stop, runTime: 990, depth: 3, duration: 180 } as StopEvent
+            ]);
+        });
+
+        it('User defined flat segment is not a stop', () => {
+            const stops = stopsOf(createResults(decoDive, decoCeilings), { ...decoParameters, userSegments: 4 });
+            expect(stops.map(s => s.runTime)).toEqual([990]);
+        });
+
+        it('Flat segment with zero ceiling is not a stop', () => {
+            expect(stopsOf(createResults(decoDive, noCeilings), decoParameters)).toEqual([]);
+        });
+
+        it('Flat segment before end of deepest point is not a stop', () => {
+            // bottom segment has ceiling, but ends at the deepest point
+            const stops = stopsOf(createResults(decoDive, decoCeilings), { ...decoParameters, userSegments: 0 });
+            expect(stops.map(s => s.runTime)).toEqual([900, 990]);
+        });
+
+        it('No stops without parameters', () => {
+            expect(stopsOf(createResults(decoDive, decoCeilings))).toEqual([]);
+        });
+
+        it('Gas switch with ceiling is a stop', () => {
+            const stops = stopsOf(withSwitchAtSixMeters(decoCeilings), decoParameters);
+            expect(stops[0]).toEqual({ type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent);
+        });
+
+        it('Gas switch without ceiling is not a stop', () => {
+            expect(stopsOf(withSwitchAtSixMeters(noCeilings), decoParameters)).toEqual([]);
+        });
+
+        it('Events are sorted by run time', () => {
+            const events = [EventsFactory.createHighPpO2(1000, 3), EventsFactory.createSafetyStopStart(990, 3)];
+            const results = createResults(decoDive, decoCeilings, 0, new UnitConversion(), events);
+            const runTimes = ComputerProfile.calculate(results, decoParameters).events.map(e => e.runTime);
+            expect(runTimes).toEqual([900, 990, 990, 1000]);
         });
     });
 });

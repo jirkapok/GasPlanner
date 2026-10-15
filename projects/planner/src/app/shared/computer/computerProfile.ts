@@ -13,6 +13,12 @@ export interface ComputerSource {
     readonly events: BoundEvent[];
 }
 
+/** Dive specific values not available in the calculated dive data */
+export interface ComputerProfileParameters {
+    /** Count of user defined segments at the start of the profile, those are never stops */
+    userSegments: number;
+}
+
 /** Samples calculated dive results for every second of the dive. */
 export class ComputerProfile {
     public static empty(): ComputerData {
@@ -22,7 +28,11 @@ export class ComputerProfile {
         };
     }
 
-    public static calculate(source: ComputerSource): ComputerData {
+    /**
+     * @param source calculated dive data
+     * @param parameters needed to create stop events, no stops are created if not provided
+     */
+    public static calculate(source: ComputerSource, parameters?: ComputerProfileParameters): ComputerData {
         const wayPoints = source.wayPoints;
 
         if (wayPoints.length === 0) {
@@ -71,10 +81,56 @@ export class ComputerProfile {
             });
         }
 
+        const stops = parameters ? ComputerProfile.stopsFrom(wayPoints, profile, parameters.userSegments) : [];
+        const events = [...ComputerProfile.eventsFrom(source), ...stops]
+            .sort((a, b) => a.runTime - b.runTime);
+
         return {
             profile: profile,
-            events: ComputerProfile.eventsFrom(source)
+            events: events
         };
+    }
+
+    /**
+     * Flat calculated segments during the ascent from the deepest point, where the ceiling is not zero.
+     * Gas switch is the same as any other flat segment.
+     */
+    private static stopsFrom(wayPoints: WayPoint[], profile: RunTimePoint[], userSegments: number): StopEvent[] {
+        const ascentStart = ComputerProfile.lastDeepestIndex(wayPoints) + 1;
+        const firstCandidate = Math.max(ascentStart, userSegments);
+        const stops: StopEvent[] = [];
+
+        for (let index = firstCandidate; index < wayPoints.length; index++) {
+            const wayPoint = wayPoints[index];
+            const duration = wayPoint.endTime - wayPoint.startTime;
+            const isFlat = wayPoint.startDepthMeters === wayPoint.endDepthMeters;
+            const ceiling = profile[Math.floor(wayPoint.startTime)].ceiling;
+
+            if (isFlat && duration > 0 && ceiling > 0) {
+                stops.push({
+                    type: ComputerEventType.stop,
+                    runTime: wayPoint.startTime,
+                    depth: wayPoint.endDepthMeters,
+                    duration: duration
+                });
+            }
+        }
+
+        return stops;
+    }
+
+    /** Index of the last way point which reaches the maximum depth */
+    private static lastDeepestIndex(wayPoints: WayPoint[]): number {
+        const maxDepth = Math.max(...wayPoints.map(w => w.endDepthMeters));
+        let deepestIndex = 0;
+
+        wayPoints.forEach((wayPoint, index) => {
+            if (wayPoint.endDepthMeters === maxDepth) {
+                deepestIndex = index;
+            }
+        });
+
+        return deepestIndex;
     }
 
     private static eventsFrom(source: ComputerSource): ComputerEvent[] {

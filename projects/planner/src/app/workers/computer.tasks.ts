@@ -79,6 +79,8 @@ export class ComputerTasks {
             events: DtoSerialization.toEvents(diveInfo.events).items.map(e => new BoundEvent(units, e))
         };
 
-        return ComputerProfile.calculate(source);
+        return ComputerProfile.calculate(source, {
+            userSegments: task.plan.length
+        });
     }
 }

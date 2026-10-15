@@ -6,6 +6,7 @@ import {
     ComputerFinishedDto, ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, ComputerStartedDto
 } from '../shared/serialization.model';
+import { ComputerEventType } from '../shared/computer/computer.model';
 import { ComputerTasks } from './computer.tasks';
 import { PlanningTasks } from './planning.tasks';
 
@@ -66,5 +67,10 @@ describe('ComputerTasks', () => {
         expect(points[0].point.ndl).toEqual(limits[0]);
         expect(points[200].point.ndl).toEqual(limits[200]);
         expect(points[200].point.ndl).toBeGreaterThan(0);
+    });
+
+    it('Started contains stop events of deco dive', () => {
+        const started = calculate(createRequest())[0] as ComputerStartedDto;
+        expect(started.events.some(e => e.type === ComputerEventType.stop)).toBeTrue();
     });
 });

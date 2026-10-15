@@ -12,7 +12,11 @@ export interface RunTimePoint {
     averageDepth: number;
     /** current ceiling in meters */
     ceiling: number;
-    /** remaining no decompression time in seconds */
+    /**
+     * Current no decompression limit at this moment in seconds: remaining time till the ceiling isn't at surface,
+     * when staying at current depth on current gas. 0 while in decompression, Infinity at surface or for more than 1000 minutes.
+     * Calculated by the computer worker.
+     */
     ndl: number;
     /**
      * Not the total runtime to end of the dive, but current time to surface at this point in the dive profile.

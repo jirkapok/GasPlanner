@@ -7,6 +7,7 @@ import {
     ComputerResultDto, ComputerStartedDto
 } from '../shared/serialization.model';
 import { ComputerTasks } from './computer.tasks';
+import { PlanningTasks } from './planning.tasks';
 
 describe('ComputerTasks', () => {
     /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops */
@@ -56,5 +57,14 @@ describe('ComputerTasks', () => {
         const messages = calculate(request);
         expect(messages.map(m => m.type)).toEqual(['started', 'finished']);
         expect((messages[0] as ComputerStartedDto).total).toEqual(0);
+    });
+
+    it('Points contain calculated no decompression limit', () => {
+        const request = createRequest();
+        const limits = PlanningTasks.noDecoLimits(request);
+        const points = pointsOf(calculate(request));
+        expect(points[0].point.ndl).toEqual(limits[0]);
+        expect(points[200].point.ndl).toEqual(limits[200]);
+        expect(points[200].point.ndl).toBeGreaterThan(0);
     });
 });

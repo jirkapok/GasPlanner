@@ -223,14 +223,6 @@ describe('ComputerProfileService', () => {
             expect(lastPublished().profile.length).toEqual(2);
         });
 
-        it('Updates progress for every point and ends at 100 %', () => {
-            calculate(schedules.dives[0], 10);
-            report(4, [point(0), point(1)], false);
-            expect(progress.slice(-2)).toEqual([25, 50]);
-            worker.calculated.next({ calculationId: worker.lastRequest.calculationId, type: 'finished' });
-            expect(lastProgress()).toEqual(100);
-        });
-
         it('New calculation interrupts the running one and resets data and progress', () => {
             const first = schedules.dives[0];
             calculate(first, 10);
@@ -268,6 +260,82 @@ describe('ComputerProfileService', () => {
             worker.failed.next();
             expect(sut.computerData.profile).toEqual([]);
             expect(lastProgress()).toEqual(100);
+        });
+    });
+
+    describe('Reporting', () => {
+        let calculationId: number;
+
+        const started = (total: number): void => {
+            worker.calculated.next({ calculationId: calculationId, type: 'started', total: total, events: [stop] });
+        };
+
+        /** Worker reports next point after given time elapsed */
+        const pointAfter = (milliseconds: number, index: number): void => {
+            jasmine.clock().tick(milliseconds);
+            worker.calculated.next({ calculationId: calculationId, type: 'point', index: index, point: point(index) });
+        };
+
+        const finish = (): void => {
+            worker.calculated.next({ calculationId: calculationId, type: 'finished' });
+        };
+
+        beforeEach(() => {
+            jasmine.clock().install();
+            jasmine.clock().mockDate(new Date(2026, 9, 17, 10, 0, 0));
+            calculate(schedules.dives[0], 10);
+            calculationId = worker.lastRequest.calculationId;
+            // only the reports of the running calculation, not the reset when it started
+            published = [];
+            progress = [];
+        });
+
+        afterEach(() => {
+            jasmine.clock().uninstall();
+        });
+
+        it('Started without points is not reported', () => {
+            started(3);
+            expect(published).toEqual([]);
+            expect(progress).toEqual([]);
+        });
+
+        it('Reports only final state when calculated within 200 ms', () => {
+            started(3);
+            pointAfter(50, 0);
+            pointAfter(50, 1);
+            pointAfter(50, 2);
+            finish();
+            expect(published.map(d => d.profile.length)).toEqual([3]);
+            expect(progress).toEqual([100]);
+        });
+
+        it('Reports whole computer data with progress every 200 ms', () => {
+            started(4);
+            pointAfter(100, 0);
+            pointAfter(100, 1); // 200 ms since the calculation started
+            pointAfter(100, 2);
+            pointAfter(100, 3); // 200 ms since the last report
+            expect(published.map(d => d.profile.length)).toEqual([2, 4]);
+            expect(published[0].events).toEqual([stop]);
+            expect(progress).toEqual([50, 100]);
+        });
+
+        it('Always reports final state', () => {
+            started(2);
+            pointAfter(200, 0);
+            pointAfter(10, 1);
+            finish();
+            expect(published.map(d => d.profile.length)).toEqual([1, 2]);
+            expect(progress).toEqual([50, 100]);
+        });
+
+        it('Reported data are not changed by later points', () => {
+            started(3);
+            pointAfter(200, 0);
+            pointAfter(10, 1);
+            pointAfter(10, 2);
+            expect(published[0].profile.length).toEqual(1);
         });
     });
 });

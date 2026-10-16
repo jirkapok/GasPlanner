@@ -236,9 +236,7 @@ export class ProfileComparatorService extends Streamed {
     private applySurfaceIntervalBeforeDive(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
         // Replace all numbers with null
         return this.applySurfaceIntervalAfterDive(profile, surfaceInterval).map(
-            row => row.map(
-                () => null
-            )
+            row => row.map(() => null)
         ) as HeatMapOverPressures;
     }
 

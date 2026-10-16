@@ -17,11 +17,18 @@ import { ComputerProfile } from './computerProfile';
  * Source data for the dive computer simulator.
  * Keeps its own dive selection (first dive by default), independent of the planner selected dive.
  * The computer data of the selected dive are calculated in background and streamed point by point.
+ * The collected data and progress are published at most every 200 ms and always when the calculation finished.
  */
 @Injectable()
 export class ComputerProfileService extends Streamed {
+    /** in milliseconds */
+    private static readonly reportInterval = 200;
+    /**
+     * Empty, when new calculation starts, then copy of already calculated data every 200 ms
+     * and complete data when the calculation finished.
+     */
     public readonly computerData$: Observable<ComputerData>;
-    /** Percents (0 - 100) of already calculated points of the current calculation */
+    /** Percents (0 - 100) of already calculated points of the current calculation, published together with computerData$ */
     public readonly progress$: Observable<number>;
     private _selectedDive: DiveSchedule;
     private readonly onComputerData = new BehaviorSubject<ComputerData>(ComputerProfile.empty());
@@ -30,6 +37,10 @@ export class ComputerProfileService extends Streamed {
     private calculationId = 0;
     private running = false;
     private total = 0;
+    /** Data received from the worker in the current calculation, not published yet */
+    private collected: ComputerData = ComputerProfile.empty();
+    /** Date.now() of last published data or start of the calculation */
+    private lastReportTime = 0;
 
     constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher, workers: WorkersFactoryCommon) {
         super();
@@ -64,7 +75,7 @@ export class ComputerProfileService extends Streamed {
         return this._selectedDive.index;
     }
 
-    /** Contains also already received points of running calculation */
+    /** Last published computer data */
     public get computerData(): ComputerData {
         return this.onComputerData.value;
     }
@@ -116,6 +127,8 @@ export class ComputerProfileService extends Streamed {
         this.calculationId++;
         this.running = false;
         this.total = 0;
+        this.collected = ComputerProfile.empty();
+        this.lastReportTime = Date.now();
         this.onComputerData.next(ComputerProfile.empty());
         this.onProgress.next(0);
         const results = this._selectedDive.diveResult;
@@ -151,26 +164,37 @@ export class ComputerProfileService extends Streamed {
 
     private started(message: ComputerStartedDto): void {
         this.total = message.total;
-        this.onComputerData.next({ profile: [], events: message.events });
+        this.collected = { profile: [], events: message.events };
     }
 
     private pointCalculated(message: ComputerPointDto): void {
-        const data = this.onComputerData.value;
         const { nextStopIndex, ...values } = message.point;
         const point: RunTimePoint = { ...values };
 
         if (nextStopIndex !== undefined) {
-            point.nextStop = data.events[nextStopIndex] as StopEvent;
+            point.nextStop = this.collected.events[nextStopIndex] as StopEvent;
         }
 
-        data.profile.push(point);
-        this.onProgress.next(Math.round(data.profile.length * 100 / this.total));
+        this.collected.profile.push(point);
+
+        if (Date.now() - this.lastReportTime >= ComputerProfileService.reportInterval) {
+            this.report(Math.round(this.collected.profile.length * 100 / this.total));
+        }
     }
 
     private finished(): void {
         this.running = false;
-        this.onComputerData.next({ ...this.onComputerData.value });
-        this.onProgress.next(100);
+        this.report(100);
+    }
+
+    /** Publishes copy of already collected data, so the published data aren't changed by later points */
+    private report(progress: number): void {
+        this.lastReportTime = Date.now();
+        this.onComputerData.next({
+            profile: this.collected.profile.slice(),
+            events: this.collected.events
+        });
+        this.onProgress.next(progress);
     }
 
     private calculationFailed(): void {

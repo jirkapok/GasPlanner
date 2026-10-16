@@ -225,7 +225,7 @@ export class ProfileComparatorService extends Streamed {
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
         if (this.alignByEnd) {
-            const surfacePressures = this.applySurfaceIntervalBeforeDive(profile, surfaceInterval);
+            const surfacePressures = this.applySurfaceIntervalBeforeDive(profile);
             return [...surfacePressures, ...profile.diveResult.tissueOverPressures];
         }
 
@@ -233,10 +233,14 @@ export class ProfileComparatorService extends Streamed {
         return [...profile.diveResult.tissueOverPressures, ...surfacePressures];
     }
 
-    private applySurfaceIntervalBeforeDive(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
-        // Replace all numbers with null
-        return this.applySurfaceIntervalAfterDive(profile, surfaceInterval).map(
-            row => row.map(() => null)
+    private applySurfaceIntervalBeforeDive(profile: DiveSchedule): HeatMapOverPressures {
+        const shorterLength = profile.diveResult.tissueOverPressures.length;
+        const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
+            ? this.profileBResults.tissueOverPressures.length
+            : this.profileAResults.tissueOverPressures.length;
+        return Array.from(
+            { length: longerLength - shorterLength},
+            () => Array(16).fill(null)
         ) as HeatMapOverPressures;
     }
 

@@ -11,10 +11,11 @@ import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
 import { WayPoint } from '../wayPoint';
+import { type HeatMapOverPressures } from '../heatMapPlotter';
 
 export interface SaturationComparison {
-    profileAOverPressures: number[][];
-    profileBOverPressures: number[][];
+    profileAOverPressures: HeatMapOverPressures;
+    profileBOverPressures: HeatMapOverPressures;
 }
 
 @Injectable()

@@ -22,6 +22,11 @@ class FakeWorker {
     public reply(data: string): void {
         this.listeners.get('message')?.({ data: data } as MessageEvent<string>);
     }
+
+    /** Simulates error in the worker thread */
+    public fail(): void {
+        this.listeners.get('error')?.({} as MessageEvent<string>);
+    }
 }
 
 describe('RestartableBackgroundTask', () => {
@@ -65,5 +70,29 @@ describe('RestartableBackgroundTask', () => {
         sut.cancel();
         created[1].reply('c');
         expect(received).toEqual(['c']);
+    });
+
+    it('Ignores error of the cancelled worker', () => {
+        let failures = 0;
+        sut.failed$.subscribe(() => failures++);
+        sut.cancel();
+        created[0].fail();
+        expect(failures).toEqual(0);
+    });
+
+    it('Ignores message of the cancelled worker', () => {
+        const received: string[] = [];
+        sut.calculated$.subscribe(m => received.push(m));
+        sut.cancel();
+        created[0].reply('late');
+        expect(received).toEqual([]);
+    });
+
+    it('Reports error of the current worker', () => {
+        let failures = 0;
+        sut.failed$.subscribe(() => failures++);
+        sut.cancel();
+        created[1].fail();
+        expect(failures).toEqual(1);
     });
 });

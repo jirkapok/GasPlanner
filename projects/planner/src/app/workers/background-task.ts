@@ -59,8 +59,21 @@ export class RestartableBackgroundTask<TRequest, TResponse> implements IRestarta
 
     private startWorker(): Worker {
         const worker = this.createWorker();
-        worker.addEventListener('message', (m: MessageEvent<TResponse>) => this.onCalculated.next(m.data));
-        worker.addEventListener('error', () => this.onFailed.next());
+        // events already queued by a cancelled worker don't belong to the current calculation
+        const isCurrent = (): boolean => worker === this.worker;
+
+        worker.addEventListener('message', (m: MessageEvent<TResponse>) => {
+            if (isCurrent()) {
+                this.onCalculated.next(m.data);
+            }
+        });
+
+        worker.addEventListener('error', () => {
+            if (isCurrent()) {
+                this.onFailed.next();
+            }
+        });
+
         return worker;
     }
 }

@@ -24,22 +24,6 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
     imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
-
-
-
-
-
-
-    // TODO: Implement/Fix selectWayPoint
-    // TODO: Heat maps
-    // TODO: Tests
-
-
-
-
-
-
-
     public icon = faChartArea;
     protected readonly heatmapIcon = faFire;
     public showHeatMap = true;

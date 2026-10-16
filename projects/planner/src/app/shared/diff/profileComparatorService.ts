@@ -239,7 +239,7 @@ export class ProfileComparatorService extends Streamed {
             ? this.profileBResults.tissueOverPressures.length
             : this.profileAResults.tissueOverPressures.length;
         return Array.from(
-            { length: longerLength - shorterLength},
+            { length: longerLength - shorterLength },
             () => Array(16).fill(null)
         ) as HeatMapOverPressures;
     }

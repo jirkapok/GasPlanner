@@ -67,5 +67,6 @@ export interface StopEvent extends ComputerEvent {
  */
 export interface ComputerData {
     profile: RunTimePoint[];
+    /** Computer events ignore the planner's ignored-issues list, as a real dive computer would. */
     events: ComputerEvent[];
 }

@@ -46,7 +46,7 @@ Stage 4: background calculation
 - R13: Move the computer data calculation into a worker thread. The worker contains the whole procedure for everything needed to get `ComputerData`: decompression profile, ceilings, events, stops, depths and NDL.
 - R14: The worker streams its results: it reports every `RunTimePoint` as soon as it is calculated.
 - R15: A selected dive change, or the selected dive being calculated, interrupts the running calculation. The service then resets its computer data to empty and starts a new calculation.
-- R16: The service has a new observable `progress$` with the percentage of `RunTimePoint`s already calculated. It is reset to 0 whenever a new calculation starts, updated for every point the worker reports, and ends at 100 when the calculation finishes.
+- R16: The service has a new observable `progress$` with the percentage of `RunTimePoint`s already calculated. It is reset to 0 whenever a new calculation starts and ends at 100 when the calculation finishes. During the calculation it is published together with `computerData$` at most every 200 ms, not for every point (changed by R18).
 
 Stage 5: performance
 
@@ -54,6 +54,10 @@ Stage 5: performance
   1. 30 m for 30 min on air;
   2. 60 m for 200 min on air;
   3. 80 m for 30 min with trimix 12/65, EAN50, oxygen, trimix 21/35 and trimix 35/25.
+
+Stage 6: reporting (change request after Task 10)
+
+- R18: The service doesn't publish the progress for every point. Instead, while the worker streams the points, it publishes the whole `ComputerData` object together with the progress every 200 ms. A calculation faster than 200 ms publishes only its final state. The final state is always published. The reset to empty data when a new calculation starts (R15) stays.
 
 ## Global Constraints
 
@@ -836,6 +840,8 @@ git commit -m "feat: #106 computer profile maximum and average depth"
   - Each `point` is appended, and the progress becomes `round(received * 100 / total)`.
   - On `finished`, the progress becomes `100`.
 - **Worker failure.** If the worker fails (`failed$`), the data is reset to empty and the progress becomes `100`.
+
+> **Changed later (Task 11, R18):** `computerData$` and `progress$` are no longer published on `started` and for every point. The service collects the points and publishes a copy of the whole `ComputerData` with the progress at most every 200 ms, and always on `finished`. The `computerData` getter returns the last published data.
 
 - [ ] **Step 1: Write the failing restartable task tests**
 
@@ -3087,3 +3093,69 @@ Run: `npx eslint -c projects/planner/eslint.config.mjs projects/planner/src/app/
 git add projects/planner/src/app/workers/computer.performance.spec.ts projects/planner/karma.performance.conf.js package.json
 git commit -m "test: #106 computer data performance test"
 ```
+
+---
+
+### Task 11: Report computer data every 200 ms (Stage 6, R18)
+
+- [x] Status
+
+A change request implemented after the final review, commit `0577ff3e`.
+
+**Files:**
+
+- Modify: `projects/planner/src/app/shared/computer/computer-profile.service.ts`
+- Test: `projects/planner/src/app/shared/computer/computer-profile.service.spec.ts`
+
+**Interfaces:**
+
+- Consumes: worker messages `started` / `point` / `finished` and `failed$` (Tasks 4, 6, 9).
+- Produces (replaces the reporting described in Task 4):
+  - `computerData$`:
+    - emits empty data when a calculation starts;
+    - while points arrive, emits a copy of the collected `ComputerData` at most every 200 ms (`profile` copied, `events` of the calculation);
+    - on `finished`, always emits the complete data.
+
+    Data already emitted is never changed later.
+  - `progress$`:
+    - `0` when a calculation starts;
+    - emitted together with each `computerData$` report as `round(received * 100 / total)`;
+    - `100` on `finished` and on worker failure.
+  - The `computerData` getter returns the last published data.
+
+**Behavior:**
+
+- `refresh()` also resets the collected data and stores `Date.now()` as the start of the first 200 ms interval.
+- `started` only stores the events and `total`. Nothing is published.
+- Each `point` is added to the collected data. When `Date.now() - lastReportTime >= 200`, a report is published and `lastReportTime` is updated. There is no timer: the check runs when a point arrives.
+- `finished` always publishes the final report with progress `100`.
+- Worker failure is unchanged: empty data, progress `100`.
+
+**Tests:** in `computer-profile.service.spec.ts`, `describe('Reporting')`. They use a mocked clock (`jasmine.clock().install()`, `mockDate`, `tick`) and replace "Updates progress for every point and ends at 100 %":
+
+- Started without points is not reported
+- Reports only final state when calculated within 200 ms
+- Reports whole computer data with progress every 200 ms
+- Always reports final state
+- Reported data are not changed by later points
+
+**Verification:** the 5 specs failed before the change and pass after it. `npm run test-ci`: 787 of 787.
+
+---
+
+## Changes after the final review
+
+The final whole-branch review found no critical issues. These were fixed afterwards:
+
+- `a955a75e`: the interactive `npm test` excludes `**/*.performance.spec.ts`. Without the special Chrome flags, the performance spec always fails there.
+- `eb6dbde8`: `RestartableBackgroundTask` forwards messages and errors only from the current worker. A late error from a cancelled worker could otherwise clear the data of the new calculation. Covered by 3 new specs in `background-task.spec.ts`.
+- `0577ff3e`: Task 11.
+
+Deferred, to decide together with the computer page:
+
+- One worker message per second of the dive reaches the main thread. Under zone.js each one triggers change detection, about 130,000 for 60 m / 200 min. Consider listening to the worker outside the Angular zone, or batching the messages.
+- An NDL predicted above 1000 minutes stays `Infinity` while counting down on a long flat shallow level, then jumps to `0` when the ceiling appears. Predict again periodically when capped.
+- The NDL index can drift about 1 s per fractional segment relative to the point runtime. The comment "limits may be shorter" in `computer.tasks.ts` is wrong: the sequence can only be longer.
+- The worker calculates the decompression profile about 3 times per run. `WayPointsService` (`@Injectable`) pulls `@angular/core` into the worker bundle (427 kB).
+- The reference screenshots in `projects/planner/src/assets/computers/` (about 700 kB) ship in the production bundle.
+- The `ComputerProfile` domain computation lives in `planner` (R4) rather than `scuba-physics`, the usual home for such logic per CLAUDE.md.

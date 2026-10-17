@@ -9,7 +9,12 @@ import { HelpService } from '../shared/learn/help.service';
     imports: [NgxMdModule, TranslatePipe],
     providers: [MarkdownCustomization],
     templateUrl: './help-sidebar.component.html',
-    styleUrl: './help-sidebar.component.scss'
+    styleUrl: './help-sidebar.component.scss',
+    host: {
+        // Fixes issue, where a <pre> tag would stretch
+        // the entire markdown document off-screen
+        'style': 'width: 100%;',
+    },
 })
 export class HelpSidebarComponent implements AfterViewInit {
     @ViewChild('helpSidebar')

@@ -41,7 +41,7 @@ export class MarkdownCustomization {
 
         renderer.code = (code: string, language: string) => {
             const lang = language ? language : 'plaintext';
-            return `<pre class="bg-light p-2"><code class="language-${lang}">${code}</code></pre>`;
+            return `<pre class="bg-light p-2 overflow-auto"><code class="language-${lang}">${code}</code></pre>`;
         };
     }
 }

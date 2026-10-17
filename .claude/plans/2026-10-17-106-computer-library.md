@@ -3,32 +3,46 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 > **Project override (CLAUDE.md):** implement ONE task per request, run its verification (tests + lint), tick its `- [ ] Status` checkbox, then STOP for review, unless the user explicitly says to continue.
 
-**Goal:** Move the dive computer data calculation from the planner into the `scuba-physics` library. The library calculates the complete `ComputerData` from the whole dive definition. The planner worker only converts DTOs and streams the results.
+**Goal:** Move the dive computer data calculation from the planner into the `scuba-physics` library, reusing the dive the planner has already calculated. The library calculates only what is new: the per-second samples, stops, next stops and NDL predictions.
 
 **Architecture:** A new library folder `projects/scuba-physics/src/lib/computer/` contains:
 
 - the model (`ComputerData.ts`, moved from the planner);
-- a pure sampler, `ComputerProfile.sample(source)`. It works on library `Segment`s, `Ceiling`s and `Event`s instead of planner `WayPoint`s and `BoundEvent`s;
-- an orchestrator, `DiveComputer`. It takes the whole dive (`AlgorithmParams`: user plan, gases, options, breathing model, surface interval). It calculates the decompression profile once, then the ceilings, events and samples, and yields the points one by one with their NDL.
+- a pure sampler, `ComputerProfile.sample(source)`. It works on library `Segment`s, `Ceiling`s and `Event`s, not on planner `WayPoint`s or `BoundEvent`s;
+- an orchestrator, `DiveComputer`.
 
-`BuhlmannAlgorithm` gets two "of profile" methods, so the profile isn't calculated three times any more. The planner keeps only the worker plumbing (`ComputerTasks`, DTOs, `RestartableBackgroundTask`) and `ComputerProfileService`.
+`DiveComputer.start(calculatedDive)` takes the whole calculated dive:
+
+- **the definition** (`AlgorithmParams`): user plan, gases, options, breathing model and surface interval;
+- **its calculated results:** the profile as `Segment`s, the ceilings and the algorithm events.
+
+It samples the dive and yields the points one by one with their NDL. The NDL comes from `BuhlmannAlgorithm.noDecoLimitsOfProfile`, which goes through the already calculated profile once to load the tissues, and predicts from them. The decompression profile and the ceilings aren't calculated again.
+
+In the planner:
+
+- `DiveResults` keeps the calculated profile `Segment`s and all algorithm events, unfiltered. Today it keeps only `WayPoint`s and the events after the ignored-issues filter.
+- The service sends these results with the computer request.
+- The worker only converts DTOs and streams the library's points.
 
 **Tech Stack:** TypeScript, `scuba-physics` (ng-packagr library), Angular planner app, Karma/Jasmine.
 
-**Spec:** the user's request of 2026-10-17:
+**Spec:** the user's requests of 2026-10-17:
 
 > "Move as much as of the computer calculation to the scuba-physics library. Don't use UI dependent objects like waypoints or anything which needs UnitConversions. As input data don't use only the Dive result, use the whole dive. Fix all related tests and move relevant tests to the library too."
+
+Decision: use **option 3**. Reuse the already calculated profile, ceilings and events. Go through the profile once more only to load the tissues for the NDL predictions. Don't store the per-second tissue history.
 
 The behaviour stays as defined by the previous plan, `.claude/plans/2026-10-15-106-computer-data-service.md` (R1–R18).
 
 ## Requirements
 
-- L1: All computer data computation lives in `scuba-physics`: per-second sampling, max and average depth, ceiling, NDL, events, stops and next stop.
+- L1: All computer data computation lives in `scuba-physics`: per-second sampling, max and average depth, ceiling, NDL, mapping of events, stops and next stop.
 - L2: The library code uses no planner or UI types: no `WayPoint`, `BoundEvent`, `UnitConversion`, `DiveResults` and nothing from `@angular/*`. Depths are in meters, times in seconds.
-- L3: The library input is the whole dive, `AlgorithmParams`: the user plan segments, gases, options, breathing model and surface interval (previous tissues for repetitive dives). It is not the planner's dive results.
-- L4: Behaviour visible to the planner service is unchanged: the same worker messages (`started` / `point` / `finished`), the same `ComputerData` content, and NDL streamed point by point.
-- L5: The tests of the moved computation move to the library and are adapted to library types. The planner keeps only tests of the planner code: the worker DTO plumbing, the service and the restartable task.
-- L6: The performance test (R17) measures the library calculation and lives in the library.
+- L3: The library input is the whole dive: the definition (`AlgorithmParams`) and its calculated results (profile `Segment`s, ceilings, algorithm events). Nothing that is already calculated is calculated again, except one pass through the profile that loads the tissues for the NDL predictions (option 3).
+- L4: The computer shows all algorithm events, regardless of the planner's ignored-issues list.
+- L5: Behaviour visible to the planner service is unchanged: the same worker messages (`started` / `point` / `finished`), the same `ComputerData` content, and NDL streamed point by point.
+- L6: The tests of the moved computation move to the library and are adapted to library types. The planner keeps only tests of the planner code: `DiveResults` / `PlannerService` storage, the worker DTO plumbing, the service and the restartable task.
+- L7: The performance test (R17) measures the library computer calculation and lives in the library.
 
 ## Global Constraints
 
@@ -39,19 +53,20 @@ The behaviour stays as defined by the previous plan, `.claude/plans/2026-10-15-1
 - ESLint: 4-space indent, single quotes, semicolons, 140-char lines. Use explicit `key: value` object literals like the surrounding code.
 - Library focused tests: `npx ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --include=<glob>`. Planner focused tests: the same with `--project planner`.
 - Keep the worker DTOs in `serialization.model.ts` and both factories in sync (CLAUDE.md).
+- `Ceiling`s sent through `postMessage` arrive as plain `{ time, depth }` objects without the class getters. Library code may read only `time` and `depth` from them.
 - Commit only the files the task names. The working copy may contain unrelated user changes, such as the moved `computers/` screenshots. Leave those alone.
 
 ## Review Focus
 
-1. **Repetitive dive.** The library must start from the previous dive's tissues (`dive.surfaceInterval`) for the decompression, the ceilings and the NDL. Test: Task 3, "Repetitive dive has shorter no decompression limit".
-2. **Invalid plan** (empty plan, gas not registered). The result must be no points and no events, with no exception. Tests: Task 3, "Invalid dive has no points and events"; Task 4, "Empty plan posts no points".
-3. **Ceilings consistency.** `ceilingsOfProfile` must return the same ceilings as `decompressionStatistics` did, so stops and events don't change. Test: Task 2, "Ceilings of profile equal decompression statistics ceilings".
-4. **NDL alignment.** NDL per point must be the same values as before the move. Test: Task 2, "No decompression limits of profile equal no decompression limits of the plan"; Task 3, "Points contain calculated no decompression limit".
-5. **Worker bundle.** After the move, the computer worker must not pull in Angular. Check: Task 4, Step 7. The production build lists `computer-worker` at roughly the size of the other workers (about 150 kB), not 427 kB.
+1. **Ignored issues.** An event ignored in the planner, and so missing from `DiveResults.events`, must still reach the computer. Test: Task 4, "Keeps all algorithm events".
+2. **Repetitive dive.** The NDL predictions must start from the previous dive's tissues (`dive.surfaceInterval`). Test: Task 3, "Repetitive dive has shorter no decompression limit".
+3. **Not calculated or failed dive, empty profile.** The result must be no points and no events, with no exception. Tests: Task 3, "Empty profile has no points and events"; Task 5, "Empty profile posts no points". The service already doesn't send requests for failed dives.
+4. **NDL alignment.** The NDL per point must be the same values as before the move. Tests: Task 2, "No decompression limits of profile equal no decompression limits of the plan"; Task 3, "Points contain calculated no decompression limit".
+5. **Worker bundle.** After the move, the computer worker must not pull in Angular. Check: Task 5, Step 7. The production build lists `computer-worker` at roughly the size of the other workers (about 150 kB), not 427 kB.
 
 ---
 
-### Task 1: Library model and sampler (L1, L2, L5)
+### Task 1: Library model and sampler (L1, L2, L6)
 
 - [ ] Status
 
@@ -695,7 +710,7 @@ git commit -m "feat: #106 sample computer data in scuba-physics"
 
 ---
 
-### Task 2: Ceilings and NDL of an already calculated profile (L1, L3)
+### Task 2: NDL of an already calculated profile (L1, L3)
 
 - [ ] Status
 
@@ -707,10 +722,12 @@ git commit -m "feat: #106 sample computer data in scuba-physics"
 **Interfaces:**
 
 - Produces:
-  - `BuhlmannAlgorithm.ceilingsOfProfile(dive: AlgorithmParams, profile: Segment[]): Ceiling[]`. It returns the ceilings of an already calculated profile, one per second. It collects no other statistics, so it is faster than `decompressionStatistics`.
-  - `BuhlmannAlgorithm.noDecoLimitsOfProfile(dive: AlgorithmParams, profile: Segment[]): Generator<number>`. It yields the same values as `noDecoLimitsSequence(dive)`, but doesn't calculate the decompression profile again.
+  - `BuhlmannAlgorithm.noDecoLimitsOfProfile(dive: AlgorithmParams, profile: Segment[]): Generator<number>`.
+    - It yields the same values as `noDecoLimitsSequence(dive)`, but for an already calculated profile, so the decompression isn't calculated again.
+    - It goes through the profile once to load the tissues, and predicts the NDL from them.
+    - `dive` provides the gases, options, breathing model and surface interval. Its `segments` (the user plan) aren't used.
+    - For an empty profile it yields nothing.
   - `noDecoLimitsSequence(dive)` becomes: calculate the decompression profile, then `yield* noDecoLimitsOfProfile(dive, profile.segments)`.
-- `dive` is the whole dive: gases, options, breathing model and surface interval. Its `segments` (the user plan) aren't used by these two methods.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -729,12 +746,8 @@ Append inside the `describe` in `BuhlmannAlgorithm.noDecoLimits.spec.ts`:
             expect(Array.from(algorithm.noDecoLimitsOfProfile(decoDive, profile))).toEqual(algorithm.noDecoLimits(decoDive));
         });
 
-        it('Ceilings of profile equal decompression statistics ceilings', () => {
-            const profile = algorithm.decompression(decoDive).segments;
-            const calculatedDive = AlgorithmParams.forMultilevelDive(Segments.fromCollection(profile), decoDive.gases,
-                decoDive.options, decoDive.breathing);
-            const expected = algorithm.decompressionStatistics(calculatedDive).ceilings;
-            expect(algorithm.ceilingsOfProfile(decoDive, profile)).toEqual(expected);
+        it('Empty profile has no limits', () => {
+            expect(Array.from(algorithm.noDecoLimitsOfProfile(decoDive, []))).toEqual([]);
         });
     });
 ```
@@ -758,15 +771,20 @@ In `BuhlmannAlgorithm.ts`, replace the body of `noDecoLimitsSequence` with:
         yield* this.noDecoLimitsOfProfile(algorithmParams, profile.segments);
 ```
 
-Add below it a new method containing the rest of the former body: everything after the `errors` check, with `profile.segments` replaced by `profile`:
+Add below it a new method containing the rest of the former body. Replace `profile.segments` with `profile`, and add the empty-profile guard:
 
 ```ts
     /**
      * The same as noDecoLimitsSequence, but for already calculated profile of the dive, see the decompression method.
      * @param dive Not null dive definition: gases, options, breathing model and surface interval. The plan segments aren't used.
-     * @param profile Not empty, already calculated profile of the dive: user defined segments followed by the calculated ascent.
+     * @param profile Already calculated profile of the dive: user defined segments followed by the calculated ascent.
+     * Nothing is yielded for empty profile.
      */
     public *noDecoLimitsOfProfile(dive: AlgorithmParams, profile: Segment[]): Generator<number> {
+        if (profile.length === 0) {
+            return;
+        }
+
         const { gases, options, surfaceInterval, breathing } = dive;
         const depthConverter = new DepthConverterFactory(options).create();
         const rested = this.applySurfaceInterval(surfaceInterval);
@@ -791,25 +809,7 @@ Add below it a new method containing the rest of the former body: everything aft
         const last = profile[profile.length - 1];
         yield this.noDecoLimitAt(context, last.endDepth, last.gas, last.speed === 0 ? previous : undefined);
     }
-
-    /**
-     * Ceilings of already calculated profile, sampled every second.
-     * Faster than decompressionStatistics, since no other statistics are collected.
-     * @param dive Not null dive definition: gases, options, breathing model and surface interval. The plan segments aren't used.
-     * @param profile Not empty, already calculated profile of the dive, see the decompression method.
-     */
-    public ceilingsOfProfile(dive: AlgorithmParams, profile: Segment[]): Ceiling[] {
-        const { gases, options, surfaceInterval, breathing } = dive;
-        const depthConverter = new DepthConverterFactory(options).create();
-        const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = AlgorithmContext.createForCeilings(gases, Segments.fromCollection(profile),
-            options, depthConverter, breathing, rested.finalTissues);
-        this.swimPlan(context);
-        return context.ceilings;
-    }
 ```
-
-`Ceiling` is already imported from `./CalculatedProfile`. `swimPlan` adds a ceiling sample at the start and after every second, the same as `decompressionStatistics`.
 
 - [ ] **Step 4: Run the tests to check they pass**
 
@@ -824,12 +824,12 @@ Expected: all pass, no lint errors, build succeeds.
 
 ```bash
 git add projects/scuba-physics/src/lib/algorithm/BuhlmannAlgorithm.ts projects/scuba-physics/src/lib/algorithm/BuhlmannAlgorithm.noDecoLimits.spec.ts
-git commit -m "feat: #106 ceilings and no decompression limits of calculated profile"
+git commit -m "feat: #106 no decompression limits of calculated profile"
 ```
 
 ---
 
-### Task 3: `DiveComputer`: computer data of the whole dive (L1, L3)
+### Task 3: `DiveComputer`: computer data of the calculated dive (L1, L3)
 
 - [ ] Status
 
@@ -841,15 +841,17 @@ git commit -m "feat: #106 ceilings and no decompression limits of calculated pro
 
 **Interfaces:**
 
-- Consumes: `ComputerProfile.sample / empty`, `ComputerData`, `RunTimePoint`, `ComputerEvent` (Task 1); `BuhlmannAlgorithm.ceilingsOfProfile / noDecoLimitsOfProfile` (Task 2); `BuhlmannAlgorithm.decompression`, `ProfileEvents.fromProfile`, `Segments.fromCollection(...).startAscentIndex`, `GasDensity.recommendedMaximum`.
-- Produces (exported from `scuba-physics`), `class DiveComputer`:
-  - `static start(dive: AlgorithmParams): DiveComputer`. It calculates the decompression profile once, then the ceilings, the algorithm events, and the samples with stops and next stops. NDL isn't calculated yet.
-  - `get events(): ComputerEvent[]`, sorted by runtime.
-  - `get total(): number`: the count of points, one per second.
-  - `points(): Generator<RunTimePoint>`. It yields each point as soon as its NDL is calculated, and can be iterated only once.
-  - `static calculate(dive: AlgorithmParams): ComputerData`: the complete data, including NDL.
-  - An invalid dive (the decompression returns errors) gives `total` 0, no events and no points.
-  - The user defined segments for the stop detection are `dive.segments.length`.
+- Consumes: `ComputerProfile.sample`, `ComputerData`, `RunTimePoint`, `ComputerEvent` (Task 1); `BuhlmannAlgorithm.noDecoLimitsOfProfile` (Task 2).
+- Produces (exported from `scuba-physics`):
+  - `interface CalculatedDive { dive: AlgorithmParams; profile: Segment[]; ceilings: Ceiling[]; events: Event[]; }`
+  - `class DiveComputer`:
+    - `static start(calculated: CalculatedDive): DiveComputer`. It samples the dive: points, events, stops and next stops. Nothing is calculated again.
+    - `get events(): ComputerEvent[]`, sorted by runtime.
+    - `get total(): number`: the count of points, one per second.
+    - `points(): Generator<RunTimePoint>`. It yields each point as soon as its NDL is predicted, and can be iterated only once.
+    - `static calculate(calculated: CalculatedDive): ComputerData`: the complete data, including NDL.
+  - The user defined segments for the stop detection are `calculated.dive.segments.length`.
+  - An empty profile gives `total` 0, no events and no points.
 
 - [ ] **Step 1: Write the failing tests**
 
@@ -859,13 +861,15 @@ git commit -m "feat: #106 ceilings and no decompression limits of calculated pro
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { OptionExtensions } from '../algorithm/Options.spec';
+import { ProfileEvents } from '../algorithm/ProfileEvents';
 import { Segments } from '../depths/Segments';
+import { GasDensity } from '../gases/GasDensity';
 import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
 import { Salinity } from '../physics/pressure-converter';
 import { Time } from '../physics/Time';
 import { ComputerEventType, GasSwitchEvent } from './ComputerData';
-import { DiveComputer } from './DiveComputer';
+import { CalculatedDive, DiveComputer } from './DiveComputer';
 
 describe('DiveComputer', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
@@ -880,6 +884,29 @@ describe('DiveComputer', () => {
         return AlgorithmParams.forMultilevelDive(segments, allGases, options, OptionExtensions.openCircuit(options), surface);
     };
 
+    /** Calculates the dive the same way as the planner does: profile, ceilings and all events */
+    const calculateDive = (dive: AlgorithmParams, surface?: RestingParameters): CalculatedDive => {
+        const profile = algorithm.decompression(dive).segments;
+        const calculatedSegments = Segments.fromCollection(profile);
+        const calculatedDive = AlgorithmParams.forMultilevelDive(calculatedSegments, dive.gases, dive.options, dive.breathing, surface);
+        const ceilings = algorithm.decompressionStatistics(calculatedDive).ceilings;
+        const events = ProfileEvents.fromProfile({
+            maxDensity: GasDensity.recommendedMaximum,
+            startAscentIndex: calculatedSegments.startAscentIndex,
+            profile: profile,
+            ceilings: ceilings,
+            profileOptions: dive.options,
+            breathing: dive.breathing
+        }).items;
+
+        return {
+            dive: dive,
+            profile: profile,
+            ceilings: ceilings,
+            events: events
+        };
+    };
+
     const fortyMetersFor30Minutes = (segments: Segments): void => {
         segments.add(40, air, Time.oneMinute * 2);
         segments.addFlat(air, Time.oneMinute * 28);
@@ -887,31 +914,31 @@ describe('DiveComputer', () => {
 
     // user defined plan takes 30 min, calculated ascent with decompression stops follows
     const decoDive = diveFor(fortyMetersFor30Minutes);
+    const calculatedDecoDive = calculateDive(decoDive);
     const userPlanEnd = Time.oneMinute * 30;
 
     it('Creates point for every second of the calculated profile', () => {
-        const profile = algorithm.decompression(decoDive).segments;
-        const duration = profile.reduce((sum, s) => sum + s.duration, 0);
-        const data = DiveComputer.calculate(decoDive);
+        const duration = calculatedDecoDive.profile.reduce((sum, s) => sum + s.duration, 0);
+        const data = DiveComputer.calculate(calculatedDecoDive);
         expect(data.profile.length).toEqual(Math.floor(duration) + 1);
-        expect(DiveComputer.start(decoDive).total).toEqual(data.profile.length);
+        expect(DiveComputer.start(calculatedDecoDive).total).toEqual(data.profile.length);
     });
 
-    it('Points are sampled from the calculated profile', () => {
-        const profile = DiveComputer.calculate(decoDive).profile;
+    it('Points are sampled from the calculated dive', () => {
+        const profile = DiveComputer.calculate(calculatedDecoDive).profile;
         expect(profile[0].depth).toBeCloseTo(0, 6);
         expect(profile[profile.length - 1].maxDepth).toBeCloseTo(40, 6);
         expect(profile.some(p => p.ceiling > 0)).toBeTrue();
     });
 
     it('Contains stops of the calculated ascent only', () => {
-        const stops = DiveComputer.calculate(decoDive).events.filter(e => e.type === ComputerEventType.stop);
+        const stops = DiveComputer.calculate(calculatedDecoDive).events.filter(e => e.type === ComputerEventType.stop);
         expect(stops.length).toBeGreaterThan(0);
         expect(stops.every(s => s.runTime >= userPlanEnd)).toBeTrue();
     });
 
     it('Contains gas switch events', () => {
-        const withDecoGas = diveFor(fortyMetersFor30Minutes, [air, StandardGases.ean50]);
+        const withDecoGas = calculateDive(diveFor(fortyMetersFor30Minutes, [air, StandardGases.ean50]));
         const switches = DiveComputer.calculate(withDecoGas).events
             .filter((e): e is GasSwitchEvent => e.type === ComputerEventType.gasSwitch);
         expect(switches.map(s => s.gasName)).toContain('EAN50');
@@ -919,26 +946,26 @@ describe('DiveComputer', () => {
 
     it('Points contain calculated no decompression limit', () => {
         const limits = algorithm.noDecoLimits(decoDive);
-        const profile = DiveComputer.calculate(decoDive).profile;
+        const profile = DiveComputer.calculate(calculatedDecoDive).profile;
         expect(profile[0].ndl).toEqual(limits[0]);
         expect(profile[200].ndl).toEqual(limits[200]);
         expect(profile[200].ndl).toBeGreaterThan(0);
     });
 
     it('Events and count of points are known before the points are calculated', () => {
-        const computer = DiveComputer.start(decoDive);
+        const computer = DiveComputer.start(calculatedDecoDive);
         expect(computer.events.length).toBeGreaterThan(0);
         expect(computer.total).toBeGreaterThan(0);
     });
 
     it('Points are provided one by one', () => {
-        const first = DiveComputer.start(decoDive).points().next();
+        const first = DiveComputer.start(calculatedDecoDive).points().next();
         expect(first.done).toBeFalse();
         expect(first.value.runTime).toEqual(0);
     });
 
     it('Next stop points to the stop event', () => {
-        const data = DiveComputer.calculate(decoDive);
+        const data = DiveComputer.calculate(calculatedDecoDive);
         const withStop = data.profile.find(p => p.nextStop !== undefined);
         expect(withStop).toBeDefined();
         expect(data.events.some(e => e === withStop?.nextStop)).toBeTrue();
@@ -949,20 +976,18 @@ describe('DiveComputer', () => {
             s.add(30, air, Time.oneMinute * 2);
             s.addFlat(air, Time.oneMinute * 20);
         });
-        const tissues = algorithm.decompression(firstDive).finalTissues;
+        const surface = new RestingParameters(algorithm.decompression(firstDive).finalTissues, Time.oneHour);
         const shallowDive = (segments: Segments): void => {
             segments.add(20, air, Time.oneMinute);
             segments.addFlat(air, Time.oneMinute * 10);
         };
-        const first = DiveComputer.calculate(diveFor(shallowDive));
-        const repetitive = DiveComputer.calculate(diveFor(shallowDive, [air], new RestingParameters(tissues, Time.oneHour)));
+        const first = DiveComputer.calculate(calculateDive(diveFor(shallowDive)));
+        const repetitive = DiveComputer.calculate(calculateDive(diveFor(shallowDive, [air], surface), surface));
         expect(repetitive.profile[120].ndl).toBeLessThan(first.profile[120].ndl);
     });
 
-    it('Invalid dive has no points and events', () => {
-        // gas used by the plan isn't in the gases
-        const invalid = diveFor(s => s.add(30, StandardGases.ean50, Time.oneMinute * 2));
-        const computer = DiveComputer.start(invalid);
+    it('Empty profile has no points and events', () => {
+        const computer = DiveComputer.start({ dive: decoDive, profile: [], ceilings: [], events: [] });
         expect(computer.total).toEqual(0);
         expect(computer.events).toEqual([]);
         expect(Array.from(computer.points())).toEqual([]);
@@ -982,15 +1007,26 @@ Expected: compilation FAIL, "Cannot find module './DiveComputer'".
 ```ts
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams } from '../algorithm/BuhlmannAlgorithmParameters';
-import { ProfileEvents } from '../algorithm/ProfileEvents';
-import { Segments } from '../depths/Segments';
-import { GasDensity } from '../gases/GasDensity';
+import { Ceiling, Event } from '../algorithm/CalculatedProfile';
+import { Segment } from '../depths/Segments';
 import { ComputerData, ComputerEvent, RunTimePoint } from './ComputerData';
 import { ComputerProfile } from './ComputerProfile';
 
+/** The whole dive: its definition and already calculated results */
+export interface CalculatedDive {
+    /** Definition of the dive: plan defined by user, gases, options, breathing model and surface interval */
+    dive: AlgorithmParams;
+    /** Already calculated profile: user defined segments followed by the calculated ascent, see BuhlmannAlgorithm.decompression */
+    profile: Segment[];
+    /** Ceilings of the profile, sampled every second */
+    ceilings: Ceiling[];
+    /** All events of the profile calculated by the algorithm */
+    events: Event[];
+}
+
 /**
- * Dive computer data of the whole dive.
- * Everything except the slow no decompression limit is calculated when started,
+ * Dive computer data of already calculated dive.
+ * Everything except the slow no decompression limit is sampled when started,
  * the points with no decompression limit are provided one by one.
  */
 export class DiveComputer {
@@ -1007,42 +1043,21 @@ export class DiveComputer {
         return this.data.profile.length;
     }
 
-    /**
-     * @param dive Not null definition of the whole dive: plan defined by user, gases, options,
-     * breathing model and surface interval, the same as for the decompression calculation.
-     */
-    public static start(dive: AlgorithmParams): DiveComputer {
-        const algorithm = new BuhlmannAlgorithm();
-        const calculated = algorithm.decompression(dive);
-
-        if (calculated.errors.length > 0) {
-            return new DiveComputer(ComputerProfile.empty(), []);
-        }
-
-        const profile = calculated.segments;
-        const ceilings = algorithm.ceilingsOfProfile(dive, profile);
-        const events = ProfileEvents.fromProfile({
-            maxDensity: GasDensity.recommendedMaximum,
-            startAscentIndex: Segments.fromCollection(profile).startAscentIndex,
-            profile: profile,
-            ceilings: ceilings,
-            profileOptions: dive.options,
-            breathing: dive.breathing
-        }).items;
-
+    /** Samples the calculated dive, nothing already calculated is calculated again */
+    public static start(calculated: CalculatedDive): DiveComputer {
         const data = ComputerProfile.sample({
-            profile: profile,
-            ceilings: ceilings,
-            events: events,
-            userSegments: dive.segments.length
+            profile: calculated.profile,
+            ceilings: calculated.ceilings,
+            events: calculated.events,
+            userSegments: calculated.dive.segments.length
         });
-
-        return new DiveComputer(data, algorithm.noDecoLimitsOfProfile(dive, profile));
+        const noDecoLimits = new BuhlmannAlgorithm().noDecoLimitsOfProfile(calculated.dive, calculated.profile);
+        return new DiveComputer(data, noDecoLimits);
     }
 
     /** Complete computer data of the whole dive including no decompression limits */
-    public static calculate(dive: AlgorithmParams): ComputerData {
-        const computer = DiveComputer.start(dive);
+    public static calculate(calculated: CalculatedDive): ComputerData {
+        const computer = DiveComputer.start(calculated);
         return {
             profile: Array.from(computer.points()),
             events: computer.events
@@ -1095,35 +1110,160 @@ Expected: all pass, no lint errors, build succeeds.
 
 ```bash
 git add projects/scuba-physics/src/lib/computer projects/scuba-physics/src/public-api.ts
-git commit -m "feat: #106 dive computer data of the whole dive in scuba-physics"
+git commit -m "feat: #106 dive computer data of calculated dive in scuba-physics"
 ```
 
 ---
 
-### Task 4: Planner uses the library (L2, L4, L5)
+### Task 4: `DiveResults` keeps the calculated dive for the computer (L3, L4)
 
 - [ ] Status
 
 **Files:**
 
-- Modify (rewrite): `projects/planner/src/app/workers/computer.tasks.ts`
-- Modify (rewrite): `projects/planner/src/app/workers/computer.tasks.spec.ts`
-- Modify: `projects/planner/src/app/workers/planning.tasks.ts` (add `diveParameters`, remove `noDecoLimits` / `noDecoLimitsSequence`)
-- Modify: `projects/planner/src/app/shared/serialization.model.ts` (model imports from `scuba-physics`)
-- Modify: `projects/planner/src/app/shared/computer/computer-profile.service.ts` and `computer-profile.service.spec.ts` (imports only)
+- Modify: `projects/planner/src/app/shared/diveresults.ts`
+- Modify: `projects/planner/src/app/shared/planner.service.ts`
+- Test: `projects/planner/src/app/shared/planner.service.spec.ts`
+
+**Interfaces:**
+
+- Produces:
+  - `DiveResults.profile: Segment[]`: the calculated profile in meters, the same segments the way points are made from. Empty when not calculated or failed.
+  - `DiveResults.algorithmEvents: Event[]`: all events calculated by the algorithm, not filtered by the ignored issues. Empty when not calculated or failed.
+  - `DiveResults.updateProfile(wayPoints, finalTissues, profile: Segment[] = [])`
+  - `DiveResults.updateDiveInfo(..., dailyCns = 0, cnsExposures = [], algorithmEvents: Event[] = [])`
+  - `PlannerService` fills both after each calculation of a dive.
+
+- [ ] **Step 1: Write the failing tests**
+
+In `planner.service.spec.ts`, add `EventType` to the `scuba-physics` import. Append inside `describe('App settings are applied', ...)` (that block ignores the no-deco event):
+
+```ts
+        it('Keeps all algorithm events for the dive computer', () => {
+            expect(dive.algorithmEvents.some(e => e.type === EventType.noDecoEnd)).toBeTrue();
+        });
+```
+
+Append inside the top level `describe('PlannerService', ...)`:
+
+```ts
+    describe('Calculated dive for the dive computer', () => {
+        it('Keeps calculated profile in meters', () => {
+            expect(dive.profile.length).toEqual(dive.wayPoints.length);
+            expect(dive.profile[0].endDepth).toEqual(30);
+        });
+
+        it('Keeps algorithm events', () => {
+            expect(dive.algorithmEvents.length).toBeGreaterThanOrEqual(dive.events.length);
+        });
+    });
+```
+
+- [ ] **Step 2: Run them to check they fail**
+
+Run: `npx ng test --project planner --browsers=ChromeHeadless --no-watch --include='**/shared/planner.service.spec.ts'`
+Expected: compilation FAIL, "Property 'algorithmEvents' does not exist on type 'DiveResults'".
+
+- [ ] **Step 3: Keep the data in `DiveResults`**
+
+In `diveresults.ts`, add `Event` and `Segment` to the `scuba-physics` import, and add the fields next to `_wayPoints` and `_events`:
+
+```ts
+    private _profile: Segment[] = [];
+    private _algorithmEvents: Event[] = [];
+```
+
+Add the getters next to `wayPoints` and `events`:
+
+```ts
+    /** Calculated profile in meters: user defined segments followed by the calculated ascent */
+    public get profile(): Segment[] {
+        return this._profile;
+    }
+
+    /** All events calculated by the algorithm, not filtered by the ignored issues. Used by the dive computer. */
+    public get algorithmEvents(): Event[] {
+        return this._algorithmEvents;
+    }
+```
+
+Extend the update methods:
+
+```ts
+    public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
+        this.updateProfileInternal(wayPoints, finalTissues, profile);
+        this.profileCalculation.finished();
+    }
+```
+
+```ts
+    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
+        this._wayPoints = wayPoints;
+        this._finalTissues = finalTissues;
+        this._profile = profile;
+    }
+```
+
+In `updateDiveInfo`:
+
+- add the last parameter `algorithmEvents: Event[] = []`;
+- add `this._algorithmEvents = algorithmEvents;` next to `this._cnsExposures = cnsExposures;`.
+
+In `emptyDiveInfo()`, add `this._algorithmEvents = [];`.
+
+- [ ] **Step 4: Fill it in `PlannerService`**
+
+In `planner.service.ts` `continueCalculation`, replace `diveResult.updateProfile(wayPoints, calculatedProfile.finalTissues);` with:
+
+```ts
+        const profile = calculatedProfile.errors.length > 0 ? [] : calculatedProfile.segments;
+        diveResult.updateProfile(wayPoints, calculatedProfile.finalTissues, profile);
+```
+
+In `finishDiveInfo`, add `events.items` as the last argument of `diveResult.updateDiveInfo(...)`, after `diveInfoResult.cnsExposures`.
+
+- [ ] **Step 5: Run the tests to check they pass**
+
+Run: the Step 2 command. Expected: 0 failures.
+
+- [ ] **Step 6: Full suite and lint**
+
+Run: `npm run test-ci`, `npx eslint -c projects/planner/eslint.config.mjs projects/planner/src/app/shared/diveresults.ts projects/planner/src/app/shared/planner.service.ts projects/planner/src/app/shared/planner.service.spec.ts`.
+Expected: all specs pass, no lint errors.
+
+- [ ] **Step 7: Commit**
+
+```bash
+git add projects/planner/src/app/shared/diveresults.ts projects/planner/src/app/shared/planner.service.ts projects/planner/src/app/shared/planner.service.spec.ts
+git commit -m "feat: #106 keep calculated profile and all events of the dive"
+```
+
+---
+
+### Task 5: Planner uses the library (L2, L4, L5, L6)
+
+- [ ] Status
+
+**Files:**
+
+- Modify: `projects/planner/src/app/shared/serialization.model.ts` (the request carries the calculated dive; model types come from `scuba-physics`)
+- Modify: `projects/planner/src/app/shared/computer/computer-profile.service.ts` and `computer-profile.service.spec.ts`
+- Modify (rewrite): `projects/planner/src/app/workers/computer.tasks.ts` and `computer.tasks.spec.ts`
+- Modify: `projects/planner/src/app/workers/planning.tasks.ts` (add `diveParameters`; remove `noDecoLimits` / `noDecoLimitsSequence`)
 - Modify: `projects/planner/src/app/shared/models.ts` and `models.spec.ts` (remove the now unused `BoundEvent.type` / `depthMeters`)
 - Delete: `projects/planner/src/app/shared/computer/computer.model.ts`, `computerProfile.ts`, `computerProfile.spec.ts`
 
 **Interfaces:**
 
-- Consumes: `DiveComputer`, `RunTimePoint`, `ComputerEvent`, `ComputerData`, `StopEvent`, `ComputerEventType`, `ComputerProfile.empty` from `scuba-physics` (Tasks 1–3).
+- Consumes: `DiveComputer`, `CalculatedDive`, `RunTimePoint`, `ComputerEvent`, `ComputerData`, `StopEvent`, `ComputerEventType`, `ComputerProfile.empty` from `scuba-physics` (Tasks 1–3); `DiveResults.profile / ceilings / algorithmEvents` (Task 4).
 - Produces:
-  - `PlanningTasks.diveParameters(task: PlanRequestDto): AlgorithmParams`: the whole dive planned by the user.
+  - `ComputerRequestDto extends PlanRequestDto { calculationId: number; profile: SegmentDto[]; ceilings: Ceiling[]; events: EventDto[]; }`
+  - `PlanningTasks.diveParameters(task: PlanRequestDto): AlgorithmParams`: the definition of the dive planned by the user.
   - `ComputerTasks.calculate` posts the same messages as before. Its only remaining job is converting `nextStop` to `nextStopIndex`.
 
 - [ ] **Step 1: Rewrite the worker spec**
 
-Replace `computer.tasks.spec.ts` with this version. It drops the `PlanningTasks.noDecoLimits` comparison, which is now library behaviour, and compares against the library algorithm instead:
+Replace `computer.tasks.spec.ts`. The request now carries the calculated dive, prepared here the same way the planner calculates it:
 
 ```ts
 import { BuhlmannAlgorithm, ComputerEventType } from 'scuba-physics';
@@ -1139,14 +1279,30 @@ import { ComputerTasks } from './computer.tasks';
 import { PlanningTasks } from './planning.tasks';
 
 describe('ComputerTasks', () => {
-    /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops */
+    /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops, calculated the same way as by the planner */
     const createRequest = (): ComputerRequestDto => {
         const schedules = new DiveSchedules(new UnitConversion(), new ReloadDispatcher());
         const dive = schedules.selected;
         dive.depths.plannedDepth = 40;
         dive.depths.planDuration = 30;
         const request = PlanRequestFactory.create(dive, schedules.previousDiveTissues(dive.id));
-        return { ...request, calculationId: 7 };
+        const profile = PlanningTasks.calculateDecompression(request).profile;
+        const diveInfo = PlanningTasks.diveInfo({
+            ...request,
+            calculatedProfile: profile.segments,
+            calculatedTissues: profile.finalTissues,
+            eventOptions: { maxDensity: 5.7 },
+            previousCns: 0,
+            previousCnsExposures: []
+        });
+
+        return {
+            ...request,
+            calculationId: 7,
+            profile: profile.segments,
+            ceilings: diveInfo.ceilings,
+            events: diveInfo.events
+        };
     };
 
     const calculate = (request: ComputerRequestDto): ComputerResultDto[] => {
@@ -1175,9 +1331,10 @@ describe('ComputerTasks', () => {
         expect(messages.every(m => m.calculationId === 7)).toBeTrue();
     });
 
-    it('Points are calculated from the planned dive', () => {
+    it('Points are calculated from the calculated dive', () => {
         const points = pointsOf(calculate(createRequest()));
         expect(points[points.length - 1].point.maxDepth).toBeCloseTo(40, 6);
+        expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
     });
 
     it('Points contain no decompression limit of the planned dive', () => {
@@ -1202,8 +1359,8 @@ describe('ComputerTasks', () => {
         expect('nextStop' in (withStop?.point ?? {})).toBeFalse();
     });
 
-    it('Empty plan posts no points', () => {
-        const request = { ...createRequest(), plan: [] };
+    it('Empty profile posts no points', () => {
+        const request = { ...createRequest(), plan: [], profile: [], ceilings: [], events: [] };
         const messages = calculate(request);
         expect(messages.map(m => m.type)).toEqual(['started', 'finished']);
         expect((messages[0] as ComputerStartedDto).total).toEqual(0);
@@ -1211,12 +1368,56 @@ describe('ComputerTasks', () => {
 });
 ```
 
-- [ ] **Step 2: Run it to check it fails**
+- [ ] **Step 2: Add the service test**
 
-Run: `npx ng test --project planner --browsers=ChromeHeadless --no-watch --include='**/workers/computer.tasks.spec.ts'`
-Expected: compilation FAIL, "Property 'diveParameters' does not exist on type 'typeof PlanningTasks'".
+In `computer-profile.service.spec.ts`:
 
-- [ ] **Step 3: Planning task and worker procedure**
+- replace the `./computer.model` import with `ComputerData, ComputerEventType, StopEvent` from `'scuba-physics'`;
+- add `Ceiling, EventsFactory` to the `scuba-physics` import, merging these into the existing import;
+- append inside `describe('Calculation', ...)`:
+
+```ts
+        it('Request contains calculated profile, ceilings and all events of selected dive', () => {
+            const first = schedules.dives[0];
+            const results = first.diveResult;
+            const segment = new Segment(0, 0, StandardGases.air, 10);
+            results.start();
+            results.updateProfile([WayPoint.fromSegment(units, segment)], ProfileTissues.createAtSurface(0), [segment]);
+            results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(),
+                [new Ceiling(1, 0)], [], [], 0, [], [EventsFactory.createNoDecoEnd(5, 0)]);
+            results.updateConsumption(0, 0, 0, 0, 0, false, false, []);
+            dispatcher.sendInfoCalculated(first.id);
+            expect(worker.lastRequest.profile.length).toEqual(1);
+            expect(worker.lastRequest.ceilings.length).toEqual(1);
+            expect(worker.lastRequest.events.length).toEqual(1);
+        });
+```
+
+- [ ] **Step 3: Run them to check they fail**
+
+Run: `npx ng test --project planner --browsers=ChromeHeadless --no-watch --include='**/workers/computer.tasks.spec.ts' --include='**/computer/computer-profile.service.spec.ts'`
+Expected: compilation FAIL. `ComputerRequestDto` has no `profile` / `ceilings` / `events`, and `PlanningTasks.diveParameters` doesn't exist.
+
+- [ ] **Step 4: Request DTO, planning task, worker and service**
+
+In `serialization.model.ts`:
+
+- remove `import { ComputerData, RunTimePoint } from './computer/computer.model';`;
+- add `ComputerData, RunTimePoint` to the existing `scuba-physics` import (it already imports `Ceiling`);
+- replace `ComputerRequestDto` with:
+
+```ts
+export interface ComputerRequestDto extends PlanRequestDto {
+    /** Identifies the calculation, messages of interrupted calculations are ignored */
+    calculationId: number;
+    /** Already calculated profile of the dive: user defined segments followed by the calculated ascent */
+    profile: SegmentDto[];
+    /** Already calculated ceilings of the profile, plain objects after the transfer */
+    ceilings: Ceiling[];
+    /** All events of the profile calculated by the algorithm, not filtered by ignored issues */
+    events: EventDto[];
+}
+```
 
 In `planning.tasks.ts`:
 
@@ -1235,15 +1436,23 @@ Replace `computer.tasks.ts` with:
 
 ```ts
 import { ComputerEvent, DiveComputer, RunTimePoint } from 'scuba-physics';
+import { DtoSerialization } from '../shared/dtoSerialization';
 import { ComputerPointDto, ComputerRequestDto, ComputerResultDto } from '../shared/serialization.model';
 import { PlanningTasks } from './planning.tasks';
 
-/** Streams the dive computer data calculated by the library from the worker */
+/** Streams the dive computer data calculated by the library from the already calculated dive */
 export class ComputerTasks {
     /** Posts started, one point for every second of the dive and finished message */
     public static calculate(task: ComputerRequestDto, post: (message: ComputerResultDto) => void): void {
         const calculationId = task.calculationId;
-        const computer = DiveComputer.start(PlanningTasks.diveParameters(task));
+        const tanks = DtoSerialization.toTanks(task.tanks);
+        const computer = DiveComputer.start({
+            dive: PlanningTasks.diveParameters(task),
+            profile: DtoSerialization.toSegments(task.profile, tanks),
+            ceilings: task.ceilings,
+            events: DtoSerialization.toEvents(task.events).items
+        });
+
         post({ calculationId: calculationId, type: 'started', total: computer.total, events: computer.events });
         let index = 0;
 
@@ -1270,38 +1479,52 @@ export class ComputerTasks {
 }
 ```
 
-- [ ] **Step 4: Remove the planner model and calculator**
+In `computer-profile.service.ts`:
+
+- replace the `./computer.model` and `./computerProfile` imports with `import { ComputerData, ComputerProfile, RunTimePoint, StopEvent } from 'scuba-physics';`;
+- add `import { DtoSerialization } from '../dtoSerialization';`;
+- in `refresh()`, replace the `this.task.calculate(...)` call with:
+
+```ts
+        this.task.calculate({
+            ...request,
+            calculationId: this.calculationId,
+            profile: DtoSerialization.fromSegments(results.profile),
+            ceilings: results.ceilings,
+            events: DtoSerialization.fromEvents(results.algorithmEvents)
+        });
+```
+
+- [ ] **Step 5: Remove the planner model, calculator and unused members**
 
 ```bash
 git rm projects/planner/src/app/shared/computer/computer.model.ts projects/planner/src/app/shared/computer/computerProfile.ts projects/planner/src/app/shared/computer/computerProfile.spec.ts
 ```
 
-Point the imports at `scuba-physics`:
+In `models.ts`, remove the `BoundEvent.type` and `BoundEvent.depthMeters` getters; nothing uses them any more. Keep `gasName`, which `chartEventText` uses. In `models.spec.ts`, remove the specs "Exposes event type" and "Depth in meters with imperial units". Remove `EventType` from the spec's imports if it is no longer used.
 
-- `serialization.model.ts`: remove `import { ComputerData, RunTimePoint } from './computer/computer.model';` and add `ComputerData, RunTimePoint` to the existing `scuba-physics` import.
-- `computer-profile.service.ts`: replace the `./computer.model` and `./computerProfile` imports with `import { ComputerData, ComputerProfile, RunTimePoint, StopEvent } from 'scuba-physics';`.
-- `computer-profile.service.spec.ts`: replace the `./computer.model` import with `import { ComputerData, ComputerEventType, StopEvent } from 'scuba-physics';`, and merge it into the existing `scuba-physics` import.
+Check that nothing references the removed code:
+`grep -rn "\.depthMeters\b\|computer\.model\|computerProfile'\|noDecoLimitsSequence\|PlanningTasks.noDecoLimits" projects/planner/src`
+Expected: no matches. `WayPoint.startDepthMeters` / `endDepthMeters` are different members and stay.
 
-In `models.ts`, remove the `BoundEvent.type` and `BoundEvent.depthMeters` getters; nothing uses them any more. Keep `gasName`, which `chartEventText` uses. In `models.spec.ts`, remove the two specs "Exposes event type" and "Depth in meters with imperial units". Remove `EventType` from that spec's imports if it is no longer used.
-
-Check that nothing else uses the removed members:
-`grep -rn "depthMeters\|\.type\b.*BoundEvent\|computer.model\|computerProfile'" projects/planner/src`
-Expected: no matches for the removed members and files. `WayPoint.startDepthMeters` / `endDepthMeters` are different members and stay.
-
-- [ ] **Step 5: Run the tests to check they pass**
+- [ ] **Step 6: Run the tests to check they pass**
 
 Run: `npx ng test --project planner --browsers=ChromeHeadless --no-watch --include='**/workers/background-task.spec.ts' --include='**/workers/computer.tasks.spec.ts' --include='**/computer/*.spec.ts' --include='**/shared/models.spec.ts'`
 Expected: 0 failures.
 
-- [ ] **Step 6: Full suite and lint**
+- [ ] **Step 7: Full suite, lint, production build and worker bundle check**
 
-Run: `npm run test-ci`, then `npx eslint -c projects/planner/eslint.config.mjs` on all files changed by this task.
-Expected: all specs pass, no lint errors in the changed files.
+Run:
 
-- [ ] **Step 7: Production build and worker bundle check**
+- `npm run test-ci`;
+- `npx eslint -c projects/planner/eslint.config.mjs` on all files changed by this task;
+- `npm run build`.
 
-Run: `npm run build`.
-Expected: build succeeds. In the "Lazy chunk files" table, `computer-worker` is roughly the size of `profile-worker`, about 150 kB, instead of 427 kB. That shows Angular is no longer bundled into the worker. Record the size in the task report.
+Expected:
+
+- all specs pass, and the changed files have no lint errors;
+- the build succeeds;
+- in the "Lazy chunk files" table, `computer-worker` is roughly the size of `profile-worker` (about 150 kB) instead of 427 kB, which shows Angular is no longer bundled into the worker. Record the size in the task report.
 
 - [ ] **Step 8: Commit**
 
@@ -1312,7 +1535,7 @@ git commit -m "refactor: #106 calculate computer data by scuba-physics"
 
 ---
 
-### Task 5: Performance test in the library (L6)
+### Task 6: Performance test in the library (L7)
 
 - [ ] Status
 
@@ -1321,14 +1544,16 @@ git commit -m "refactor: #106 calculate computer data by scuba-physics"
 - Create: `projects/scuba-physics/src/lib/computer/DiveComputer.performance.spec.ts`
 - Create: `projects/scuba-physics/karma.performance.conf.js`
 - Delete: `projects/planner/src/app/workers/computer.performance.spec.ts`, `projects/planner/karma.performance.conf.js`
-- Modify: `package.json` (`test-performance` targets the library; the library test scripts exclude the performance spec)
+- Modify: `package.json` (`test-performance` targets the library; the library test scripts exclude performance specs)
 
 **Interfaces:**
 
-- Consumes: `DiveComputer.start / points / total` (Task 3).
+- Consumes: `DiveComputer.start / points / total`, `CalculatedDive` (Task 3).
 - Produces: `npm run test-performance`. It runs `**/*.performance.spec.ts` of `scuba-physics` in headless Chrome with `--enable-precise-memory-info --js-flags=--expose-gc`, and logs one line per dive: `<dive>: <ms> ms, <points> points, peak heap +<MB> MB, retained heap +<MB> MB`.
 
-The dives are the same three as R17. They are now built from library types with the library test options (GF 40/85, 20 m/min descent), so the numbers aren't directly comparable with the earlier planner measurement.
+**What is measured:** the computer calculation from the already calculated dive: the sampling plus the NDL of every point. That is the work the computer worker does. The dive itself (profile, ceilings, events) is calculated before the measurement starts, because the planner has already calculated it.
+
+The dives are the same three as R17. They are built from library types with the library test options (GF 40/85, 20 m/min descent), so the numbers aren't directly comparable with the earlier planner measurement.
 
 - [ ] **Step 1: Karma configuration and scripts**
 
@@ -1375,15 +1600,18 @@ git rm projects/planner/src/app/workers/computer.performance.spec.ts projects/pl
 `projects/scuba-physics/src/lib/computer/DiveComputer.performance.spec.ts`:
 
 ```ts
+import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams, durationFor } from '../algorithm/BuhlmannAlgorithmParameters';
 import { OptionExtensions } from '../algorithm/Options.spec';
+import { ProfileEvents } from '../algorithm/ProfileEvents';
 import { Segments } from '../depths/Segments';
+import { GasDensity } from '../gases/GasDensity';
 import { Gas, Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
 import { Salinity } from '../physics/pressure-converter';
 import { Time } from '../physics/Time';
 import { RunTimePoint } from './ComputerData';
-import { DiveComputer } from './DiveComputer';
+import { CalculatedDive, DiveComputer } from './DiveComputer';
 
 /** Chrome only, precise values require --enable-precise-memory-info, see karma.performance.conf.js */
 interface ChromeMemory {
@@ -1414,6 +1642,7 @@ const toMegaBytes = (bytes: number): number => Math.round(bytes / 1024 / 1024 * 
 
 describe('Dive computer performance', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+    const algorithm = new BuhlmannAlgorithm();
 
     /** Descent at the descent speed, then staying at the depth, so the plan takes the given minutes */
     const createDive = (depth: number, minutes: number, bottomGas: Gas, decoGases: Gas[] = []): AlgorithmParams => {
@@ -1427,15 +1656,39 @@ describe('Dive computer performance', () => {
         return AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
     };
 
-    /** Calculates complete computer data and measures it */
+    /** Calculates the dive the same way as the planner does: profile, ceilings and all events */
+    const calculateDive = (dive: AlgorithmParams): CalculatedDive => {
+        const profile = algorithm.decompression(dive).segments;
+        const calculatedSegments = Segments.fromCollection(profile);
+        const calculatedDive = AlgorithmParams.forMultilevelDive(calculatedSegments, dive.gases, dive.options, dive.breathing);
+        const ceilings = algorithm.decompressionStatistics(calculatedDive).ceilings;
+        const events = ProfileEvents.fromProfile({
+            maxDensity: GasDensity.recommendedMaximum,
+            startAscentIndex: calculatedSegments.startAscentIndex,
+            profile: profile,
+            ceilings: ceilings,
+            profileOptions: dive.options,
+            breathing: dive.breathing
+        }).items;
+
+        return {
+            dive: dive,
+            profile: profile,
+            ceilings: ceilings,
+            events: events
+        };
+    };
+
+    /** Calculates complete computer data of already calculated dive and measures it */
     const measure = (name: string, dive: AlgorithmParams): Measurement => {
+        const calculated = calculateDive(dive);
         const points: RunTimePoint[] = [];
         collectGarbage();
         const heapBefore = usedHeap();
         let peakHeap = heapBefore;
         const start = performance.now();
 
-        const computer = DiveComputer.start(dive);
+        const computer = DiveComputer.start(calculated);
 
         for (const point of computer.points()) {
             points.push(point);

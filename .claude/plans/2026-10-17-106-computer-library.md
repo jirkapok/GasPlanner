@@ -68,7 +68,7 @@ The behaviour stays as defined by the previous plan, `.claude/plans/2026-10-15-1
 
 ### Task 1: Library model and sampler (L1, L2, L6)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

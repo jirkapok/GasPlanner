@@ -41,6 +41,8 @@ export * from './lib/physics/pressure-converter';
 export * from './lib/algorithm/ProfileTissues';
 export * from './lib/algorithm/CalculatedProfile';
 export * from './lib/algorithm/ProfileEvents';
+export * from './lib/computer/ComputerData';
+export * from './lib/computer/ComputerProfile';
 export * from './lib/calculators/SacCalculator';
 export * from './lib/depths/Segments';
 export * from './lib/gases/StandardGases';

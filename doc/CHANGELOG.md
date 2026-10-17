@@ -1,3 +1,10 @@
+## [0.13.1](https://github.com/jirkapok/GasPlanner/compare/v0.13.0...v0.13.1) (2026-10-17)
+
+
+### Bug Fixes
+
+* Fix sidebar preformatted overflow bug ([#121](https://github.com/jirkapok/GasPlanner/issues/121)) ([b0dfded](https://github.com/jirkapok/GasPlanner/commit/b0dfded70f9a21008e88836a443d2daf04a5254c))
+
 # [0.13.0](https://github.com/jirkapok/GasPlanner/compare/v0.12.0...v0.13.0) (2026-10-15)
 
 

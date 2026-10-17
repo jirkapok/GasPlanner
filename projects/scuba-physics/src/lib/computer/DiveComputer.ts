@@ -23,7 +23,7 @@ export interface CalculatedDive {
  * the points with no decompression limit are provided one by one.
  */
 export class DiveComputer {
-    private constructor(private readonly data: ComputerData, private readonly noDecoLimits: Iterable<number>) {
+    private constructor(private readonly calculated: CalculatedDive, private readonly data: ComputerData) {
     }
 
     /** Events of the dive sorted by run time */
@@ -44,8 +44,7 @@ export class DiveComputer {
             events: calculated.events,
             userSegments: calculated.dive.segments.length
         });
-        const noDecoLimits = new BuhlmannAlgorithm().noDecoLimitsOfProfile(calculated.dive, calculated.profile);
-        return new DiveComputer(data, noDecoLimits);
+        return new DiveComputer(calculated, data);
     }
 
     /** Complete computer data of the whole dive including no decompression limits */
@@ -57,13 +56,17 @@ export class DiveComputer {
         };
     }
 
-    /** Yields every point as soon as its no decompression limit is calculated. Can be iterated only once. */
+    /**
+     * Yields every point as soon as its no decompression limit is calculated.
+     * Every call calculates the limits again and provides new point objects, already provided points aren't changed.
+     */
     public *points(): Generator<RunTimePoint, void, undefined> {
         const profile = this.data.profile;
+        const noDecoLimits = new BuhlmannAlgorithm().noDecoLimitsOfProfile(this.calculated.dive, this.calculated.profile);
         let index = 0;
         let lastLimit = 0;
 
-        for (const limit of this.noDecoLimits) {
+        for (const limit of noDecoLimits) {
             // limits are calculated for every started second of each segment, so there may be more of them than points
             if (index >= profile.length) {
                 break;
@@ -80,9 +83,8 @@ export class DiveComputer {
         }
     }
 
+    /** Copy of the sampled point, so the sampled data stay unchanged */
     private withNoDecoLimit(index: number, limit: number): RunTimePoint {
-        const point = this.data.profile[index];
-        point.ndl = limit;
-        return point;
+        return { ...this.data.profile[index], ndl: limit };
     }
 }

@@ -1,6 +1,5 @@
 import { Ceiling, Event, EventType } from '../algorithm/CalculatedProfile';
 import { Segment } from '../depths/Segments';
-import { GasNames } from '../gases/GasNames';
 import { Time } from '../physics/Time';
 import {
     ComputerData, ComputerEvent, ComputerEventType,
@@ -208,12 +207,11 @@ export class ComputerProfile {
             case EventType.brokenCeiling:
                 return { type: ComputerEventType.brokenCeiling, runTime: runTime, depth: depth };
             case EventType.gasSwitch: {
-                const gas = event.gas;
                 const gasSwitch: GasSwitchEvent = {
                     type: ComputerEventType.gasSwitch,
                     runTime: runTime,
                     depth: depth,
-                    gasName: gas ? GasNames.nameFor(gas.fO2, gas.fHe) : ''
+                    gasName: event.gas?.name ?? ''
                 };
                 return gasSwitch;
             }

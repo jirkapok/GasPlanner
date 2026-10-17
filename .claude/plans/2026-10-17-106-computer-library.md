@@ -1537,7 +1537,7 @@ git commit -m "refactor: #106 calculate computer data by scuba-physics"
 
 ### Task 6: Performance test in the library (L7)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

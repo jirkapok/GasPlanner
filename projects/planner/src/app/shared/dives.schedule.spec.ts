@@ -124,11 +124,11 @@ describe('Scheduled dives', () => {
     describe('Previous dive tissues', () => {
         const sut: DiveSchedules = createSut();
         const loadedTissues = ProfileTissues.createAtSurface();
-        sut.dives[0].diveResult.updateProfile([], loadedTissues);
+        sut.dives[0].diveResult.updateProfile([], loadedTissues, []);
 
         const repetitive = sut.add();
         repetitive.surfaceInterval = Time.oneHour;
-        repetitive.diveResult.updateProfile([], ProfileTissues.createAtSurface());
+        repetitive.diveResult.updateProfile([], ProfileTissues.createAtSurface(), []);
 
         sut.add();
 
@@ -165,9 +165,9 @@ describe('Scheduled dives', () => {
 
             sut.dives.forEach(d => {
                 // irrelevant values only to be able mark the dive calculated
-                d.diveResult.updateProfile([], ProfileTissues.createAtSurface(0));
+                d.diveResult.updateProfile([], ProfileTissues.createAtSurface(0), []);
                 d.diveResult.updateConsumption(0, 0, 0, 0, 0, false, false, []);
-                d.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+                d.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
             });
 
             sut.markStart(2);

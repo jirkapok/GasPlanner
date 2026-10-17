@@ -56,7 +56,7 @@ describe('Selected Waypoint', () => {
             });
 
             const dive = schedules.selected.diveResult;
-            dive.updateProfile(TestBedExtensions.sampleWayPoints(), ProfileTissues.createAtSurface(0));
+            dive.updateProfile(TestBedExtensions.sampleWayPoints(), ProfileTissues.createAtSurface(0), []);
             sut.selectedTimeStamp = '1/1/1970 0:8:00';
             const expected = schedules.selected.diveResult.wayPoints[1];
 

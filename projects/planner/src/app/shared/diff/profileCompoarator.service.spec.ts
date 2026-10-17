@@ -61,7 +61,7 @@ describe('ProfileComparison service', () => {
     it('Total duration of one dive', inject([UnitConversion], (units: UnitConversion) => {
         schedules.selected.diveResult.updateProfile([
             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 600))
-        ], irrelevantTissues);
+        ], irrelevantTissues, []);
 
         expect(sut.totalDuration).toEqual(600);
     }));
@@ -70,11 +70,11 @@ describe('ProfileComparison service', () => {
         schedules.add();
         schedules.dives[0].diveResult.updateProfile([
             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 500))
-        ], irrelevantTissues);
+        ], irrelevantTissues, []);
 
         schedules.dives[1].diveResult.updateProfile([
             WayPoint.fromSegment(units, new Segment(0,0, StandardGases.air, 700))
-        ], irrelevantTissues);
+        ], irrelevantTissues, []);
 
         sut.selectProfile(1);
 
@@ -110,16 +110,16 @@ describe('ProfileComparison service', () => {
         });
 
         it('Dive profiles are already calculated', () => {
-            sut.profileAResults.updateProfile([], irrelevantTissues);
-            sut.profileBResults.updateProfile([], irrelevantTissues);
+            sut.profileAResults.updateProfile([], irrelevantTissues, []);
+            sut.profileBResults.updateProfile([], irrelevantTissues, []);
             expect(sut.profilesCalculated).toBeTruthy();
         });
 
         it('Dive results are already calculated', () => {
             sut.profileAResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
-            sut.profileAResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            sut.profileAResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
             sut.profileBResults.updateConsumption(0, 0, 0, 0, 0, false, false, []);
-            sut.profileBResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            sut.profileBResults.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
             expect(sut.bothResultsCalculated).toBeTruthy();
         });
 

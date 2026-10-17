@@ -48,7 +48,7 @@ describe('Depths service', () => {
         const expectedNdl = 12;
         beforeEach(() => {
             const diveResults = TestBed.inject(DiveResults);
-            diveResults.updateDiveInfo(expectedNdl, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
+            diveResults.updateDiveInfo(expectedNdl, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], [], 0, [], []);
             diveResults.updateConsumption(expectedDuration, 0,0,0,0, false, false, []);
         });
 

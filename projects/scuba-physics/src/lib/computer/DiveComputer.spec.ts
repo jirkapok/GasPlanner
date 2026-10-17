@@ -100,8 +100,8 @@ describe('DiveComputer', () => {
 
     it('Points are provided one by one', () => {
         const first = DiveComputer.start(calculatedDecoDive).points().next();
-        expect(first.done).toBeFalse();
-        expect(first.value.runTime).toEqual(0);
+        const point = first.done ? undefined : first.value;
+        expect(point?.runTime).toEqual(0);
     });
 
     it('Next stop points to the stop event', () => {

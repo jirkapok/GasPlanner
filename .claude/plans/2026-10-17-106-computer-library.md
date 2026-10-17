@@ -1117,7 +1117,7 @@ git commit -m "feat: #106 dive computer data of calculated dive in scuba-physics
 
 ### Task 4: `DiveResults` keeps the calculated dive for the computer (L3, L4)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

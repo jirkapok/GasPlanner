@@ -2,7 +2,8 @@ import {
     Ceiling, HighestDensity,
     TissueOverPressures, LoadedTissues,
     OtuCalculator, ProfileTissues, CnsExposure,
-    CnsCalculator, CnsDailyCalculator, ConsumedGas, ConsumptionByGas
+    CnsCalculator, CnsDailyCalculator, ConsumedGas, ConsumptionByGas,
+    Event, Segment
 } from 'scuba-physics';
 import _ from 'lodash';
 import { Injectable } from '@angular/core';
@@ -43,6 +44,7 @@ export class DiveResults {
 
     // Profile related
     private _wayPoints: WayPoint[] = [];
+    private _profile: Segment[] = [];
     private _finalTissues: LoadedTissues = ProfileTissues.createAtSurface(0);
 
     // Dive info related
@@ -63,6 +65,7 @@ export class DiveResults {
     // 16 tissues overpressure history
     private _tissueOverPressures: TissueOverPressures[] = [];
     private _events: BoundEvent[] = [];
+    private _algorithmEvents: Event[] = [];
 
     // Consumption related
     private _maxTime = 0;
@@ -82,6 +85,11 @@ export class DiveResults {
 
     public get wayPoints(): WayPoint[] {
         return this._wayPoints;
+    }
+
+    /** Calculated profile in meters: user defined segments followed by the calculated ascent */
+    public get profile(): Segment[] {
+        return this._profile;
     }
 
     public get emergencyAscent(): WayPoint[] {
@@ -158,6 +166,11 @@ export class DiveResults {
 
     public get events(): BoundEvent[] {
         return this._events;
+    }
+
+    /** All events calculated by the algorithm, not filtered by the ignored issues. Used by the dive computer. */
+    public get algorithmEvents(): Event[] {
+        return this._algorithmEvents;
     }
 
     public get maxTime(): number {
@@ -327,8 +340,8 @@ export class DiveResults {
         this._calculationFailed = true;
     }
 
-    public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues): void {
-        this.updateProfileInternal(wayPoints, finalTissues);
+    public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
+        this.updateProfileInternal(wayPoints, finalTissues, profile);
         this.profileCalculation.finished();
     }
 
@@ -347,11 +360,13 @@ export class DiveResults {
         tissueOverPressures: TissueOverPressures[],
         events: BoundEvent[],
         dailyCns = 0,
-        cnsExposures: CnsExposure[] = []): void {
+        cnsExposures: CnsExposure[] = [],
+        algorithmEvents: Event[] = []): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;
         this._cnsExposures = cnsExposures;
+        this._algorithmEvents = algorithmEvents;
         this.diveInfoCalculation.finished();
     }
 
@@ -377,6 +392,7 @@ export class DiveResults {
 
     private emptyDiveInfo(): void {
         this.updateDiveInfoInternal(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+        this._algorithmEvents = [];
         this._dailyCns = 0;
         this._cnsExposures = [];
     }
@@ -385,9 +401,10 @@ export class DiveResults {
         this.updateConsumptionInternal(0, 0, 0, 0, 0, false, false, []);
     }
 
-    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues): void {
+    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
         this._wayPoints = wayPoints;
         this._finalTissues = finalTissues;
+        this._profile = profile;
     }
 
     private updateDiveInfoInternal(

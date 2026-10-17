@@ -1,10 +1,9 @@
 import {
     Tank, Ceiling, EventType,
     Salinity, SafetyStop, CircuitType,
-    TissueOverPressures
+    TissueOverPressures, ComputerData, RunTimePoint
 } from 'scuba-physics';
 import { ViewState } from './views.model';
-import { ComputerData, RunTimePoint } from './computer/computer.model';
 
 export interface AppPreferences extends AppPreferencesDto {
     states: AppStates;
@@ -275,6 +274,12 @@ export interface QuizSessionDto {
 export interface ComputerRequestDto extends PlanRequestDto {
     /** Identifies the calculation, messages of interrupted calculations are ignored */
     calculationId: number;
+    /** Already calculated profile of the dive: user defined segments followed by the calculated ascent */
+    profile: SegmentDto[];
+    /** Already calculated ceilings of the profile, plain objects after the transfer */
+    ceilings: Ceiling[];
+    /** All events of the profile calculated by the algorithm, not filtered by ignored issues */
+    events: EventDto[];
 }
 
 export interface ComputerStartedDto {

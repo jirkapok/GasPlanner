@@ -10,8 +10,8 @@ import {
     ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, ComputerStartedDto
 } from '../serialization.model';
-import { ComputerData, RunTimePoint, StopEvent } from './computer.model';
-import { ComputerProfile } from './computerProfile';
+import { ComputerData, ComputerProfile, RunTimePoint, StopEvent } from 'scuba-physics';
+import { DtoSerialization } from '../dtoSerialization';
 
 /**
  * Source data for the dive computer simulator.
@@ -140,7 +140,13 @@ export class ComputerProfileService extends Streamed {
         const dive = this._selectedDive;
         const request = PlanRequestFactory.create(dive, this.schedules.previousDiveTissues(dive.id));
         this.running = true;
-        this.task.calculate({ ...request, calculationId: this.calculationId });
+        this.task.calculate({
+            ...request,
+            calculationId: this.calculationId,
+            profile: DtoSerialization.fromSegments(results.profile),
+            ceilings: results.ceilings,
+            events: DtoSerialization.fromEvents(results.algorithmEvents)
+        });
     }
 
     private processMessage(message: ComputerResultDto): void {

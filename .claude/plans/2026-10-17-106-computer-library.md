@@ -1242,7 +1242,7 @@ git commit -m "feat: #106 keep calculated profile and all events of the dive"
 
 ### Task 5: Planner uses the library (L2, L4, L5, L6)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

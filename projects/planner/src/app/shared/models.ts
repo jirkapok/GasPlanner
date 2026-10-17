@@ -313,15 +313,6 @@ export class BoundEvent {
         return this.units.fromMeters(this.event.depth);
     }
 
-    public get type(): EventType {
-        return this.event.type;
-    }
-
-    /** in meters */
-    public get depthMeters(): number {
-        return this.event.depth;
-    }
-
     /** Name of the gas associated with the event, empty if the event has no gas */
     public get gasName(): string {
         const gas = this.event.gas;

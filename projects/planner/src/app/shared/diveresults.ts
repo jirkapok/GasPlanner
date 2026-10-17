@@ -340,7 +340,7 @@ export class DiveResults {
         this._calculationFailed = true;
     }
 
-    public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
+    public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[]): void {
         this.updateProfileInternal(wayPoints, finalTissues, profile);
         this.profileCalculation.finished();
     }
@@ -359,9 +359,9 @@ export class DiveResults {
         ceilings: Ceiling[],
         tissueOverPressures: TissueOverPressures[],
         events: BoundEvent[],
-        dailyCns = 0,
-        cnsExposures: CnsExposure[] = [],
-        algorithmEvents: Event[] = []): void {
+        dailyCns: number,
+        cnsExposures: CnsExposure[],
+        algorithmEvents: Event[]): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;
@@ -387,7 +387,7 @@ export class DiveResults {
     }
 
     private emptyProfile(): void {
-        this.updateProfileInternal([], ProfileTissues.createAtSurface(0));
+        this.updateProfileInternal([], ProfileTissues.createAtSurface(0), []);
     }
 
     private emptyDiveInfo(): void {
@@ -401,7 +401,7 @@ export class DiveResults {
         this.updateConsumptionInternal(0, 0, 0, 0, 0, false, false, []);
     }
 
-    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[] = []): void {
+    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[]): void {
         this._wayPoints = wayPoints;
         this._finalTissues = finalTissues;
         this._profile = profile;

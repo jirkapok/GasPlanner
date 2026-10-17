@@ -26,7 +26,7 @@ describe('Stops filter', () => {
         const schedules = TestBed.inject(DiveSchedules);
         dive = schedules.selected.diveResult;
 
-        dive.updateProfile(TestBedExtensions.sampleWayPoints(), irrelevantTissues);
+        dive.updateProfile(TestBedExtensions.sampleWayPoints(), irrelevantTissues, []);
     });
 
     it('When disabled returns all waypoints', () => {
@@ -68,7 +68,7 @@ describe('Stops filter', () => {
         ];
 
         // this is incorrect, because we don't set the used defined waypoints in depths plan
-        dive.updateProfile(wayPointService.calculateWayPoints(profile), irrelevantTissues);
+        dive.updateProfile(wayPointService.calculateWayPoints(profile), irrelevantTissues, []);
         service.switchFilter();
 
         const expected = [

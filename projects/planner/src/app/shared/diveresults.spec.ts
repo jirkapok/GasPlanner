@@ -5,7 +5,7 @@ describe('DiveResults', () => {
     let sut: DiveResults;
 
     const updateCns = (cns: number, dailyCns: number): void => {
-        sut.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, cns, HighestDensity.createDefault(), [], [], [], dailyCns, []);
+        sut.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, cns, HighestDensity.createDefault(), [], [], [], dailyCns, [], []);
     };
 
     beforeEach(() => {
@@ -43,7 +43,7 @@ describe('DiveResults', () => {
         });
 
         it('Daily CNS defaults to 0 % when not provided', () => {
-            sut.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 50, HighestDensity.createDefault(), [], [], []);
+            sut.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 50, HighestDensity.createDefault(), [], [], [], 0, [], []);
             expect(sut.dailyCns).toBe(0);
             expect(sut.cnsExceeded).toBeFalsy();
         });

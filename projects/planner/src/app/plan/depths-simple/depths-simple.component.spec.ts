@@ -93,7 +93,8 @@ describe('Depths Simple Component', () => {
             (schedule: DiveSchedules, dispatcher: ReloadDispatcher) => {
                 let eventFired = false;
                 dispatcher.depthChanged$.subscribe(() => eventFired = true );
-                schedule.selected.diveResult.updateDiveInfo(21, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(), [], [], []);
+                schedule.selected.diveResult.updateDiveInfo(21, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(),
+                    [], [], [], 0, [], []);
                 const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
                 simplePage.applyNdlButton.click();
                 expect(assignDurationSpy).toHaveBeenCalledWith();

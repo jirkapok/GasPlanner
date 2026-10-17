@@ -57,8 +57,8 @@ describe('ComputerProfileService', () => {
         const results = dive.diveResult;
         results.start();
         results.updateProfile([WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, duration))],
-            ProfileTissues.createAtSurface(0));
-        results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
+            ProfileTissues.createAtSurface(0), []);
+        results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
         results.updateConsumption(0, 0, 0, 0, 0, false, false, []);
         dispatcher.sendInfoCalculated(dive.id);
     };

@@ -712,7 +712,7 @@ git commit -m "feat: #106 sample computer data in scuba-physics"
 
 ### Task 2: NDL of an already calculated profile (L1, L3)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

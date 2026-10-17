@@ -70,14 +70,28 @@ export class BuhlmannAlgorithm {
             return;
         }
 
-        const { gases, options, surfaceInterval, breathing } = algorithmParams;
+        yield* this.noDecoLimitsOfProfile(algorithmParams, profile.segments);
+    }
+
+    /**
+     * The same as noDecoLimitsSequence, but for already calculated profile of the dive, see the decompression method.
+     * @param dive Not null dive definition: gases, options, breathing model and surface interval. The plan segments aren't used.
+     * @param profile Already calculated profile of the dive: user defined segments followed by the calculated ascent.
+     * Nothing is yielded for empty profile.
+     */
+    public *noDecoLimitsOfProfile(dive: AlgorithmParams, profile: Segment[]): Generator<number> {
+        if (profile.length === 0) {
+            return;
+        }
+
+        const { gases, options, surfaceInterval, breathing } = dive;
         const depthConverter = new DepthConverterFactory(options).create();
         const rested = this.applySurfaceInterval(surfaceInterval);
-        const context = AlgorithmContext.createWithoutStatistics(gases, Segments.fromCollection(profile.segments),
+        const context = AlgorithmContext.createWithoutStatistics(gases, Segments.fromCollection(profile),
             options, depthConverter, breathing, rested.finalTissues);
         let previous: number | undefined;
 
-        for (const segment of profile.segments) {
+        for (const segment of profile) {
             let depth = segment.startDepth;
 
             for (let elapsed = 0; elapsed < segment.duration; elapsed += Time.oneSecond) {
@@ -91,7 +105,7 @@ export class BuhlmannAlgorithm {
         }
 
         // the final moment at end of the profile, usually at surface
-        const last = profile.segments[profile.segments.length - 1];
+        const last = profile[profile.length - 1];
         yield this.noDecoLimitAt(context, last.endDepth, last.gas, last.speed === 0 ? previous : undefined);
     }
 

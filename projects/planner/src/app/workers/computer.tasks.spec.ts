@@ -91,6 +91,12 @@ describe('ComputerTasks', () => {
         expect('nextStop' in (withStop?.point ?? {})).toBeFalse();
     });
 
+    it('Calculates request transferred to the worker as plain objects', () => {
+        const transferred = structuredClone(createRequest());
+        const points = pointsOf(calculate(transferred));
+        expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
+    });
+
     it('Empty profile posts no points', () => {
         const request = { ...createRequest(), plan: [], profile: [], ceilings: [], events: [] };
         const messages = calculate(request);

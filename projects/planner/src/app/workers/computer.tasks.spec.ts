@@ -73,7 +73,9 @@ describe('ComputerTasks', () => {
         const request = createRequest();
         const limits = new BuhlmannAlgorithm().noDecoLimits(PlanningTasks.diveParameters(request));
         const points = pointsOf(calculate(request));
+        expect(points[0].point.ndl).toEqual(limits[0]);
         expect(points[200].point.ndl).toEqual(limits[200]);
+        expect(points[200].point.ndl).toBeGreaterThan(0);
     });
 
     it('Started contains stop events of deco dive', () => {

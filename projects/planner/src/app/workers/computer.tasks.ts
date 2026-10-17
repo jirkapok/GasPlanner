@@ -1,4 +1,4 @@
-import { ComputerEvent, DiveComputer, RunTimePoint } from 'scuba-physics';
+import { Ceiling, ComputerEvent, DiveComputer, RunTimePoint } from 'scuba-physics';
 import { DtoSerialization } from '../shared/dtoSerialization';
 import { ComputerPointDto, ComputerRequestDto, ComputerResultDto } from '../shared/serialization.model';
 import { PlanningTasks } from './planning.tasks';
@@ -12,7 +12,7 @@ export class ComputerTasks {
         const computer = DiveComputer.start({
             dive: PlanningTasks.diveParameters(task),
             profile: DtoSerialization.toSegments(task.profile, tanks),
-            ceilings: task.ceilings,
+            ceilings: task.ceilings.map(c => new Ceiling(c.time, c.depth)),
             events: DtoSerialization.toEvents(task.events).items
         });
 

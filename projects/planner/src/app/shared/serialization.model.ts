@@ -276,10 +276,18 @@ export interface ComputerRequestDto extends PlanRequestDto {
     calculationId: number;
     /** Already calculated profile of the dive: user defined segments followed by the calculated ascent */
     profile: SegmentDto[];
-    /** Already calculated ceilings of the profile, plain objects after the transfer */
-    ceilings: Ceiling[];
+    /** Already calculated ceilings of the profile */
+    ceilings: CeilingDto[];
     /** All events of the profile calculated by the algorithm, not filtered by ignored issues */
     events: EventDto[];
+}
+
+/** Ceiling after the transfer to the worker, plain object without the methods of Ceiling */
+export interface CeilingDto {
+    /** in seconds since start of the dive */
+    time: number;
+    /** in meters */
+    depth: number;
 }
 
 export interface ComputerStartedDto {

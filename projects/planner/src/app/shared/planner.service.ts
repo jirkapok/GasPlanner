@@ -88,7 +88,8 @@ export class PlannerService extends Streamed {
         const calculatedProfile = DtoSerialization.toProfile(result.profile, tankData);
         const diveResult = dive.diveResult;
         const wayPoints = this.wayPointsFromResult(calculatedProfile);
-        diveResult.updateProfile(wayPoints, calculatedProfile.finalTissues);
+        const profile = calculatedProfile.errors.length > 0 ? [] : calculatedProfile.segments;
+        diveResult.updateProfile(wayPoints, calculatedProfile.finalTissues, profile);
 
         if (diveResult.endsOnSurface) {
             this.processCalculatedProfile(result.profile, dive);
@@ -176,7 +177,8 @@ export class PlannerService extends Streamed {
             diveInfoResult.tissueOverPressures,
             filteredEvents,
             diveInfoResult.dailyCns,
-            diveInfoResult.cnsExposures
+            diveInfoResult.cnsExposures,
+            events.items
         );
         this.fireFinishedEvents(dive);
     }

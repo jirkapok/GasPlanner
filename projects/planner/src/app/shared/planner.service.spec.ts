@@ -1,6 +1,6 @@
 import {
     CalculatedProfile, CalculatedProfileStatistics,
-    Event, StandardGases, Time
+    Event, EventType, StandardGases, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
@@ -532,6 +532,10 @@ describe('PlannerService', () => {
         it('Filters events', () => {
             expect(_(dive.events).some(e => e.isNoDeco)).toBeFalsy();
         });
+
+        it('Keeps all algorithm events for the dive computer', () => {
+            expect(dive.algorithmEvents.some(e => e.type === EventType.noDecoEnd)).toBeTrue();
+        });
     });
 
     describe('Deco stop distance is applied', () => {
@@ -549,6 +553,17 @@ describe('PlannerService', () => {
 
             expect(wayDepths).toEqual(expectedWayDepths);
             expect(emerDepths).toEqual(expectedEmerDepths);
+        });
+    });
+
+    describe('Calculated dive for the dive computer', () => {
+        it('Keeps calculated profile in meters', () => {
+            expect(dive.profile.length).toEqual(dive.wayPoints.length);
+            expect(dive.profile[0].endDepth).toEqual(30);
+        });
+
+        it('Keeps algorithm events', () => {
+            expect(dive.algorithmEvents.length).toBeGreaterThanOrEqual(dive.events.length);
         });
     });
 });

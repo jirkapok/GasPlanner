@@ -103,4 +103,21 @@ describe('Buhlmann Algorithm - No decompression limits for every second', () => 
         const invalid = AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
         expect(algorithm.noDecoLimits(invalid)).toEqual([]);
     });
+
+    describe('Of calculated profile', () => {
+        // 40 m for 25 min, decompression dive
+        const decoDive = paramsFor(s => {
+            s.add(40, air, 160);
+            s.addFlat(air, Time.oneMinute * 25);
+        });
+
+        it('No decompression limits of profile equal no decompression limits of the plan', () => {
+            const profile = algorithm.decompression(decoDive).segments;
+            expect(Array.from(algorithm.noDecoLimitsOfProfile(decoDive, profile))).toEqual(algorithm.noDecoLimits(decoDive));
+        });
+
+        it('Empty profile has no limits', () => {
+            expect(Array.from(algorithm.noDecoLimitsOfProfile(decoDive, []))).toEqual([]);
+        });
+    });
 });

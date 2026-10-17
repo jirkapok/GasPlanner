@@ -58,7 +58,7 @@ export class DiveComputer {
     }
 
     /** Yields every point as soon as its no decompression limit is calculated. Can be iterated only once. */
-    public *points(): Generator<RunTimePoint> {
+    public *points(): Generator<RunTimePoint, void, undefined> {
         const profile = this.data.profile;
         let index = 0;
         let lastLimit = 0;

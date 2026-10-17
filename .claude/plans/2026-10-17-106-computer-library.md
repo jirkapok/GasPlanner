@@ -831,7 +831,7 @@ git commit -m "feat: #106 no decompression limits of calculated profile"
 
 ### Task 3: `DiveComputer`: computer data of the calculated dive (L1, L3)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

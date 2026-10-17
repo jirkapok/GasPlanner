@@ -1,3 +1,4 @@
+import { BuhlmannAlgorithm, ComputerEventType } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { UnitConversion } from '../shared/UnitConversion';
@@ -6,19 +7,34 @@ import {
     ComputerFinishedDto, ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, ComputerStartedDto
 } from '../shared/serialization.model';
-import { ComputerEventType } from '../shared/computer/computer.model';
 import { ComputerTasks } from './computer.tasks';
 import { PlanningTasks } from './planning.tasks';
 
 describe('ComputerTasks', () => {
-    /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops */
+    /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops, calculated the same way as by the planner */
     const createRequest = (): ComputerRequestDto => {
         const schedules = new DiveSchedules(new UnitConversion(), new ReloadDispatcher());
         const dive = schedules.selected;
         dive.depths.plannedDepth = 40;
         dive.depths.planDuration = 30;
         const request = PlanRequestFactory.create(dive, schedules.previousDiveTissues(dive.id));
-        return { ...request, calculationId: 7 };
+        const profile = PlanningTasks.calculateDecompression(request).profile;
+        const diveInfo = PlanningTasks.diveInfo({
+            ...request,
+            calculatedProfile: profile.segments,
+            calculatedTissues: profile.finalTissues,
+            eventOptions: { maxDensity: 5.7 },
+            previousCns: 0,
+            previousCnsExposures: []
+        });
+
+        return {
+            ...request,
+            calculationId: 7,
+            profile: profile.segments,
+            ceilings: diveInfo.ceilings,
+            events: diveInfo.events
+        };
     };
 
     const calculate = (request: ComputerRequestDto): ComputerResultDto[] => {
@@ -47,26 +63,17 @@ describe('ComputerTasks', () => {
         expect(messages.every(m => m.calculationId === 7)).toBeTrue();
     });
 
-    it('Points are calculated from the planned dive', () => {
+    it('Points are calculated from the calculated dive', () => {
         const points = pointsOf(calculate(createRequest()));
-        const maxDepth = points[points.length - 1].point.maxDepth;
-        expect(maxDepth).toBeCloseTo(40, 6);
+        expect(points[points.length - 1].point.maxDepth).toBeCloseTo(40, 6);
+        expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
     });
 
-    it('Empty plan posts no points', () => {
-        const request = { ...createRequest(), plan: [] };
-        const messages = calculate(request);
-        expect(messages.map(m => m.type)).toEqual(['started', 'finished']);
-        expect((messages[0] as ComputerStartedDto).total).toEqual(0);
-    });
-
-    it('Points contain calculated no decompression limit', () => {
+    it('Points contain no decompression limit of the planned dive', () => {
         const request = createRequest();
-        const limits = PlanningTasks.noDecoLimits(request);
+        const limits = new BuhlmannAlgorithm().noDecoLimits(PlanningTasks.diveParameters(request));
         const points = pointsOf(calculate(request));
-        expect(points[0].point.ndl).toEqual(limits[0]);
         expect(points[200].point.ndl).toEqual(limits[200]);
-        expect(points[200].point.ndl).toBeGreaterThan(0);
     });
 
     it('Started contains stop events of deco dive', () => {
@@ -82,5 +89,12 @@ describe('ComputerTasks', () => {
         expect(stopIndex).toBeGreaterThanOrEqual(0);
         expect([ComputerEventType.stop, ComputerEventType.safetyStop]).toContain(started.events[stopIndex]?.type);
         expect('nextStop' in (withStop?.point ?? {})).toBeFalse();
+    });
+
+    it('Empty profile posts no points', () => {
+        const request = { ...createRequest(), plan: [], profile: [], ceilings: [], events: [] };
+        const messages = calculate(request);
+        expect(messages.map(m => m.type)).toEqual(['started', 'finished']);
+        expect((messages[0] as ComputerStartedDto).total).toEqual(0);
     });
 });

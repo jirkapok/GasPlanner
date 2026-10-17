@@ -1,6 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { Observable, Subject } from 'rxjs';
-import { HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import {
+    Ceiling, ComputerData, ComputerEventType, EventsFactory, HighestDensity,
+    ProfileTissues, Segment, StandardGases, StopEvent
+} from 'scuba-physics';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { UnitConversion } from '../UnitConversion';
@@ -8,7 +11,6 @@ import { WayPoint } from '../wayPoint';
 import { WorkersFactoryCommon } from '../serial.workers.factory';
 import { IRestartableTask } from '../../workers/background-task';
 import { ComputerRequestDto, ComputerResultDto, RunTimePointDto } from '../serialization.model';
-import { ComputerData, ComputerEventType, StopEvent } from './computer.model';
 import { ComputerProfileService } from './computer-profile.service';
 
 /** Replaces the worker, the test decides what the worker reports */
@@ -186,6 +188,21 @@ describe('ComputerProfileService', () => {
     });
 
     describe('Calculation', () => {
+        it('Request contains calculated profile, ceilings and all events of selected dive', () => {
+            const first = schedules.dives[0];
+            const results = first.diveResult;
+            const segment = new Segment(0, 0, StandardGases.air, 10);
+            results.start();
+            results.updateProfile([WayPoint.fromSegment(units, segment)], ProfileTissues.createAtSurface(0), [segment]);
+            results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(),
+                [new Ceiling(1, 0)], [], [], 0, [], [EventsFactory.createNoDecoEnd(5, 0)]);
+            results.updateConsumption(0, 0, 0, 0, 0, false, false, []);
+            dispatcher.sendInfoCalculated(first.id);
+            expect(worker.lastRequest.profile.length).toEqual(1);
+            expect(worker.lastRequest.ceilings.length).toEqual(1);
+            expect(worker.lastRequest.events.length).toEqual(1);
+        });
+
         it('Resolves next stop to the reported event', () => {
             calculate(schedules.dives[0], 10);
             report(2, [point(0, 0), point(1)], true);

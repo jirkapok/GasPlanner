@@ -98,6 +98,17 @@ describe('DiveComputer', () => {
         expect(computer.total).toBeGreaterThan(0);
     });
 
+    it('Points can be iterated repeatedly without changing already provided points', () => {
+        const computer = DiveComputer.start(calculatedDecoDive);
+        const first = Array.from(computer.points());
+        const ndlBefore = first[200].ndl;
+        const second = Array.from(computer.points());
+        expect(ndlBefore).toBeGreaterThan(0);
+        expect(second.length).toEqual(first.length);
+        expect(second[200].ndl).toEqual(ndlBefore);
+        expect(first[200].ndl).toEqual(ndlBefore);
+    });
+
     it('Points are provided one by one', () => {
         const first = DiveComputer.start(calculatedDecoDive).points().next();
         const point = first.done ? undefined : first.value;

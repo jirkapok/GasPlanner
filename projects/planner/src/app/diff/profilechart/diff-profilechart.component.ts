@@ -102,20 +102,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             return;
         }
 
-        const { wayPoint, offset } = selected.durationA
-        ? {
-            wayPoint: selected.wayPointA,
-            offset: this.profileComparatorService.profileATimeOffset,
-          }
-        : {
-            wayPoint: selected.wayPointB,
-            offset: this.profileComparatorService.profileBTimeOffset,
-          };
-
-        if (wayPoint) {
-            wayPoint.startTime += offset;
-            wayPoint.endTime += offset;
-        }
+        const wayPoint = selected.durationA
+            ? selected.wayPointA
+            : selected.wayPointB;
 
         this.plotter.plotCursor(wayPoint);
     }

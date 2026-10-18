@@ -84,6 +84,18 @@ describe('ComputerProfile', () => {
         expect(sample(simpleDive).profile[10].ndl).toEqual(0);
     });
 
+    it('Time to surface is remaining time till end of the dive', () => {
+        const profile = sample(simpleDive).profile;
+        expect(profile[0].tts).toEqual(120);
+        expect(profile[30].tts).toEqual(90);
+        expect(profile[120].tts).toEqual(0);
+    });
+
+    it('Time to surface of fractional duration ends with the remaining fraction', () => {
+        const profile = sample([new Segment(0, 10, air, 90.5)]).profile;
+        expect(profile[90].tts).toBeCloseTo(0.5, 6);
+    });
+
     describe('Depth statistics', () => {
         // 0 -> 30 m in 60 s, 60 s at 30 m, ascent 30 -> 10 m in 60 s
         const diveWithAscent = [

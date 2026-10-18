@@ -15,11 +15,7 @@ export interface RunTimePoint {
      * when staying at current depth on current gas. 0 while in decompression, Infinity at surface or for more than 1000 minutes.
      */
     ndl: number;
-    /**
-     * Not the total runtime to end of the dive, but current time to surface at this point in the dive profile.
-     * This will require calculate the profile for every second of the dive - performance hit maybe not feasible.
-     * in seconds.
-     **/
+    /** Time to surface: remaining time in seconds from this moment to the end of the calculated dive */
     tts: number;
     /**
      * Next stop (decompression or safety stop) not finished yet at this moment, including the stop in progress.

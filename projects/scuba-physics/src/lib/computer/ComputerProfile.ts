@@ -87,7 +87,8 @@ export class ComputerProfile {
         }
 
         const ceilings = source.ceilings;
-        const duration = Math.floor(segments[segments.length - 1].endTime);
+        const diveEnd = segments[segments.length - 1].endTime;
+        const duration = Math.floor(diveEnd);
         const profile: RunTimePoint[] = [];
         let segmentIndex = 0;
         let ceilingIndex = 0;
@@ -123,7 +124,7 @@ export class ComputerProfile {
                 averageDepth: runTime > 0 ? depthArea / runTime : 0,
                 ceiling: ceiling,
                 ndl: 0,
-                tts: 0
+                tts: diveEnd - runTime
             });
         }
 

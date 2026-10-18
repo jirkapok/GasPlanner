@@ -314,7 +314,7 @@ git commit -m "feat: #106 average depth for every second of the profile"
 
 ### Task 2: Dive computer uses `AverageDepth.add` (A3)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

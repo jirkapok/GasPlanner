@@ -1,4 +1,5 @@
 import { Ceiling, Event } from '../algorithm/CalculatedProfile';
+import { AverageDepth } from '../depths/AverageDepth';
 import { Segment } from '../depths/Segments';
 import { ComputerData, ComputerEvent, ComputerEventType, RunTimePoint } from './ComputerData';
 import { ComputerStop } from './ComputerStop';
@@ -74,8 +75,8 @@ class ComputerProfileContext {
     private _depth = 0;
     private _ceiling = 0;
     private _maxDepth = 0;
-    /** meters * seconds */
-    private depthArea = 0;
+    private _averageDepth = 0;
+    private readonly averageDepths = new AverageDepth();
 
     constructor(private readonly segments: TimedSegment[], private readonly ceilings: Ceiling[]) {
     }
@@ -97,7 +98,7 @@ class ComputerProfileContext {
 
     /** in meters, time weighted from start of the dive to current moment */
     public get averageDepth(): number {
-        return this._runTime > 0 ? this.depthArea / this._runTime : 0;
+        return this._averageDepth;
     }
 
     /** in meters at current moment */
@@ -145,12 +146,7 @@ class ComputerProfileContext {
 
         const depth = this.segment.depthAt(runTime);
         this._maxDepth = Math.max(this._maxDepth, depth);
-
-        if (runTime > 0) {
-            // trapezoid of the last second, exact for linear depth change
-            this.depthArea += (this._depth + depth) / 2;
-        }
-
+        this._averageDepth = this.averageDepths.add(depth);
         this._depth = depth;
         this._runTime = runTime;
     }

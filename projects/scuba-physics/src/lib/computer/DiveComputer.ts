@@ -23,17 +23,17 @@ export interface CalculatedDive {
  * the points with no decompression limit are provided one by one.
  */
 export class DiveComputer {
-    private constructor(private readonly calculated: CalculatedDive, private readonly data: ComputerData) {
+    private constructor(private readonly calculated: CalculatedDive, private readonly computerData: ComputerData) {
     }
 
     /** Events of the dive sorted by run time */
     public get events(): ComputerEvent[] {
-        return this.data.events;
+        return this.computerData.events;
     }
 
     /** Count of points, one for every second of the dive */
     public get total(): number {
-        return this.data.profile.length;
+        return this.computerData.profile.length;
     }
 
     /** Samples the calculated dive, nothing already calculated is calculated again */
@@ -61,7 +61,7 @@ export class DiveComputer {
      * Every call calculates the limits again and provides new point objects, already provided points aren't changed.
      */
     public *points(): Generator<RunTimePoint, void, undefined> {
-        const profile = this.data.profile;
+        const profile = this.computerData.profile;
         const noDecoLimits = new BuhlmannAlgorithm().noDecoLimitsOfProfile(this.calculated.dive, this.calculated.profile);
         let index = 0;
         let lastLimit = 0;
@@ -85,6 +85,6 @@ export class DiveComputer {
 
     /** Copy of the sampled point, so the sampled data stay unchanged */
     private withNoDecoLimit(index: number, limit: number): RunTimePoint {
-        return { ...this.data.profile[index], ndl: limit };
+        return { ...this.computerData.profile[index], ndl: limit };
     }
 }

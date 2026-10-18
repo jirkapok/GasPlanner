@@ -21,6 +21,7 @@ import { DtoSerialization } from '../dtoSerialization';
  */
 @Injectable()
 export class ComputerProfileService extends Streamed {
+    private static readonly finishedPercents = 100;
     /** in milliseconds */
     private static readonly reportInterval = 200;
     /**
@@ -102,6 +103,7 @@ export class ComputerProfileService extends Streamed {
             return;
         }
 
+        // undefined means the dive calculation failed in planner, so we need to clear the state.
         if (diveId === undefined || diveId === this._selectedDive.id) {
             this.refresh();
         }
@@ -184,13 +186,14 @@ export class ComputerProfileService extends Streamed {
         this.collected.profile.push(point);
 
         if (Date.now() - this.lastReportTime >= ComputerProfileService.reportInterval) {
-            this.report(Math.round(this.collected.profile.length * 100 / this.total));
+            const currentPercents = Math.round(this.collected.profile.length * 100 / this.total);
+            this.report(currentPercents);
         }
     }
 
     private finished(): void {
         this.running = false;
-        this.report(100);
+        this.report(ComputerProfileService.finishedPercents);
     }
 
     /** Publishes copy of already collected data, so the published data aren't changed by later points */
@@ -206,6 +209,6 @@ export class ComputerProfileService extends Streamed {
     private calculationFailed(): void {
         this.running = false;
         this.onComputerData.next(ComputerProfile.empty());
-        this.onProgress.next(100);
+        this.onProgress.next(ComputerProfileService.finishedPercents);
     }
 }

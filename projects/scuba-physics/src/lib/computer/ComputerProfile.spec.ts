@@ -3,6 +3,7 @@ import { Segment } from '../depths/Segments';
 import { StandardGases } from '../gases/StandardGases';
 import { ComputerData, ComputerEvent, ComputerEventType, StopEvent } from './ComputerData';
 import { ComputerProfile } from './ComputerProfile';
+import { ComputerStop } from './ComputerStop';
 
 describe('ComputerProfile', () => {
     /** Ceilings are sampled every second starting at 1 s */
@@ -112,45 +113,6 @@ describe('ComputerProfile', () => {
         });
     });
 
-    describe('Algorithm events', () => {
-        const eventsOf = (events: Event[]): ComputerEvent[] => sample(simpleDive, [], events).events;
-
-        it('Copies high ppO2, low ppO2 and broken ceiling', () => {
-            const events = eventsOf([
-                EventsFactory.createLowPpO2(5, 1),
-                EventsFactory.createHighPpO2(60, 10),
-                EventsFactory.createBrokenCeiling(100, 10)
-            ]);
-            expect(events).toEqual([
-                { type: ComputerEventType.lowPpO2, runTime: 5, depth: 1 },
-                { type: ComputerEventType.highPpO2, runTime: 60, depth: 10 },
-                { type: ComputerEventType.brokenCeiling, runTime: 100, depth: 10 }
-            ]);
-        });
-
-        it('Copies gas switch with gas name', () => {
-            const events = eventsOf([EventsFactory.createGasSwitch(70, 10, StandardGases.ean50)]);
-            expect(events).toEqual([
-                { type: ComputerEventType.gasSwitch, runTime: 70, depth: 10, gasName: 'EAN50' } as ComputerEvent
-            ]);
-        });
-
-        it('Converts safety stop to stop with 3 minutes duration', () => {
-            const events = eventsOf([EventsFactory.createSafetyStopStart(80, 3)]);
-            expect(events).toEqual([
-                { type: ComputerEventType.safetyStop, runTime: 80, depth: 3, duration: 180 } as ComputerEvent
-            ]);
-        });
-
-        it('Ignores other events', () => {
-            const events = eventsOf([
-                EventsFactory.createNoDecoEnd(50, 10),
-                EventsFactory.createHighAscentSpeed(60, 10)
-            ]);
-            expect(events).toEqual([]);
-        });
-    });
-
     // 0 -> 30 m, 600 s at 30 m, ascent with stops at 6 m and 3 m
     const decoDive = [
         new Segment(0, 30, air, 60), // 0 - 60
@@ -201,8 +163,8 @@ describe('ComputerProfile', () => {
 
         it('Creates stop for every flat segment with ceiling closer than stop distance', () => {
             expect(stopsOf(decoDive, decoCeilings)).toEqual([
-                { type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent,
-                { type: ComputerEventType.stop, runTime: 990, depth: 3, duration: 180 } as StopEvent
+                new ComputerStop(ComputerEventType.stop, 900, 6, 60),
+                new ComputerStop(ComputerEventType.stop, 990, 3, 180)
             ]);
         });
 
@@ -234,7 +196,7 @@ describe('ComputerProfile', () => {
 
         it('Gas switch with close ceiling is a stop', () => {
             const stops = stopsOf(withSwitchAtSixMeters(), decoCeilings);
-            expect(stops[0]).toEqual({ type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent);
+            expect(stops[0]).toEqual(new ComputerStop(ComputerEventType.stop, 900, 6, 60));
         });
 
         it('Gas switch without ceiling is not a stop', () => {

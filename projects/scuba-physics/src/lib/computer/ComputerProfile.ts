@@ -1,10 +1,7 @@
-import { Ceiling, Event, EventType } from '../algorithm/CalculatedProfile';
+import { Ceiling, Event } from '../algorithm/CalculatedProfile';
 import { Segment } from '../depths/Segments';
-import { Time } from '../physics/Time';
-import {
-    ComputerData, ComputerEvent, ComputerEventType,
-    GasSwitchEvent, RunTimePoint, StopEvent
-} from './ComputerData';
+import { ComputerData, ComputerEvent, ComputerEventType, RunTimePoint } from './ComputerData';
+import { ComputerStop } from './ComputerStop';
 
 /** Calculated dive data, from which the computer data are sampled */
 export interface ComputerProfileSource {
@@ -45,11 +42,13 @@ class TimedSegment {
      * @param stopDistance distance between decompression stops in meters
      */
     public hasCloseCeiling(profile: RunTimePoint[], stopDistance: number): boolean {
-        for (let runTime = Math.floor(this.startTime); runTime < this.endTime && runTime < profile.length; runTime++) {
-            const ceiling = profile[runTime].ceiling;
+        if (this.segment.isFlat && this.segment.duration > 0) {
+            for (let runTime = Math.floor(this.startTime); runTime < this.endTime && runTime < profile.length; runTime++) {
+                const ceiling = profile[runTime].ceiling;
 
-            if (ceiling > 0 && this.depthAt(runTime) - ceiling < stopDistance) {
-                return true;
+                if (ceiling > 0 && this.depthAt(runTime) - ceiling < stopDistance) {
+                    return true;
+                }
             }
         }
 
@@ -119,7 +118,7 @@ export class ComputerProfile {
         }
 
         const stops = ComputerProfile.stopsFrom(segments, profile, source.stopDistance);
-        const events = [...ComputerProfile.eventsFrom(source.events), ...stops]
+        const events = [...ComputerStop.eventsFrom(source.events), ...stops]
             .sort((a, b) => a.runTime - b.runTime);
         ComputerProfile.assignNextStop(profile, events);
 
@@ -143,19 +142,12 @@ export class ComputerProfile {
      * Flat segments, user defined or calculated (gas switch included), where at any moment of the segment
      * the ceiling comes closer to the depth than the stop distance. E.g. bottom with ceiling far above isn't a stop.
      */
-    private static stopsFrom(segments: TimedSegment[], profile: RunTimePoint[], stopDistance: number): StopEvent[] {
-        const stops: StopEvent[] = [];
+    private static stopsFrom(segments: TimedSegment[], profile: RunTimePoint[], stopDistance: number): ComputerStop[] {
+        const stops: ComputerStop[] = [];
 
         segments.forEach((timed) => {
-            const segment = timed.segment;
-
-            if (segment.isFlat && segment.duration > 0 && timed.hasCloseCeiling(profile, stopDistance)) {
-                stops.push({
-                    type: ComputerEventType.stop,
-                    runTime: timed.startTime,
-                    depth: segment.endDepth,
-                    duration: segment.duration
-                });
+            if (timed.hasCloseCeiling(profile, stopDistance)) {
+                stops.push(new ComputerStop(ComputerEventType.stop, timed.startTime, timed.segment.endDepth, timed.segment.duration));
             }
         });
 
@@ -167,7 +159,7 @@ export class ComputerProfile {
         let stopIndex = 0;
 
         profile.forEach((point) => {
-            while (stopIndex < stops.length && ComputerProfile.stopEnd(stops[stopIndex]) <= point.runTime) {
+            while (stopIndex < stops.length && stops[stopIndex].stopEnd <= point.runTime) {
                 stopIndex++;
             }
 
@@ -176,65 +168,11 @@ export class ComputerProfile {
     }
 
     /** Stops and safety stops sorted by time, safety stop overlapping any stop is replaced by the stop */
-    private static stopsToFollow(events: ComputerEvent[]): StopEvent[] {
-        const allStops = events.filter((e): e is StopEvent =>
-            e.type === ComputerEventType.stop || e.type === ComputerEventType.safetyStop);
+    private static stopsToFollow(events: ComputerEvent[]): ComputerStop[] {
+        const allStops = events.filter((e): e is ComputerStop => e instanceof ComputerStop);
         const decoStops = allStops.filter(s => s.type === ComputerEventType.stop);
 
         return allStops.filter(s => s.type === ComputerEventType.stop ||
-            !decoStops.some(decoStop => ComputerProfile.overlaps(decoStop, s)));
-    }
-
-    private static overlaps(first: StopEvent, second: StopEvent): boolean {
-        return first.runTime < ComputerProfile.stopEnd(second) && second.runTime < ComputerProfile.stopEnd(first);
-    }
-
-    private static stopEnd(stop: StopEvent): number {
-        return stop.runTime + stop.duration;
-    }
-
-    private static eventsFrom(source: Event[]): ComputerEvent[] {
-        const events: ComputerEvent[] = [];
-
-        source.forEach((event) => {
-            const converted = ComputerProfile.toComputerEvent(event);
-
-            if (converted) {
-                events.push(converted);
-            }
-        });
-
-        return events;
-    }
-
-    private static toComputerEvent(event: Event): ComputerEvent | undefined {
-        const runTime = event.timeStamp;
-        const depth = event.depth;
-
-        switch (event.type) {
-            case EventType.highPpO2:
-                return { type: ComputerEventType.highPpO2, runTime: runTime, depth: depth };
-            case EventType.lowPpO2:
-                return { type: ComputerEventType.lowPpO2, runTime: runTime, depth: depth };
-            case EventType.brokenCeiling:
-                return { type: ComputerEventType.brokenCeiling, runTime: runTime, depth: depth };
-            case EventType.gasSwitch: {
-                const gasSwitch: GasSwitchEvent = {
-                    type: ComputerEventType.gasSwitch,
-                    runTime: runTime,
-                    depth: depth,
-                    gasName: event.gas?.name ?? ''
-                };
-                return gasSwitch;
-            }
-            case EventType.safetyStop: {
-                const safetyStop: StopEvent = {
-                    type: ComputerEventType.safetyStop, runTime: runTime, depth: depth, duration: Time.safetyStopDuration
-                };
-                return safetyStop;
-            }
-            default:
-                return undefined;
-        }
+            !decoStops.some(decoStop => decoStop.overlaps(s)));
     }
 }

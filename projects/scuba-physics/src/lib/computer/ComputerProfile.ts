@@ -23,13 +23,37 @@ export interface ComputerProfileSource {
 
 /** Segment with its position in the profile, in seconds since start of the dive */
 class TimedSegment {
-    constructor(public readonly segment: Segment, public readonly startTime: number, public readonly endTime: number) {
+    private readonly _endTime: number;
+
+    constructor(public readonly segment: Segment, public readonly startTime: number) {
+        this._endTime = startTime + segment.duration;
+    }
+
+    public get endTime(): number {
+        return this._endTime;
     }
 
     /** Depth in meters at the given run time (seconds since start of the dive) within this segment */
     public depthAt(runTime: number): number {
         // zero duration segment has no speed, so it stays at its end depth
         return this.segment.duration > 0 ? this.segment.depthAt(runTime - this.startTime) : this.segment.endDepth;
+    }
+
+    /**
+     * True, if at any moment of the segment the ceiling isn't at surface and is closer to the segment depth than the stop distance
+     * @param profile sampled points of the whole dive, one for every second
+     * @param stopDistance distance between decompression stops in meters
+     */
+    public hasCloseCeiling(profile: RunTimePoint[], stopDistance: number): boolean {
+        for (let runTime = Math.floor(this.startTime); runTime < this.endTime && runTime < profile.length; runTime++) {
+            const ceiling = profile[runTime].ceiling;
+
+            if (ceiling > 0 && this.depthAt(runTime) - ceiling < stopDistance) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 
@@ -109,9 +133,8 @@ export class ComputerProfile {
         let startTime = 0;
 
         return profile.map((segment) => {
-            const endTime = startTime + segment.duration;
-            const timed = new TimedSegment(segment, startTime, endTime);
-            startTime = endTime;
+            const timed = new TimedSegment(segment, startTime);
+            startTime = timed.endTime;
             return timed;
         });
     }
@@ -126,7 +149,7 @@ export class ComputerProfile {
         segments.forEach((timed) => {
             const segment = timed.segment;
 
-            if (segment.isFlat && segment.duration > 0 && ComputerProfile.hasCloseCeiling(timed, profile, stopDistance)) {
+            if (segment.isFlat && segment.duration > 0 && timed.hasCloseCeiling(profile, stopDistance)) {
                 stops.push({
                     type: ComputerEventType.stop,
                     runTime: timed.startTime,
@@ -137,21 +160,6 @@ export class ComputerProfile {
         });
 
         return stops;
-    }
-
-    /** True, if at any moment of the segment the ceiling isn't at surface and is closer to the segment depth than the stop distance */
-    private static hasCloseCeiling(timed: TimedSegment, profile: RunTimePoint[], stopDistance: number): boolean {
-        const depth = timed.segment.endDepth;
-
-        for (let runTime = Math.floor(timed.startTime); runTime < timed.endTime && runTime < profile.length; runTime++) {
-            const ceiling = profile[runTime].ceiling;
-
-            if (ceiling > 0 && depth - ceiling < stopDistance) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     private static assignNextStop(profile: RunTimePoint[], events: ComputerEvent[]): void {

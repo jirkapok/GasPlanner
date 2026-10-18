@@ -41,6 +41,9 @@ export class ProfileComparatorService extends Streamed {
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.resetSelection());
+
+        this.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateWayPoints());
     }
 
     public get profileAIndex(): number {
@@ -165,11 +168,25 @@ export class ProfileComparatorService extends Streamed {
     }
 
     private get wayPointsA(): WayPoint[]{
-        return this.profileAResults.wayPoints;
+        const wayPoints = this.deepCopyWayPoints(this.profileAResults.wayPoints);
+
+        for (const wayPoint of wayPoints) {
+            wayPoint.startTime += this.profileATimeOffset;
+            wayPoint.endTime += this.profileATimeOffset;
+        }
+
+        return wayPoints;
     }
 
     private get wayPointsB(): WayPoint[]{
-        return this.profileBResults.wayPoints;
+        const wayPoints = this.deepCopyWayPoints(this.profileBResults.wayPoints);
+
+        for (const wayPoint of wayPoints) {
+            wayPoint.startTime += this.profileBTimeOffset;
+            wayPoint.endTime += this.profileBTimeOffset;
+        }
+
+        return wayPoints;
     }
 
     public get alignByEnd(): boolean {
@@ -188,7 +205,6 @@ export class ProfileComparatorService extends Streamed {
 
         this._profileAIndex = this._profileBIndex;
         this._profileBIndex = index;
-        this.updateWayPoints();
         this._onSelectionChanged.next();
     }
 
@@ -204,6 +220,14 @@ export class ProfileComparatorService extends Streamed {
         }
 
         this.updateWayPoints();
+    }
+
+    private deepCopyWayPoints(wayPoints: WayPoint[]): WayPoint[] {
+        let copies = [];
+        for (const wayPoint of wayPoints) {
+            copies.push(wayPoint.copy);
+        }
+        return copies;
     }
 
     /** Waypoints need to be cached to preserve the selection */

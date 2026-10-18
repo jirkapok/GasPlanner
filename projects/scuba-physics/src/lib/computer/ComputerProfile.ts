@@ -54,6 +54,16 @@ class TimedSegment {
 
         return false;
     }
+
+    public static fromSegments(profile: Segment[]): TimedSegment[] {
+        let startTime = 0;
+
+        return profile.map((segment) => {
+            const timed = new TimedSegment(segment, startTime);
+            startTime = timed.endTime;
+            return timed;
+        });
+    }
 }
 
 /** Samples calculated dive for every second of the dive. */
@@ -70,7 +80,7 @@ export class ComputerProfile {
      * The no decompression limit isn't sampled (0 in every point), see DiveComputer.
      */
     public static sample(source: ComputerProfileSource): ComputerData {
-        const segments = ComputerProfile.timed(source.profile);
+        const segments = TimedSegment.fromSegments(source.profile);
 
         if (segments.length === 0) {
             return ComputerProfile.empty();
@@ -126,16 +136,6 @@ export class ComputerProfile {
             profile: profile,
             events: events
         };
-    }
-
-    private static timed(profile: Segment[]): TimedSegment[] {
-        let startTime = 0;
-
-        return profile.map((segment) => {
-            const timed = new TimedSegment(segment, startTime);
-            startTime = timed.endTime;
-            return timed;
-        });
     }
 
     /**

@@ -72,7 +72,7 @@ Background: the chart's running mean of the depths at the start of each second l
 
 ### Task 1: `AverageDepth` class in the library (A1, A2, A5)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

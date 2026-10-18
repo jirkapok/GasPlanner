@@ -45,6 +45,7 @@ export * from './lib/computer/ComputerData';
 export * from './lib/computer/ComputerProfile';
 export * from './lib/computer/DiveComputer';
 export * from './lib/calculators/SacCalculator';
+export * from './lib/depths/AverageDepth';
 export * from './lib/depths/Segments';
 export * from './lib/gases/StandardGases';
 export * from './lib/consumption/StandardTanks';

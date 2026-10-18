@@ -65,7 +65,9 @@ export class ComputerProfile {
                 ceilingIndex++;
             }
 
-            const depth = ComputerProfile.depthAt(segments[segmentIndex], runTime);
+            const timed = segments[segmentIndex];
+            // zero duration segment has no speed, so it stays at its end depth
+            const depth = timed.segment.duration > 0 ? timed.segment.depthAt(runTime - timed.startTime) : timed.segment.endDepth;
             maxDepth = Math.max(maxDepth, depth);
 
             if (runTime > 0) {
@@ -224,18 +226,5 @@ export class ComputerProfile {
             default:
                 return undefined;
         }
-    }
-
-    /** Linear interpolation of the depth in meters within the segment */
-    private static depthAt(timed: TimedSegment, runTime: number): number {
-        const duration = timed.endTime - timed.startTime;
-        const segment = timed.segment;
-
-        if (duration <= 0) {
-            return segment.endDepth;
-        }
-
-        const elapsed = Math.min(Math.max(runTime - timed.startTime, 0), duration);
-        return segment.startDepth + (segment.endDepth - segment.startDepth) * elapsed / duration;
     }
 }

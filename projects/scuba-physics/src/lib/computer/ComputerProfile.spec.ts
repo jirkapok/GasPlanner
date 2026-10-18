@@ -48,6 +48,16 @@ describe('ComputerProfile', () => {
         expect(profile[90].depth).toBeCloseTo(10, 6);
     });
 
+    it('Zero duration segment keeps the depth', () => {
+        // only segment at the start of the profile is sampled, others are skipped by the next segments
+        const profile = sample([
+            new Segment(0, 0, air, 0),
+            new Segment(0, 10, air, 60)
+        ]).profile;
+        expect(profile[0].depth).toEqual(0);
+        expect(profile.every(p => !Number.isNaN(p.depth))).toBeTrue();
+    });
+
     it('Fractional duration ends at last whole second', () => {
         const profile = sample([new Segment(0, 10, air, 90.5)]).profile;
         expect(profile.length).toEqual(91);

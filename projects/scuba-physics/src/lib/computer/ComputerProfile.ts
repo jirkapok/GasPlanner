@@ -66,6 +66,96 @@ class TimedSegment {
     }
 }
 
+/** State of the sampling, moves through the dive second by second */
+class ComputerProfileContext {
+    private segmentIndex = 0;
+    private ceilingIndex = 0;
+    private _runTime = 0;
+    private _depth = 0;
+    private _ceiling = 0;
+    private _maxDepth = 0;
+    /** meters * seconds */
+    private depthArea = 0;
+
+    constructor(private readonly segments: TimedSegment[], private readonly ceilings: Ceiling[]) {
+    }
+
+    /** Last whole second of the dive */
+    public get duration(): number {
+        return Math.floor(this.diveEnd);
+    }
+
+    /** in meters at current moment */
+    public get depth(): number {
+        return this._depth;
+    }
+
+    /** in meters, the deepest depth reached so far */
+    public get maxDepth(): number {
+        return this._maxDepth;
+    }
+
+    /** in meters, time weighted from start of the dive to current moment */
+    public get averageDepth(): number {
+        return this._runTime > 0 ? this.depthArea / this._runTime : 0;
+    }
+
+    /** in meters at current moment */
+    public get ceiling(): number {
+        return this._ceiling;
+    }
+
+    /** remaining seconds from current moment to the end of the dive */
+    public get timeToSurface(): number {
+        return this.diveEnd - this._runTime;
+    }
+
+    /** Segment at current moment */
+    private get segment(): TimedSegment {
+        return this.segments[this.segmentIndex];
+    }
+
+    private get hasNextSegment(): boolean {
+        return this.segmentIndex < this.segments.length - 1;
+    }
+
+    private get nextCeiling(): Ceiling {
+        return this.ceilings[this.ceilingIndex];
+    }
+
+    private get hasNextCeiling(): boolean {
+        return this.ceilingIndex < this.ceilings.length;
+    }
+
+    /** in seconds since start of the dive */
+    private get diveEnd(): number {
+        return this.segments[this.segments.length - 1].endTime;
+    }
+
+    /** Moves to the given second of the dive, expecting it follows the current one */
+    public moveTo(runTime: number): void {
+        while (this.hasNextSegment && this.segment.endTime < runTime) {
+            this.segmentIndex++;
+        }
+
+        while (this.hasNextCeiling && this.nextCeiling.time <= runTime) {
+            this._ceiling = this.nextCeiling.depth;
+            this.ceilingIndex++;
+        }
+
+        const depth = this.segment.depthAt(runTime);
+        this._maxDepth = Math.max(this._maxDepth, depth);
+
+        if (runTime > 0) {
+            // trapezoid of the last second, exact for linear depth change
+            this.depthArea += (this._depth + depth) / 2;
+        }
+
+        this._depth = depth;
+        this._runTime = runTime;
+    }
+}
+
 /** Samples calculated dive for every second of the dive. */
 export class ComputerProfile {
     public static empty(): ComputerData {
@@ -86,45 +176,20 @@ export class ComputerProfile {
             return ComputerProfile.empty();
         }
 
-        const ceilings = source.ceilings;
-        const diveEnd = segments[segments.length - 1].endTime;
-        const duration = Math.floor(diveEnd);
+        const context = new ComputerProfileContext(segments, source.ceilings);
         const profile: RunTimePoint[] = [];
-        let segmentIndex = 0;
-        let ceilingIndex = 0;
-        let ceiling = 0;
-        let maxDepth = 0;
-        let depthArea = 0; // meters * seconds
-        let previousDepth = 0;
 
-        for (let runTime = 0; runTime <= duration; runTime++) {
-            while (segmentIndex < segments.length - 1 && segments[segmentIndex].endTime < runTime) {
-                segmentIndex++;
-            }
-
-            while (ceilingIndex < ceilings.length && ceilings[ceilingIndex].time <= runTime) {
-                ceiling = ceilings[ceilingIndex].depth;
-                ceilingIndex++;
-            }
-
-            const depth = segments[segmentIndex].depthAt(runTime);
-            maxDepth = Math.max(maxDepth, depth);
-
-            if (runTime > 0) {
-                // trapezoid of the last second, exact for linear depth change
-                depthArea += (previousDepth + depth) / 2;
-            }
-
-            previousDepth = depth;
+        for (let runTime = 0; runTime <= context.duration; runTime++) {
+            context.moveTo(runTime);
 
             profile.push({
                 runTime: runTime,
-                depth: depth,
-                maxDepth: maxDepth,
-                averageDepth: runTime > 0 ? depthArea / runTime : 0,
-                ceiling: ceiling,
+                depth: context.depth,
+                maxDepth: context.maxDepth,
+                averageDepth: context.averageDepth,
+                ceiling: context.ceiling,
                 ndl: 0,
-                tts: diveEnd - runTime
+                tts: context.timeToSurface
             });
         }
 

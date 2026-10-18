@@ -369,7 +369,7 @@ git commit -m "refactor: #106 computer average depth by library average depth"
 
 ### Task 3: Profile chart uses `AverageDepth.addProfile` (A4, A5)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

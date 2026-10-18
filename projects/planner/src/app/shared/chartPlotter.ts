@@ -4,7 +4,7 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling } from 'scuba-physics';
+import { Ceiling, Segment } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 
@@ -183,13 +183,13 @@ export class DiveTracesBuilder {
 
     public profileTraces(): Partial<Plotly.PlotData>[] {
         const diveResult = this.dive();
-        const averageDepths = this.plotAverageDepth(diveResult.wayPoints);
+        const averageDepths = this.plotAverageDepth(diveResult.profile);
         const depths = this.plotDepths(diveResult.wayPoints);
         return [averageDepths, depths];
     }
 
-    private plotAverageDepth(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
-        const resampleAverageDepth = this.resampling.resampleAverageDepth(wayPoints);
+    private plotAverageDepth(profile: Segment[]): Partial<Plotly.PlotData> {
+        const resampleAverageDepth = this.resampling.resampleAverageDepth(profile);
 
         return {
             x: resampleAverageDepth.xValues,

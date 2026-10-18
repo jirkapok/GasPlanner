@@ -14,8 +14,11 @@ export interface ComputerProfileSource {
     ceilings: Ceiling[];
     /** Events of the profile calculated by the algorithm */
     events: Event[];
-    /** Count of user defined segments at the start of the profile, those are never stops. Infinity if not known: no stops are created. */
-    userSegments: number;
+    /**
+     * Distance between decompression stops in meters, see Options.decoStopDistance.
+     * Flat segment is a stop, when its ceiling comes closer than this distance.
+     */
+    stopDistance: number;
 }
 
 /** Segment with its position in the profile, in seconds since start of the dive */
@@ -88,7 +91,7 @@ export class ComputerProfile {
             });
         }
 
-        const stops = ComputerProfile.stopsFrom(segments, profile, source.userSegments);
+        const stops = ComputerProfile.stopsFrom(segments, profile, source.stopDistance);
         const events = [...ComputerProfile.eventsFrom(source.events), ...stops]
             .sort((a, b) => a.runTime - b.runTime);
         ComputerProfile.assignNextStop(profile, events);
@@ -111,20 +114,16 @@ export class ComputerProfile {
     }
 
     /**
-     * Flat calculated segments during the ascent from the deepest point, where the ceiling is not zero.
-     * Gas switch is the same as any other flat segment.
+     * Flat segments, user defined or calculated (gas switch included), where at any moment of the segment
+     * the ceiling comes closer to the depth than the stop distance. E.g. bottom with ceiling far above isn't a stop.
      */
-    private static stopsFrom(segments: TimedSegment[], profile: RunTimePoint[], userSegments: number): StopEvent[] {
-        const ascentStart = ComputerProfile.lastDeepestIndex(segments) + 1;
-        const firstCandidate = Math.max(ascentStart, userSegments);
+    private static stopsFrom(segments: TimedSegment[], profile: RunTimePoint[], stopDistance: number): StopEvent[] {
         const stops: StopEvent[] = [];
 
-        for (let index = firstCandidate; index < segments.length; index++) {
-            const timed = segments[index];
+        segments.forEach((timed) => {
             const segment = timed.segment;
-            const ceiling = profile[Math.floor(timed.startTime)].ceiling;
 
-            if (segment.isFlat && segment.duration > 0 && ceiling > 0) {
+            if (segment.isFlat && segment.duration > 0 && ComputerProfile.hasCloseCeiling(timed, profile, stopDistance)) {
                 stops.push({
                     type: ComputerEventType.stop,
                     runTime: timed.startTime,
@@ -132,9 +131,24 @@ export class ComputerProfile {
                     duration: segment.duration
                 });
             }
-        }
+        });
 
         return stops;
+    }
+
+    /** True, if at any moment of the segment the ceiling isn't at surface and is closer to the segment depth than the stop distance */
+    private static hasCloseCeiling(timed: TimedSegment, profile: RunTimePoint[], stopDistance: number): boolean {
+        const depth = timed.segment.endDepth;
+
+        for (let runTime = Math.floor(timed.startTime); runTime < timed.endTime && runTime < profile.length; runTime++) {
+            const ceiling = profile[runTime].ceiling;
+
+            if (ceiling > 0 && depth - ceiling < stopDistance) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static assignNextStop(profile: RunTimePoint[], events: ComputerEvent[]): void {
@@ -166,20 +180,6 @@ export class ComputerProfile {
 
     private static stopEnd(stop: StopEvent): number {
         return stop.runTime + stop.duration;
-    }
-
-    /** Index of the last segment which reaches the maximum depth */
-    private static lastDeepestIndex(segments: TimedSegment[]): number {
-        const maxDepth = Math.max(...segments.map(s => s.segment.endDepth));
-        let deepestIndex = 0;
-
-        segments.forEach((timed, index) => {
-            if (timed.segment.endDepth === maxDepth) {
-                deepestIndex = index;
-            }
-        });
-
-        return deepestIndex;
     }
 
     private static eventsFrom(source: Event[]): ComputerEvent[] {

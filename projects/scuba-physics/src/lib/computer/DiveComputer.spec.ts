@@ -77,6 +77,18 @@ describe('DiveComputer', () => {
         expect(stops.every(s => s.runTime >= userPlanEnd)).toBeTrue();
     });
 
+    it('User planned stop with close ceiling is a stop', () => {
+        // user defines own stop at 6 m right after the bottom, ascent 34 m in 204 s
+        const withUserStop = diveFor(s => {
+            fortyMetersFor30Minutes(s);
+            s.add(6, air, 204);
+            s.addFlat(air, Time.oneMinute * 10);
+        });
+        const userStopStart = userPlanEnd + 204;
+        const stops = DiveComputer.calculate(calculateDive(withUserStop)).events.filter(e => e.type === ComputerEventType.stop);
+        expect(stops.some(s => s.runTime === userStopStart && s.depth === 6)).toBeTrue();
+    });
+
     it('Contains gas switch events', () => {
         const withDecoGas = calculateDive(diveFor(fortyMetersFor30Minutes, [air, StandardGases.ean50]));
         const switches = DiveComputer.calculate(withDecoGas).events

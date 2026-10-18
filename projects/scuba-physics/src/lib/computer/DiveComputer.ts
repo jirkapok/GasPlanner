@@ -42,7 +42,7 @@ export class DiveComputer {
             profile: calculated.profile,
             ceilings: calculated.ceilings,
             events: calculated.events,
-            userSegments: calculated.dive.segments.length
+            stopDistance: calculated.dive.options.decoStopDistance
         });
         return new DiveComputer(calculated, data);
     }

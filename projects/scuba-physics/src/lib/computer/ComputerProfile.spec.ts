@@ -8,14 +8,18 @@ describe('ComputerProfile', () => {
     /** Ceilings are sampled every second starting at 1 s */
     const ceilingsFrom = (depths: number[]): Ceiling[] => depths.map((depth, index) => new Ceiling(index + 1, depth));
 
-    /** userSegments Infinity means unknown, no stops are created */
-    const sample = (profile: Segment[], ceilings: Ceiling[] = [], events: Event[] = [],
-        userSegments = Number.POSITIVE_INFINITY): ComputerData => ComputerProfile.sample({
-        profile: profile,
-        ceilings: ceilings,
-        events: events,
-        userSegments: userSegments
-    });
+    /** Ceilings sampled every second starting at 1 s, given by the run time */
+    const ceilingsAt = (duration: number, ceilingAt: (runTime: number) => number): Ceiling[] =>
+        Array.from({ length: duration }, (_, index) => new Ceiling(index + 1, ceilingAt(index + 1)));
+
+    /** stopDistance in meters, the same as default options */
+    const sample = (profile: Segment[], ceilings: Ceiling[] = [], events: Event[] = [], stopDistance = 3): ComputerData =>
+        ComputerProfile.sample({
+            profile: profile,
+            ceilings: ceilings,
+            events: events,
+            stopDistance: stopDistance
+        });
 
     const air = StandardGases.air;
     // descent to 10 m in 60 s, then 60 s at 10 m
@@ -147,7 +151,7 @@ describe('ComputerProfile', () => {
         });
     });
 
-    // user defined: 0 -> 30 m, 600 s at 30 m; calculated ascent with stops at 6 m and 3 m
+    // 0 -> 30 m, 600 s at 30 m, ascent with stops at 6 m and 3 m
     const decoDive = [
         new Segment(0, 30, air, 60), // 0 - 60
         new Segment(30, 30, air, 600), // 60 - 660
@@ -157,15 +161,32 @@ describe('ComputerProfile', () => {
         new Segment(3, 3, air, 180), // 990 - 1170 stop
         new Segment(3, 0, air, 30) // 1170 - 1200
     ];
-    const decoUserSegments = 2;
-    // ceiling 2 m up to 999 s, cleared from 1000 s
-    const decoCeilings = ceilingsFrom([...Array.from({ length: 999 }, () => 2), ...Array.from({ length: 201 }, () => 0)]);
-    const noCeilings = ceilingsFrom(Array.from({ length: 1200 }, () => 0));
+    // ceiling far from the bottom and ascent, close to both stops, cleared during the last stop
+    const decoCeilings = ceilingsAt(1200, (runTime) => {
+        if (runTime < 600) {
+            return 0;
+        }
+
+        if (runTime < 900) {
+            return 5;
+        }
+
+        if (runTime < 960) {
+            return 4;
+        }
+
+        if (runTime < 990) {
+            return 2.5;
+        }
+
+        return runTime < 1100 ? 1 : 0;
+    });
+    const noCeilings = ceilingsAt(1200, () => 0);
     const isStop = (e: ComputerEvent): boolean => e.type === ComputerEventType.stop;
 
     describe('Stops', () => {
-        const stopsOf = (profile: Segment[], ceilings: Ceiling[], userSegments: number): ComputerEvent[] =>
-            sample(profile, ceilings, [], userSegments).events.filter(isStop);
+        const stopsOf = (profile: Segment[], ceilings: Ceiling[], stopDistance = 3): ComputerEvent[] =>
+            sample(profile, ceilings, [], stopDistance).events.filter(isStop);
 
         /** The 6 m stop (900 - 960 s) breathing EAN50, i.e. gas switch */
         const withSwitchAtSixMeters = (): Segment[] => {
@@ -174,44 +195,55 @@ describe('ComputerProfile', () => {
             return profile;
         };
 
-        it('Creates stop for every calculated flat ascent segment with ceiling', () => {
-            expect(stopsOf(decoDive, decoCeilings, decoUserSegments)).toEqual([
+        /** Ceiling only during the 6 m stop (900 - 960 s) */
+        const ceilingAtSixMeters = (ceilingAt: (runTime: number) => number): Ceiling[] =>
+            ceilingsAt(1200, (runTime) => runTime >= 900 && runTime < 960 ? ceilingAt(runTime) : 0);
+
+        it('Creates stop for every flat segment with ceiling closer than stop distance', () => {
+            expect(stopsOf(decoDive, decoCeilings)).toEqual([
                 { type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent,
                 { type: ComputerEventType.stop, runTime: 990, depth: 3, duration: 180 } as StopEvent
             ]);
         });
 
-        it('User defined flat segment is not a stop', () => {
-            const stops = stopsOf(decoDive, decoCeilings, 4);
-            expect(stops.map(s => s.runTime)).toEqual([990]);
+        it('Flat segment with ceiling far from its depth is not a stop', () => {
+            // bottom at 30 m with ceiling at 5 m
+            expect(stopsOf(decoDive, decoCeilings).map(s => s.runTime)).not.toContain(60);
         });
 
         it('Flat segment with zero ceiling is not a stop', () => {
-            expect(stopsOf(decoDive, noCeilings, decoUserSegments)).toEqual([]);
+            expect(stopsOf(decoDive, noCeilings)).toEqual([]);
         });
 
-        it('Flat segment before end of deepest point is not a stop', () => {
-            // bottom segment has ceiling, but ends at the deepest point
-            const stops = stopsOf(decoDive, decoCeilings, 0);
-            expect(stops.map(s => s.runTime)).toEqual([900, 990]);
+        it('Flat segment with ceiling at stop distance is not a stop', () => {
+            // diver at 6 m is allowed to ascend to the 3 m ceiling
+            expect(stopsOf(decoDive, ceilingAtSixMeters(() => 3))).toEqual([]);
         });
 
-        it('No stops when user defined segments are not known', () => {
-            expect(stopsOf(decoDive, decoCeilings, Number.POSITIVE_INFINITY)).toEqual([]);
+        it('Flat segment is a stop when the ceiling comes closer during it', () => {
+            const comingCloser = ceilingAtSixMeters((runTime) => runTime < 930 ? 2 : 4);
+            expect(stopsOf(decoDive, comingCloser).map(s => s.runTime)).toEqual([900]);
         });
 
-        it('Gas switch with ceiling is a stop', () => {
-            const stops = stopsOf(withSwitchAtSixMeters(), decoCeilings, decoUserSegments);
+        it('Uses stop distance from options', () => {
+            // ceiling 4 m from the 6 m segment
+            const ceilings = ceilingAtSixMeters(() => 2);
+            expect(stopsOf(decoDive, ceilings)).toEqual([]);
+            expect(stopsOf(decoDive, ceilings, 5).map(s => s.runTime)).toEqual([900]);
+        });
+
+        it('Gas switch with close ceiling is a stop', () => {
+            const stops = stopsOf(withSwitchAtSixMeters(), decoCeilings);
             expect(stops[0]).toEqual({ type: ComputerEventType.stop, runTime: 900, depth: 6, duration: 60 } as StopEvent);
         });
 
         it('Gas switch without ceiling is not a stop', () => {
-            expect(stopsOf(withSwitchAtSixMeters(), noCeilings, decoUserSegments)).toEqual([]);
+            expect(stopsOf(withSwitchAtSixMeters(), noCeilings)).toEqual([]);
         });
 
         it('Events are sorted by run time', () => {
             const events = [EventsFactory.createHighPpO2(1000, 3), EventsFactory.createSafetyStopStart(990, 3)];
-            const runTimes = sample(decoDive, decoCeilings, events, decoUserSegments).events.map(e => e.runTime);
+            const runTimes = sample(decoDive, decoCeilings, events).events.map(e => e.runTime);
             expect(runTimes).toEqual([900, 990, 990, 1000]);
         });
     });
@@ -220,7 +252,7 @@ describe('ComputerProfile', () => {
         // safety stop at 3 m overlaps the last deco stop 990 - 1170
         const safetyStop = EventsFactory.createSafetyStopStart(990, 3);
 
-        const sampleDeco = (ceilings: Ceiling[]): ComputerData => sample(decoDive, ceilings, [safetyStop], decoUserSegments);
+        const sampleDeco = (ceilings: Ceiling[]): ComputerData => sample(decoDive, ceilings, [safetyStop]);
 
         it('Points to first stop before it starts', () => {
             const data = sampleDeco(decoCeilings);

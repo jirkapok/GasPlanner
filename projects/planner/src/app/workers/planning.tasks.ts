@@ -62,7 +62,7 @@ export class PlanningTasks {
         const cnsExposures = CnsDailyCalculator.appendDive(task.previousCnsExposures, task.surfaceInterval, diveExposures);
         const density = new DensityAtDepth(depthConverter, breathing).forProfile(originalProfile, startAscentIndex);
         const averageDepths = new AverageDepth();
-        averageDepths.addProfile(originalProfile);
+        averageDepths.forProfile(originalProfile);
         const averageDepth = averageDepths.average;
 
         const eventOptions: EventOptions = {

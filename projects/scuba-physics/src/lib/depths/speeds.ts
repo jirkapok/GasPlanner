@@ -28,7 +28,7 @@ export class AscentSpeeds {
 
     public markAverageDepth(profile: Segments): void {
         const averageDepth = new AverageDepth();
-        averageDepth.addProfile(profile.deepestPart());
+        averageDepth.forProfile(profile.deepestPart());
         this.averageDepth = averageDepth.average;
     }
 

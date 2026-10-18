@@ -26,12 +26,12 @@ export class ResamplingService {
     constructor(private units: UnitConversion, private translate: TranslateService) {
     }
 
-    /** Average depth in user units for every second of the calculated profile, see AverageDepth.addProfile */
+    /** Average depth in user units for every second of the calculated profile, see AverageDepth.forProfile */
     public resampleAverageDepth(profile: Segment[]): AxisValues {
         const xValues: Date[] = [];
         const yValues: number[] = [];
 
-        new AverageDepth().addProfile(profile).forEach((average, runTime) => {
+        new AverageDepth().forProfile(profile).forEach((average, runTime) => {
             xValues.push(DateFormats.toDate(runTime));
             yValues.push(this.convertDepth(average));
         });

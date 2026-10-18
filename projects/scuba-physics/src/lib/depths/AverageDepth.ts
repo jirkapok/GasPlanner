@@ -22,7 +22,7 @@ export class AverageDepth {
      * @returns Average depths in meters, index is run time in seconds (0 .. floor of total duration).
      * The first value is the depth at the start. Empty for empty profile.
      */
-    public addProfile(profile: Segment[]): number[] {
+    public forProfile(profile: Segment[]): number[] {
         const averages: number[] = [];
         const lastSecond = Math.floor(profile.reduce((sum, segment) => sum + segment.duration, 0));
         let segmentIndex = 0;

@@ -297,13 +297,11 @@ describe('Buhlmann Algorithm - Plan', () => {
                 const endTimes: number[] = [];
                 let runTime = 0;
 
-                const isFlat = (segment?: Segment) => !!segment && segment.startDepth === segment.endDepth;
-
                 decoPlan.forEach((segment, index) => {
                     runTime += segment.duration;
-                    const isGeneratedStop = index >= userSegmentsCount && isFlat(segment);
+                    const isGeneratedStop = index >= userSegmentsCount && segment.isFlat;
                     // air breaks split the stop to multiple segments at the same depth
-                    const stopContinues = isFlat(decoPlan[index + 1]);
+                    const stopContinues = !!decoPlan[index + 1]?.isFlat;
                     if (isGeneratedStop && !stopContinues) {
                         endTimes.push(runTime);
                     }

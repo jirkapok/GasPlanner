@@ -87,6 +87,11 @@ export class Segment {
         return this._tank;
     }
 
+    /** True, if the segment stays at the same depth, regardless of its duration */
+    public get isFlat(): boolean {
+        return this.startDepth === this.endDepth;
+    }
+
     /**
      * meters per second, positive for descent, negative for ascent
      */
@@ -442,9 +447,7 @@ export class Segments {
         deepest.duration += durationDelta;
 
         if (depthDelta > 0) {
-            const isFlat = deepest.startDepth === deepest.endDepth;
-
-            if (isFlat && deepestIndex > 0) {
+            if (deepest.isFlat && deepestIndex > 0) {
                 Segments.deepen(this.segments[deepestIndex - 1], depthDelta);
                 deepest.endDepth += depthDelta;
             } else {

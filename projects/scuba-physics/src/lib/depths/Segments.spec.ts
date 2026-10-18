@@ -347,6 +347,24 @@ describe('Segments', () => {
         });
     });
 
+    describe('Segment is flat', () => {
+        it('Staying at the same depth is flat', () => {
+            expect(new Segment(10, 10, StandardGases.air, 60).isFlat).toBeTrue();
+        });
+
+        it('Descent is not flat', () => {
+            expect(new Segment(0, 10, StandardGases.air, 60).isFlat).toBeFalse();
+        });
+
+        it('Ascent is not flat', () => {
+            expect(new Segment(10, 6, StandardGases.air, 60).isFlat).toBeFalse();
+        });
+
+        it('Zero duration at the same depth is flat', () => {
+            expect(new Segment(10, 10, StandardGases.air, 0).isFlat).toBeTrue();
+        });
+    });
+
     describe('Depth at', () => {
         const profile = [
             new Segment(5, 10, StandardGases.air, 20), // 5 m to distinguish from default 0 m

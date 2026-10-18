@@ -122,10 +122,9 @@ export class ComputerProfile {
         for (let index = firstCandidate; index < segments.length; index++) {
             const timed = segments[index];
             const duration = timed.endTime - timed.startTime;
-            const isFlat = timed.segment.startDepth === timed.segment.endDepth;
             const ceiling = profile[Math.floor(timed.startTime)].ceiling;
 
-            if (isFlat && duration > 0 && ceiling > 0) {
+            if (timed.segment.isFlat && duration > 0 && ceiling > 0) {
                 stops.push({
                     type: ComputerEventType.stop,
                     runTime: timed.startTime,

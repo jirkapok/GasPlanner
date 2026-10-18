@@ -66,6 +66,15 @@ export class WayPoint {
         return this.action;
     }
 
+    public get copy(): WayPoint {
+        const copy =  new WayPoint(this.units, this.duration, this.endDepthMeters, this.startDepthMeters);
+        copy.startTime = this.startTime;
+        copy.endTime = this.endTime;
+        copy._gasName = this.gasName;
+        copy.speed = this.speed;
+        return copy;
+    }
+
     public static fromSegment(units: UnitConversion, segment: Segment, startOffset: number = 0): WayPoint {
         const duration = segment.duration + startOffset;
         const newWayPoint = new WayPoint(units, duration, segment.endDepth, segment.startDepth);

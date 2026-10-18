@@ -62,6 +62,11 @@ export class ComputerStop implements StopEvent {
         }
     }
 
+    /** New stop starting at the same moment as this stop, but ending at the given run time in seconds since start of the dive */
+    public endAt(runTime: number): ComputerStop {
+        return new ComputerStop(this.type, this.runTime, this.depth, runTime - this.runTime);
+    }
+
     /** True, if both stops happen at least partially at the same time */
     public overlaps(other: ComputerStop): boolean {
         return this.runTime < other.stopEnd && other.runTime < this.stopEnd;

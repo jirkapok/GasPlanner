@@ -30,6 +30,16 @@ class TimedSegment {
         return this._endTime;
     }
 
+    public static fromSegments(profile: Segment[]): TimedSegment[] {
+        let startTime = 0;
+
+        return profile.map((segment) => {
+            const timed = new TimedSegment(segment, startTime);
+            startTime = timed.endTime;
+            return timed;
+        });
+    }
+
     /** Depth in meters at the given run time (seconds since start of the dive) within this segment */
     public depthAt(runTime: number): number {
         // zero duration segment has no speed, so it stays at its end depth
@@ -53,16 +63,6 @@ class TimedSegment {
         }
 
         return false;
-    }
-
-    public static fromSegments(profile: Segment[]): TimedSegment[] {
-        let startTime = 0;
-
-        return profile.map((segment) => {
-            const timed = new TimedSegment(segment, startTime);
-            startTime = timed.endTime;
-            return timed;
-        });
     }
 }
 
@@ -127,8 +127,9 @@ export class ComputerProfile {
             });
         }
 
+        const algorithmEvents = ComputerStop.eventsFrom(source.events);
         const stops = ComputerProfile.stopsFrom(segments, profile, source.stopDistance);
-        const events = [...ComputerStop.eventsFrom(source.events), ...stops]
+        const events = [...algorithmEvents, ...ComputerProfile.endBeforeSafetyStops(stops, algorithmEvents)]
             .sort((a, b) => a.runTime - b.runTime);
         ComputerProfile.assignNextStop(profile, events);
 
@@ -167,12 +168,24 @@ export class ComputerProfile {
         });
     }
 
-    /** Stops and safety stops sorted by time, safety stop overlapping any stop is replaced by the stop */
-    private static stopsToFollow(events: ComputerEvent[]): ComputerStop[] {
-        const allStops = events.filter((e): e is ComputerStop => e instanceof ComputerStop);
-        const decoStops = allStops.filter(s => s.type === ComputerEventType.stop);
+    /**
+     * Safety stop always follows the mandatory stop, they may be part of the same segment.
+     * So the mandatory stop ends, where the overlapping safety stop starts.
+     * Stop completely covered by the safety stop is removed.
+     */
+    private static endBeforeSafetyStops(stops: ComputerStop[], events: ComputerEvent[]): ComputerStop[] {
+        const safetyStops = events.filter((e): e is ComputerStop => e instanceof ComputerStop && e.type === ComputerEventType.safetyStop);
 
-        return allStops.filter(s => s.type === ComputerEventType.stop ||
-            !decoStops.some(decoStop => decoStop.overlaps(s)));
+        return stops
+            .map((stop) => {
+                const safetyStop = safetyStops.find(s => stop.overlaps(s));
+                return safetyStop ? stop.endAt(safetyStop.runTime) : stop;
+            })
+            .filter(stop => stop.duration > 0);
+    }
+
+    /** Stops and safety stops sorted by time, they don't overlap */
+    private static stopsToFollow(events: ComputerEvent[]): ComputerStop[] {
+        return events.filter((e): e is ComputerStop => e instanceof ComputerStop);
     }
 }

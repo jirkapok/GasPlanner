@@ -11,6 +11,10 @@ describe('ComputerStop', () => {
         expect(stopAt(900, 60).stopEnd).toEqual(960);
     });
 
+    it('Stop ending earlier keeps its start', () => {
+        expect(stopAt(990, 300).endAt(1110)).toEqual(new ComputerStop(ComputerEventType.stop, 990, 6, 120));
+    });
+
     it('Stops happening at the same time overlap', () => {
         expect(stopAt(900, 60).overlaps(stopAt(930, 60))).toBeTrue();
         expect(stopAt(930, 60).overlaps(stopAt(900, 60))).toBeTrue();

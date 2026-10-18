@@ -120,11 +120,11 @@ describe('ComputerProfile', () => {
         new Segment(30, 6, air, 240), // 660 - 900
         new Segment(6, 6, air, 60), // 900 - 960 stop
         new Segment(6, 3, air, 30), // 960 - 990
-        new Segment(3, 3, air, 180), // 990 - 1170 stop
-        new Segment(3, 0, air, 30) // 1170 - 1200
+        new Segment(3, 3, air, 300), // 990 - 1290 stop, its last 180 s is the safety stop
+        new Segment(3, 0, air, 30) // 1290 - 1320
     ];
     // ceiling far from the bottom and ascent, close to both stops, cleared during the last stop
-    const decoCeilings = ceilingsAt(1200, (runTime) => {
+    const decoCeilings = ceilingsAt(1320, (runTime) => {
         if (runTime < 600) {
             return 0;
         }
@@ -143,7 +143,7 @@ describe('ComputerProfile', () => {
 
         return runTime < 1100 ? 1 : 0;
     });
-    const noCeilings = ceilingsAt(1200, () => 0);
+    const noCeilings = ceilingsAt(1320, () => 0);
     const isStop = (e: ComputerEvent): boolean => e.type === ComputerEventType.stop;
 
     describe('Stops', () => {
@@ -159,12 +159,12 @@ describe('ComputerProfile', () => {
 
         /** Ceiling only during the 6 m stop (900 - 960 s) */
         const ceilingAtSixMeters = (ceilingAt: (runTime: number) => number): Ceiling[] =>
-            ceilingsAt(1200, (runTime) => runTime >= 900 && runTime < 960 ? ceilingAt(runTime) : 0);
+            ceilingsAt(1320, (runTime) => runTime >= 900 && runTime < 960 ? ceilingAt(runTime) : 0);
 
         it('Creates stop for every flat segment with ceiling closer than stop distance', () => {
             expect(stopsOf(decoDive, decoCeilings)).toEqual([
                 new ComputerStop(ComputerEventType.stop, 900, 6, 60),
-                new ComputerStop(ComputerEventType.stop, 990, 3, 180)
+                new ComputerStop(ComputerEventType.stop, 990, 3, 300)
             ]);
         });
 
@@ -204,15 +204,29 @@ describe('ComputerProfile', () => {
         });
 
         it('Events are sorted by run time', () => {
-            const events = [EventsFactory.createHighPpO2(1000, 3), EventsFactory.createSafetyStopStart(990, 3)];
+            const events = [EventsFactory.createSafetyStopStart(1110, 3), EventsFactory.createHighPpO2(1000, 3)];
             const runTimes = sample(decoDive, decoCeilings, events).events.map(e => e.runTime);
-            expect(runTimes).toEqual([900, 990, 990, 1000]);
+            expect(runTimes).toEqual([900, 990, 1000, 1110]);
+        });
+
+        it('Stop ends at the beginning of the following safety stop', () => {
+            const events = sample(decoDive, decoCeilings, [EventsFactory.createSafetyStopStart(1110, 3)]).events;
+            expect(events.filter(isStop)).toEqual([
+                new ComputerStop(ComputerEventType.stop, 900, 6, 60),
+                new ComputerStop(ComputerEventType.stop, 990, 3, 120)
+            ]);
+        });
+
+        it('Stop covered by the safety stop is removed', () => {
+            // the safety stop starts together with the 3 m stop
+            const events = sample(decoDive, decoCeilings, [EventsFactory.createSafetyStopStart(990, 3)]).events;
+            expect(events.filter(isStop).map(s => s.runTime)).toEqual([900]);
         });
     });
 
     describe('Next stop', () => {
-        // safety stop at 3 m overlaps the last deco stop 990 - 1170
-        const safetyStop = EventsFactory.createSafetyStopStart(990, 3);
+        // safety stop is the last 180 s of the 3 m stop 990 - 1290
+        const safetyStop = EventsFactory.createSafetyStopStart(1110, 3);
 
         const sampleDeco = (ceilings: Ceiling[]): ComputerData => sample(decoDive, ceilings, [safetyStop]);
 
@@ -234,10 +248,17 @@ describe('ComputerProfile', () => {
             expect(data.profile[960].nextStop).toBe(stops[1] as StopEvent);
         });
 
-        it('Points to stop, not to overlapping safety stop', () => {
+        it('Points to stop until the safety stop starts', () => {
             const profile = sampleDeco(decoCeilings).profile;
-            expect(profile[980].nextStop?.type).toEqual(ComputerEventType.stop);
             expect(profile[1000].nextStop?.type).toEqual(ComputerEventType.stop);
+            expect(profile[1000].nextStop?.duration).toEqual(120);
+            expect(profile[1109].nextStop?.type).toEqual(ComputerEventType.stop);
+        });
+
+        it('Points to safety stop after the stop finished', () => {
+            const profile = sampleDeco(decoCeilings).profile;
+            expect(profile[1110].nextStop?.type).toEqual(ComputerEventType.safetyStop);
+            expect(profile[1289].nextStop?.type).toEqual(ComputerEventType.safetyStop);
         });
 
         it('Points to safety stop when there is no deco stop', () => {
@@ -248,8 +269,8 @@ describe('ComputerProfile', () => {
 
         it('No next stop after last stop finished', () => {
             const profile = sampleDeco(decoCeilings).profile;
-            expect(profile[1170].nextStop).toBeUndefined();
-            expect(profile[1200].nextStop).toBeUndefined();
+            expect(profile[1290].nextStop).toBeUndefined();
+            expect(profile[1320].nextStop).toBeUndefined();
         });
     });
 });

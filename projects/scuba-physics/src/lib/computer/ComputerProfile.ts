@@ -121,15 +121,15 @@ export class ComputerProfile {
 
         for (let index = firstCandidate; index < segments.length; index++) {
             const timed = segments[index];
-            const duration = timed.endTime - timed.startTime;
+            const segment = timed.segment;
             const ceiling = profile[Math.floor(timed.startTime)].ceiling;
 
-            if (timed.segment.isFlat && duration > 0 && ceiling > 0) {
+            if (segment.isFlat && segment.duration > 0 && ceiling > 0) {
                 stops.push({
                     type: ComputerEventType.stop,
                     runTime: timed.startTime,
-                    depth: timed.segment.endDepth,
-                    duration: duration
+                    depth: segment.endDepth,
+                    duration: segment.duration
                 });
             }
         }

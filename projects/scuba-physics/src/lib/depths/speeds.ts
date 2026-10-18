@@ -1,3 +1,4 @@
+import { AverageDepth } from './AverageDepth';
 import { Segments } from './Segments';
 
 export interface SpeedOptions {
@@ -26,8 +27,9 @@ export class AscentSpeeds {
     constructor(private options: SpeedOptions) { }
 
     public markAverageDepth(profile: Segments): void {
-        const deepestPart = profile.deepestPart();
-        this.averageDepth = Segments.averageDepth(deepestPart);
+        const averageDepth = new AverageDepth();
+        averageDepth.addProfile(profile.deepestPart());
+        this.averageDepth = averageDepth.average;
     }
 
     /** current depth in meters */

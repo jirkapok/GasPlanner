@@ -225,45 +225,6 @@ describe('Segments', () => {
         });
     });
 
-    describe('Average depth', () => {
-        it('No elements = 0 meters', () => {
-            const segments: Segment[] = [];
-            const averageDepth = Segments.averageDepth(segments);
-
-            expect(averageDepth).toBe(0);
-        });
-
-        it('One element returns the only one element depth', () => {
-            const segments: Segment[] = [
-                new Segment(10, 30, StandardGases.air, 60)
-            ];
-
-            const averageDepth = Segments.averageDepth(segments);
-            expect(averageDepth).toBe(20);
-        });
-
-        it('0 duration is not added', () => {
-            const segments: Segment[] = [
-                new Segment(40, 40, StandardGases.air, 0),
-                new Segment(40, 40, StandardGases.air, 60)
-            ];
-
-            const averageDepth = Segments.averageDepth(segments);
-            expect(averageDepth).toBe(40);
-        });
-
-        it('Multiple elements count all elements', () => {
-            const segments: Segment[] = [
-                new Segment(0, 40, StandardGases.air, 60),
-                new Segment(40, 40, StandardGases.air, 120),
-                new Segment(40, 0, StandardGases.air, 60)
-            ];
-
-            const averageDepth = Segments.averageDepth(segments);
-            expect(averageDepth).toBe(30);
-        });
-    });
-
     describe('Deepest part', () => {
         it('No elements = empty result', () => {
             const segments = new Segments();

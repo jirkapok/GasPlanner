@@ -290,27 +290,6 @@ export class Segments {
         return 0;
     }
 
-    /** Calculates average depth in meters from provided segments */
-    public static averageDepth(segments: Segment[]): number {
-        if (segments.length <= 0) {
-            return 0;
-        }
-
-        let cumulativeAverage = 0;
-        let totalDuration = 0;
-
-        // Uses cumulative average to prevent number overflow for large segment durations
-        segments.forEach(segment => {
-            if (segment.duration > 0) {
-                const cumulativeWeight = segment.averageDepth * segment.duration + totalDuration * cumulativeAverage;
-                totalDuration += segment.duration;
-                cumulativeAverage = cumulativeWeight / totalDuration;
-            }
-        });
-
-        return cumulativeAverage;
-    }
-
     /** Moves end depth of the segment deeper by depthDelta in meters, keeping its speed, if it isn't flat */
     private static deepen(segment: Segment, depthDelta: number): void {
         const depthChange = segment.endDepth - segment.startDepth;

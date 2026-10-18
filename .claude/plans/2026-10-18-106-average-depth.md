@@ -495,7 +495,7 @@ git commit -m "feat: #106 profile chart average depth by library average depth"
 
 ### Task 4: Dive summary and ascent speeds use `AverageDepth.average`; remove `Segments.averageDepth` (A5)
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 

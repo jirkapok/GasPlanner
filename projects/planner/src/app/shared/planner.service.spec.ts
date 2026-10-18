@@ -228,7 +228,7 @@ describe('PlannerService', () => {
 
     describe('Updates dive', () => {
         it('Average depth is calculated', () => {
-            expect(dive.averageDepth).toEqual(21.75);
+            expect(dive.averageDepth).toBeCloseTo(21.75, 6);
         });
 
         it('Waypoints are calculated', () => {

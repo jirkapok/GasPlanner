@@ -1,5 +1,5 @@
 import {
-    Segments, Tanks, ProfileEvents, DepthConverterFactory,
+    AverageDepth, Segments, Tanks, ProfileEvents, DepthConverterFactory,
     Consumption, Time, Diver, OtuCalculator, CnsCalculator,
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
@@ -61,7 +61,9 @@ export class PlanningTasks {
         const diveExposures = dailyCnsCalculator.exposuresForProfile(originalProfile, startAscentIndex);
         const cnsExposures = CnsDailyCalculator.appendDive(task.previousCnsExposures, task.surfaceInterval, diveExposures);
         const density = new DensityAtDepth(depthConverter, breathing).forProfile(originalProfile, startAscentIndex);
-        const averageDepth = Segments.averageDepth(originalProfile);
+        const averageDepths = new AverageDepth();
+        averageDepths.addProfile(originalProfile);
+        const averageDepth = averageDepths.average;
 
         const eventOptions: EventOptions = {
             maxDensity: task.eventOptions.maxDensity,

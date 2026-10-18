@@ -22,10 +22,15 @@ export interface ComputerProfileSource {
 }
 
 /** Segment with its position in the profile, in seconds since start of the dive */
-interface TimedSegment {
-    segment: Segment;
-    startTime: number;
-    endTime: number;
+class TimedSegment {
+    constructor(public readonly segment: Segment, public readonly startTime: number, public readonly endTime: number) {
+    }
+
+    /** Depth in meters at the given run time (seconds since start of the dive) within this segment */
+    public depthAt(runTime: number): number {
+        // zero duration segment has no speed, so it stays at its end depth
+        return this.segment.duration > 0 ? this.segment.depthAt(runTime - this.startTime) : this.segment.endDepth;
+    }
 }
 
 /** Samples calculated dive for every second of the dive. */
@@ -68,9 +73,7 @@ export class ComputerProfile {
                 ceilingIndex++;
             }
 
-            const timed = segments[segmentIndex];
-            // zero duration segment has no speed, so it stays at its end depth
-            const depth = timed.segment.duration > 0 ? timed.segment.depthAt(runTime - timed.startTime) : timed.segment.endDepth;
+            const depth = segments[segmentIndex].depthAt(runTime);
             maxDepth = Math.max(maxDepth, depth);
 
             if (runTime > 0) {
@@ -107,7 +110,7 @@ export class ComputerProfile {
 
         return profile.map((segment) => {
             const endTime = startTime + segment.duration;
-            const timed: TimedSegment = { segment: segment, startTime: startTime, endTime: endTime };
+            const timed = new TimedSegment(segment, startTime, endTime);
             startTime = endTime;
             return timed;
         });

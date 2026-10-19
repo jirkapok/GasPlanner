@@ -16,7 +16,7 @@ import { Consumption, ConsumptionOptions } from '../consumption/consumption';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
 // Lets assign reserve to all asserts on slower machines at github.
-describe('Performance', () => {
+describe('Algorithm calculation Performance', () => {
     const assertDuration = (message: string, limit: number, actionToMeasure: () => void): void => {
         const iterations = 1;
         const results: number[] = [];

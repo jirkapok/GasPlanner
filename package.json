@@ -11,7 +11,7 @@
     "test-ci": "ng test --project planner --browsers=ChromeHeadless --no-watch --code-coverage --exclude **/*.performance.spec.ts",
     "test-performance": "ng test --project scuba-physics --karma-config projects/scuba-physics/karma.performance.conf.js --no-watch --include=**/*.performance.spec.ts",
     "test-lib": "ng test --project scuba-physics --exclude **/*.performance.spec.ts",
-    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --code-coverage --exclude **/performanceTests.spec.ts --exclude **/*.performance.spec.ts",
+    "test-lib-ci": "ng test --project scuba-physics --browsers=ChromeHeadless --no-watch --code-coverage --exclude **/*.performance.spec.ts",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },

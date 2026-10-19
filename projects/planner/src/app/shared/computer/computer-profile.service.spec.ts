@@ -12,6 +12,7 @@ import { WorkersFactoryCommon } from '../serial.workers.factory';
 import { IRestartableTask } from '../../workers/background-task';
 import { ComputerRequestDto, ComputerResultDto, RunTimePointDto } from '../serialization.model';
 import { ComputerProfileService } from './computer-profile.service';
+import { DtoSerialization } from '../dtoSerialization';
 
 /** Replaces the worker, the test decides what the worker reports */
 class FakeComputerTask implements IRestartableTask<ComputerRequestDto, ComputerResultDto> {
@@ -212,11 +213,11 @@ describe('ComputerProfileService', () => {
             results.start();
             results.updateProfile([WayPoint.fromSegment(units, segment)], tissues, [segment]);
             results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(),
-                [new Ceiling(1, 0), new Ceiling(2, 0)], [], [], 0, [], [], [tissues, tissues]);
+                [new Ceiling(1, 0), new Ceiling(2, 0)], [], [], 0, [], [], DtoSerialization.packTissuesHistory([tissues, tissues]));
             results.updateConsumption(0, 0, 0, 0, 0, false, false, []);
             dispatcher.sendInfoCalculated(first.id);
-            expect(worker.lastRequest.tissues.length).toEqual(2);
-            expect(worker.lastRequest.tissues[1][0].pN2).toEqual(tissues[0].pN2);
+            expect(DtoSerialization.tissuesHistorySamples(worker.lastRequest.tissues)).toEqual(2);
+            expect(DtoSerialization.unpackTissuesHistory(worker.lastRequest.tissues)[1]).toEqual(tissues);
         });
 
         it('Request passes tissues history of selected dive without copying it', () => {

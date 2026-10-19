@@ -96,7 +96,7 @@ export class PlanningTasks {
             offgasingStartTime: offgasingStartRuntime,
             offgasingStartDepth: offgasingStartDepth,
             ceilings: statistics.ceilings,
-            tissues: DtoSerialization.fromTissuesHistory(statistics.tissues),
+            tissues: DtoSerialization.packTissuesHistory(statistics.tissues),
             tissueOverPressures: statistics.tissueOverPressures
         };
     }

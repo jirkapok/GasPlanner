@@ -3,7 +3,7 @@ import {
     CalculatedProfile, Diver, Events, Event, Gas,
     HighestDensity, Options, Segment, Tank, Tanks,
     AirBreakOptions, LoadedTissues, CalculatedProfileStatistics, ConsumedGas,
-    RebreatherOptions
+    RebreatherOptions, Compartments, LoadedTissue
 } from 'scuba-physics';
 import {
     AirBreaksDto,
@@ -14,6 +14,9 @@ import {
 
 /** Serialization used to store preferences and for communication with background workers */
 export class DtoSerialization {
+    /** Nitrogen and helium pressure of every compartment in one sample of packed tissues history */
+    public static readonly valuesPerTissuesSample = Compartments.buhlmannZHL16C.length * 2;
+
     public static toTanks(source: TankDto[]): Tank[] {
         const result: Tank[] = [];
         source.forEach(tank => {
@@ -142,10 +145,47 @@ export class DtoSerialization {
         })).value() as LoadedTissues;
     }
 
-    /* Not used yet */
-    public static toTissuesHistory(tissuesHistory: LoadedTissueDto[][]): LoadedTissues[] {
-        return _(tissuesHistory).map(t => DtoSerialization.toTissues(t))
-            .value();
+    /**
+     * Packs the tissues history to one array of numbers, which is transferred to and from the workers as one block of memory.
+     * Transfer of the history as objects takes hundreds of milliseconds for long dives.
+     * Every sample contains nitrogen and helium pressure of every compartment in order of the compartments.
+     */
+    public static packTissuesHistory(tissuesHistory: LoadedTissues[]): Float64Array {
+        const packed = new Float64Array(tissuesHistory.length * DtoSerialization.valuesPerTissuesSample);
+        let index = 0;
+
+        for (const sample of tissuesHistory) {
+            for (const tissue of sample) {
+                packed[index++] = tissue.pN2;
+                packed[index++] = tissue.pHe;
+            }
+        }
+
+        return packed;
+    }
+
+    /** Reverse of packTissuesHistory */
+    public static unpackTissuesHistory(packed: Float64Array): LoadedTissues[] {
+        const samples = DtoSerialization.tissuesHistorySamples(packed);
+        const tissuesHistory: LoadedTissues[] = [];
+
+        for (let sample = 0; sample < samples; sample++) {
+            const start = sample * DtoSerialization.valuesPerTissuesSample;
+            const tissues: LoadedTissue[] = [];
+
+            for (let index = start; index < start + DtoSerialization.valuesPerTissuesSample; index += 2) {
+                tissues.push({ pN2: packed[index], pHe: packed[index + 1] });
+            }
+
+            tissuesHistory.push(tissues as LoadedTissues);
+        }
+
+        return tissuesHistory;
+    }
+
+    /** Count of samples in packed tissues history */
+    public static tissuesHistorySamples(packed: Float64Array): number {
+        return packed.length / DtoSerialization.valuesPerTissuesSample;
     }
 
     public static fromTissues(tissues: LoadedTissues): LoadedTissueDto[] {
@@ -153,11 +193,6 @@ export class DtoSerialization {
             pN2: t.pN2,
             pHe: t.pHe
         })).value();
-    }
-
-    public static fromTissuesHistory(tissuesHistory: LoadedTissues[]): LoadedTissueDto[][] {
-        return _(tissuesHistory).map(t => DtoSerialization.fromTissues(t))
-            .value();
     }
 
     public static toEvents(dto: EventDto[]): Events {

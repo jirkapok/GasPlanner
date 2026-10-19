@@ -110,8 +110,8 @@ export interface DiveInfoResultDto {
     offgasingStartTime: number;
     offgasingStartDepth: number;
     ceilings: Ceiling[];
-    /* not used yet */
-    tissues: LoadedTissueDto[][];
+    /** Tissues history sampled at the same times as the ceilings, see DtoSerialization.packTissuesHistory */
+    tissues: Float64Array;
     tissueOverPressures: TissueOverPressures[];
 }
 
@@ -278,8 +278,11 @@ export interface ComputerRequestDto extends PlanRequestDto {
     profile: SegmentDto[];
     /** Already calculated ceilings of the profile */
     ceilings: CeilingDto[];
-    /** Already calculated tissues history of the profile, sampled at the same times as the ceilings */
-    tissues: LoadedTissueDto[][];
+    /**
+     * Already calculated tissues history of the profile, sampled at the same times as the ceilings,
+     * see DtoSerialization.packTissuesHistory
+     */
+    tissues: Float64Array;
     /** All events of the profile calculated by the algorithm, not filtered by ignored issues */
     events: EventDto[];
 }

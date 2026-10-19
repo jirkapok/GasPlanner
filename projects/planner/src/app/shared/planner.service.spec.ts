@@ -91,7 +91,7 @@ describe('PlannerService', () => {
         });
 
         it('Tissues history is calculated for every second', () => {
-            expect(dive.tissues.length).toEqual(dive.ceilings.length);
+            expect(DtoSerialization.tissuesHistorySamples(dive.tissues)).toEqual(dive.ceilings.length);
             expect(dive.tissues.length).toBeGreaterThan(0);
         });
 
@@ -502,7 +502,7 @@ describe('PlannerService', () => {
                         offgasingStartTime: 0,
                         offgasingStartDepth: 0,
                         ceilings: [],
-                        tissues: [],
+                        tissues: new Float64Array(0),
                         tissueOverPressures: []
                     }));
 

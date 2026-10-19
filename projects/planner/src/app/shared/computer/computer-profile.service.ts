@@ -147,7 +147,7 @@ export class ComputerProfileService extends Streamed {
             calculationId: this.calculationId,
             profile: DtoSerialization.fromSegments(results.profile),
             ceilings: results.ceilings,
-            // already plain objects, conversion of the large history would block the UI
+            // already packed, so it is copied to the worker as one block of memory
             tissues: results.tissues,
             events: DtoSerialization.fromEvents(results.algorithmEvents)
         });

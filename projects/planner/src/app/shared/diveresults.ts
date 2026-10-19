@@ -9,7 +9,6 @@ import _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
-import { LoadedTissueDto } from './serialization.model';
 
 class CalculationState {
     private _calculating = false;
@@ -68,7 +67,7 @@ export class DiveResults {
     private _events: BoundEvent[] = [];
     private _algorithmEvents: Event[] = [];
     // tissues history sampled every second at the same times as the ceilings, kept as received from the worker
-    private _tissues: LoadedTissueDto[][] = [];
+    private _tissues: Float64Array = new Float64Array(0);
 
     // Consumption related
     private _maxTime = 0;
@@ -161,9 +160,9 @@ export class DiveResults {
 
     /**
      * Tissues history of the dive, sampled every second at the same times as the ceilings.
-     * Kept as received from the worker, the conversion of the large history would block the UI.
+     * Packed and kept as received from the worker, see DtoSerialization.packTissuesHistory.
      */
-    public get tissues(): LoadedTissueDto[][] {
+    public get tissues(): Float64Array {
         return this._tissues;
     }
 
@@ -373,7 +372,7 @@ export class DiveResults {
         dailyCns: number,
         cnsExposures: CnsExposure[],
         algorithmEvents: Event[],
-        tissues: LoadedTissueDto[][] = []): void {
+        tissues: Float64Array = new Float64Array(0)): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;
@@ -406,7 +405,7 @@ export class DiveResults {
     private emptyDiveInfo(): void {
         this.updateDiveInfoInternal(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
         this._algorithmEvents = [];
-        this._tissues = [];
+        this._tissues = new Float64Array(0);
         this._dailyCns = 0;
         this._cnsExposures = [];
     }

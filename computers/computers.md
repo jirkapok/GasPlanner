@@ -11,6 +11,11 @@
 * TTS - current total time to surface in minutes (needs to be calculated for every moment)
 * Stop - remaining time of the safety or mandatory stop
 
+TODO to implement
+* Asc - ascent speed
+* N2 - Nitrogen loading of the leading tissue
+* Shearwater like values - GF99, SurfGF, "@+5", "Δ+5"
+
 ## Warnings
 
 * Switch - proposed gas switch to concrete/next gas

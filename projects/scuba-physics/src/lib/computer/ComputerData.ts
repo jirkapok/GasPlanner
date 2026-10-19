@@ -13,6 +13,11 @@ export interface RunTimePoint {
     /** current ascent speed in meters per second, positive number. 0 for flat, descending or zero duration segment. */
     ascentSpeed: number;
     /**
+     * Current leading tissue loading in percents 0-100 relative to the surface M-value reduced by gradient factor high.
+     * 100 = no decompression limit reached, decompression starts.
+     */
+    tissuesLoading: number;
+    /**
      * Current no decompression limit at this moment in seconds: remaining time till the ceiling isn't at surface,
      * when staying at current depth on current gas. 0 while in decompression, Infinity at surface or for more than 1000 minutes.
      */

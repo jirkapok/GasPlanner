@@ -54,12 +54,13 @@ describe('Dive computer performance', () => {
         return AlgorithmParams.forMultilevelDive(segments, gases, options, OptionExtensions.openCircuit(options));
     };
 
-    /** Calculates the dive the same way as the planner does: profile, ceilings and all events */
+    /** Calculates the dive the same way as the planner does: profile, ceilings, tissues history and all events */
     const calculateDive = (dive: AlgorithmParams): CalculatedDive => {
         const profile = algorithm.decompression(dive).segments;
         const calculatedSegments = Segments.fromCollection(profile);
         const calculatedDive = AlgorithmParams.forMultilevelDive(calculatedSegments, dive.gases, dive.options, dive.breathing);
-        const ceilings = algorithm.decompressionStatistics(calculatedDive).ceilings;
+        const statistics = algorithm.decompressionStatistics(calculatedDive);
+        const ceilings = statistics.ceilings;
         const events = ProfileEvents.fromProfile({
             maxDensity: GasDensity.recommendedMaximum,
             startAscentIndex: calculatedSegments.startAscentIndex,
@@ -73,6 +74,7 @@ describe('Dive computer performance', () => {
             dive: dive,
             profile: profile,
             ceilings: ceilings,
+            tissues: statistics.tissues,
             events: events
         };
     };

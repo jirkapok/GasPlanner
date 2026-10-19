@@ -24,12 +24,13 @@ describe('DiveComputer', () => {
         return AlgorithmParams.forMultilevelDive(segments, allGases, options, OptionExtensions.openCircuit(options), surface);
     };
 
-    /** Calculates the dive the same way as the planner does: profile, ceilings and all events */
+    /** Calculates the dive the same way as the planner does: profile, ceilings, tissues history and all events */
     const calculateDive = (dive: AlgorithmParams, surface?: RestingParameters): CalculatedDive => {
         const profile = algorithm.decompression(dive).segments;
         const calculatedSegments = Segments.fromCollection(profile);
         const calculatedDive = AlgorithmParams.forMultilevelDive(calculatedSegments, dive.gases, dive.options, dive.breathing, surface);
-        const ceilings = algorithm.decompressionStatistics(calculatedDive).ceilings;
+        const statistics = algorithm.decompressionStatistics(calculatedDive);
+        const ceilings = statistics.ceilings;
         const events = ProfileEvents.fromProfile({
             maxDensity: GasDensity.recommendedMaximum,
             startAscentIndex: calculatedSegments.startAscentIndex,
@@ -43,6 +44,7 @@ describe('DiveComputer', () => {
             dive: dive,
             profile: profile,
             ceilings: ceilings,
+            tissues: statistics.tissues,
             events: events
         };
     };
@@ -166,8 +168,54 @@ describe('DiveComputer', () => {
         expect(repetitive.profile[120].ndl).toBeLessThan(first.profile[120].ndl);
     });
 
+    describe('Tissues loading', () => {
+        it('Tissues loading is 100 when no decompression limit ends', () => {
+            const profile = DiveComputer.calculate(calculatedDecoDive).profile;
+            const noDecoEnd = profile.findIndex(p => p.ndl === 0);
+            expect(profile[0].tissuesLoading).toEqual(0);
+            expect(noDecoEnd).toBeGreaterThan(0);
+            expect(profile[noDecoEnd].tissuesLoading).toEqual(100);
+            expect(profile[noDecoEnd - 1].tissuesLoading).toBeCloseTo(100, 0);
+        });
+
+        it('Tissues loading uses surface pressure at altitude', () => {
+            const altitudeOptions = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            altitudeOptions.altitude = 2000;
+            const gases = new Gases();
+            gases.add(air);
+            const segments = new Segments();
+            fortyMetersFor30Minutes(segments);
+            const breathing = OptionExtensions.openCircuit(altitudeOptions);
+            const altitudeDive = AlgorithmParams.forMultilevelDive(segments, gases, altitudeOptions, breathing);
+            const profile = DiveComputer.calculate(calculateDive(altitudeDive)).profile;
+            const noDecoEnd = profile.findIndex(p => p.ndl === 0);
+            expect(profile[noDecoEnd - 1].tissuesLoading).toBeCloseTo(100, 0);
+        });
+
+        it('Tissues loading is available before no decompression limits are calculated', () => {
+            const computer = DiveComputer.start(calculatedDecoDive);
+            const points = computer.points();
+            const first = points.next();
+            expect(first.done ? undefined : first.value.tissuesLoading).toEqual(0);
+        });
+
+        it('Repetitive dive starts loaded', () => {
+            const firstDive = diveFor(s => {
+                s.add(30, air, Time.oneMinute * 2);
+                s.addFlat(air, Time.oneMinute * 20);
+            });
+            const surface = new RestingParameters(algorithm.decompression(firstDive).finalTissues, Time.oneMinute * 30);
+            const shallowDive = (segments: Segments): void => {
+                segments.add(20, air, Time.oneMinute);
+                segments.addFlat(air, Time.oneMinute * 10);
+            };
+            const repetitive = DiveComputer.calculate(calculateDive(diveFor(shallowDive, [air], surface), surface));
+            expect(repetitive.profile[0].tissuesLoading).toBeGreaterThan(0);
+        });
+    });
+
     it('Empty profile has no points and events', () => {
-        const computer = DiveComputer.start({ dive: decoDive, profile: [], ceilings: [], events: [] });
+        const computer = DiveComputer.start({ dive: decoDive, profile: [], ceilings: [], tissues: [], events: [] });
         expect(computer.total).toEqual(0);
         expect(computer.events).toEqual([]);
         expect(Array.from(computer.points())).toEqual([]);

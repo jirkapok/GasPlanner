@@ -278,6 +278,8 @@ export interface ComputerRequestDto extends PlanRequestDto {
     profile: SegmentDto[];
     /** Already calculated ceilings of the profile */
     ceilings: CeilingDto[];
+    /** Already calculated tissues history of the profile, sampled at the same times as the ceilings */
+    tissues: LoadedTissueDto[][];
     /** All events of the profile calculated by the algorithm, not filtered by ignored issues */
     events: EventDto[];
 }

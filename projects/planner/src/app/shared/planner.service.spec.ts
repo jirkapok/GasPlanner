@@ -90,6 +90,11 @@ describe('PlannerService', () => {
             expect(noDecoLimit).toEqual(13);
         });
 
+        it('Tissues history is calculated for every second', () => {
+            expect(dive.tissues.length).toEqual(dive.ceilings.length);
+            expect(dive.tissues.length).toBeGreaterThan(0);
+        });
+
         it('OTU limit is calculated', () => {
             const otuLimit = dive.otu;
             expect(otuLimit).toBeCloseTo(8.2858, 4);

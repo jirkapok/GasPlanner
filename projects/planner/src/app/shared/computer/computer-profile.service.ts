@@ -147,6 +147,7 @@ export class ComputerProfileService extends Streamed {
             calculationId: this.calculationId,
             profile: DtoSerialization.fromSegments(results.profile),
             ceilings: results.ceilings,
+            tissues: DtoSerialization.fromTissuesHistory(results.tissues),
             events: DtoSerialization.fromEvents(results.algorithmEvents)
         });
     }

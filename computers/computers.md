@@ -10,10 +10,10 @@
 * AVG - average depth till now in meters
 * TTS - current total time to surface in minutes (needs to be calculated for every moment)
 * Stop - remaining time of the safety or mandatory stop
+* Asc - current ascent speed
+* Tissues - loading of the leading tissue, 100 % = NDL reached
 
 TODO to implement
-* Asc - ascent speed
-* N2 - Nitrogen loading of the leading tissue
 * Shearwater like values - GF99, SurfGF, "@+5", "Δ+5"
 
 ## Warnings

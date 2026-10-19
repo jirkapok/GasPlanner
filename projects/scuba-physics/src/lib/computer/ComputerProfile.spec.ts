@@ -1,9 +1,12 @@
 import { Ceiling, Event, EventsFactory } from '../algorithm/CalculatedProfile';
+import { Compartments } from '../algorithm/Compartments';
+import { LoadedTissues } from '../algorithm/Tissues.api';
 import { Segment } from '../depths/Segments';
 import { StandardGases } from '../gases/StandardGases';
 import { ComputerData, ComputerEvent, ComputerEventType, StopEvent } from './ComputerData';
 import { ComputerProfile } from './ComputerProfile';
 import { ComputerStop } from './ComputerStop';
+import { TissuesLoading } from './TissuesLoading';
 
 describe('ComputerProfile', () => {
     /** Ceilings are sampled every second starting at 1 s */
@@ -13,13 +16,20 @@ describe('ComputerProfile', () => {
     const ceilingsAt = (duration: number, ceilingAt: (runTime: number) => number): Ceiling[] =>
         Array.from({ length: duration }, (_, index) => new Ceiling(index + 1, ceilingAt(index + 1)));
 
+    const surfacePressure = 1;
+    const gfHigh = 0.85;
+
     /** stopDistance in meters, the same as default options */
-    const sample = (profile: Segment[], ceilings: Ceiling[] = [], events: Event[] = [], stopDistance = 3): ComputerData =>
+    const sample = (profile: Segment[], ceilings: Ceiling[] = [], events: Event[] = [], stopDistance = 3,
+        tissues: LoadedTissues[] = []): ComputerData =>
         ComputerProfile.sample({
             profile: profile,
             ceilings: ceilings,
+            tissues: tissues,
             events: events,
-            stopDistance: stopDistance
+            stopDistance: stopDistance,
+            surfacePressure: surfacePressure,
+            gfHigh: gfHigh
         });
 
     const air = StandardGases.air;
@@ -82,6 +92,43 @@ describe('ComputerProfile', () => {
 
     it('No decompression limit is not sampled', () => {
         expect(sample(simpleDive).profile[10].ndl).toEqual(0);
+    });
+
+    describe('Tissues loading', () => {
+        /** All tissues loaded by the same nitrogen pressure in bars */
+        const tissuesWith = (pN2: number): LoadedTissues =>
+            Array.from({ length: Compartments.buhlmannZHL16C.length }, () => ({ pN2: pN2, pHe: 0 })) as LoadedTissues;
+        /** Every sample is more loaded than the previous one */
+        const tissuesHistory = (count: number): LoadedTissues[] =>
+            Array.from({ length: count }, (_, index) => tissuesWith(1.05 + index * 0.001));
+        const zeroCeilings = ceilingsAt(120, () => 0);
+        const loadingOf = (tissues: LoadedTissues): number => TissuesLoading.percents(tissues, 0, surfacePressure, gfHigh);
+
+        it('Tissues loading uses the tissues sample of the ceiling', () => {
+            const tissues = tissuesHistory(120);
+            const profile = sample(simpleDive, zeroCeilings, [], 3, tissues).profile;
+            expect(profile[50].tissuesLoading).toBeGreaterThan(0);
+            expect(profile[50].tissuesLoading).toEqual(loadingOf(tissues[49]));
+        });
+
+        it('Point before first tissues sample uses the first one', () => {
+            const tissues = tissuesHistory(120);
+            expect(sample(simpleDive, zeroCeilings, [], 3, tissues).profile[0].tissuesLoading).toEqual(loadingOf(tissues[0]));
+        });
+
+        it('Point without tissues sample repeats the last one', () => {
+            const tissues = tissuesHistory(3);
+            expect(sample(simpleDive, zeroCeilings, [], 3, tissues).profile[100].tissuesLoading).toEqual(loadingOf(tissues[2]));
+        });
+
+        it('Ceiling below surface is fully loaded', () => {
+            const ceilings = ceilingsAt(120, () => 3);
+            expect(sample(simpleDive, ceilings, [], 3, tissuesHistory(120)).profile[50].tissuesLoading).toEqual(100);
+        });
+
+        it('No tissues history means no loading', () => {
+            expect(sample(simpleDive, zeroCeilings).profile.every(p => p.tissuesLoading === 0)).toBeTrue();
+        });
     });
 
     it('Time to surface is remaining time till end of the dive', () => {

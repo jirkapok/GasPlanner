@@ -1,7 +1,9 @@
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams } from '../algorithm/BuhlmannAlgorithmParameters';
 import { Ceiling, Event } from '../algorithm/CalculatedProfile';
+import { LoadedTissues } from '../algorithm/Tissues.api';
 import { Segment } from '../depths/Segments';
+import { DepthConverterFactory } from '../physics/depth-converter';
 import { ComputerData, ComputerEvent, RunTimePoint } from './ComputerData';
 import { ComputerProfile } from './ComputerProfile';
 
@@ -13,6 +15,11 @@ export interface CalculatedDive {
     profile: Segment[];
     /** Ceilings of the profile, sampled every second */
     ceilings: Ceiling[];
+    /**
+     * Tissues history of the profile, sampled every second at the same times as the ceilings,
+     * see BuhlmannAlgorithm.decompressionStatistics
+     */
+    tissues: LoadedTissues[];
     /** All events of the profile calculated by the algorithm */
     events: Event[];
 }
@@ -41,8 +48,11 @@ export class DiveComputer {
         const data = ComputerProfile.sample({
             profile: calculated.profile,
             ceilings: calculated.ceilings,
+            tissues: calculated.tissues,
             events: calculated.events,
-            stopDistance: calculated.dive.options.decoStopDistance
+            stopDistance: calculated.dive.options.decoStopDistance,
+            surfacePressure: new DepthConverterFactory(calculated.dive.options).create().surfacePressure,
+            gfHigh: calculated.dive.options.gfHigh
         });
         return new DiveComputer(calculated, data);
     }

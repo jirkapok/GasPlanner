@@ -66,6 +66,8 @@ export class DiveResults {
     private _tissueOverPressures: TissueOverPressures[] = [];
     private _events: BoundEvent[] = [];
     private _algorithmEvents: Event[] = [];
+    // tissues history sampled every second at the same times as the ceilings
+    private _tissues: LoadedTissues[] = [];
 
     // Consumption related
     private _maxTime = 0;
@@ -154,6 +156,11 @@ export class DiveResults {
 
     public get ceilings(): Ceiling[] {
         return this._ceilings;
+    }
+
+    /** Tissues history of the dive, sampled every second at the same times as the ceilings */
+    public get tissues(): LoadedTissues[] {
+        return this._tissues;
     }
 
     public get maxCeiling(): Ceiling | undefined {
@@ -361,12 +368,14 @@ export class DiveResults {
         events: BoundEvent[],
         dailyCns: number,
         cnsExposures: CnsExposure[],
-        algorithmEvents: Event[]): void {
+        algorithmEvents: Event[],
+        tissues: LoadedTissues[] = []): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;
         this._cnsExposures = cnsExposures;
         this._algorithmEvents = algorithmEvents;
+        this._tissues = tissues;
         this.diveInfoCalculation.finished();
     }
 
@@ -393,6 +402,7 @@ export class DiveResults {
     private emptyDiveInfo(): void {
         this.updateDiveInfoInternal(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
         this._algorithmEvents = [];
+        this._tissues = [];
         this._dailyCns = 0;
         this._cnsExposures = [];
     }

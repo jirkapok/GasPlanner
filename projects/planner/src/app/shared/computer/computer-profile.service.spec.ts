@@ -66,7 +66,8 @@ describe('ComputerProfileService', () => {
     const stop: StopEvent = { type: ComputerEventType.stop, runTime: 5, depth: 3, duration: 60 };
 
     const point = (runTime: number, nextStopIndex?: number): RunTimePointDto => ({
-        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ascentSpeed: 0, ndl: 0, tts: 0, nextStopIndex: nextStopIndex
+        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ascentSpeed: 0, tissuesLoading: 0, ndl: 0, tts: 0,
+        nextStopIndex: nextStopIndex
     });
 
     /** Reports started with given total, then the points, for the last request */
@@ -201,6 +202,21 @@ describe('ComputerProfileService', () => {
             expect(worker.lastRequest.profile.length).toEqual(1);
             expect(worker.lastRequest.ceilings.length).toEqual(1);
             expect(worker.lastRequest.events.length).toEqual(1);
+        });
+
+        it('Request contains tissues history of selected dive', () => {
+            const first = schedules.dives[0];
+            const results = first.diveResult;
+            const segment = new Segment(0, 0, StandardGases.air, 10);
+            const tissues = ProfileTissues.createAtSurface(0);
+            results.start();
+            results.updateProfile([WayPoint.fromSegment(units, segment)], tissues, [segment]);
+            results.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(),
+                [new Ceiling(1, 0), new Ceiling(2, 0)], [], [], 0, [], [], [tissues, tissues]);
+            results.updateConsumption(0, 0, 0, 0, 0, false, false, []);
+            dispatcher.sendInfoCalculated(first.id);
+            expect(worker.lastRequest.tissues.length).toEqual(2);
+            expect(worker.lastRequest.tissues[1][0].pN2).toEqual(tissues[0].pN2);
         });
 
         it('Resolves next stop to the reported event', () => {

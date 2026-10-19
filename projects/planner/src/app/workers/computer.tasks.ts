@@ -13,6 +13,7 @@ export class ComputerTasks {
             dive: PlanningTasks.diveParameters(task),
             profile: DtoSerialization.toSegments(task.profile, tanks),
             ceilings: task.ceilings.map(c => new Ceiling(c.time, c.depth)),
+            tissues: DtoSerialization.toTissuesHistory(task.tissues),
             events: DtoSerialization.toEvents(task.events).items
         });
 

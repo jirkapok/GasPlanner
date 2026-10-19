@@ -178,7 +178,8 @@ export class PlannerService extends Streamed {
             filteredEvents,
             diveInfoResult.dailyCns,
             diveInfoResult.cnsExposures,
-            events.items
+            events.items,
+            DtoSerialization.toTissuesHistory(diveInfoResult.tissues)
         );
         this.fireFinishedEvents(dive);
     }

@@ -1,8 +1,10 @@
 import { Ceiling, Event } from '../algorithm/CalculatedProfile';
+import { LoadedTissues } from '../algorithm/Tissues.api';
 import { AverageDepth } from '../depths/AverageDepth';
 import { Segment } from '../depths/Segments';
 import { ComputerData, ComputerEvent, ComputerEventType, RunTimePoint } from './ComputerData';
 import { ComputerStop } from './ComputerStop';
+import { TissuesLoading } from './TissuesLoading';
 
 /** Calculated dive data, from which the computer data are sampled */
 export interface ComputerProfileSource {
@@ -10,6 +12,8 @@ export interface ComputerProfileSource {
     profile: Segment[];
     /** Ceilings of the profile, sampled every second */
     ceilings: Ceiling[];
+    /** Tissues history of the profile, sampled every second at the same times as the ceilings */
+    tissues: LoadedTissues[];
     /** Events of the profile calculated by the algorithm */
     events: Event[];
     /**
@@ -17,6 +21,10 @@ export interface ComputerProfileSource {
      * Flat segment is a stop, when its ceiling comes closer than this distance.
      */
     stopDistance: number;
+    /** in bars, see DepthConverter.surfacePressure */
+    surfacePressure: number;
+    /** Gradient factor high in range 0-1, see Options.gfHigh */
+    gfHigh: number;
 }
 
 /** Segment with its position in the profile, in seconds since start of the dive */
@@ -84,7 +92,11 @@ class ComputerProfileContext {
     private _averageDepth = 0;
     private readonly averageDepths = new AverageDepth();
 
-    constructor(private readonly segments: TimedSegment[], private readonly ceilings: Ceiling[]) {
+    constructor(
+        private readonly segments: TimedSegment[],
+        private readonly ceilings: Ceiling[],
+        private readonly tissues: LoadedTissues[]
+    ) {
     }
 
     /** Last whole second of the dive */
@@ -105,6 +117,15 @@ class ComputerProfileContext {
     /** in meters, time weighted from start of the dive to current moment */
     public get averageDepth(): number {
         return this._averageDepth;
+    }
+
+    /**
+     * Tissues sampled at the same time as the current ceiling, the first sample before any ceiling was sampled
+     * and the last sample, when there are less tissues samples than ceilings. Undefined for empty tissues history.
+     */
+    public get currentTissues(): LoadedTissues | undefined {
+        const index = Math.min(Math.max(this.ceilingIndex - 1, 0), this.tissues.length - 1);
+        return this.tissues[index];
     }
 
     /** in meters at current moment */
@@ -183,7 +204,7 @@ export class ComputerProfile {
             return ComputerProfile.empty();
         }
 
-        const context = new ComputerProfileContext(segments, source.ceilings);
+        const context = new ComputerProfileContext(segments, source.ceilings, source.tissues);
         const profile: RunTimePoint[] = [];
 
         for (let runTime = 0; runTime <= context.duration; runTime++) {
@@ -196,6 +217,7 @@ export class ComputerProfile {
                 averageDepth: context.averageDepth,
                 ceiling: context.ceiling,
                 ascentSpeed: context.ascentSpeed,
+                tissuesLoading: ComputerProfile.tissuesLoading(context, source),
                 ndl: 0,
                 tts: context.timeToSurface
             });
@@ -211,6 +233,12 @@ export class ComputerProfile {
             profile: profile,
             events: events
         };
+    }
+
+    /** Loading of the tissues at current moment, 0 without tissues history */
+    private static tissuesLoading(context: ComputerProfileContext, source: ComputerProfileSource): number {
+        const tissues = context.currentTissues;
+        return tissues ? TissuesLoading.percents(tissues, context.ceiling, source.surfacePressure, source.gfHigh) : 0;
     }
 
     /**

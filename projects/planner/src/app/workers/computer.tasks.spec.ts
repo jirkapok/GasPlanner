@@ -33,6 +33,7 @@ describe('ComputerTasks', () => {
             calculationId: 7,
             profile: profile.segments,
             ceilings: diveInfo.ceilings,
+            tissues: diveInfo.tissues,
             events: diveInfo.events
         };
     };
@@ -67,6 +68,12 @@ describe('ComputerTasks', () => {
         const points = pointsOf(calculate(createRequest()));
         expect(points[points.length - 1].point.maxDepth).toBeCloseTo(40, 6);
         expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
+    });
+
+    it('Points contain ascent speed and tissues loading', () => {
+        const points = pointsOf(calculate(createRequest()));
+        expect(points.some(p => p.point.ascentSpeed > 0)).toBeTrue();
+        expect(points.some(p => p.point.tissuesLoading === 100)).toBeTrue();
     });
 
     it('Points contain no decompression limit of the planned dive', () => {

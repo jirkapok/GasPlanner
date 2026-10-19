@@ -49,7 +49,7 @@
 
 ### Task 1: Ascent speed in sampled points
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/scuba-physics/src/lib/computer/ComputerData.ts` (`RunTimePoint`)
@@ -60,32 +60,32 @@
 **Interfaces:**
 - Produces: `RunTimePoint.ascentSpeed: number` - doc comment: "current ascent speed in meters per second, positive number. 0 for flat, descending or zero duration segment."
 
-- [ ] **Step 1: Create the branch** `git checkout -b feat/106-computer-ascent-speed-tissues-loading` from up to date `master`.
+- [x] **Step 1: Create the branch** `git checkout -b feat/106-computer-ascent-speed-tissues-loading` from up to date `master`.
 
-- [ ] **Step 2: Write the failing tests** in a new `describe('Ascent speed', ...)` of `ComputerProfile.spec.ts`, profile `new Segment(0, 20, air, 120)`, `new Segment(20, 20, air, 60)`, `new Segment(20, 20, air, 0)`, `new Segment(20, 5, air, 90)`, `new Segment(5, 5, air, 60)`:
+- [x] **Step 2: Write the failing tests** in a new `describe('Ascent speed', ...)` of `ComputerProfile.spec.ts`, profile `new Segment(0, 20, air, 120)`, `new Segment(20, 20, air, 60)`, `new Segment(20, 20, air, 0)`, `new Segment(20, 5, air, 90)`, `new Segment(5, 5, air, 60)`:
   - "Ascent speed is zero during descent": `profile[60].ascentSpeed` equals `0`.
   - "Ascent speed is zero at flat segment": `profile[150].ascentSpeed` equals `0`.
   - "Ascent speed of ascending segment in meters per second": `profile[200].ascentSpeed` close to `15 / 90` (6 decimals).
   - "Zero duration segment has no ascent speed": sample `[new Segment(0, 10, air, 60), new Segment(10, 10, air, 0)]`, every point has finite `ascentSpeed` and `profile[60].ascentSpeed` equals `0`.
   - "Ascent speed is zero after the ascent": `profile[300].ascentSpeed` equals `0`.
 
-- [ ] **Step 3: Run the spec, verify the new tests fail** (`ascentSpeed` undefined / compile error).
+- [x] **Step 3: Run the spec, verify the new tests fail** (`ascentSpeed` undefined / compile error).
 
-- [ ] **Step 4: Implement**
+- [x] **Step 4: Implement**
   - `RunTimePoint.ascentSpeed` in `ComputerData.ts`.
   - `TimedSegment.ascentSpeed: number` getter: `-segment.speed` for `duration > 0 && speed < 0`, otherwise `0` (`Segment.speed` is meters per second, negative for ascent).
   - `ComputerProfileContext.ascentSpeed` getter returning the current segment's value; `sample` writes it into every point.
   - Add `ascentSpeed: 0` to the planner fixture at `computer-profile.service.spec.ts:69`.
 
-- [ ] **Step 5: Run** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` - all pass.
+- [x] **Step 5: Run** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` - all pass.
 
-- [ ] **Step 6: Commit** `feat: #106 computer ascent speed`
+- [x] **Step 6: Commit** `feat: #106 computer ascent speed`
 
 ---
 
 ### Task 2: High ascent speed computer event
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/scuba-physics/src/lib/computer/ComputerData.ts` (`ComputerEventType`)
@@ -95,24 +95,24 @@
 **Interfaces:**
 - Produces: `ComputerEventType.highAscentSpeed = 6` (doc comment "ascent speed higher than the maximum for the depth"). Event shape is plain `ComputerEvent` `{ type, runTime, depth }`.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
   - `ComputerStop.spec.ts`, "Algorithm events": "Copies high ascent speed": `eventsOf([EventsFactory.createHighAscentSpeed(120, 20)])` equals `[{ type: ComputerEventType.highAscentSpeed, runTime: 120, depth: 20 }]`.
   - `DiveComputer.spec.ts`: "Too fast ascent creates high ascent speed warning": dive `segments.add(30, air, Time.oneMinute * 2); segments.addFlat(air, Time.oneMinute * 10); segments.add(10, air, Time.oneMinute / 2);` (40 m/min), `DiveComputer.calculate(calculateDive(dive)).events` contains an event with `type === ComputerEventType.highAscentSpeed`, `runTime === Time.oneMinute * 12` and `depth === 30`.
   - `DiveComputer.spec.ts`: "Calculated ascent has no high ascent speed warning": `DiveComputer.calculate(calculatedDecoDive).events` has no `highAscentSpeed` event.
 
-- [ ] **Step 2: Run both specs, verify the new tests fail.**
+- [x] **Step 2: Run both specs, verify the new tests fail.**
 
-- [ ] **Step 3: Implement** the enum member and the `case EventType.highAscentSpeed` in `ComputerStop.toComputerEvent`, same shape as `highPpO2`.
+- [x] **Step 3: Implement** the enum member and the `case EventType.highAscentSpeed` in `ComputerStop.toComputerEvent`, same shape as `highPpO2`.
 
-- [ ] **Step 4: Run** `npm run test-lib-ci`, `npm run lint` - all pass.
+- [x] **Step 4: Run** `npm run test-lib-ci`, `npm run lint` - all pass.
 
-- [ ] **Step 5: Commit** `feat: #106 computer high ascent speed warning`
+- [x] **Step 5: Commit** `feat: #106 computer high ascent speed warning`
 
 ---
 
 ### Task 3: Tissues loading of one tissues sample
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/scuba-physics/src/lib/computer/TissuesLoading.ts`
@@ -121,7 +121,7 @@
 **Interfaces:**
 - Produces: `TissuesLoading.percents(tissues: LoadedTissues, ceiling: number, surfacePressure: number, gfHigh: number): number` - `100` when `ceiling > 0`, otherwise `Math.min(100, Tissues.createLoaded(tissues).gradientFactor(surfacePressure) / gfHigh * 100)` (`gradientFactor` is already never negative). `ceiling` in meters, `surfacePressure` in bars, `gfHigh` 0-1. Doc comment states 100 % = no decompression limit reached. Not exported from `public-api.ts` (internal to the computer).
 
-- [ ] **Step 1: Write the failing tests.** Statistics of a 30 m / 40 min air dive (options gfLow 0.4 / gfHigh 0.85, created the same way as in `DiveComputer.spec.ts`): `statistics = algorithm.decompressionStatistics(calculatedDive)`; tissues history `statistics.tissues` and `statistics.ceilings` share their index; `i = statistics.ceilings.findIndex(c => c.depth > 0)`; `surface = new DepthConverterFactory(options).create().surfacePressure`.
+- [x] **Step 1: Write the failing tests.** Statistics of a 30 m / 40 min air dive (options gfLow 0.4 / gfHigh 0.85, created the same way as in `DiveComputer.spec.ts`): `statistics = algorithm.decompressionStatistics(calculatedDive)`; tissues history `statistics.tissues` and `statistics.ceilings` share their index; `i = statistics.ceilings.findIndex(c => c.depth > 0)`; `surface = new DepthConverterFactory(options).create().surfacePressure`.
   - "Tissues saturated at surface are not loaded": `percents(Tissues.createLoadedAt(0), 0, surface, 0.85)` equals `0`.
   - "Ceiling below surface is fully loaded": `percents(Tissues.createLoadedAt(0), 3, surface, 0.85)` equals `100`.
   - "Reaches 100 when no decompression limit ends": `percents(statistics.tissues[i - 1], 0, surface, 0.85)` close to `100` (0 decimals) and < `100`; `percents(statistics.tissues[i], statistics.ceilings[i].depth, surface, 0.85)` equals `100`.
@@ -129,19 +129,19 @@
   - "Loading grows at the bottom": loading of sample at 10 min < loading at 20 min (ceiling 0).
   - "Lower gradient factor high means higher loading": the same tissues at 10 min, `gfHigh` 0.7 gives more than 0.85.
 
-- [ ] **Step 2: Run the spec, verify the tests fail** (class doesn't exist).
+- [x] **Step 2: Run the spec, verify the tests fail** (class doesn't exist).
 
-- [ ] **Step 3: Implement** `TissuesLoading.percents` as specified in Interfaces.
+- [x] **Step 3: Implement** `TissuesLoading.percents` as specified in Interfaces.
 
-- [ ] **Step 4: Run** `npm run test-lib-ci`, `npm run lint` - all pass; `git diff --stat master` shows no file in `lib/algorithm`.
+- [x] **Step 4: Run** `npm run test-lib-ci`, `npm run lint` - all pass; `git diff --stat master` shows no file in `lib/algorithm`.
 
-- [ ] **Step 5: Commit** `feat: #106 leading tissues loading from tissues sample`
+- [x] **Step 5: Commit** `feat: #106 leading tissues loading from tissues sample`
 
 ---
 
 ### Task 4: Tissues loading in dive computer points
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/scuba-physics/src/lib/computer/ComputerData.ts` (`RunTimePoint`)
@@ -163,7 +163,7 @@
 - Produces: `DiveResults.tissues: LoadedTissues[]` getter; `updateDiveInfo(..., algorithmEvents: Event[], tissues: LoadedTissues[] = [])` - optional last parameter, so existing spec callers stay unchanged.
 - Produces: `ComputerRequestDto.tissues: LoadedTissueDto[][]` ("already calculated tissues history of the profile").
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
   - `ComputerProfile.spec.ts`: "Tissues loading uses the tissues sample of the ceiling": `simpleDive`, ceilings `ceilingsFrom` 120 zeros, tissues where sample index 49 is loaded (take it from a statistics run or build with `Tissues.create(1)` + `load`) - `profile[50].tissuesLoading` equals `TissuesLoading.percents(tissues[49], 0, 1, 0.85)`.
   - `ComputerProfile.spec.ts`: "Point before first tissues sample uses the first one": `profile[0].tissuesLoading` equals the loading of `tissues[0]`.
   - `ComputerProfile.spec.ts`: "Point without tissues sample repeats the last one": 3 samples for `simpleDive`, `profile[100].tissuesLoading` equals the loading of `tissues[2]`.
@@ -173,13 +173,13 @@
   - `computer.tasks.spec.ts`: "Points contain ascent speed and tissues loading": some point has `ascentSpeed > 0`, some point has `tissuesLoading === 100`.
   - `computer-profile.service.spec.ts`: "Request contains tissues history of the dive": after dive info with tissues history of 2 samples, `worker.lastRequest.tissues.length` equals `2`.
 
-- [ ] **Step 2: Run the specs, verify the new tests fail.**
+- [x] **Step 2: Run the specs, verify the new tests fail.**
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
   - Library: new fields; `ComputerProfileContext` keeps the current tissues sample at the same index as the ceiling (`tissues[ceilingIndex - 1]`, `tissues[0]` before the first ceiling sample, last sample when the history is shorter); `sample` writes `TissuesLoading.percents(currentTissues, context.ceiling, surfacePressure, gfHigh)`, `0` for empty history. `DiveComputer.start` passes `calculated.tissues`, `new DepthConverterFactory(options).create().surfacePressure` and `options.gfHigh`.
   - Planner: `planner.service.ts` passes `DtoSerialization.toTissuesHistory(diveInfoResult.tissues)` to `updateDiveInfo`; `computer-profile.service.ts` sends `tissues: DtoSerialization.fromTissuesHistory(results.tissues)`; `computer.tasks.ts` passes `tissues: DtoSerialization.toTissuesHistory(task.tissues)`.
   - `computers/computers.md`: add `* Asc - current ascent speed` and `* Tissues - loading of the leading tissue, 100 % = NDL reached` to the list, remove both from "TODO to implement".
 
-- [ ] **Step 4: Run** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` - all pass; check `DiveComputer.performance.spec.ts` still within its limit; `git diff --stat master` shows no file in `lib/algorithm`.
+- [x] **Step 4: Run** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` - all pass; check `DiveComputer.performance.spec.ts` still within its limit; `git diff --stat master` shows no file in `lib/algorithm`.
 
-- [ ] **Step 5: Commit** `feat: #106 computer tissues loading`
+- [x] **Step 5: Commit** `feat: #106 computer tissues loading`

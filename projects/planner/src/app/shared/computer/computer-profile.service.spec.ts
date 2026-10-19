@@ -219,6 +219,12 @@ describe('ComputerProfileService', () => {
             expect(worker.lastRequest.tissues[1][0].pN2).toEqual(tissues[0].pN2);
         });
 
+        it('Request passes tissues history of selected dive without copying it', () => {
+            const first = schedules.dives[0];
+            calculate(first, 10);
+            expect(worker.lastRequest.tissues).toBe(first.diveResult.tissues);
+        });
+
         it('Resolves next stop to the reported event', () => {
             calculate(schedules.dives[0], 10);
             report(2, [point(0, 0), point(1)], true);

@@ -9,6 +9,7 @@ import _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
+import { LoadedTissueDto } from './serialization.model';
 
 class CalculationState {
     private _calculating = false;
@@ -66,8 +67,8 @@ export class DiveResults {
     private _tissueOverPressures: TissueOverPressures[] = [];
     private _events: BoundEvent[] = [];
     private _algorithmEvents: Event[] = [];
-    // tissues history sampled every second at the same times as the ceilings
-    private _tissues: LoadedTissues[] = [];
+    // tissues history sampled every second at the same times as the ceilings, kept as received from the worker
+    private _tissues: LoadedTissueDto[][] = [];
 
     // Consumption related
     private _maxTime = 0;
@@ -158,8 +159,11 @@ export class DiveResults {
         return this._ceilings;
     }
 
-    /** Tissues history of the dive, sampled every second at the same times as the ceilings */
-    public get tissues(): LoadedTissues[] {
+    /**
+     * Tissues history of the dive, sampled every second at the same times as the ceilings.
+     * Kept as received from the worker, the conversion of the large history would block the UI.
+     */
+    public get tissues(): LoadedTissueDto[][] {
         return this._tissues;
     }
 
@@ -369,7 +373,7 @@ export class DiveResults {
         dailyCns: number,
         cnsExposures: CnsExposure[],
         algorithmEvents: Event[],
-        tissues: LoadedTissues[] = []): void {
+        tissues: LoadedTissueDto[][] = []): void {
         this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
             offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
         this._dailyCns = dailyCns;

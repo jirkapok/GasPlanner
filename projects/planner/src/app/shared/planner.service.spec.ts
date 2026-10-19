@@ -95,6 +95,13 @@ describe('PlannerService', () => {
             expect(dive.tissues.length).toBeGreaterThan(0);
         });
 
+        it('Tissues history is kept as received from the worker without copying', () => {
+            const diveInfoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
+            planner.calculate(1);
+            const received = diveInfoSpy.calls.mostRecent().returnValue.tissues;
+            expect(dive.tissues).toBe(received);
+        });
+
         it('OTU limit is calculated', () => {
             const otuLimit = dive.otu;
             expect(otuLimit).toBeCloseTo(8.2858, 4);

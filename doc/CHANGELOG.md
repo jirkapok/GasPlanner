@@ -1,3 +1,38 @@
+# [0.14.0](https://github.com/jirkapok/GasPlanner/compare/v0.13.1...v0.14.0) (2026-10-19)
+
+
+### Bug Fixes
+
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) dive computer points can be iterated repeatedly ([88539d2](https://github.com/jirkapok/GasPlanner/commit/88539d22c5812fc6ce83dbeaea29e3d25a9e9d88))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) exclude performance spec from interactive test run ([df359a7](https://github.com/jirkapok/GasPlanner/commit/df359a76885842be6f6e24dd9a6ed977bb6210e4))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) ignore events of cancelled computer worker ([6fa360e](https://github.com/jirkapok/GasPlanner/commit/6fa360ed7ce8923fd877816c2b3db5e56d97ce0a))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) require calculated dive data when updating dive results ([c2d8db6](https://github.com/jirkapok/GasPlanner/commit/c2d8db66803e345e64e8432d8b9501d7783014a4))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) restore ceilings transferred to computer worker ([67c7da3](https://github.com/jirkapok/GasPlanner/commit/67c7da300a7f2f4c65171980b0b9f5d5e61adb84))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) type dive computer points generator ([070c2fa](https://github.com/jirkapok/GasPlanner/commit/070c2fa43c6be66f6c81d843cf0e9118cd74e941))
+
+
+### Features
+
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) average depth for every second of the profile ([625047e](https://github.com/jirkapok/GasPlanner/commit/625047eb2da9db182f6c6c8592628139dafaf38b))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) calculate computer data in background worker ([1813bd4](https://github.com/jirkapok/GasPlanner/commit/1813bd43f4a25dc7ab53e7c7d621f8ae6723c1ad))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer events from dive results ([9d9f319](https://github.com/jirkapok/GasPlanner/commit/9d9f319e0fb4425a331889c0200e34581a60303a))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer next stop ([0d568f3](https://github.com/jirkapok/GasPlanner/commit/0d568f34965c2fc7ae1e18e59711e009c24df5e5))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer profile maximum and average depth ([ba31aec](https://github.com/jirkapok/GasPlanner/commit/ba31aecf4d1e90c9596ec6a664ecfef8839fd6d9))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer profile service for selected dive ([a3aa502](https://github.com/jirkapok/GasPlanner/commit/a3aa5028ef04f3add3d22074b602e6514bb9e2cc))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer stop events ([463d440](https://github.com/jirkapok/GasPlanner/commit/463d44003d4a3c759f6cab40e3b8e5fcbc276093))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer time to surface till end of the dive ([dd9265c](https://github.com/jirkapok/GasPlanner/commit/dd9265ccb21f476fcea6336564fe8960d45721ab))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) dive computer data of calculated dive in scuba-physics ([de24adf](https://github.com/jirkapok/GasPlanner/commit/de24adf52df13e87b608931f8e7f6767e4809ce3))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) keep calculated profile and all events of the dive ([96176a7](https://github.com/jirkapok/GasPlanner/commit/96176a7e17e76cf909023b30bc0843e1d4d12158))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) mandatory stop ends at the beginning of safety stop ([82617cf](https://github.com/jirkapok/GasPlanner/commit/82617cfae56f6d78224290f86216409abb4d5cdf))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) no decompression limit for every second of the dive ([8a25920](https://github.com/jirkapok/GasPlanner/commit/8a2592023586480d7581248485d55a0731ddc666))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) no decompression limits of calculated profile ([6847d7e](https://github.com/jirkapok/GasPlanner/commit/6847d7e8ccd763dfcd1421d8ff399ba6aeea27ef))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) profile chart average depth by library average depth ([dbac15e](https://github.com/jirkapok/GasPlanner/commit/dbac15e3b04b26b1a4b1cbab9458b825ddd38d12))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) report computer data and progress every 200 ms ([9c97c75](https://github.com/jirkapok/GasPlanner/commit/9c97c75c09a174b8290238957728c8f958af95e7))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) sample computer data in scuba-physics ([d79f8ea](https://github.com/jirkapok/GasPlanner/commit/d79f8ea0c8ff409ec678b728c26694e83ebb1255))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) sample computer profile for every second of the dive ([18995a8](https://github.com/jirkapok/GasPlanner/commit/18995a80b43a81a9109d170e93c5f0c5780d6384))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) stop is any flat segment with ceiling closer than stop distance ([340a989](https://github.com/jirkapok/GasPlanner/commit/340a98964da8eae484055e208c3a78c97220bf89))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) stream computer no decompression limit ([85af8c3](https://github.com/jirkapok/GasPlanner/commit/85af8c3d3df3b9f7aaccea00475981bcc3e27403))
+
 ## [0.13.1](https://github.com/jirkapok/GasPlanner/compare/v0.13.0...v0.13.1) (2026-10-17)
 
 

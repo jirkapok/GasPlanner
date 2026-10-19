@@ -66,7 +66,7 @@ describe('ComputerProfileService', () => {
     const stop: StopEvent = { type: ComputerEventType.stop, runTime: 5, depth: 3, duration: 60 };
 
     const point = (runTime: number, nextStopIndex?: number): RunTimePointDto => ({
-        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ndl: 0, tts: 0, nextStopIndex: nextStopIndex
+        runTime: runTime, depth: 0, maxDepth: 0, averageDepth: 0, ceiling: 0, ascentSpeed: 0, ndl: 0, tts: 0, nextStopIndex: nextStopIndex
     });
 
     /** Reports started with given total, then the points, for the last request */

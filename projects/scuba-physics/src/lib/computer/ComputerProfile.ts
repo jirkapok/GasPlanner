@@ -31,6 +31,12 @@ class TimedSegment {
         return this._endTime;
     }
 
+    /** in meters per second, positive number for ascent, 0 for flat, descending or zero duration segment */
+    public get ascentSpeed(): number {
+        const speed = this.segment.speed;
+        return this.segment.duration > 0 && speed < 0 ? -speed : 0;
+    }
+
     public static fromSegments(profile: Segment[]): TimedSegment[] {
         let startTime = 0;
 
@@ -104,6 +110,11 @@ class ComputerProfileContext {
     /** in meters at current moment */
     public get ceiling(): number {
         return this._ceiling;
+    }
+
+    /** in meters per second at current moment, see TimedSegment.ascentSpeed */
+    public get ascentSpeed(): number {
+        return this.segment.ascentSpeed;
     }
 
     /** remaining seconds from current moment to the end of the dive */
@@ -184,6 +195,7 @@ export class ComputerProfile {
                 maxDepth: context.maxDepth,
                 averageDepth: context.averageDepth,
                 ceiling: context.ceiling,
+                ascentSpeed: context.ascentSpeed,
                 ndl: 0,
                 tts: context.timeToSurface
             });

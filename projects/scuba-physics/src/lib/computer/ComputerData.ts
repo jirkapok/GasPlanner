@@ -10,6 +10,8 @@ export interface RunTimePoint {
     averageDepth: number;
     /** current ceiling in meters */
     ceiling: number;
+    /** current ascent speed in meters per second, positive number. 0 for flat, descending or zero duration segment. */
+    ascentSpeed: number;
     /**
      * Current no decompression limit at this moment in seconds: remaining time till the ceiling isn't at surface,
      * when staying at current depth on current gas. 0 while in decompression, Infinity at surface or for more than 1000 minutes.

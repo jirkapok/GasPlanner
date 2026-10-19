@@ -125,6 +125,38 @@ describe('ComputerProfile', () => {
         });
     });
 
+    describe('Ascent speed', () => {
+        const diveWithAscent = [
+            new Segment(0, 20, air, 120), // 0 - 120 descent
+            new Segment(20, 20, air, 60), // 120 - 180 bottom
+            new Segment(20, 20, air, 0), // 180 gas switch
+            new Segment(20, 5, air, 90), // 180 - 270 ascent
+            new Segment(5, 5, air, 60) // 270 - 330 stop
+        ];
+
+        it('Ascent speed is zero during descent', () => {
+            expect(sample(diveWithAscent).profile[60].ascentSpeed).toEqual(0);
+        });
+
+        it('Ascent speed is zero at flat segment', () => {
+            expect(sample(diveWithAscent).profile[150].ascentSpeed).toEqual(0);
+        });
+
+        it('Ascent speed of ascending segment in meters per second', () => {
+            expect(sample(diveWithAscent).profile[200].ascentSpeed).toBeCloseTo(15 / 90, 6);
+        });
+
+        it('Zero duration segment has no ascent speed', () => {
+            const profile = sample([new Segment(0, 10, air, 60), new Segment(10, 10, air, 0)]).profile;
+            expect(profile.every(p => Number.isFinite(p.ascentSpeed))).toBeTrue();
+            expect(profile[60].ascentSpeed).toEqual(0);
+        });
+
+        it('Ascent speed is zero after the ascent', () => {
+            expect(sample(diveWithAscent).profile[300].ascentSpeed).toEqual(0);
+        });
+    });
+
     // 0 -> 30 m, 600 s at 30 m, ascent with stops at 6 m and 3 m
     const decoDive = [
         new Segment(0, 30, air, 60), // 0 - 60

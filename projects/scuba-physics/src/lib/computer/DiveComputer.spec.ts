@@ -96,6 +96,23 @@ describe('DiveComputer', () => {
         expect(switches.map(s => s.gasName)).toContain('EAN50');
     });
 
+    it('Too fast ascent creates high ascent speed warning', () => {
+        // 40 m/min from 30 m to 10 m
+        const fastAscent = diveFor(s => {
+            s.add(30, air, Time.oneMinute * 2);
+            s.addFlat(air, Time.oneMinute * 10);
+            s.add(10, air, Time.oneMinute / 2);
+        });
+        const events = DiveComputer.calculate(calculateDive(fastAscent)).events;
+        expect(events.some(e => e.type === ComputerEventType.highAscentSpeed && e.runTime === Time.oneMinute * 12 && e.depth === 30))
+            .toBeTrue();
+    });
+
+    it('Calculated ascent has no high ascent speed warning', () => {
+        const events = DiveComputer.calculate(calculatedDecoDive).events;
+        expect(events.some(e => e.type === ComputerEventType.highAscentSpeed)).toBeFalse();
+    });
+
     it('Points contain calculated no decompression limit', () => {
         const limits = algorithm.noDecoLimits(decoDive);
         const profile = DiveComputer.calculate(calculatedDecoDive).profile;

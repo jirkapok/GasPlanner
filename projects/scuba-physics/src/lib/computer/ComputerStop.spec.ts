@@ -53,10 +53,15 @@ describe('ComputerStop', () => {
             expect(events).toEqual([new ComputerStop(ComputerEventType.safetyStop, 80, 3, 180)]);
         });
 
+        it('Copies high ascent speed', () => {
+            const events = eventsOf([EventsFactory.createHighAscentSpeed(120, 20)]);
+            expect(events).toEqual([{ type: ComputerEventType.highAscentSpeed, runTime: 120, depth: 20 }]);
+        });
+
         it('Ignores other events', () => {
             const events = eventsOf([
                 EventsFactory.createNoDecoEnd(50, 10),
-                EventsFactory.createHighAscentSpeed(60, 10)
+                EventsFactory.createHighDescentSpeed(60, 10)
             ]);
             expect(events).toEqual([]);
         });

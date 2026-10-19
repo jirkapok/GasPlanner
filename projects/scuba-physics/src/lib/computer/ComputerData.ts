@@ -35,7 +35,9 @@ export enum ComputerEventType {
     gasSwitch = 3,
     /** decompression stop */
     stop = 4,
-    safetyStop = 5
+    safetyStop = 5,
+    /** ascent speed higher than the maximum for the depth */
+    highAscentSpeed = 6
 }
 
 export interface ComputerEvent {

@@ -46,6 +46,8 @@ export class ComputerStop implements StopEvent {
                 return { type: ComputerEventType.lowPpO2, runTime: runTime, depth: depth };
             case EventType.brokenCeiling:
                 return { type: ComputerEventType.brokenCeiling, runTime: runTime, depth: depth };
+            case EventType.highAscentSpeed:
+                return { type: ComputerEventType.highAscentSpeed, runTime: runTime, depth: depth };
             case EventType.gasSwitch: {
                 const gasSwitch: GasSwitchEvent = {
                     type: ComputerEventType.gasSwitch,

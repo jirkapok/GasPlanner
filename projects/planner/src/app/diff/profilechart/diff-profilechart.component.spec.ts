@@ -32,7 +32,15 @@ describe('ProfileDifferenceChartComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('creates', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('has functional alignByEnd button', () => {
+
+    });
+
+    it('has functional heatMap button', () => {
+
     });
 });

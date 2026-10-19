@@ -43,7 +43,23 @@ describe('DiffComponent', () => {
         fixture.detectChanges();
     });
 
-    it('should create', () => {
+    it('creates', () => {
         expect(component).toBeTruthy();
+    });
+
+    it('navigates to dashboard', () => {
+
+    });
+
+    it('creates diff state when there is none', () => {
+
+    });
+
+    it('loads existing diff state', () => {
+
+    });
+
+    it('saves diff state', () => {
+
     });
 });

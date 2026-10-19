@@ -1,5 +1,7 @@
 # #106 Dive Computer Calculation in scuba-physics Implementation Plan
 
+**Status: finished (2026-10-19).** All tasks 1-6 are implemented. Later refactors (stop rules, time to surface, `ComputerProfileContext`, `AverageDepth`) changed parts of the described design.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 > **Project override (CLAUDE.md):** implement ONE task per request, run its verification (tests + lint), tick its `- [ ] Status` checkbox, then STOP for review, unless the user explicitly says to continue.
 

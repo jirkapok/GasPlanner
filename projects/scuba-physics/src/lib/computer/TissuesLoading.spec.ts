@@ -38,9 +38,9 @@ describe('TissuesLoading', () => {
 
     const surfacePressureOf = (options: Options): number => new DepthConverterFactory(options).create().surfacePressure;
 
-    const options = createOptions(0);
-    const surface = surfacePressureOf(options);
-    const statistics = statisticsFor(options);
+    const seaLevelOptions = createOptions(0);
+    const surface = surfacePressureOf(seaLevelOptions);
+    const statistics = statisticsFor(seaLevelOptions);
     // tissues history and ceilings share their index
     const loadingAt = (index: number, gradient = gfHigh): number =>
         TissuesLoading.percents(statistics.tissues[index], statistics.ceilings[index].depth, surface, gradient);
@@ -59,7 +59,8 @@ describe('TissuesLoading', () => {
         const altitudeStatistics = statisticsFor(altitudeOptions);
         const i = altitudeStatistics.ceilings.findIndex(c => c.depth > 0);
         const before = TissuesLoading.percents(altitudeStatistics.tissues[i - 1], 0, altitudeSurface, gfHigh);
-        const reached = TissuesLoading.percents(altitudeStatistics.tissues[i], altitudeStatistics.ceilings[i].depth, altitudeSurface, gfHigh);
+        const reachedCeiling = altitudeStatistics.ceilings[i].depth;
+        const reached = TissuesLoading.percents(altitudeStatistics.tissues[i], reachedCeiling, altitudeSurface, gfHigh);
 
         expect(i).toBeGreaterThan(0);
         expect(before).toBeCloseTo(100, 0);

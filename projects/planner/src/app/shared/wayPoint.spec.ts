@@ -67,6 +67,28 @@ describe('WayPoint', () => {
         expect(copy.depthAt(2)).toBe(waypoint.depthAt(2));
     });
 
+    it("deep-copies waypoints", () => {
+        const originals = [
+            WayPoint.fromSegment(
+                mockMetersUnits,
+                makeSegment()
+            ),
+            WayPoint.fromSegment(
+                mockFeetUnits,
+                makeSegment({ startDepth: 20, endDepth: 30 })
+            )
+        ];
+        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+
+        expect(copies[0]).not.toBe(originals[0]);
+        expect(copies[0]).toEqual(originals[0]);
+        expect(copies[1]).not.toBe(originals[1]);
+        expect(copies[1]).toEqual(originals[1]);
+
+        originals[0].endTime = 999;
+        expect(copies[0].endTime).not.toEqual(999);
+    });
+
     it('creates new WayPoint from segment', () => {
         const segment = makeSegment({
             duration: 60,

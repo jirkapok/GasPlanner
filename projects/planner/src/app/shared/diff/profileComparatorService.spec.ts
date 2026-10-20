@@ -207,10 +207,11 @@ describe('ProfileComparatorService', () => {
     });
 
     it('emits on selectionChanged$ when alignByEnd is set', () => {
+        let emitted = false;
+        sut.selectionChanged$.subscribe(() => emitted = true);
 
-    });
+        sut.alignByEnd = true;
 
-    it("doesn't shallow-copy waypoints in deepCopyWayPoints", () => {
-
+        expect(emitted).toEqual(true);
     });
 });

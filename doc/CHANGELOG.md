@@ -1,3 +1,19 @@
+# [0.15.0](https://github.com/jirkapok/GasPlanner/compare/v0.14.0...v0.15.0) (2026-10-20)
+
+
+### Features
+
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer ascent speed ([06e5753](https://github.com/jirkapok/GasPlanner/commit/06e57532dafa25a5a489749c0085a984b98a25c0))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer high ascent speed warning ([3308757](https://github.com/jirkapok/GasPlanner/commit/3308757893fbaa0883612b82a92cb88732a6a127))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) computer tissues loading ([730836c](https://github.com/jirkapok/GasPlanner/commit/730836c14af28df413798e1c93c0432d4b78fb60))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) leading tissues loading from tissues sample ([90e8f1e](https://github.com/jirkapok/GasPlanner/commit/90e8f1e754e921d91c2e7e4ce498674ae66b08ce))
+
+
+### Performance Improvements
+
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) pass tissues history to computer without conversion ([8615e11](https://github.com/jirkapok/GasPlanner/commit/8615e11bdbbe3ae6f299af2f5948d1052ce43b28))
+* [#106](https://github.com/jirkapok/GasPlanner/issues/106) transfer tissues history to workers packed in one array ([69584ce](https://github.com/jirkapok/GasPlanner/commit/69584ceb1e067aa2078154a48ae5ae3e0c7ffba7))
+
 # [0.14.0](https://github.com/jirkapok/GasPlanner/compare/v0.13.1...v0.14.0) (2026-10-19)
 
 

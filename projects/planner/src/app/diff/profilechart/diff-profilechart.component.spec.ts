@@ -12,6 +12,8 @@ import { provideTestTranslate } from '../../../testing/translate-testing.helpers
 describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;
     let fixture: ComponentFixture<ProfileDifferenceChartComponent>;
+    let heatMapButton: HTMLButtonElement;
+    let alignByEndButton: HTMLButtonElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -30,17 +32,33 @@ describe('ProfileDifferenceChartComponent', () => {
         fixture = TestBed.createComponent(ProfileDifferenceChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
+
+        alignByEndButton = fixture.nativeElement.querySelector('[data-testid="align-by-end-button"]');
+        heatMapButton = fixture.nativeElement.querySelector('[data-testid="heat-map-button"]');
     });
 
     it('creates', () => {
         expect(component).toBeTruthy();
-    });
-
-    it('has functional alignByEnd button', () => {
-
+        expect(heatMapButton).toBeTruthy();
+        expect(alignByEndButton).toBeTruthy();
     });
 
     it('has functional heatMap button', () => {
+        const valueBefore = component.showHeatMap;
 
+        heatMapButton.click();
+
+        const valueAfter = component.showHeatMap;
+        expect(valueAfter).not.toEqual(valueBefore);
+    });
+
+    it('has functional alignByEnd button', () => {
+        const diff = TestBed.inject(ProfileComparatorService);
+        const valueBefore = diff.alignByEnd;
+
+        alignByEndButton.click();
+
+        const valueAfter = diff.alignByEnd;
+        expect(valueAfter).not.toEqual(valueBefore);
     });
 });

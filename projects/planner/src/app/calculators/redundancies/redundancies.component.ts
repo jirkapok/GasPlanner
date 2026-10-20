@@ -141,7 +141,7 @@ export class RedundanciesComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: RedundanciesViewState = this.viewStates.loadView(KnownViews.redundancies);
+        let state = this.viewStates.loadView<RedundanciesViewState>(KnownViews.redundancies);
 
         if (!state) {
             state = this.createDefaultState();

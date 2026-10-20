@@ -50,7 +50,7 @@ export class DiffComponent extends Streamed implements OnInit {
     }
 
     private loadState(): void {
-        let state: DiffViewState = this.viewStates.loadView(KnownViews.diff);
+        let state = this.viewStates.loadView<DiffViewState>(KnownViews.diff);
 
         if(!state) {
             state = {

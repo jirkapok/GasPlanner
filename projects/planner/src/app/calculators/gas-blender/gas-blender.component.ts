@@ -189,7 +189,7 @@ export class GasBlenderComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: BlenderViewState = this.viewStates.loadView(KnownViews.blender);
+        let state = this.viewStates.loadView<BlenderViewState>(KnownViews.blender);
 
         if (!state) {
             state = this.createDefaultState();

@@ -180,7 +180,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NitroxViewState = this.viewStates.loadView(
+        let state = this.viewStates.loadView<NitroxViewState>(
             KnownViews.nitrox
         );
 

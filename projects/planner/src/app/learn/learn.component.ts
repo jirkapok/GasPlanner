@@ -187,7 +187,7 @@ export class LearnComponent {
     }
 
     private loadState(): void {
-        let state: LearnViewState = this.viewStates.loadView(
+        let state = this.viewStates.loadView<LearnViewState>(
             KnownViews.learn
         );
 

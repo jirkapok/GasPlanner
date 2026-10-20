@@ -137,7 +137,7 @@ export class GasPropertiesCalcComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: GasViewState = this.viewStates.loadView(KnownViews.gas);
+        let state = this.viewStates.loadView<GasViewState>(KnownViews.gas);
 
         if (!state) {
             state = this.createState();

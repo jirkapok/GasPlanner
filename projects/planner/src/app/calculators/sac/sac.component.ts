@@ -18,6 +18,7 @@ import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { TankSizeComponent } from '../../controls/tank.size/tank.size.component';
 import { TranslatePipe } from '@ngx-translate/core';
+
 interface SacForm {
     depth: FormControl<number>;
     tankSize: FormControl<number>;
@@ -246,7 +247,7 @@ export class SacComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: SacViewState = this.viewStates.loadView(KnownViews.sac);
+        let state = this.viewStates.loadView<SacViewState>(KnownViews.sac);
 
         if (!state) {
             state = this.createState();

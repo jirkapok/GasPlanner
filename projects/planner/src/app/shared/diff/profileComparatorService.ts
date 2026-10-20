@@ -167,26 +167,20 @@ export class ProfileComparatorService extends Streamed {
         };
     }
 
+    /** Deep-copied waypoints with offset applied */
     private get wayPointsA(): WayPoint[]{
-        const wayPoints = WayPoint.deepCopyWayPoints(this.profileAResults.wayPoints);
-
-        for (const wayPoint of wayPoints) {
-            wayPoint.startTime += this.profileATimeOffset;
-            wayPoint.endTime += this.profileATimeOffset;
-        }
-
-        return wayPoints;
+        return this.deepCopyWayPointsWithOffset(
+            this.profileAResults.wayPoints,
+            this.profileATimeOffset
+        )
     }
 
+    /** Deep-copied waypoints with offset applied */
     private get wayPointsB(): WayPoint[]{
-        const wayPoints = WayPoint.deepCopyWayPoints(this.profileBResults.wayPoints);
-
-        for (const wayPoint of wayPoints) {
-            wayPoint.startTime += this.profileBTimeOffset;
-            wayPoint.endTime += this.profileBTimeOffset;
-        }
-
-        return wayPoints;
+        return this.deepCopyWayPointsWithOffset(
+            this.profileBResults.wayPoints,
+            this.profileBTimeOffset
+        )
     }
 
     public get alignByEnd(): boolean {
@@ -220,6 +214,17 @@ export class ProfileComparatorService extends Streamed {
         }
 
         this.updateWayPoints();
+    }
+
+    private deepCopyWayPointsWithOffset(originalWayPoints: WayPoint[], offset: number): WayPoint[] {
+        const wayPoints = WayPoint.deepCopyWayPoints(originalWayPoints);
+
+        for (const wayPoint of wayPoints) {
+            wayPoint.startTime += offset;
+            wayPoint.endTime += offset;
+        }
+
+        return wayPoints;
     }
 
     /** Waypoints need to be cached to preserve the selection */

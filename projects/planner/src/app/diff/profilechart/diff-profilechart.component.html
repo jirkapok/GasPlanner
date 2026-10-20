@@ -8,13 +8,13 @@
         <div class="float-end d-flex align-items-center gap-2 me-1">
             <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="isComplex" [checked]="alignByEnd"
-                    (change)="alignByEnd = !alignByEnd" mdbCheckbox />
+                 (change)="toggleAlignByEnd()" mdbCheckbox data-testid="align-by-end-button" />
                 <!-- Translate button text (and remove this comment) -->
                 <label class="custom-control-label" for="isComplex">{{ 'Align dives by their ends' }}</label>
             </div>
 
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
-                    data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="toggleHeatMap()">
+            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button" data-toggle="button"
+                [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="toggleHeatMap()" data-testid="heat-map-button">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>

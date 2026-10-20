@@ -91,6 +91,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.showHeatMap = !this.showHeatMap;
     }
 
+    protected toggleAlignByEnd(): void {
+        this.alignByEnd = !this.alignByEnd;
+    }
+
     private plotlyHoverLeave() {
         this.selectedWaypoints.selectedTimeStamp = '';
         this.selectWayPoint(undefined);

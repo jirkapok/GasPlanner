@@ -9,11 +9,22 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
+export class ProfileDifferenceChartPage {
+    constructor(private fixture: ComponentFixture<ProfileDifferenceChartComponent>) { }
+
+    public get heatMapButton(): HTMLButtonElement {
+        return this.fixture.nativeElement.querySelector('[data-testid="heat-map-button"]') as HTMLButtonElement;
+    }
+
+    public get alignByEndButton(): HTMLInputElement {
+        return this.fixture.nativeElement.querySelector('[data-testid="align-by-end-button"]') as HTMLInputElement;
+    }
+}
+
 describe('ProfileDifferenceChartComponent', () => {
     let component: ProfileDifferenceChartComponent;
     let fixture: ComponentFixture<ProfileDifferenceChartComponent>;
-    let heatMapButton: HTMLButtonElement;
-    let alignByEndButton: HTMLButtonElement;
+    let page: ProfileDifferenceChartPage;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -32,21 +43,19 @@ describe('ProfileDifferenceChartComponent', () => {
         fixture = TestBed.createComponent(ProfileDifferenceChartComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-
-        alignByEndButton = fixture.nativeElement.querySelector('[data-testid="align-by-end-button"]');
-        heatMapButton = fixture.nativeElement.querySelector('[data-testid="heat-map-button"]');
+        page = new ProfileDifferenceChartPage(fixture);
     });
 
     it('creates', () => {
         expect(component).toBeTruthy();
-        expect(heatMapButton).toBeTruthy();
-        expect(alignByEndButton).toBeTruthy();
+        expect(page.heatMapButton).toBeTruthy();
+        expect(page.alignByEndButton).toBeTruthy();
     });
 
     it('has functional heatMap button', () => {
         const valueBefore = component.showHeatMap;
 
-        heatMapButton.click();
+        page.heatMapButton.click();
 
         const valueAfter = component.showHeatMap;
         expect(valueAfter).not.toEqual(valueBefore);
@@ -56,7 +65,7 @@ describe('ProfileDifferenceChartComponent', () => {
         const diff = TestBed.inject(ProfileComparatorService);
         const valueBefore = diff.alignByEnd;
 
-        alignByEndButton.click();
+        page.alignByEndButton.click();
 
         const valueAfter = diff.alignByEnd;
         expect(valueAfter).not.toEqual(valueBefore);

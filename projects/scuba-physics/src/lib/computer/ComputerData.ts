@@ -26,8 +26,8 @@ export interface RunTimePoint {
     tts: number;
     /**
      * Next stop (decompression or safety stop) not finished yet at this moment, including the stop in progress.
-     * A decompression stop takes precedence over an overlapping safety stop.
-     * Undefined after the last stop.
+     * A decompression stop takes precedence over safety stop (they shouldn't overlap).
+     * Undefined after the last stop or in case no stop available.
      */
     nextStop?: StopEvent;
 }

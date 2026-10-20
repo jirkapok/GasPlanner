@@ -75,6 +75,14 @@ export class WayPoint {
         return copy;
     }
 
+    public static deepCopyWayPoints(wayPoints: WayPoint[]): WayPoint[] {
+        let copies = [];
+        for (const wayPoint of wayPoints) {
+            copies.push(wayPoint.copy);
+        }
+        return copies;
+    }
+
     public static fromSegment(units: UnitConversion, segment: Segment, startOffset: number = 0): WayPoint {
         const duration = segment.duration + startOffset;
         const newWayPoint = new WayPoint(units, duration, segment.endDepth, segment.startDepth);

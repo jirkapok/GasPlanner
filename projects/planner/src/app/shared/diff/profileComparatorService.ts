@@ -168,7 +168,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     private get wayPointsA(): WayPoint[]{
-        const wayPoints = this.deepCopyWayPoints(this.profileAResults.wayPoints);
+        const wayPoints = WayPoint.deepCopyWayPoints(this.profileAResults.wayPoints);
 
         for (const wayPoint of wayPoints) {
             wayPoint.startTime += this.profileATimeOffset;
@@ -179,7 +179,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     private get wayPointsB(): WayPoint[]{
-        const wayPoints = this.deepCopyWayPoints(this.profileBResults.wayPoints);
+        const wayPoints = WayPoint.deepCopyWayPoints(this.profileBResults.wayPoints);
 
         for (const wayPoint of wayPoints) {
             wayPoint.startTime += this.profileBTimeOffset;
@@ -220,14 +220,6 @@ export class ProfileComparatorService extends Streamed {
         }
 
         this.updateWayPoints();
-    }
-
-    private deepCopyWayPoints(wayPoints: WayPoint[]): WayPoint[] {
-        let copies = [];
-        for (const wayPoint of wayPoints) {
-            copies.push(wayPoint.copy);
-        }
-        return copies;
     }
 
     /** Waypoints need to be cached to preserve the selection */

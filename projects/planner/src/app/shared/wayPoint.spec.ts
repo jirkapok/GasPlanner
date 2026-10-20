@@ -22,24 +22,34 @@ describe('WayPoint', () => {
             ...overrides
         } as Segment);
 
-    it('returns start depth both in meters and feet', () => {
+    it('returns start depth in meters', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 12 });
         const waypointMeters = WayPoint.fromSegment(mockMetersUnits, segment);
-        const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
 
         expect(waypointMeters.startDepthMeters).toBe(10);
         expect(waypointMeters.startDepth).toBe(10);
+    });
+
+    it('returns start depth in feet', () => {
+        const segment = makeSegment({ startDepth: 10, endDepth: 12 });
+        const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
+
         expect(waypointFeet.startDepthMeters).toBe(10);
         expect(waypointFeet.startDepth).toBeCloseTo(32.8084, 4);
     });
 
-    it('returns end depth both in meters and feet', () => {
+    it('returns end depth in meters', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 20 });
         const waypointMeters = WayPoint.fromSegment(mockMetersUnits, segment);
-        const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
 
         expect(waypointMeters.endDepthMeters).toBe(20);
         expect(waypointMeters.endDepth).toBe(20);
+    });
+
+    it('returns end depth in feet', () => {
+        const segment = makeSegment({ startDepth: 10, endDepth: 20 });
+        const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
+
         expect(waypointFeet.endDepthMeters).toBe(20);
         expect(waypointFeet.endDepth).toBeCloseTo(65.6168, 4);
     });

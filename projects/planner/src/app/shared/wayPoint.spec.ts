@@ -85,8 +85,9 @@ describe('WayPoint', () => {
         expect(copies[1]).not.toBe(originals[1]);
         expect(copies[1]).toEqual(originals[1]);
 
+        copies[0].endTime = 42
         originals[0].endTime = 999;
-        expect(copies[0].endTime).not.toEqual(999);
+        expect(copies[0].endTime).toEqual(42);
     });
 
     it('creates new WayPoint from segment', () => {

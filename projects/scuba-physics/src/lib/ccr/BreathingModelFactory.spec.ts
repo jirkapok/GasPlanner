@@ -2,6 +2,7 @@ import { BreathingModelFactory } from './BreathingModelFactory';
 import { OpenCircuitBreathing } from './BreathingModel';
 import { PscrBreathing } from './PscrBreathing';
 import { MccrBreathing } from './MccrBreathing';
+import { EccrBreathing } from './EccrBreathing';
 import { CircuitType } from './RebreatherOptions';
 import { Options } from '../algorithm/Options';
 import { DepthConverter } from '../physics/depth-converter';
@@ -28,6 +29,14 @@ describe('Breathing model factory', () => {
         options.rebreather.circuit = CircuitType.mccr;
         const model = BreathingModelFactory.create(options, 20, tanks, depthConverter);
         expect(model).toBeInstanceOf(MccrBreathing);
+        expect(model.oxygenTank).toBe(tanks[1]);
+    });
+
+    it('creates eCCR with oxygen from the dive tanks', () => {
+        const options = new Options();
+        options.rebreather.circuit = CircuitType.eccr;
+        const model = BreathingModelFactory.create(options, 20, tanks, depthConverter);
+        expect(model).toBeInstanceOf(EccrBreathing);
         expect(model.oxygenTank).toBe(tanks[1]);
     });
 });

@@ -50,6 +50,10 @@ export class ValidatorGroups {
         return this.rangeFor(this.ranges.loopVolume);
     }
 
+    public get setpointSwitchDepth(): ValidatorFn[] {
+        return this.rangeFor(this.ranges.setpointSwitchDepth);
+    }
+
     public get depth(): ValidatorFn[] {
         return this.rangeFor(this.ranges.depth);
     }
@@ -139,6 +143,18 @@ export class ValidatorGroups {
             }
 
             return null;
+        };
+    }
+
+    /**
+     * Form group validator: eCCR descent setpoint can't be higher than the bottom setpoint.
+     * Sets the descentAboveBottom error on the group.
+     */
+    public descentNotAboveBottom(descentControl: string, bottomControl: string): ValidatorFn {
+        return (group: AbstractControl): ValidationErrors | null => {
+            const descent = Number(group.get(descentControl)?.value);
+            const bottom = Number(group.get(bottomControl)?.value);
+            return descent > bottom ? { descentAboveBottom: true } : null;
         };
     }
 

@@ -363,6 +363,62 @@ describe('PreferencesStore', () => {
                 }));
         });
 
+        describe('eCCR', () => {
+            const useEccr = (viewSwitch: ViewSwitchService): void => {
+                viewSwitch.isComplex = true;
+                TestBed.inject(DiveSchedules).dives[0].tanksService.prepareForClosedCircuit();
+                options.circuit = CircuitType.eccr;
+                options.descentSetpoint = 0.6;
+                options.bottomSetpoint = 1.2;
+                options.decoSetpoint = 1.4;
+                options.setpointSwitchDepth = 15;
+            };
+
+            const loadedOptions = (): OptionsService => TestBed.inject(DiveSchedules).dives[0].optionsService;
+
+            it('eCCR options are loaded after save', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
+                useEccr(viewSwitch);
+                sut.save();
+
+                options.circuit = CircuitType.oc;
+                options.descentSetpoint = 0.7;
+                options.bottomSetpoint = 1.1;
+                options.decoSetpoint = 1.3;
+                options.setpointSwitchDepth = 20;
+                sut.load();
+
+                const loaded = loadedOptions();
+                expect(loaded.circuit).toBe(CircuitType.eccr);
+                expect(loaded.descentSetpoint).toBeCloseTo(0.6, 6);
+                expect(loaded.bottomSetpoint).toBeCloseTo(1.2, 6);
+                expect(loaded.decoSetpoint).toBeCloseTo(1.4, 6);
+                expect(loaded.setpointSwitchDepth).toBeCloseTo(15, 6);
+            }));
+
+            it('Legacy rebreather without eCCR values loads defaults', inject([ViewSwitchService],
+                (viewSwitch: ViewSwitchService) => {
+                    useEccr(viewSwitch);
+                    sut.save();
+                    const stored = JSON.parse(localStorage.getItem('preferences') ?? '{}') as AppPreferences;
+                    stored.dives.forEach(d => {
+                        delete d.options.rebreather?.descentSetpoint;
+                        delete d.options.rebreather?.bottomSetpoint;
+                        delete d.options.rebreather?.decoSetpoint;
+                        delete d.options.rebreather?.setpointSwitchDepth;
+                    });
+                    localStorage.setItem('preferences', JSON.stringify(stored));
+
+                    sut.load();
+
+                    const loaded = loadedOptions();
+                    expect(loaded.circuit).toBe(CircuitType.eccr);
+                    expect(loaded.descentSetpoint).toBeCloseTo(RebreatherDefaults.descentSetpoint, 6);
+                    expect(loaded.bottomSetpoint).toBeCloseTo(RebreatherDefaults.bottomSetpoint, 6);
+                    expect(loaded.decoSetpoint).toBeCloseTo(RebreatherDefaults.decoSetpoint, 6);
+                    expect(loaded.setpointSwitchDepth).toBeCloseTo(RebreatherDefaults.setpointSwitchDepth, 6);
+                }));
+        });
+
         it('Legacy preferences without rebreather load as open circuit', inject([ViewSwitchService],
             (viewSwitch: ViewSwitchService) => {
                 viewSwitch.isComplex = true;

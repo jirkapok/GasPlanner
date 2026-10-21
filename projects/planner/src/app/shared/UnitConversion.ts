@@ -180,6 +180,9 @@ export interface RangeConstants {
     /** Rebreather breathing loop volume */
     loopVolume: [number, number];
     loopVolumeLabel: string;
+    /** eCCR depth to switch from descent to bottom setpoint */
+    setpointSwitchDepth: [number, number];
+    setpointSwitchDepthLabel: string;
     ppO2: [number, number];
     /** Number of decimal places to round rmv values */
     rmvRounding: number;
@@ -233,6 +236,8 @@ class MetricRanges implements RangeConstants {
     public readonly o2FlowLabel: string = toLabel(this.o2Flow, this.units.volumeShortcut + perMinute);
     public readonly loopVolume: [number, number] = [2, 10];
     public readonly loopVolumeLabel: string = toLabel(this.loopVolume, this.units.volumeShortcut);
+    public readonly setpointSwitchDepth: [number, number] = [3, 30];
+    public readonly setpointSwitchDepthLabel: string = toLabel(this.setpointSwitchDepth, this.units.lengthShortcut);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [1, 10];
@@ -287,6 +292,8 @@ class ImperialRanges implements RangeConstants {
     public readonly o2FlowLabel: string = toLabel(this.o2Flow, this.units.volumeShortcut + perMinute);
     public readonly loopVolume: [number, number] = [0.07, 0.354];
     public readonly loopVolumeLabel: string = toLabel(this.loopVolume, this.units.volumeShortcut);
+    public readonly setpointSwitchDepth: [number, number] = [10, 100];
+    public readonly setpointSwitchDepthLabel: string = toLabel(this.setpointSwitchDepth, this.units.lengthShortcut);
     public readonly duration: [number, number] = [1, 1440];
     public readonly durationLabel: string = toLabel(this.duration, 'min');
     public readonly maxDensity: [number, number] = [0.0624, 0.624];

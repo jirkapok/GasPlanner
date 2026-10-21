@@ -4,6 +4,7 @@ import { Tank } from '../consumption/Tanks';
 import { BreathingModel, OpenCircuitBreathing } from './BreathingModel';
 import { PscrBreathing } from './PscrBreathing';
 import { MccrBreathing } from './MccrBreathing';
+import { EccrBreathing } from './EccrBreathing';
 import { CircuitType } from './RebreatherOptions';
 
 export class BreathingModelFactory {
@@ -21,6 +22,8 @@ export class BreathingModelFactory {
                 return new PscrBreathing(options.rebreather, rmv, depthConverter);
             case CircuitType.mccr:
                 return new MccrBreathing(options.rebreather, tanks, depthConverter);
+            case CircuitType.eccr:
+                return new EccrBreathing(options.rebreather, tanks, depthConverter);
             default:
                 return new OpenCircuitBreathing(depthConverter);
         }

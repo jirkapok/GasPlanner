@@ -317,7 +317,7 @@ describe('PreferencesStore', () => {
         describe('mCCR', () => {
             const useMccr = (viewSwitch: ViewSwitchService): void => {
                 viewSwitch.isComplex = true;
-                TestBed.inject(DiveSchedules).dives[0].tanksService.prepareForMccr();
+                TestBed.inject(DiveSchedules).dives[0].tanksService.prepareForClosedCircuit();
                 options.circuit = CircuitType.mccr;
                 options.setpoint = 1.1;
                 options.o2Flow = 1.2;

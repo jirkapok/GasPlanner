@@ -72,6 +72,22 @@ describe('SettingsNormalizationService', () => {
             expect(optionsService.o2Flow).toBe(0.3);
         });
 
+        it('eCCR setpoints are normalized', () => {
+            optionsService.descentSetpoint = 0.1;
+            optionsService.bottomSetpoint = 2;
+            optionsService.decoSetpoint = 1.666;
+            service.apply();
+            expect(optionsService.descentSetpoint).toBe(0.4);
+            expect(optionsService.bottomSetpoint).toBe(1.6);
+            expect(optionsService.decoSetpoint).toBe(1.6);
+        });
+
+        it('eCCR switch depth is normalized', () => {
+            optionsService.setpointSwitchDepth = 40;
+            service.apply();
+            expect(optionsService.setpointSwitchDepth).toBe(30);
+        });
+
         it('Loop volume is normalized', () => {
             optionsService.loopVolume = 50;
             service.apply();
@@ -87,6 +103,12 @@ describe('SettingsNormalizationService', () => {
                 optionsService.o2Flow = 1;
                 service.apply();
                 expect(optionsService.o2Flow).toBeCloseTo(0.106, 6);
+            });
+
+            it('eCCR switch depth in feet is normalized', () => {
+                optionsService.setpointSwitchDepth = 5;
+                service.apply();
+                expect(optionsService.setpointSwitchDepth).toBeCloseTo(10, 6);
             });
 
             it('Loop volume is normalized', () => {

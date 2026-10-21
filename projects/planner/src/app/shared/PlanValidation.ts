@@ -3,12 +3,12 @@ import {
     OptionsDto, RebreatherDto, SegmentDto, TankDto, DiveDto
 } from './serialization.model';
 import _ from 'lodash';
-import { CircuitType, Precision, RebreatherTanks, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
+import { CircuitType, Precision, RebreatherDefaults, RebreatherTanks, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 export class PlanValidation {
     /** Only circuits, which the planner is able to calculate */
-    private static readonly supportedCircuits: CircuitType[] = [CircuitType.oc, CircuitType.pscr, CircuitType.mccr];
+    private static readonly supportedCircuits: CircuitType[] = [CircuitType.oc, CircuitType.pscr, CircuitType.mccr, CircuitType.eccr];
     private ranges: RangeConstants;
     private units: Units;
     private durationRange: [number, number];
@@ -151,7 +151,21 @@ export class PlanValidation {
             this.isInRange(metabolicO2, this.ranges.metabolicO2) &&
             this.isOptionalInRange(rebreather.setpoint, this.ranges.setpoint) &&
             this.isOptionalVolumeInRange(rebreather.o2Flow, this.ranges.o2Flow) &&
-            this.isOptionalVolumeInRange(rebreather.loopVolume, this.ranges.loopVolume);
+            this.isOptionalVolumeInRange(rebreather.loopVolume, this.ranges.loopVolume) &&
+            this.eccrSetpointsValid(rebreather);
+    }
+
+    private eccrSetpointsValid(rebreather: RebreatherDto): boolean {
+        const descent = rebreather.descentSetpoint ?? RebreatherDefaults.descentSetpoint;
+        const bottom = rebreather.bottomSetpoint ?? RebreatherDefaults.bottomSetpoint;
+        const descentNotAboveBottom = rebreather.circuit !== CircuitType.eccr || descent <= bottom;
+        const switchDepth = rebreather.setpointSwitchDepth;
+        const switchDepthValid = switchDepth === undefined || this.isLengthInRange(switchDepth, this.ranges.setpointSwitchDepth);
+
+        return this.isOptionalInRange(rebreather.descentSetpoint, this.ranges.setpoint) &&
+            this.isOptionalInRange(rebreather.bottomSetpoint, this.ranges.setpoint) &&
+            this.isOptionalInRange(rebreather.decoSetpoint, this.ranges.setpoint) &&
+            switchDepthValid && descentNotAboveBottom;
     }
 
     /** missing values (older data) are replaced by defaults */
@@ -164,9 +178,10 @@ export class PlanValidation {
         return liters === undefined || this.isInRange(this.units.fromLiter(liters), range);
     }
 
-    /** mCCR needs the diluent and oxygen as the second tank */
+    /** Closed circuit rebreathers (mCCR, eCCR) need the diluent and oxygen as the second tank */
     private rebreatherTanksValid(plan: DiveDto): boolean {
-        if (plan.options.rebreather?.circuit !== CircuitType.mccr) {
+        const circuit = plan.options.rebreather?.circuit;
+        if (circuit !== CircuitType.mccr && circuit !== CircuitType.eccr) {
             return true;
         }
 

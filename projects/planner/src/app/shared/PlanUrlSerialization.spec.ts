@@ -238,7 +238,7 @@ describe('Url Serialization', () => {
         it('Serializes mCCR with target ppO2 as last value', () => {
             useMccr(complexSut);
             const url = complexSut.urlSerialization.toUrl();
-            expect(url).toContain('&r=3,8,1,1.1,5,1.2&');
+            expect(url).toContain('&r=3,8,1,1.1,5,1.2,0.7,1.1,1.3,20&');
         });
 
         it('Round trips mCCR options', () => {
@@ -259,6 +259,59 @@ describe('Url Serialization', () => {
             expect(rebreather.setpoint).toBe(RebreatherDefaults.setpoint);
         });
 
+        const useEccr = (sut: TestSut): void => {
+            sut.schedules.selected.tanksService.prepareForClosedCircuit();
+            sut.options.circuit = CircuitType.eccr;
+            sut.options.descentSetpoint = 0.6;
+            sut.options.bottomSetpoint = 1.2;
+            sut.options.decoSetpoint = 1.4;
+            sut.options.setpointSwitchDepth = 15;
+        };
+
+        it('Serializes eCCR setpoints and switch depth as last values', () => {
+            useEccr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            expect(url).toContain('&r=4,8,1,0.8,6,1.3,0.6,1.2,1.4,15&');
+        });
+
+        it('Round trips eCCR options', () => {
+            useEccr(complexSut);
+            const url = complexSut.urlSerialization.toUrl();
+            const current = createComplexSut();
+            current.urlSerialization.fromUrl(url);
+            expect(current.options.getOptions().rebreather).toEqual(complexSut.options.getOptions().rebreather);
+        });
+
+        it('Partial eCCR group falls back to defaults', () => {
+            const url = preCcrUrl.replace('t=1-18-0-200-0.209-0', mccrTanks) + '&r=4,8,1';
+            complexSut.urlSerialization.fromUrl(url);
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.eccr);
+            expect(rebreather.descentSetpoint).toBe(RebreatherDefaults.descentSetpoint);
+            expect(rebreather.bottomSetpoint).toBe(RebreatherDefaults.bottomSetpoint);
+            expect(rebreather.decoSetpoint).toBe(RebreatherDefaults.decoSetpoint);
+            expect(rebreather.setpointSwitchDepth).toBe(RebreatherDefaults.setpointSwitchDepth);
+        });
+
+        it('Stage 3 mCCR url loads unchanged', () => {
+            const url = preCcrUrl.replace('t=1-18-0-200-0.209-0', mccrTanks) + '&r=3,8,1,0.9,5,1.2';
+            complexSut.urlSerialization.fromUrl(url);
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.mccr);
+            expect(rebreather.o2Flow).toBe(0.9);
+            expect(rebreather.loopVolume).toBe(5);
+            expect(rebreather.setpoint).toBe(1.2);
+            expect(rebreather.descentSetpoint).toBe(RebreatherDefaults.descentSetpoint);
+        });
+
+        it('mCCR doesn\'t require descent setpoint lower than bottom setpoint', () => {
+            const url = preCcrUrl.replace('t=1-18-0-200-0.209-0', mccrTanks) + '&r=3,8,1,0.8,6,1.3,1.2,1.1,1.3,20';
+            complexSut.urlSerialization.fromUrl(url);
+            const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
+            expect(rebreather.circuit).toBe(CircuitType.mccr);
+            expect(rebreather.descentSetpoint).toBe(1.2);
+        });
+
         it('Stage 2 pSCR url loads unchanged', () => {
             complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,8,1');
             const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
@@ -275,7 +328,7 @@ describe('Url Serialization', () => {
             usePscr(complexSut);
             const url = complexSut.urlSerialization.toUrl();
             // all values written for every rebreather, so indexes stay stable
-            expect(url).toContain('&r=2,10,1.2,0.8,6,1.3&');
+            expect(url).toContain('&r=2,10,1.2,0.8,6,1.3,0.7,1.1,1.3,20&');
         });
 
         it('Round trips pSCR options', () => {
@@ -304,7 +357,7 @@ describe('Url Serialization', () => {
         });
 
         it('Redundant rebreather values are ignored', () => {
-            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,10,1.2,0.8,6,1.3,5,abc');
+            complexSut.urlSerialization.fromUrl(preCcrUrl + '&r=2,10,1.2,0.8,6,1.3,0.7,1.1,1.3,20,5,abc');
             const rebreather = complexSut.schedules.selected.optionsService.getOptions().rebreather;
             expect(rebreather.circuit).toBe(CircuitType.pscr);
             expect(rebreather.injectionRatio).toBe(10);
@@ -358,6 +411,34 @@ describe('Url Serialization', () => {
 
             it('mCCR with single tank', () => {
                 assertSkipped('&r=3,8,1,0.8,6,1.3', 't=1-18-0-200-0.209-0');
+            });
+
+            it('eCCR setpoint out of range', () => {
+                assertSkipped('&r=4,8,1,0.8,6,1.3,0.7,1.7,1.3,20', mccrTanks);
+            });
+
+            it('eCCR switch depth too shallow', () => {
+                assertSkipped('&r=4,8,1,0.8,6,1.3,0.7,1.1,1.3,2', mccrTanks);
+            });
+
+            it('eCCR switch depth too deep', () => {
+                assertSkipped('&r=4,8,1,0.8,6,1.3,0.7,1.1,1.3,40', mccrTanks);
+            });
+
+            it('eCCR descent setpoint higher than bottom setpoint', () => {
+                assertSkipped('&r=4,8,1,0.8,6,1.3,1.2,1.1,1.3,20', mccrTanks);
+            });
+
+            it('eCCR descent setpoint higher than default bottom setpoint', () => {
+                assertSkipped('&r=4,8,1,0.8,6,1.3,1.2', mccrTanks);
+            });
+
+            it('eCCR second tank is not oxygen', () => {
+                assertSkipped('&r=4,8,1', 't=1-12-0-200-0.21-0,2-3-0-200-0.5-0');
+            });
+
+            it('eCCR with single tank', () => {
+                assertSkipped('&r=4,8,1', 't=1-18-0-200-0.209-0');
             });
 
             it('Rebreather in simple view', () => {

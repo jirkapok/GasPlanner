@@ -67,7 +67,7 @@ export class TanksService {
 
     /** Closed circuit rebreathers need the diluent and oxygen tanks, they can't be removed */
     public canRemove(tank: TankBound, circuit: CircuitType): boolean {
-        if (circuit !== CircuitType.mccr) {
+        if (circuit !== CircuitType.mccr && circuit !== CircuitType.eccr) {
             return true;
         }
 
@@ -78,7 +78,7 @@ export class TanksService {
      * Ensures the second tank is oxygen without overwriting any existing tank.
      * Existing oxygen tank is moved to the second position, otherwise new oxygen tank is inserted.
      */
-    public prepareForMccr(): void {
+    public prepareForClosedCircuit(): void {
         const tanks = this._tanks.slice();
         const oxygenIndex = RebreatherTanks.oxygenIndex;
 

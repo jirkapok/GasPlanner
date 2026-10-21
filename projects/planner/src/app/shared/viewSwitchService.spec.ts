@@ -68,13 +68,26 @@ describe('View Switch service', () => {
                 tanksService.loadFrom([new Tank(12, 200, 18), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
                 tanksService.firstTank.he = 45;
                 options.circuit = CircuitType.mccr;
-                tanksService.prepareForMccr();
+                tanksService.prepareForClosedCircuit();
 
                 viewSwitch.isComplex = false;
 
                 expect(options.isRebreather).toBe(false);
                 expect(tanksService.tanks.length).toBe(1);
                 expect(tanksService.firstTank.he).toBe(0);
+            }));
+
+        it('Switches eCCR dive back to open circuit with single tank', inject([DiveSchedules],
+            (schedules: DiveSchedules) => {
+                const options = schedules.selected.optionsService;
+                tanksService.loadFrom([new Tank(12, 200, 18), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+                options.circuit = CircuitType.eccr;
+                tanksService.prepareForClosedCircuit();
+
+                viewSwitch.isComplex = false;
+
+                expect(options.isRebreather).toBeFalse();
+                expect(tanksService.tanks.length).toBe(1);
             }));
     });
 });

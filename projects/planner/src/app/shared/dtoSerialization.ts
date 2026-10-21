@@ -326,7 +326,11 @@ export class DtoSerialization {
             loopVolume: rebreather.loopVolume,
             injectionRatio: rebreather.injectionRatio,
             setpoint: rebreather.setpoint,
-            o2Flow: rebreather.o2Flow
+            o2Flow: rebreather.o2Flow,
+            descentSetpoint: rebreather.descentSetpoint,
+            bottomSetpoint: rebreather.bottomSetpoint,
+            decoSetpoint: rebreather.decoSetpoint,
+            setpointSwitchDepth: rebreather.setpointSwitchDepth
         };
     }
 
@@ -338,6 +342,10 @@ export class DtoSerialization {
             rebreather.injectionRatio = rebreatherDto.injectionRatio;
             rebreather.setpoint = rebreatherDto.setpoint ?? rebreather.setpoint;
             rebreather.o2Flow = rebreatherDto.o2Flow ?? rebreather.o2Flow;
+            rebreather.descentSetpoint = rebreatherDto.descentSetpoint ?? rebreather.descentSetpoint;
+            rebreather.bottomSetpoint = rebreatherDto.bottomSetpoint ?? rebreather.bottomSetpoint;
+            rebreather.decoSetpoint = rebreatherDto.decoSetpoint ?? rebreather.decoSetpoint;
+            rebreather.setpointSwitchDepth = rebreatherDto.setpointSwitchDepth ?? rebreather.setpointSwitchDepth;
         }
     }
 

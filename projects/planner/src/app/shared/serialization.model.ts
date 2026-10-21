@@ -261,6 +261,14 @@ export interface RebreatherDto {
     setpoint?: number;
     /** mCCR oxygen flow in liters/minute, optional because of upgrade */
     o2Flow?: number;
+    /** eCCR setpoint in bars shallower than the switch depth, optional because of upgrade */
+    descentSetpoint?: number;
+    /** eCCR setpoint in bars deeper than the switch depth, optional because of upgrade */
+    bottomSetpoint?: number;
+    /** eCCR setpoint in bars from the deepest point, optional because of upgrade */
+    decoSetpoint?: number;
+    /** eCCR setpoint switch depth in meters, optional because of upgrade */
+    setpointSwitchDepth?: number;
 }
 
 export interface QuizSessionDto {

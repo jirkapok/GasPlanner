@@ -37,6 +37,33 @@ describe('DtoSerialization - Rebreather', () => {
         expect(loaded.rebreather.o2Flow).toBe(RebreatherDefaults.o2Flow);
     });
 
+    it('round trips eCCR options', () => {
+        const options = new Options();
+        options.rebreather.circuit = CircuitType.eccr;
+        options.rebreather.descentSetpoint = 0.6;
+        options.rebreather.bottomSetpoint = 1.2;
+        options.rebreather.decoSetpoint = 1.4;
+        options.rebreather.setpointSwitchDepth = 15;
+
+        const dto = DtoSerialization.fromOptions(options);
+        const loaded = DtoSerialization.toOptions(dto);
+
+        expect(dto.rebreather?.setpointSwitchDepth).toBe(15);
+        expect(loaded.rebreather).toEqual(options.rebreather);
+    });
+
+    it('legacy rebreather options without eCCR values load eCCR defaults', () => {
+        const dto = DtoSerialization.fromOptions(new Options());
+        dto.rebreather = { circuit: CircuitType.mccr, metabolicO2: 1, loopVolume: 6, injectionRatio: 8, setpoint: 1.2, o2Flow: 1 };
+
+        const loaded = DtoSerialization.toOptions(dto);
+
+        expect(loaded.rebreather.descentSetpoint).toBe(RebreatherDefaults.descentSetpoint);
+        expect(loaded.rebreather.bottomSetpoint).toBe(RebreatherDefaults.bottomSetpoint);
+        expect(loaded.rebreather.decoSetpoint).toBe(RebreatherDefaults.decoSetpoint);
+        expect(loaded.rebreather.setpointSwitchDepth).toBe(RebreatherDefaults.setpointSwitchDepth);
+    });
+
     it('missing rebreather options load as open circuit defaults', () => {
         const dto = DtoSerialization.fromOptions(new Options());
         delete dto.rebreather;

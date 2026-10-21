@@ -169,7 +169,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public useMccr(): void {
-        this.tanksService.prepareForMccr();
+        this.tanksService.prepareForClosedCircuit();
         this.applyCircuit(CircuitType.mccr);
     }
 

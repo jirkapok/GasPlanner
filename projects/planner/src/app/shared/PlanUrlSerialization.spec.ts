@@ -228,7 +228,7 @@ describe('Url Serialization', () => {
 
         const mccrTanks = 't=1-12-0-200-0.21-0,2-3-0-200-1-0';
         const useMccr = (sut: TestSut): void => {
-            sut.schedules.selected.tanksService.prepareForMccr();
+            sut.schedules.selected.tanksService.prepareForClosedCircuit();
             sut.options.circuit = CircuitType.mccr;
             sut.options.o2Flow = 1.1;
             sut.options.loopVolume = 5;

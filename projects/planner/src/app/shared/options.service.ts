@@ -148,6 +148,15 @@ export class OptionsService {
         return this.circuit === CircuitType.mccr;
     }
 
+    public get isEccr(): boolean {
+        return this.circuit === CircuitType.eccr;
+    }
+
+    /** Rebreather with diluent and oxygen tanks holding a setpoint (mCCR or eCCR) */
+    public get isClosedCircuit(): boolean {
+        return this.isMccr || this.isEccr;
+    }
+
     public get injectionRatio(): number {
         return this.options.rebreather.injectionRatio;
     }
@@ -155,6 +164,27 @@ export class OptionsService {
     /** mCCR target ppO2 in bars */
     public get setpoint(): number {
         return this.options.rebreather.setpoint;
+    }
+
+    /** eCCR setpoint in bars shallower than the switch depth */
+    public get descentSetpoint(): number {
+        return this.options.rebreather.descentSetpoint;
+    }
+
+    /** eCCR setpoint in bars deeper than the switch depth */
+    public get bottomSetpoint(): number {
+        return this.options.rebreather.bottomSetpoint;
+    }
+
+    /** eCCR setpoint in bars from the deepest point */
+    public get decoSetpoint(): number {
+        return this.options.rebreather.decoSetpoint;
+    }
+
+    /** eCCR setpoint switch depth in current length units */
+    public get setpointSwitchDepth(): number {
+        const source = this.options.rebreather.setpointSwitchDepth;
+        return this.units.fromMeters(source);
     }
 
     /** In current volume units per minute */
@@ -286,6 +316,22 @@ export class OptionsService {
 
     public set setpoint(newValue: number) {
         this.options.rebreather.setpoint = newValue;
+    }
+
+    public set descentSetpoint(newValue: number) {
+        this.options.rebreather.descentSetpoint = newValue;
+    }
+
+    public set bottomSetpoint(newValue: number) {
+        this.options.rebreather.bottomSetpoint = newValue;
+    }
+
+    public set decoSetpoint(newValue: number) {
+        this.options.rebreather.decoSetpoint = newValue;
+    }
+
+    public set setpointSwitchDepth(newValue: number) {
+        this.options.rebreather.setpointSwitchDepth = this.units.toMeters(newValue);
     }
 
     public set o2Flow(newValue: number) {

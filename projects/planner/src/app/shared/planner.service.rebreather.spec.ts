@@ -78,4 +78,30 @@ describe('PlannerService - Rebreathers', () => {
             expect(dive.diveResult.calculated).toBe(true);
         });
     });
+
+    describe('eCCR', () => {
+        const prepareEccr = (oxygenPercent: number): void => {
+            dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, oxygenPercent)]);
+            dive.optionsService.circuit = CircuitType.eccr;
+        };
+
+        it('calculates eCCR profile different from open circuit and consumes the oxygen tank', () => {
+            dive.tanksService.firstTank.o2 = 21;
+            const openCircuit = calculate();
+            prepareEccr(100);
+            const eccr = calculate();
+
+            expect(eccr.duration).not.toBe(openCircuit.duration);
+            expect(dive.tanksService.tanks[1].tank.consumed).toBeGreaterThan(0);
+            expect(dive.diveResult.hasErrors).toBeFalse();
+        });
+
+        it('eCCR without oxygen in second tank ends with profile error', () => {
+            prepareEccr(50);
+            planner.calculate(dive.id);
+
+            expect(dive.diveResult.hasErrors).toBeTrue();
+            expect(dive.diveResult.calculated).toBeTrue();
+        });
+    });
 });

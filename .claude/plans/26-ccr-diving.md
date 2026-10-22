@@ -1943,7 +1943,7 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
 - Cross-field rule: descent setpoint ≤ bottom setpoint (URL validation and form validator). Deco setpoint has no cross-field rule.
 
 ##### Task 4.1: eCCR breathing model (lib)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `ccr/RebreatherOptions.ts`, `ccr/RebreatherOptions.spec.ts`
@@ -1964,8 +1964,8 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
   - `BreathingModelFactory.create` → `EccrBreathing` for `CircuitType.eccr`.
 
 **Steps (TDD):**
-- [ ] `RebreatherOptions.spec.ts`: the five new defaults; `loadFrom` copies them; a legacy source without them keeps the defaults. FAIL → implement → PASS.
-- [ ] `EccrBreathing.spec.ts` (salt water converter, tanks [air diluent, O2], defaults: descent 0.7, bottom 1.1, deco 1.3, switch 20 m, metabolic 1.0, o2Loss 0.1, loop 6 L):
+- [x] `RebreatherOptions.spec.ts`: the five new defaults; `loadFrom` copies them; a legacy source without them keeps the defaults. FAIL → implement → PASS.
+- [x] `EccrBreathing.spec.ts` (salt water converter, tanks [air diluent, O2], defaults: descent 0.7, bottom 1.1, deco 1.3, switch 20 m, metabolic 1.0, o2Loss 0.1, loop 6 L):
   - 10 m, not ascent → ppO2 0.7 (`toBeCloseTo(…, 6)`); 30 m, not ascent → 1.1; exactly 20 m, not ascent → 1.1 (bottom);
   - 10 m and 30 m with `isAscent` → 1.3;
   - 3 m with `isAscent` (deco SP above ambient) → loop is pure oxygen, ppO2 = ambient, no exception;
@@ -1975,12 +1975,12 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
   - `validate()`: [air, O2] → `[]`; [air, ean50] → one error with message `eCCR needs oxygen in the second tank.`; [air] → one error;
   - `oxygenTank` is the second tank instance; `usesGasSwitching`/`usesAirBreaks` false.
   - FAIL (missing class) → refactor `MccrBreathing` onto `ClosedCircuitBreathing`, add `EccrBreathing` → PASS, and `MccrBreathing.spec.ts` still PASS unchanged.
-- [ ] `BreathingModelFactory.spec.ts`: `CircuitType.eccr` → `EccrBreathing` whose `oxygenTank` is the passed `tanks[1]`. FAIL → implement → PASS.
-- [ ] Export `ClosedCircuitBreathing`, `EccrBreathing` in `public-api.ts`.
-- [ ] Verification: single specs, `npm run test-lib-ci`, `npm run build-lib`, lint of changed files. Commit `feat(scuba-physics): #26 eCCR breathing model`.
+- [x] `BreathingModelFactory.spec.ts`: `CircuitType.eccr` → `EccrBreathing` whose `oxygenTank` is the passed `tanks[1]`. FAIL → implement → PASS.
+- [x] Export `ClosedCircuitBreathing`, `EccrBreathing` in `public-api.ts`.
+- [x] Verification: single specs, `npm run test-lib-ci`, `npm run build-lib`, lint of changed files. Commit `feat(scuba-physics): #26 eCCR breathing model`.
 
 ##### Task 4.2: Deco setpoint in the algorithm, eCCR consumption (lib)
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `algorithm/BuhlmannAlgorithmParameters.ts`, `algorithm/BuhlmannAlgorithm.ts`, `depths/PlanFactory.ts`
@@ -1995,25 +1995,25 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
   - `PlanFactory.emergencyAscent` passes `startAscentIndex = emergencyPlan.length`.
 
 **Steps (TDD):**
-- [ ] `BuhlmannAlgorithmParameters.spec.ts`: plan 40 m descent + flat + user ascent to 20 m + flat → default `startAscentIndex` 2; explicit 4 is kept; `forSimpleDive` → 1. FAIL → implement → PASS.
-- [ ] `BuhlmannAlgorithm.eccr.spec.ts`. A test-local `RecordingBreathing` (wraps `OpenCircuitBreathing`, records `(depth, isAscent)` of every `inspiredGas` call) pins the flags; real `EccrBreathing` pins the physics:
+- [x] `BuhlmannAlgorithmParameters.spec.ts`: plan 40 m descent + flat + user ascent to 20 m + flat → default `startAscentIndex` 2; explicit 4 is kept; `forSimpleDive` → 1. FAIL → implement → PASS.
+- [x] `BuhlmannAlgorithm.eccr.spec.ts`. A test-local `RecordingBreathing` (wraps `OpenCircuitBreathing`, records `(depth, isAscent)` of every `inspiredGas` call) pins the flags; real `EccrBreathing` pins the physics:
   - recording, plan above (40 m, then a 20 m user level): `decompression` calls with depth from the 20 m level are all `isAscent = true`, the 40 m bottom all `false`; `decompressionStatistics` of the calculated profile records the same flag per profile segment;
   - recording, `noDecoLimitsOfProfile` uses the same flags;
   - eCCR 40 m / 25 min, tanks [trimix 21/35 diluent, O2, ean50], GF 30/85: (a) the profile stays on the diluent, no air breaks; (b) deco SP 1.3 gives a shorter runtime than deco SP 1.1 with the same bottom SP; (c) bottom SP 1.3 gives a shorter runtime than bottom SP 1.1; (d) tanks [diluent, ean50] → one `EventType.error`, `noDecoLimit` 0.
   - **E2E reference value**: 60 m, default complex-view bottom time and default planner options (read them from `OptionsService`/`DiveSchedules` defaults), tanks [18/45 diluent, O2, 18/45, EAN50, O2] with planner default sizes, SP 1.1/1.1/1.3, switch 20 m → assert the runtime in seconds. Write the number after the sanity check against a reference planner (Subsurface/MultiDeco, same inputs, within one stop minute). If no reference is at hand, ask me for the cross-check before Task 4.6 and ledger it.
   - FAIL → implement → PASS. All existing `BuhlmannAlgorithm*.spec.ts` (OC/pSCR/mCCR) pass unchanged.
-- [ ] `PlanFactory.bailout.spec.ts`: a `RecordingBreathing` as the primary of an mCCR-like plan with a user-defined ascent segment (with tank) after the deepest point → the primary is asked for that segment's depths (`isAscent = false`), i.e. the user ascent stays on the loop. Expected PASS only after the `emergencyAscent` override; check it FAILS when the override is temporarily removed, then restore.
-- [ ] `consumption.eccr.spec.ts` (tanks 1 = 18/45 12 L/200 bar diluent, 2 = O2 3 L/200 bar, 3 = air 11 L/200 bar; profile from the algorithm with `EccrBreathing`, 40 m / 25 min):
+- [x] `PlanFactory.bailout.spec.ts`: a `RecordingBreathing` as the primary of an mCCR-like plan with a user-defined ascent segment (with tank) after the deepest point → the primary is asked for that segment's depths (`isAscent = false`), i.e. the user ascent stays on the loop. Expected PASS only after the `emergencyAscent` override; check it FAILS when the override is temporarily removed, then restore.
+- [x] `consumption.eccr.spec.ts` (tanks 1 = 18/45 12 L/200 bar diluent, 2 = O2 3 L/200 bar, 3 = air 11 L/200 bar; profile from the algorithm with `EccrBreathing`, 40 m / 25 min):
   - O2 consumed = `Rebreathers.eccrO2Rate(1.0, 0.1)` × runtime minutes, plus the oxygen reserve of the emergency ascent (as in `consumption.mccr.spec.ts`);
   - diluent consumed = loop volume × descent pressure difference;
   - bailout tank 3 consumes only reserve.
   - **E2E reference value**: the same inputs as the runtime reference above → assert the CCR oxygen tank consumed bars.
   - Expected PASS without production changes (model-driven); ledger it if green first.
-- [ ] `consumptionByGas.eccr.spec.ts`: oxygen gas consumed = eCCR O2 liters + reserve; diluent = descent liters only. Expected PASS; ledger it.
-- [ ] Verification: `npm run test-lib-ci` (all existing specs unchanged), `npm run build-lib`, `npm run test-ci` (planner compiles and its OC/pSCR/mCCR results are unchanged), lint. Commit `feat(scuba-physics): #26 eCCR deco setpoint and consumption`.
+- [x] `consumptionByGas.eccr.spec.ts`: oxygen gas consumed = eCCR O2 liters + reserve; diluent = descent liters only. Expected PASS; ledger it.
+- [x] Verification: `npm run test-lib-ci` (all existing specs unchanged), `npm run build-lib`, `npm run test-ci` (planner compiles and its OC/pSCR/mCCR results are unchanged), lint. Commit `feat(scuba-physics): #26 eCCR deco setpoint and consumption`.
 
 ##### Task 4.3: Planner state, DTOs and tanks
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `shared/serialization.model.ts`, `shared/dtoSerialization.ts`, `shared/options.service.ts`, `shared/tanks.service.ts`, `plan/tanks-complex/tanks-complex.component.ts` (rename call only)
@@ -2027,15 +2027,15 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
   - `TanksService.prepareForClosedCircuit()` (renamed from `prepareForMccr`, same behavior); `canRemove` returns false for tanks 1–2 in mCCR **and** eCCR.
 
 **Steps (TDD):**
-- [ ] `dtoSerialization.rebreather.spec.ts`: eCCR round-trip keeps the four fields; a legacy DTO without them loads the defaults. FAIL → implement → PASS.
-- [ ] `options.service.rebreather.spec.ts`: imperial `setpointSwitchDepth` setter 66 ft → ~20.1 m and getter back; setpoints not converted; `isEccr`, `isClosedCircuit` for each circuit. FAIL → implement → PASS.
-- [ ] `tanks.service.ccr.spec.ts` (`git mv`): rename the calls to `prepareForClosedCircuit`; add `canRemove` false for tanks 1–2 in eCCR. FAIL → rename/implement → PASS.
-- [ ] `viewSwitchService.spec.ts`: an eCCR dive switched to simple view → OC, single tank. Expected PASS through `setSimple`; ledger it if green.
-- [ ] `planner.service.rebreather.spec.ts`: an eCCR dive calculates with a runtime different from the same OC dive and O2 tank consumed > 0; tank 2 = air → profile error, no crash. Expected PASS through the worker factory; ledger it if green.
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR options state`.
+- [x] `dtoSerialization.rebreather.spec.ts`: eCCR round-trip keeps the four fields; a legacy DTO without them loads the defaults. FAIL → implement → PASS.
+- [x] `options.service.rebreather.spec.ts`: imperial `setpointSwitchDepth` setter 66 ft → ~20.1 m and getter back; setpoints not converted; `isEccr`, `isClosedCircuit` for each circuit. FAIL → implement → PASS.
+- [x] `tanks.service.ccr.spec.ts` (`git mv`): rename the calls to `prepareForClosedCircuit`; add `canRemove` false for tanks 1–2 in eCCR. FAIL → rename/implement → PASS.
+- [x] `viewSwitchService.spec.ts`: an eCCR dive switched to simple view → OC, single tank. Expected PASS through `setSimple`; ledger it if green.
+- [x] `planner.service.rebreather.spec.ts`: an eCCR dive calculates with a runtime different from the same OC dive and O2 tank consumed > 0; tank 2 = air → profile error, no crash. Expected PASS through the worker factory; ledger it if green.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR options state`.
 
 ##### Task 4.4: URL `r` group, validation, normalization, saving/loading
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `shared/PlanUrlSerialization.ts`, `shared/PlanValidation.ts`, `shared/settings-normalization.service.ts`, `shared/UnitConversion.ts`, `shared/ValidatorGroups.ts`
@@ -2048,14 +2048,14 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
 - Normalization clamps the three setpoints (2 decimals) and the switch depth (same rounding as other depths).
 
 **Steps (TDD):**
-- [ ] `PlanUrlSerialization.spec.ts`: eCCR round-trip writes `r=4,8,1,0.8,6,1.3,0.7,1.1,1.3,20` and loads all ten back; `r=4,8,1` → eCCR with all defaults; an mCCR URL from Stage 3 (`r=3,8,1,0.8,6,1.3`) loads unchanged. FAIL → implement → PASS.
-- [ ] `PlanValidation` ("Skips loading"): bottom SP 1.7; switch depth 2 m; switch depth 40 m; eCCR descent 1.2 > bottom 1.1; eCCR with tank 2 = air; eCCR with a single tank → skipped. A valid eCCR → loaded. An mCCR with descent > bottom (eCCR fields irrelevant) → loaded. FAIL → implement → PASS.
-- [ ] `settings-normalization.service.spec.ts`: out-of-range setpoints and switch depth are clamped, metric and imperial. FAIL → implement → PASS.
-- [ ] `preferences.spec.ts`: eCCR round-trip per field; legacy JSON → defaults. Expected PASS after Task 4.3; ledger it if green.
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR url, validation and normalization`.
+- [x] `PlanUrlSerialization.spec.ts`: eCCR round-trip writes `r=4,8,1,0.8,6,1.3,0.7,1.1,1.3,20` and loads all ten back; `r=4,8,1` → eCCR with all defaults; an mCCR URL from Stage 3 (`r=3,8,1,0.8,6,1.3`) loads unchanged. FAIL → implement → PASS.
+- [x] `PlanValidation` ("Skips loading"): bottom SP 1.7; switch depth 2 m; switch depth 40 m; eCCR descent 1.2 > bottom 1.1; eCCR with tank 2 = air; eCCR with a single tank → skipped. A valid eCCR → loaded. An mCCR with descent > bottom (eCCR fields irrelevant) → loaded. FAIL → implement → PASS.
+- [x] `settings-normalization.service.spec.ts`: out-of-range setpoints and switch depth are clamped, metric and imperial. FAIL → implement → PASS.
+- [x] `preferences.spec.ts`: eCCR round-trip per field; legacy JSON → defaults. Expected PASS after Task 4.3; ledger it if green.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR url, validation and normalization`.
 
 ##### Task 4.5: Tanks card UI and eCCR options component
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `plan/eccr-options/eccr-options.component.{html,ts,spec.ts}` (`EccrOptionsComponent`, selector `app-eccr-options`, form name `eccrOptions`)
@@ -2070,36 +2070,36 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
   - `TanksComplexComponent.useEccr()`; diluent/oxygen labels, oxygen gas lock and non-removable tanks 1–2 use `isClosedCircuit`; `rebreatherInvalid` includes the eCCR form.
 
 **Steps (TDD, component specs):**
-- [ ] `eccr-options.component.spec.ts`:
+- [x] `eccr-options.component.spec.ts`:
   - shows the descent/bottom/deco setpoints, switch depth, loop volume and metabolic O2; no O2 flow, no injection ratio;
   - invalid deco SP 2.0 and switch depth 40 m mark `is-invalid` with the sibling range message;
   - descent 1.2 with bottom 1.1 → form invalid, `#descentSetpointError` shown, `sendOptionsChanged` not called;
   - a valid change calls `sendOptionsChanged` once, imperial switch depth converted to meters;
   - reloads on `optionsReloaded$` and `selectedChanged$`; after destroy its form group is removed from the root form.
   - FAIL → implement → PASS.
-- [ ] `tanks-complex.rebreather.spec.ts`:
+- [x] `tanks-complex.rebreather.spec.ts`:
   - `useEccr()` inserts the O2 tank 2 and selects eCCR; the header button text is "eCCR";
   - the Rebreather tab shows only `app-eccr-options` for eCCR (pSCR/mCCR hidden);
   - rows 1–2 show Diluent/Oxygen, tank 2 gas controls disabled, remove hidden for tanks 1–2 in eCCR;
   - an invalid mCCR value followed by a switch to eCCR doesn't block the planner.
   - FAIL → implement → PASS.
-- [ ] Layout `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message. i18n keys in all 7 files: `tanksComplex.eccr`, `eccrOptions.descentSetpoint` ("Descent setpoint"), `eccrOptions.bottomSetpoint` ("Bottom setpoint"), `eccrOptions.decoSetpoint` ("Deco setpoint"), `eccrOptions.setpointSwitchDepth` ("Setpoint switch depth"), `eccrOptions.descentAboveBottom` ("Descent setpoint can't be higher than bottom setpoint"), `eccrOptions.loopVolume`, `eccrOptions.metabolicO2`.
-- [ ] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR tanks card and options component`.
+- [x] Layout `col-12 col-sm-6 col-md-4`, `[class.is-invalid]` + sibling `text-danger` message. i18n keys in all 7 files: `tanksComplex.eccr`, `eccrOptions.descentSetpoint` ("Descent setpoint"), `eccrOptions.bottomSetpoint` ("Bottom setpoint"), `eccrOptions.decoSetpoint` ("Deco setpoint"), `eccrOptions.setpointSwitchDepth` ("Setpoint switch depth"), `eccrOptions.descentAboveBottom` ("Descent setpoint can't be higher than bottom setpoint"), `eccrOptions.loopVolume`, `eccrOptions.metabolicO2`.
+- [x] Verification: `npm run test-ci`, lint. Commit `feat(planner): #26 eCCR tanks card and options component`.
 
 ##### Task 4.6: Docs, E2E and full verification
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `doc/rebreather.md` (eCCR section) and the help menu anchor (`help/help.component.ts`). The section covers: the three setpoints and the switch depth rule (descent SP shallower than the switch depth before the deepest point, bottom SP deeper, deco SP from the deepest point on, also for user levels); O2 used = metabolic O2 + 10 % loss; diluent and oxygen tanks as in mCCR; bailout as in mCCR; limits.
 - Create: `e2e/eccr.spec.ts` (page-object style of `e2e/mccr.spec.ts`)
 
 **Steps:**
-- [ ] E2E happy path (roadmap steps 1–5): complex view → `#circuitType` → `#circuitEccr` → tanks diluent 18/45, tank 2 O2, bailout 18/45, EAN50, O2 → `#rebreatherTab` → descent/bottom 1.1, deco 1.3 → depth 60 m → assert only the CCR oxygen tank consumed value (Consumed tab) and `#total-dive-time-value`, hardcoded from the Task 4.2 reference values.
-- [ ] Manual check (`npm start`): immediate update on each input; mobile layout; eCCR URL round-trip; an old mCCR URL still loads.
-- [ ] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commits `docs: #26 eCCR rebreather documentation` and `test(e2e): #26 eCCR happy path`.
+- [x] E2E happy path (roadmap steps 1–5): complex view → `#circuitType` → `#circuitEccr` → tanks diluent 18/45, tank 2 O2, bailout 18/45, EAN50, O2 → `#rebreatherTab` → descent/bottom 1.1, deco 1.3 → depth 60 m → assert only the CCR oxygen tank consumed value (Consumed tab) and `#total-dive-time-value`, hardcoded from the Task 4.2 reference values.
+- [x] Manual check (`npm start`): immediate update on each input; mobile layout; eCCR URL round-trip; an old mCCR URL still loads.
+- [x] Verification: `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint`, `npm run e2e`. Commits `docs: #26 eCCR rebreather documentation` and `test(e2e): #26 eCCR happy path`.
 
 ##### Stage 4 final review
-- [ ] Status
+- [x] Status
 
 ##### Stage 4 finish (issue #26 stays open)
 - [ ] Status

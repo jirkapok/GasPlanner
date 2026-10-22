@@ -47,6 +47,7 @@ import { TanksSimpleComponent } from './plan/tanks-simple/tanks-simple.component
 import { TanksComplexComponent } from './plan/tanks-complex/tanks-complex.component';
 import { PscrOptionsComponent } from './plan/pscr-options/pscr-options.component';
 import { MccrOptionsComponent } from './plan/mccr-options/mccr-options.component';
+import { EccrOptionsComponent } from './plan/eccr-options/eccr-options.component';
 import { DiverComponent } from './plan/diver/diver.component';
 import { DiveOptionsComponent } from './plan/diveoptions/diveoptions.component';
 import { DiveInfoComponent } from './plan/diveinfo/diveinfo.component';
@@ -140,6 +141,7 @@ const MDB_MODULES = [
 const STANDALONE = [
     PscrOptionsComponent,
     MccrOptionsComponent,
+    EccrOptionsComponent,
     AltitudeCalcComponent,
     DashboardComponent,
     DepthComponent,

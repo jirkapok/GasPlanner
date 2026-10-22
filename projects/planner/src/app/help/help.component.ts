@@ -52,6 +52,7 @@ export class HelpComponent implements OnInit {
                 { label: 'help.menu.plan.tanks', path: 'tanks' },
                 { label: 'help.menu.plan.rebreather', path: 'rebreather' },
                 { label: 'help.menu.plan.mccr', path: 'rebreather', anchor: 'mccr' },
+                { label: 'help.menu.plan.eccr', path: 'rebreather', anchor: 'eccr' },
                 { label: 'help.menu.plan.standardGases', path: 'standard_gases' },
                 { label: 'help.menu.plan.depths', path: 'depths' },
                 { label: 'help.menu.plan.surfaceInterval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }

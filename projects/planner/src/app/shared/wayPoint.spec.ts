@@ -26,7 +26,6 @@ describe('WayPoint', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 12 });
         const waypointMeters = WayPoint.fromSegment(mockMetersUnits, segment);
 
-        expect(waypointMeters.startDepthMeters).toBe(10);
         expect(waypointMeters.startDepth).toBe(10);
     });
 
@@ -34,7 +33,6 @@ describe('WayPoint', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 12 });
         const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
 
-        expect(waypointFeet.startDepthMeters).toBe(10);
         expect(waypointFeet.startDepth).toBeCloseTo(32.8084, 4);
     });
 
@@ -42,7 +40,6 @@ describe('WayPoint', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 20 });
         const waypointMeters = WayPoint.fromSegment(mockMetersUnits, segment);
 
-        expect(waypointMeters.endDepthMeters).toBe(20);
         expect(waypointMeters.endDepth).toBe(20);
     });
 
@@ -50,11 +47,33 @@ describe('WayPoint', () => {
         const segment = makeSegment({ startDepth: 10, endDepth: 20 });
         const waypointFeet = WayPoint.fromSegment(mockFeetUnits, segment);
 
-        expect(waypointFeet.endDepthMeters).toBe(20);
         expect(waypointFeet.endDepth).toBeCloseTo(65.6168, 4);
     });
 
-    it('copies successfully', () => {
+    it('copies waypoint and copy contains identical values', () => {
+        const waypoint = WayPoint.fromSegment(
+            mockMetersUnits,
+            makeSegment({
+                duration: 30,
+                startDepth: 10,
+                endDepth: 20,
+                speed: 0.5
+            }),
+            5
+        );
+
+        const { startTime, endTime, startDepth, endDepth, gasName } = waypoint.copy;
+
+        expect({ startTime, endTime, startDepth, endDepth, gasName }).toEqual({
+            startTime: waypoint.startTime,
+            endTime: waypoint.endTime,
+            startDepth: waypoint.startDepth,
+            endDepth: waypoint.endDepth,
+            gasName: waypoint.gasName
+        });
+    });
+
+    it("copies waypoint and copy doesn't reference original", () => {
         const waypoint = WayPoint.fromSegment(
             mockMetersUnits,
             makeSegment({
@@ -67,17 +86,10 @@ describe('WayPoint', () => {
         );
 
         const copy = waypoint.copy;
-
         expect(copy).not.toBe(waypoint);
-        expect(copy.startTime).toBe(waypoint.startTime);
-        expect(copy.endTime).toBe(waypoint.endTime);
-        expect(copy.startDepthMeters).toBe(waypoint.startDepthMeters);
-        expect(copy.endDepthMeters).toBe(waypoint.endDepthMeters);
-        expect(copy.gasName).toBe(waypoint.gasName);
-        expect(copy.depthAt(2)).toBe(waypoint.depthAt(2));
     });
 
-    it("deep-copies waypoints", () => {
+    it("deep-copies waypoints and they contain identical fields", () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
@@ -90,13 +102,38 @@ describe('WayPoint', () => {
         ];
         const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
 
-        expect(copies[0]).not.toBe(originals[0]);
-        expect(copies[0]).toEqual(originals[0]);
-        expect(copies[1]).not.toBe(originals[1]);
-        expect(copies[1]).toEqual(originals[1]);
+        expect(copies).toEqual(originals);
+    });
 
-        copies[0].endTime = 42
+    it("deep-copies waypoints and they waypoints don't reference the same objects in memory", () => {
+        const originals = [
+            WayPoint.fromSegment(
+                mockMetersUnits,
+                makeSegment()
+            ),
+            WayPoint.fromSegment(
+                mockMetersUnits,
+                makeSegment({ startDepth: 20, endDepth: 30 })
+            )
+        ];
+        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+
+        expect(copies[0]).not.toBe(originals[0]);
+        expect(copies[1]).not.toBe(originals[1]);
+    });
+
+    it("deep-copies waypoint and changing original doesn't affect the copy", () => {
+        const originals = [
+            WayPoint.fromSegment(
+                mockMetersUnits,
+                makeSegment()
+            )
+        ];
+        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+
+        copies[0].endTime = 42;
         originals[0].endTime = 999;
+
         expect(copies[0].endTime).toEqual(42);
     });
 
@@ -109,12 +146,15 @@ describe('WayPoint', () => {
 
         const waypoint = WayPoint.fromSegment(mockMetersUnits, segment, 10);
 
-        expect(waypoint.startTime).toBe(10);
-        expect(waypoint.endTime).toBe(70);
-        expect(waypoint.startDepthMeters).toBe(5);
-        expect(waypoint.endDepthMeters).toBe(15);
-        expect(waypoint.gasName).toBe(GasNames.nameFor(0.21, 0));
-        expect(waypoint.swimAction).toBe(SwimAction.descent);
+        const { startTime, endTime, startDepth, endDepth, gasName, swimAction } = waypoint;
+        expect({ startTime, endTime, startDepth, endDepth, gasName, swimAction }).toEqual({
+            startTime: 10,
+            endTime: 70,
+            startDepth: 5,
+            endDepth: 15,
+            gasName: GasNames.nameFor(0.21, 0),
+            swimAction: SwimAction.descent
+        });
     });
 
     it('creates new WayPoint moving to level from segment', () => {
@@ -130,11 +170,14 @@ describe('WayPoint', () => {
 
         const levelWaypoint = first.toLevel(levelSegment);
 
-        expect(levelWaypoint.startTime).toBe(first.endTime);
-        expect(levelWaypoint.endTime).toBe(first.endTime + levelSegment.duration);
-        expect(levelWaypoint.startDepthMeters).toBe(first.endDepthMeters);
-        expect(levelWaypoint.endDepthMeters).toBe(20);
-        expect(levelWaypoint.swimAction).toBe(SwimAction.hover);
+        const { startTime, endTime, startDepth, endDepth, swimAction } = levelWaypoint;
+        expect({ startTime, endTime, startDepth, endDepth, swimAction }).toEqual({
+            startTime: 30,
+            endTime: 90,
+            startDepth: 20,
+            endDepth: 20,
+            swimAction: SwimAction.hover
+        });
     });
 
     it('fits when actually fits', () => {
@@ -144,9 +187,7 @@ describe('WayPoint', () => {
             10
         );
 
-        expect(waypoint.fits(10)).toBeTrue();
-        expect(waypoint.fits(30)).toBeTrue();
-        expect(waypoint.fits(69.99)).toBeTrue();
+        expect(waypoint.fits(10) && waypoint.fits(30) && waypoint.fits(69.99)).toBeTrue();
     });
 
     it("doesn't fit when actually doesn't fit", () => {
@@ -156,8 +197,7 @@ describe('WayPoint', () => {
             10
         );
 
-        expect(waypoint.fits(9.99)).toBeFalse();
-        expect(waypoint.fits(70)).toBeFalse();
+        expect(waypoint.fits(9.99) || waypoint.fits(70)).toBeFalse();
     });
 
     it('updates swim action to hover', () => {

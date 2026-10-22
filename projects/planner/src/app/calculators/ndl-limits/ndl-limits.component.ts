@@ -114,7 +114,7 @@ export class NdlLimitsComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NdlViewState = this.viewStates.loadView(KnownViews.ndl);
+        let state = this.viewStates.loadView<NdlViewState>(KnownViews.ndl);
 
         if (!state) {
             state = this.createState();

@@ -45,12 +45,13 @@ export class ViewStates {
     }
 
     /**
-     * Returns view state only once, after first usage it returns null
      * @param id case sensitive id as view key
+     * @returns ViewState object identified by id,
+     * if there is no such state, returns undefined
      */
-    public get<TView extends ViewState>(id: string): TView | null {
+    public get<TView extends ViewState>(id: string): TView | undefined {
         const current = this.states.get(id);
-        return current as TView;
+        return current as TView | undefined;
     }
 
     public set<TView extends ViewState>(view: TView): void {

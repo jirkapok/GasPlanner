@@ -172,7 +172,7 @@ export class HelpComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: HelpViewState = this.viewStates.loadView(
+        let state = this.viewStates.loadView<HelpViewState>(
             KnownViews.help
         );
 

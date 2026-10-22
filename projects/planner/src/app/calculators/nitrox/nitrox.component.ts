@@ -121,7 +121,7 @@ export class NitroxComponent implements OnInit {
 
             this.updateCalc();
             this.saveState();
-        } catch (e) {
+        } catch {
             this.failingMod = true;
             this.nitroxForm.updateValueAndValidity();
         }
@@ -180,7 +180,7 @@ export class NitroxComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: NitroxViewState = this.viewStates.loadView(
+        let state = this.viewStates.loadView<NitroxViewState>(
             KnownViews.nitrox
         );
 

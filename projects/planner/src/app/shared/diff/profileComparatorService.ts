@@ -11,17 +11,19 @@ import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
 import { WayPoint } from '../wayPoint';
+import { type HeatMapOverPressures } from '../heatMapPlotter';
 
 export interface SaturationComparison {
-    profileAOverPressures: number[][];
-    profileBOverPressures: number[][];
+    profileAOverPressures: HeatMapOverPressures;
+    profileBOverPressures: HeatMapOverPressures;
 }
 
 @Injectable()
 export class ProfileComparatorService extends Streamed {
     private _profileAIndex = 0;
     private _profileBIndex = 0;
-    private _onSelectionChanged: Subject<void> = new Subject<void>();
+    private _alignByEnd = false;
+    private _onSelectionChanged = new Subject<void>();
     private _selectionChanged$: Observable<void>;
     private _wayPoints: ComparedWaypoint[] = [];
 
@@ -39,6 +41,9 @@ export class ProfileComparatorService extends Streamed {
         // In case dive removed
         this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.resetSelection());
+
+        this.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.updateWayPoints());
     }
 
     public get profileAIndex(): number {
@@ -61,6 +66,11 @@ export class ProfileComparatorService extends Streamed {
         return ConsumptionByMix.combine(this.profileA.tanksService.tankData);
     }
 
+    /** In seconds */
+    public get profileATimeOffset(): number {
+        return this.timeOffset(this.profileAResults);
+    }
+
     public get profileBIndex(): number {
         return this._profileBIndex;
     }
@@ -81,6 +91,12 @@ export class ProfileComparatorService extends Streamed {
         return ConsumptionByMix.combine(this.profileB.tanksService.tankData);
     }
 
+    /** In seconds */
+    public get profileBTimeOffset(): number {
+        return this.timeOffset(this.profileBResults);
+    }
+
+    /** Emits upon changed selection of profiles or other diff component options */
     public get selectionChanged$(): Observable<void> {
         return this._selectionChanged$;
     }
@@ -121,30 +137,45 @@ export class ProfileComparatorService extends Streamed {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
         const surfaceInterval = Math.abs(durationDiff);
 
-        // add to the shorter one and don't store it in the result, since it is used only for the diff
+        // Add to the shorter one and don't store it in the result, since it is used only for the diff
         if(durationDiff > 0) {
-            const surfaceIntervalOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
-            const profileBOverPressures = [...this.profileBResults.tissueOverPressures, ...surfaceIntervalOverPressures];
+            const profileBOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
             return {
                 profileAOverPressures: this.profileAResults.tissueOverPressures,
                 profileBOverPressures: profileBOverPressures
             };
         }
 
-        const surfaceIntervalOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
-        const profileAOverPressures = [...this.profileAResults.tissueOverPressures, ...surfaceIntervalOverPressures];
+        const profileAOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
         return {
             profileAOverPressures: profileAOverPressures,
             profileBOverPressures: this.profileBResults.tissueOverPressures
         };
     }
 
-    private get wayPointsA(): WayPoint[]{
-        return this.profileAResults.wayPoints;
+    public get alignByEnd(): boolean {
+        return this._alignByEnd;
     }
 
+    /** Deep-copied waypoints with offset applied */
+    private get wayPointsA(): WayPoint[]{
+        return WayPoint.shiftProfile(
+            this.profileAResults.wayPoints,
+            this.profileATimeOffset
+        );
+    }
+
+    /** Deep-copied waypoints with offset applied */
     private get wayPointsB(): WayPoint[]{
-        return this.profileBResults.wayPoints;
+        return WayPoint.shiftProfile(
+            this.profileBResults.wayPoints,
+            this.profileBTimeOffset
+        );
+    }
+
+    public set alignByEnd(value: boolean) {
+        this._alignByEnd = value;
+        this._onSelectionChanged.next();
     }
 
     public selectProfile(index: number): void {
@@ -154,7 +185,6 @@ export class ProfileComparatorService extends Streamed {
 
         this._profileAIndex = this._profileBIndex;
         this._profileBIndex = index;
-        this.updateWayPoints();
         this._onSelectionChanged.next();
     }
 
@@ -170,6 +200,15 @@ export class ProfileComparatorService extends Streamed {
         }
 
         this.updateWayPoints();
+    }
+
+    /** In seconds, offset aligning end of the given profile to end of the longer one */
+    private timeOffset(results: DiveResults): number {
+        if (!this.alignByEnd) {
+            return 0;
+        }
+
+        return this.totalDuration - results.totalDuration;
     }
 
     /** Waypoints need to be cached to preserve the selection */
@@ -189,7 +228,28 @@ export class ProfileComparatorService extends Streamed {
         }
     }
 
-    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
+    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
+        if (this.alignByEnd) {
+            const pressuresBeforeDive = this.applySurfaceIntervalBeforeDive(profile);
+            return [...pressuresBeforeDive, ...profile.diveResult.tissueOverPressures];
+        }
+
+        const surfacePressures = this.applySurfaceIntervalAfterDive(profile, surfaceInterval);
+        return [...profile.diveResult.tissueOverPressures, ...surfacePressures];
+    }
+
+    private applySurfaceIntervalBeforeDive(profile: DiveSchedule): HeatMapOverPressures {
+        const shorterLength = profile.diveResult.tissueOverPressures.length;
+        const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
+            ? this.profileBResults.tissueOverPressures.length
+            : this.profileAResults.tissueOverPressures.length;
+        return Array.from(
+            { length: longerLength - shorterLength },
+            () => new Array<null>(16).fill(null)
+        ) as HeatMapOverPressures;
+    }
+
+    private applySurfaceIntervalAfterDive(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
         const altitude = profile.optionsService.altitude;
         const tissues = profile.diveResult.finalTissues;
         const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);

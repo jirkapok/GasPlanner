@@ -124,7 +124,7 @@ export class AltitudeCalcComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: AltitudeViewState = this.viewStates.loadView(KnownViews.altitude);
+        let state = this.viewStates.loadView<AltitudeViewState>(KnownViews.altitude);
 
         if (!state) {
             state = this.createState();

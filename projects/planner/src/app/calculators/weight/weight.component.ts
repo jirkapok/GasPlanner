@@ -119,7 +119,7 @@ export class WeightCalcComponent implements OnInit {
     }
 
     private loadState(): void {
-        let state: WeightViewState = this.viewStates.loadView(KnownViews.weight);
+        let state = this.viewStates.loadView<WeightViewState>(KnownViews.weight);
 
         if (!state) {
             state = this.createState();

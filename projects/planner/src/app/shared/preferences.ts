@@ -52,7 +52,7 @@ export class Preferences {
 
         this.applyLoaded(loaded);
         this.viewStates.loadFrom(loaded.states);
-        const mainView: DashBoardViewState | null = this.viewStates.get(KnownViews.dashboard);
+        const mainView = this.viewStates.get<DashBoardViewState>(KnownViews.dashboard);
 
         if(mainView) {
             this.schedules.setSelectedIndex(mainView.selectedDiveIndex);

@@ -14,7 +14,7 @@ import { ViewSwitchService } from '../viewSwitchService';
 import { ApplicationSettingsService } from '../ApplicationSettings';
 import { WorkersFactoryCommon } from '../serial.workers.factory';
 
-describe('ProfileComparison service', () => {
+describe('ProfileComparatorService', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
@@ -186,5 +186,66 @@ describe('ProfileComparison service', () => {
         const lengthB = overPressures.profileAOverPressures.length;
         const lengthA = overPressures.profileBOverPressures.length;
         expect(lengthA).toEqual(lengthB);
+    });
+
+    describe('Offsets', () => {
+        const setDiveDurations = (durationA: number, durationB: number): void => {
+            schedules.add();
+            sut.selectProfile(1);
+
+            const units = TestBed.inject(UnitConversion);
+            schedules.dives[0].diveResult.updateProfile([
+                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationA))
+            ], irrelevantTissues, []);
+            schedules.dives[1].diveResult.updateProfile([
+                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
+            ], irrelevantTissues, []);
+        };
+
+        it('Returns correct offsets when alignByEnd is false on differing dives', () => {
+            setDiveDurations(500, 700);
+
+            expect(sut.profileATimeOffset).toEqual(0);
+            expect(sut.profileBTimeOffset).toEqual(0);
+        });
+
+        it('Returns correct offsets when A is shorter and alignByEnd is true', () => {
+            setDiveDurations(500, 700);
+
+            sut.alignByEnd = true;
+
+            expect(sut.profileATimeOffset).toEqual(200);
+            expect(sut.profileBTimeOffset).toEqual(0);
+        });
+
+        it('Returns correct offsets when B is shorter and alignByEnd is true', () => {
+            setDiveDurations(700, 500);
+
+            sut.alignByEnd = true;
+
+            expect(sut.profileATimeOffset).toEqual(0);
+            expect(sut.profileBTimeOffset).toEqual(200);
+        });
+
+        it('Returns correct offset after alignByEnd is toggled twice for differing dives', () => {
+            setDiveDurations(500, 700);
+
+            sut.alignByEnd = true;
+            expect(sut.profileATimeOffset).toEqual(200);
+            expect(sut.profileBTimeOffset).toEqual(0);
+
+            sut.alignByEnd = false;
+            expect(sut.profileATimeOffset).toEqual(0);
+            expect(sut.profileBTimeOffset).toEqual(0);
+        });
+    });
+
+    it('Emits on selectionChanged$ when alignByEnd is set', () => {
+        let emitted = false;
+        sut.selectionChanged$.subscribe(() => emitted = true);
+
+        sut.alignByEnd = true;
+
+        expect(emitted).toEqual(true);
     });
 });

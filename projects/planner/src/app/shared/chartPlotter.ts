@@ -21,11 +21,14 @@ export class ChartPlotterFactory {
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
+    /** in seconds */
+    private timeOffset: () => number;
 
     constructor(
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string = key => key) {
+        this.timeOffset = () => 0;
     }
 
     public createOptions(): Partial<Plotly.Config> {
@@ -91,6 +94,7 @@ export class ChartPlotterFactory {
         this.namePrefixKey = prefixKey;
         return this;
     }
+
     public wthAverageDepthColor(color: string): ChartPlotterFactory {
         this.averageDepthLineColor = color;
         return this;
@@ -116,42 +120,51 @@ export class ChartPlotterFactory {
         return this;
     }
 
+    /** Set time (x axis) offset in seconds */
+    public withTimeOffset(offsetFn: () => number): ChartPlotterFactory {
+        this.timeOffset = offsetFn;
+        return this;
+    }
+
     public create(dive: () => DiveResults): DiveTracesBuilder {
         return new DiveTracesBuilder(
             dive,
             this.resampling,
             this.units,
             this.translate,
+            this.timeOffset,
             this.namePrefixKey,
             this.averageDepthLineColor,
             this.depthLineColor,
             this.ceilingLineColor,
             this.eventLineColor,
-            this.eventFillColor
+            this.eventFillColor,
         );
     }
 }
 
 export class DiveTracesBuilder {
+    public showEmergencyAscent = false;
     private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
     private readonly depthLineColor: string = 'rgb(31, 119, 180)';
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
     private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
-    public showEmergencyAscent = false;
 
     constructor(
         private dive: () => DiveResults,
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string,
+        /** in seconds */
+        private timeOffset: () => number,
         namePrefixKey: string | null,
         averageDepthLineColor: string,
         depthLineColor: string,
         ceilingLineColor: string,
         eventLineColor: string,
-        eventFillColor: string
+        eventFillColor: string,
     ) {
         this.namePrefixKey = namePrefixKey;
         this.averageDepthLineColor = averageDepthLineColor;
@@ -192,7 +205,7 @@ export class DiveTracesBuilder {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(profile);
 
         return {
-            x: resampleAverageDepth.xValues,
+            x: this.applyTimeOffset(resampleAverageDepth.xValues),
             y: resampleAverageDepth.yValues,
             type: 'scatter',
             line: {
@@ -210,7 +223,7 @@ export class DiveTracesBuilder {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
         return {
-            x: resampled.xValues,
+            x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
             name: this.namePrefix + this.translate('profileChart.depthTraceName'),
@@ -225,7 +238,7 @@ export class DiveTracesBuilder {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
         return {
-            x: resampled.xValues,
+            x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
             name: this.namePrefix + this.translate('profileChart.emergencyTraceName'),
@@ -243,7 +256,7 @@ export class DiveTracesBuilder {
         const resampled = this.resampling.resampleCeilings(ceilings);
 
         const dataCeilings = {
-            x: resampled.xValues,
+            x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: <Plotly.PlotType>'scatter',
             fill: 'tozeroy',
@@ -261,7 +274,7 @@ export class DiveTracesBuilder {
         const resampled = this.resampling.convertEvents(events, totalDuration);
 
         const dataEvents = {
-            x: resampled.xValues,
+            x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             labels: resampled.labels,
             text: resampled.labels,
@@ -287,6 +300,13 @@ export class DiveTracesBuilder {
         };
 
         return <Partial<Plotly.PlotData>>dataEvents;
+    }
+
+    private applyTimeOffset(timestamps: Date[]): Date[] {
+        const millisecondsOffset = this.timeOffset() * 1000;
+        return timestamps.map(date =>
+            new Date(date.getTime() + millisecondsOffset)
+        );
     }
 }
 

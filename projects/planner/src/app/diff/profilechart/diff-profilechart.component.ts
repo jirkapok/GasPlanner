@@ -1,6 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { takeUntil } from 'rxjs';
+import { NgClass } from '@angular/common';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
+import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
 import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
@@ -11,10 +14,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { NgClass } from '@angular/common';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
-import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -25,8 +25,8 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
-    protected readonly heatmapIcon = faFire;
     public showHeatMap = true;
+    protected readonly heatmapIcon = faFire;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;
@@ -40,8 +40,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         private translate: TranslateService) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
         const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
+            .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -50,6 +51,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor('rgb(118,119,120)')
+            .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
@@ -57,6 +59,78 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
+        this.subscribeToObservables();
+    }
+
+    protected get profilesCalculated(): boolean {
+        return this.profileComparatorService.profilesCalculated;
+    }
+
+    protected get alignByEnd(): boolean {
+        return this.profileComparatorService.alignByEnd;
+    }
+
+    protected set alignByEnd(value: boolean) {
+        this.profileComparatorService.alignByEnd = value;
+    }
+
+    public ngOnInit(): void {
+        if (this.profilesCalculated) {
+            this.plotCharts();
+            this.hookChartEvents();
+        }
+    }
+
+    public plotlyHover(data: Plotly.PlotMouseEvent): void {
+        // first data is the dive profile chart, x value is the timestamp as string
+        const timeStampValue: string = data.points[0].x?.toString() ?? '';
+        this.selectedWaypoints.selectedTimeStamp = timeStampValue;
+    }
+
+    protected toggleHeatMap(): void {
+        this.showHeatMap = !this.showHeatMap;
+    }
+
+    protected toggleAlignByEnd(): void {
+        this.alignByEnd = !this.alignByEnd;
+    }
+
+    private plotlyHoverLeave() {
+        this.selectedWaypoints.selectedTimeStamp = '';
+        this.selectWayPoint(undefined);
+    }
+
+    private selectWayPoint(selected: ComparedWaypoint | undefined): void {
+        if (!selected) {
+            this.plotter.plotCursor(undefined);
+            return;
+        }
+
+        const wayPoint = selected.durationA
+            ? selected.wayPointA
+            : selected.wayPointB;
+
+        this.plotter.plotCursor(wayPoint);
+    }
+
+    private plotCharts(): void {
+        this.plotter.plotAllCharts();
+
+        if(this.showHeatMap) {
+            const overPressures = this.profileComparatorService.overPressures;
+            this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
+            this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
+        }
+    }
+
+    private hookChartEvents(): void {
+        const chartElement = document.getElementById(this.plotter.elementName) as Plotly.PlotlyHTMLElement;
+        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
+    }
+
+    private subscribeToObservables(): void {
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
@@ -83,59 +157,5 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                     this.plotCharts();
                 }
             });
-    }
-
-    public get profilesCalculated(): boolean {
-        return this.profileComparatorService.profilesCalculated;
-    }
-
-    public ngOnInit(): void {
-        if (this.profilesCalculated) {
-            this.plotCharts();
-            this.hookChartEvents();
-        }
-    }
-
-    public plotlyHover(data: Plotly.PlotMouseEvent): void {
-        // first data is the dive profile chart, x value is the timestamp as string
-        const timeStampValue: string = data.points[0].x?.toString() ?? '';
-        this.selectedWaypoints.selectedTimeStamp = timeStampValue;
-    }
-
-    public switchHeatMap(): void {
-        this.showHeatMap = !this.showHeatMap;
-    }
-
-    private plotlyHoverLeave() {
-        this.selectedWaypoints.selectedTimeStamp = '';
-        this.selectWayPoint(undefined);
-    }
-
-    private selectWayPoint(selected: ComparedWaypoint | undefined): void {
-        if (!selected) {
-            this.plotter.plotCursor(undefined);
-            return;
-        }
-
-        const wayPoint = selected.durationA ? selected.wayPointA : selected.wayPointB;
-        this.plotter.plotCursor(wayPoint);
-    }
-
-    private plotCharts(): void {
-        this.plotter.plotAllCharts();
-
-        if(this.showHeatMap) {
-            var overPressures = this.profileComparatorService.overPressures;
-            this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
-            this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
-        }
-    }
-
-    private hookChartEvents(): void {
-        // used any to prevent typescript type gymnastic
-        const chartElement: any = document.getElementById(this.plotter.elementName);
-        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 }

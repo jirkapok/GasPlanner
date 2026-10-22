@@ -1,6 +1,16 @@
 import * as Plotly from 'plotly.js-dist';
 import * as _ from 'lodash';
 
+/**
+ * Same as TissueOverPressures[], except all number
+ * fields are replaced with number | null
+ */
+export type HeatMapOverPressures =
+    [number | null, number | null, number | null, number | null,
+    number | null, number | null, number | null, number | null,
+    number | null, number | null, number | null, number | null,
+    number | null, number | null, number | null, number | null][];
+
 export class HeatMapPlotter {
     private readonly colorScale = [
         [0, 'rgb(31, 119, 180)'],
@@ -58,8 +68,8 @@ export class HeatMapPlotter {
      *  0: is equilibrium (tissue is not offgasing or ongasing).
      * +1: is 100% speed of ongasing.
      */
-    public plotHeatMap(dataValues: number[][]): void {
-        let transponed = _.zip.apply(_, dataValues) as number[][];
+    public plotHeatMap(dataValues: HeatMapOverPressures): void {
+        let transponed = _.zip(...dataValues) as number[][];
         transponed = transponed.reverse();
 
         const data: Plotly.Data[] = [
@@ -72,8 +82,8 @@ export class HeatMapPlotter {
             }
         ];
 
-        Plotly.newPlot(this.elementName, data, this.layout, this.config);
-        Plotly.relayout(this.elementName, this.layout);
+        void Plotly.newPlot(this.elementName, data, this.layout, this.config);
+        void Plotly.relayout(this.elementName, this.layout);
         // fixes initial sizing issues when the plot is hidden on init
         Plotly.Plots.resize(this.elementName);
     }

@@ -1,16 +1,24 @@
 <div class="card">
-    <div class="card-header">
+    <div class="card-header align-items-center">
         <div class="float-start">
             <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
             <span>{{ 'diffProfileChart.cardTitle' | translate }}</span>
         </div>
-        <div class="float-end me-1">
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
-                    data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="switchHeatMap()">
+
+        <div class="float-end d-flex align-items-center gap-2 me-1">
+            <div class="form-check form-switch">
+                <input type="checkbox" class="form-check-input" id="alignByEnd" [checked]="alignByEnd"
+                 (change)="toggleAlignByEnd()" mdbCheckbox data-testid="align-by-end-button" />
+                <label class="custom-control-label" for="alignByEnd">{{ 'diffProfileChart.alignByEnd' | translate }}</label>
+            </div>
+
+            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button" data-toggle="button"
+                [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="toggleHeatMap()" data-testid="heat-map-button">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>
     </div>
+
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
         <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{

@@ -59,7 +59,7 @@
     "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性"
   },
   "diffGasConsumed": { "cardTitle": "气体消耗", "difference": "差异", "gasRemaining": "剩余气体：", "notAvailable": "不可用", "reserve": "储备：" },
-  "diffProfileChart": { "cardTitle": "剖面图" },
+  "diffProfileChart": { "cardTitle": "剖面图", "alignByEnd": "按结束对齐" },
   "diffTabs": { "profileA": "剖面 A", "profileB": "剖面 B" },
   "diffWaypoints": { "cardTitle": "潜水航点", "profileA": "剖面 A", "profileB": "剖面 B", "run": "累计时间", "depth": "深度", "duration": "持续时间" },
   "common": { "back": "返回", "use": "使用" },

@@ -253,7 +253,7 @@ describe('GasBlenderComponent', () => {
 
             const views = TestBed.inject(SubViewStorage);
             const state = views.loadView<BlenderViewState>(KnownViews.blender);
-            expect(state.mode).toEqual(BlenderMode.identify);
+            expect(state?.mode).toEqual(BlenderMode.identify);
         });
     });
 });

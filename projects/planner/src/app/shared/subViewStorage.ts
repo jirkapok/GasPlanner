@@ -43,9 +43,8 @@ export class SubViewStorage {
         this.preferences.save();
     }
 
-    public loadView<TView extends ViewState>(viewId: string): TView {
-        const loaded = this.views.get<TView>(viewId);
-        return loaded as TView;
+    public loadView<TView extends ViewState>(viewId: string): TView | undefined {
+        return this.views.get<TView>(viewId);
     }
 
     public setSelectedDive(newIndex: number) {

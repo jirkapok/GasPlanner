@@ -93,6 +93,7 @@ export interface DiffViewState extends ViewState {
     profileA: number;
     // index
     profileB: number;
+    alignByEnd: boolean;
 }
 
 

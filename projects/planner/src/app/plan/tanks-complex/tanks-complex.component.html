@@ -8,6 +8,8 @@
         aria-expanded="false" mdbDropdownToggle>
         @if (isMccr) {
           {{ 'tanksComplex.mccr' | translate }}
+        } @else if (isEccr) {
+          {{ 'tanksComplex.eccr' | translate }}
         } @else if (isPscr) {
           {{ 'tanksComplex.pscr' | translate }}
         } @else {
@@ -18,6 +20,7 @@
         <li id="circuitOc" (click)="useOpenCircuit()"><a class="dropdown-item">{{ 'tanksComplex.openCircuit' | translate }}</a></li>
         <li id="circuitPscr" (click)="usePscr()"><a class="dropdown-item">{{ 'tanksComplex.pscr' | translate }}</a></li>
         <li id="circuitMccr" (click)="useMccr()"><a class="dropdown-item">{{ 'tanksComplex.mccr' | translate }}</a></li>
+        <li id="circuitEccr" (click)="useEccr()"><a class="dropdown-item">{{ 'tanksComplex.eccr' | translate }}</a></li>
       </ul>
     </div>
   </app-card-header>
@@ -271,8 +274,9 @@
 
   <!-- kept rendered, so its invalid values are shown also on the tanks tab -->
   <div class="card-body" [hidden]="!rebreatherTab">
-    <!-- both kept rendered, only the selected circuit options are shown -->
-    <app-pscr-options [rootForm]="rootForm" [hidden]="isMccr"></app-pscr-options>
+    <!-- all kept rendered, only the selected circuit options are shown -->
+    <app-pscr-options [rootForm]="rootForm" [hidden]="!isPscr"></app-pscr-options>
     <app-mccr-options [rootForm]="rootForm" [hidden]="!isMccr"></app-mccr-options>
+    <app-eccr-options [rootForm]="rootForm" [hidden]="!isEccr"></app-eccr-options>
   </div>
 </div>

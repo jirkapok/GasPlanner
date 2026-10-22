@@ -504,6 +504,7 @@
     "tanksTab": "Tanks",
     "rebreatherTab": "Rebreather",
     "mccr": "mCCR",
+    "eccr": "eCCR",
     "diluent": "Diluent",
     "oxygen": "Oxygen"
   },
@@ -514,6 +515,15 @@
   "mccrOptions": {
     "setpoint": "Target ppO2",
     "o2Flow": "O2 flow",
+    "loopVolume": "Loop volume",
+    "metabolicO2": "Metabolic O2"
+  },
+  "eccrOptions": {
+    "descentSetpoint": "Descent setpoint",
+    "bottomSetpoint": "Bottom setpoint",
+    "decoSetpoint": "Deco setpoint",
+    "setpointSwitchDepth": "Setpoint switch depth",
+    "descentAboveBottom": "Descent setpoint can't be higher than bottom setpoint",
     "loopVolume": "Loop volume",
     "metabolicO2": "Metabolic O2"
   },

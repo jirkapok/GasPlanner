@@ -163,9 +163,10 @@
   "surfaceInterval": { "label": "Oberflächenpause", "firstDive": "Erster Tauchgang", "thirtyMinutes": "30 Minuten", "oneHour": "1 Stunde", "twoHours": "2 Stunden", "invalidFormat": "Muss im Format hh:mm angegeben werden" },
   "tankChart": { "gasRemaining": "Verbleibendes Gas:", "rockBottom": "Rock Bottom:" },
   "gasChart": { "reserve": "Reserve:", "consumed": "Verbraucht:", "available": "Verfügbar:" },
-  "tanksComplex": { "cardTitle": "Flaschen", "size": "Größe", "workPressure": "Betriebsdr.", "pressure": "Druck", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck", "openCircuit": "Offenes System", "pscr": "pSCR", "tanksTab": "Flaschen", "rebreatherTab": "Kreislaufgerät", "mccr": "mCCR", "diluent": "Diluent", "oxygen": "Sauerstoff" },
+  "tanksComplex": { "cardTitle": "Flaschen", "size": "Größe", "workPressure": "Betriebsdr.", "pressure": "Druck", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck", "openCircuit": "Offenes System", "pscr": "pSCR", "tanksTab": "Flaschen", "rebreatherTab": "Kreislaufgerät", "mccr": "mCCR", "eccr": "eCCR", "diluent": "Diluent", "oxygen": "Sauerstoff" },
   "pscrOptions": { "injectionRatio": "Dosierverhältnis", "metabolicO2": "Stoffwechsel-O2" },
   "mccrOptions": { "setpoint": "Ziel-ppO2", "o2Flow": "O2-Fluss", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
+  "eccrOptions": { "descentSetpoint": "Abstiegs-Setpoint", "bottomSetpoint": "Grund-Setpoint", "decoSetpoint": "Deko-Setpoint", "setpointSwitchDepth": "Setpoint-Wechseltiefe", "descentAboveBottom": "Abstiegs-Setpoint darf nicht höher als der Grund-Setpoint sein", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
   "tanksSimple": { "cardTitle": "Grundgasflasche", "size": "Größe", "sac": "SAC:", "workingPressure": "Betriebsdruck", "startPressure": "Startdruck" },
   "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
   "learn": {

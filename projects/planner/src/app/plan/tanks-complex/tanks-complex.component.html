@@ -160,7 +160,7 @@
             <div class="col col-2 m-0 px-1" [class.col-4]="!units.imperialUnits">{{ 'tanksComplex.o2' | translate }} [%]</div>
             <div class="col col-2 m-0 px-1">{{ 'tanksComplex.he' | translate }} [%]</div>
             <div class="col col-1 m-0 px-1">
-              <button class="p-1 btn btn-secondary" type="button" (click)="addTank()">
+              <button id="addTank" class="p-1 btn btn-secondary" type="button" (click)="addTank()">
                 <fa-icon [icon]="plusIcon" class="fa-xl"></fa-icon>
               </button>
             </div>

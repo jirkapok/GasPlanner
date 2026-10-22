@@ -66,21 +66,8 @@ export class WayPoint {
         return this.action;
     }
 
-    public get copy(): WayPoint {
-        const copy =  new WayPoint(this.units, this.duration, this.endDepthMeters, this.startDepthMeters);
-        copy.startTime = this.startTime;
-        copy.endTime = this.endTime;
-        copy._gasName = this.gasName;
-        copy.speed = this.speed;
-        return copy;
-    }
-
-    public static deepCopyWayPoints(wayPoints: WayPoint[]): WayPoint[] {
-        const copies: WayPoint[] = [];
-        for (const wayPoint of wayPoints) {
-            copies.push(wayPoint.copy);
-        }
-        return copies;
+    public static shiftProfile(wayPoints: WayPoint[], offset: number): WayPoint[] {
+        return wayPoints.map(wayPoint => wayPoint.shift(offset));
     }
 
     public static fromSegment(units: UnitConversion, segment: Segment, startOffset: number = 0): WayPoint {
@@ -91,6 +78,15 @@ export class WayPoint {
         newWayPoint._gasName = gasName;
         newWayPoint.speed = segment.speed;
         return newWayPoint;
+    }
+
+    public shift(offset: number): WayPoint {
+        const copy =  new WayPoint(this.units, this.duration, this.endDepthMeters, this.startDepthMeters);
+        copy.startTime = this.startTime + offset;
+        copy.endTime = this.endTime + offset;
+        copy._gasName = this.gasName;
+        copy.speed = this.speed;
+        return copy;
     }
 
     public asGasSwitch(): void {

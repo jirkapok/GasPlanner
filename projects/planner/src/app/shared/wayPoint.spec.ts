@@ -50,7 +50,7 @@ describe('WayPoint', () => {
         expect(waypointFeet.endDepth).toBeCloseTo(65.6168, 4);
     });
 
-    it('copies waypoint and copy contains identical values', () => {
+    it('shifts waypoint times by offset and keeps other values', () => {
         const waypoint = WayPoint.fromSegment(
             mockMetersUnits,
             makeSegment({
@@ -62,34 +62,31 @@ describe('WayPoint', () => {
             5
         );
 
-        const { startTime, endTime, startDepth, endDepth, gasName } = waypoint.copy;
+        const { startTime, endTime, startDepth, endDepth, gasName } = waypoint.shift(100);
 
         expect({ startTime, endTime, startDepth, endDepth, gasName }).toEqual({
-            startTime: waypoint.startTime,
-            endTime: waypoint.endTime,
+            startTime: waypoint.startTime + 100,
+            endTime: waypoint.endTime + 100,
             startDepth: waypoint.startDepth,
             endDepth: waypoint.endDepth,
             gasName: waypoint.gasName
         });
     });
 
-    it('copies waypoint and copy does not reference original', () => {
-        const waypoint = WayPoint.fromSegment(
-            mockMetersUnits,
-            makeSegment({
-                duration: 30,
-                startDepth: 10,
-                endDepth: 20,
-                speed: 0.5
-            }),
-            5
-        );
+    it('shifts waypoint by zero offset to identical copy', () => {
+        const waypoint = WayPoint.fromSegment(mockMetersUnits, makeSegment(), 5);
 
-        const copy = waypoint.copy;
-        expect(copy).not.toBe(waypoint);
+        expect(waypoint.shift(0)).toEqual(waypoint);
     });
 
-    it('deep-copies waypoints and they contain identical fields', () => {
+    it('shifted waypoint does not reference original', () => {
+        const waypoint = WayPoint.fromSegment(mockMetersUnits, makeSegment(), 5);
+
+        const shifted = waypoint.shift(0);
+        expect(shifted).not.toBe(waypoint);
+    });
+
+    it('shifts all waypoints of profile by offset', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
@@ -97,15 +94,16 @@ describe('WayPoint', () => {
             ),
             WayPoint.fromSegment(
                 mockFeetUnits,
-                makeSegment({ startDepth: 20, endDepth: 30 })
+                makeSegment({ startDepth: 20, endDepth: 30 }),
+                60
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals);
+        const shifted = WayPoint.shiftProfile(originals, 200);
 
-        expect(copies).toEqual(originals);
+        expect(shifted.map(w => [w.startTime, w.endTime])).toEqual([[200, 260], [260, 320]]);
     });
 
-    it('deep-copies waypoints and they waypoints do not reference the same objects in memory', () => {
+    it('shifted profile does not reference the original waypoints', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
@@ -116,25 +114,25 @@ describe('WayPoint', () => {
                 makeSegment({ startDepth: 20, endDepth: 30 })
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals);
+        const shifted = WayPoint.shiftProfile(originals, 0);
 
-        expect(copies[0]).not.toBe(originals[0]);
-        expect(copies[1]).not.toBe(originals[1]);
+        expect(shifted[0]).not.toBe(originals[0]);
+        expect(shifted[1]).not.toBe(originals[1]);
     });
 
-    it('deep-copies waypoint and changing original does not affect the copy', () => {
+    it('changing original does not affect the shifted profile', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
                 makeSegment()
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals);
+        const shifted = WayPoint.shiftProfile(originals, 0);
 
-        copies[0].endTime = 42;
+        shifted[0].endTime = 42;
         originals[0].endTime = 999;
 
-        expect(copies[0].endTime).toEqual(42);
+        expect(shifted[0].endTime).toEqual(42);
     });
 
     it('creates new WayPoint from segment', () => {

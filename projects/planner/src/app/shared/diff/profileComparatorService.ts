@@ -235,10 +235,7 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffContext(
-            [...this.profileAResults.wayPoints], [...this.profileBResults.wayPoints],
-            [...this.wayPointsA], [...this.wayPointsB]
-        );
+        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
 
         while(context.hasNext) {
             const row = context.toRow();
@@ -285,14 +282,7 @@ class WaypointsDiffContext {
     private _endTimeA = this.defaultTime;
     private _endTimeB = this.defaultTime;
 
-    // Calculate runtime from original WayPoints then set
-    // pointers to calculated WayPoints (ones with time offsets)
-    constructor(
-        private originalWaypointsA: WayPoint[],
-        private originalWaypointsB: WayPoint[],
-        private calculatedWaypointsA: WayPoint[],
-        private calculatedWaypointsB: WayPoint[]
-    ) {
+    constructor(private wayPointsA: WayPoint[], private wayPointsB: WayPoint[]) {
         this.updateA();
         this.updateB();
     }
@@ -336,17 +326,12 @@ class WaypointsDiffContext {
     }
 
     private updateA(): void {
-        this.waypointA = this.calculatedWaypointsA.pop();
-
-        const waypoint = this.originalWaypointsA.pop();
-        this._endTimeA = waypoint?.endTime ?? this.defaultTime;
-
+        this.waypointA = this.wayPointsA.pop();
+        this._endTimeA = this.waypointA?.endTime ?? this.defaultTime;
     }
 
     private updateB(): void {
-        this.waypointB = this.calculatedWaypointsB.pop();
-
-        const waypoint = this.originalWaypointsB.pop();
-        this._endTimeB = waypoint?.endTime ?? this.defaultTime;
+        this.waypointB = this.wayPointsB.pop();
+        this._endTimeB = this.waypointB?.endTime ?? this.defaultTime;
     }
 }

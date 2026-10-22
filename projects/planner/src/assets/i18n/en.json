@@ -84,6 +84,7 @@
         "tanks": "Tanks",
         "rebreather": "Rebreather",
         "mccr": "mCCR",
+        "eccr": "eCCR",
         "standardGases": "Standard gases",
         "depths": "Depths",
         "surfaceInterval": "Surface interval"

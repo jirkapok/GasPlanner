@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
 import { ProfileDifferenceChartComponent } from './diff-profilechart.component';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
@@ -13,11 +14,11 @@ export class ProfileDifferenceChartPage {
     constructor(private fixture: ComponentFixture<ProfileDifferenceChartComponent>) { }
 
     public get heatMapButton(): HTMLButtonElement {
-        return this.fixture.nativeElement.querySelector('[data-testid="heat-map-button"]') as HTMLButtonElement;
+        return this.fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
     }
 
     public get alignByEndButton(): HTMLInputElement {
-        return this.fixture.nativeElement.querySelector('[data-testid="align-by-end-button"]') as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('[data-testid="align-by-end-button"]')).nativeElement as HTMLInputElement;
     }
 }
 

@@ -72,8 +72,8 @@ describe('DiffComponent', () => {
         expect(stateAfterInit).toEqual(defaultState);
     });
 
-    it("doesn't modify diff state", () => {
-        const customState = {...defaultState, alignByEnd: true };
+    it('does not modify diff state', () => {
+        const customState = { ...defaultState, alignByEnd: true };
         states.saveView(customState);
         fixture.detectChanges();
 

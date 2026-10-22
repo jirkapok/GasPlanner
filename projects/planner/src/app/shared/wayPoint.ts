@@ -76,7 +76,7 @@ export class WayPoint {
     }
 
     public static deepCopyWayPoints(wayPoints: WayPoint[]): WayPoint[] {
-        let copies = [];
+        const copies: WayPoint[] = [];
         for (const wayPoint of wayPoints) {
             copies.push(wayPoint.copy);
         }

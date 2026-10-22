@@ -25,8 +25,8 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
-    protected readonly heatmapIcon = faFire;
     public showHeatMap = true;
+    protected readonly heatmapIcon = faFire;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;
@@ -40,7 +40,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         private translate: TranslateService) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
         const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
             .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
             .create(() => this.profileComparatorService.profileAResults);
@@ -117,15 +117,14 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotAllCharts();
 
         if(this.showHeatMap) {
-            var overPressures = this.profileComparatorService.overPressures;
+            const overPressures = this.profileComparatorService.overPressures;
             this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
             this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
         }
     }
 
     private hookChartEvents(): void {
-        // used any to prevent typescript type gymnastic
-        const chartElement: any = document.getElementById(this.plotter.elementName);
+        const chartElement = document.getElementById(this.plotter.elementName) as Plotly.PlotlyHTMLElement;
         chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
         chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
         chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());

@@ -1,4 +1,5 @@
-import { HeatMapOverPressures, HeatMapPlotter } from "./heatMapPlotter";
+import * as Plotly from 'plotly.js-dist';
+import { HeatMapOverPressures, HeatMapPlotter } from './heatMapPlotter';
 
 describe('HeatMapPlotter', () => {
     it('creates', () => {
@@ -27,12 +28,13 @@ describe('HeatMapPlotter', () => {
         try {
             new HeatMapPlotter(id).plotHeatMap(input);
 
-            expect((graphDiv as any).data[0].type).toBe('heatmap');
-            expect((graphDiv as any).data[0].z).toEqual(expectedZ);
+            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.PlotData>;
+            expect(plotted.type).toBe('heatmap');
+            expect(plotted.z).toEqual(expectedZ);
             expect(graphDiv.querySelector('svg.main-svg')).not.toBeNull();
         } finally {
             // Causes error when uncommented
-            //Plotly.purge(graphDiv);
+            // Plotly.purge(graphDiv);
             graphDiv.remove();
         }
     });

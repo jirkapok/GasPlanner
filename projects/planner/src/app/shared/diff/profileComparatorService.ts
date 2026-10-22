@@ -153,12 +153,16 @@ export class ProfileComparatorService extends Streamed {
         };
     }
 
+    public get alignByEnd(): boolean {
+        return this._alignByEnd;
+    }
+
     /** Deep-copied waypoints with offset applied */
     private get wayPointsA(): WayPoint[]{
         return this.deepCopyWayPointsWithOffset(
             this.profileAResults.wayPoints,
             this.profileATimeOffset
-        )
+        );
     }
 
     /** Deep-copied waypoints with offset applied */
@@ -166,11 +170,7 @@ export class ProfileComparatorService extends Streamed {
         return this.deepCopyWayPointsWithOffset(
             this.profileBResults.wayPoints,
             this.profileBTimeOffset
-        )
-    }
-
-    public get alignByEnd(): boolean {
-        return this._alignByEnd;
+        );
     }
 
     public set alignByEnd(value: boolean) {
@@ -241,8 +241,8 @@ export class ProfileComparatorService extends Streamed {
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
         if (this.alignByEnd) {
-            const surfacePressures = this.applySurfaceIntervalBeforeDive(profile);
-            return [...surfacePressures, ...profile.diveResult.tissueOverPressures];
+            const pressuresBeforeDive = this.applySurfaceIntervalBeforeDive(profile);
+            return [...pressuresBeforeDive, ...profile.diveResult.tissueOverPressures];
         }
 
         const surfacePressures = this.applySurfaceIntervalAfterDive(profile, surfaceInterval);
@@ -256,7 +256,7 @@ export class ProfileComparatorService extends Streamed {
             : this.profileAResults.tissueOverPressures.length;
         return Array.from(
             { length: longerLength - shorterLength },
-            () => Array(16).fill(null)
+            () => new Array<null>(16).fill(null)
         ) as HeatMapOverPressures;
     }
 

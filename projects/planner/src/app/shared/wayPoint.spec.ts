@@ -73,7 +73,7 @@ describe('WayPoint', () => {
         });
     });
 
-    it("copies waypoint and copy doesn't reference original", () => {
+    it('copies waypoint and copy does not reference original', () => {
         const waypoint = WayPoint.fromSegment(
             mockMetersUnits,
             makeSegment({
@@ -89,7 +89,7 @@ describe('WayPoint', () => {
         expect(copy).not.toBe(waypoint);
     });
 
-    it("deep-copies waypoints and they contain identical fields", () => {
+    it('deep-copies waypoints and they contain identical fields', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
@@ -100,12 +100,12 @@ describe('WayPoint', () => {
                 makeSegment({ startDepth: 20, endDepth: 30 })
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+        const copies = WayPoint.deepCopyWayPoints(originals);
 
         expect(copies).toEqual(originals);
     });
 
-    it("deep-copies waypoints and they waypoints don't reference the same objects in memory", () => {
+    it('deep-copies waypoints and they waypoints do not reference the same objects in memory', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
@@ -116,20 +116,20 @@ describe('WayPoint', () => {
                 makeSegment({ startDepth: 20, endDepth: 30 })
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+        const copies = WayPoint.deepCopyWayPoints(originals);
 
         expect(copies[0]).not.toBe(originals[0]);
         expect(copies[1]).not.toBe(originals[1]);
     });
 
-    it("deep-copies waypoint and changing original doesn't affect the copy", () => {
+    it('deep-copies waypoint and changing original does not affect the copy', () => {
         const originals = [
             WayPoint.fromSegment(
                 mockMetersUnits,
                 makeSegment()
             )
         ];
-        const copies = WayPoint.deepCopyWayPoints(originals) as WayPoint[];
+        const copies = WayPoint.deepCopyWayPoints(originals);
 
         copies[0].endTime = 42;
         originals[0].endTime = 999;
@@ -190,7 +190,7 @@ describe('WayPoint', () => {
         expect(waypoint.fits(10) && waypoint.fits(30) && waypoint.fits(69.99)).toBeTrue();
     });
 
-    it("doesn't fit when actually doesn't fit", () => {
+    it('does not fit when actually does not fit', () => {
         const waypoint = WayPoint.fromSegment(
             mockMetersUnits,
             makeSegment({ duration: 60 }),

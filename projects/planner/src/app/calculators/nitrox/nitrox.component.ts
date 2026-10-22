@@ -121,7 +121,7 @@ export class NitroxComponent implements OnInit {
 
             this.updateCalc();
             this.saveState();
-        } catch (e) {
+        } catch {
             this.failingMod = true;
             this.nitroxForm.updateValueAndValidity();
         }

@@ -21,12 +21,14 @@ export class ChartPlotterFactory {
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
-    private timeOffset = () => 0;
+    /** in seconds */
+    private timeOffset: () => number;
 
     constructor(
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string = key => key) {
+        this.timeOffset = () => 0;
     }
 
     public createOptions(): Partial<Plotly.Config> {
@@ -142,13 +144,13 @@ export class ChartPlotterFactory {
 }
 
 export class DiveTracesBuilder {
+    public showEmergencyAscent = false;
     private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
     private readonly depthLineColor: string = 'rgb(31, 119, 180)';
     private readonly ceilingLineColor: string = 'rgb(255, 160, 73)';
     private readonly eventLineColor: string = 'rgba(31, 119, 180, 0.7)';
     private readonly eventFillColor: string = 'rgba(31, 119, 180, 0.5)';
-    public showEmergencyAscent = false;
 
     constructor(
         private dive: () => DiveResults,

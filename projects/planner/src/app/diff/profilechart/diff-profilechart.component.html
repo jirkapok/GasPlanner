@@ -7,10 +7,9 @@
 
         <div class="float-end d-flex align-items-center gap-2 me-1">
             <div class="form-check form-switch">
-                <input type="checkbox" class="form-check-input" id="isComplex" [checked]="alignByEnd"
+                <input type="checkbox" class="form-check-input" id="alignByEnd" [checked]="alignByEnd"
                  (change)="toggleAlignByEnd()" mdbCheckbox data-testid="align-by-end-button" />
-                <!-- Translate button text (and remove this comment) -->
-                <label class="custom-control-label" for="isComplex">{{ 'Align dives by their ends' }}</label>
+                <label class="custom-control-label" for="alignByEnd">{{ 'diffProfileChart.alignByEnd' | translate }}</label>
             </div>
 
             <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button" data-toggle="button"

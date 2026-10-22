@@ -59,7 +59,7 @@
     "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS"
   },
   "diffGasConsumed": { "cardTitle": "Расход газа", "difference": "Разница", "gasRemaining": "Остаток газа:", "notAvailable": "Недоступно", "reserve": "Резерв:" },
-  "diffProfileChart": { "cardTitle": "График профиля" },
+  "diffProfileChart": { "cardTitle": "График профиля", "alignByEnd": "Выровнять по окончанию" },
   "diffTabs": { "profileA": "ПРОФИЛЬ A", "profileB": "ПРОФИЛЬ B" },
   "diffWaypoints": { "cardTitle": "Точки погружения", "profileA": "Профиль A", "profileB": "Профиль B", "run": "Время", "depth": "Глубина", "duration": "Длительность" },
   "common": { "back": "Назад", "use": "Использовать" },

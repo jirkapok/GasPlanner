@@ -155,6 +155,7 @@ export class DiveTracesBuilder {
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string,
+        /** in seconds */
         private timeOffset: () => number,
         namePrefixKey: string | null,
         averageDepthLineColor: string,
@@ -300,8 +301,9 @@ export class DiveTracesBuilder {
     }
 
     private applyTimeOffset(timestamps: Date[]): Date[] {
+        const millisecondsOffset = this.timeOffset() * 1000;
         return timestamps.map(date =>
-            new Date(date.getTime() + this.timeOffset() * 1000) // Convert seconds to ms
+            new Date(date.getTime() + millisecondsOffset)
         );
     }
 }

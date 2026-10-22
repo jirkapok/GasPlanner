@@ -68,14 +68,7 @@ export class ProfileComparatorService extends Streamed {
 
     /** In seconds */
     public get profileATimeOffset(): number {
-        if (!this.alignByEnd) {
-            return 0;
-        }
-
-        const totalDuration = this.totalDuration;
-        const durationA = this.profileAResults.totalDuration;
-
-        return totalDuration - durationA;
+        return this.timeOffset(this.profileAResults);
     }
 
     public get profileBIndex(): number {
@@ -100,14 +93,7 @@ export class ProfileComparatorService extends Streamed {
 
     /** In seconds */
     public get profileBTimeOffset(): number {
-        if (!this.alignByEnd) {
-            return 0;
-        }
-
-        const totalDuration = this.totalDuration;
-        const durationB = this.profileBResults.totalDuration;
-
-        return totalDuration - durationB;
+        return this.timeOffset(this.profileBResults);
     }
 
     /** Emits upon changed selection of profiles or other diff component options */
@@ -214,6 +200,15 @@ export class ProfileComparatorService extends Streamed {
         }
 
         this.updateWayPoints();
+    }
+
+    /** In seconds, offset aligning end of the given profile to end of the longer one */
+    private timeOffset(results: DiveResults): number {
+        if (!this.alignByEnd) {
+            return 0;
+        }
+
+        return this.totalDuration - results.totalDuration;
     }
 
     private deepCopyWayPointsWithOffset(originalWayPoints: WayPoint[], offset: number): WayPoint[] {

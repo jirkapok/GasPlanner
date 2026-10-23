@@ -145,8 +145,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.plotCharts();
-                    this.plotlyHoverLeave();
+                    // Hack to prevent HeatMapPlotter from accessing hidden div
+                    setTimeout(() => {
+                        this.plotCharts();
+                        this.plotlyHoverLeave();
+                    });
                 }
             });
 

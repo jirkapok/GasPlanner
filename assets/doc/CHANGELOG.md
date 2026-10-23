@@ -1,3 +1,11 @@
+## [0.16.1](https://github.com/jirkapok/GasPlanner/compare/v0.16.0...v0.16.1) (2026-10-23)
+
+
+### Bug Fixes
+
+* dashboard heat map not drawn after switching it on ([4d218b2](https://github.com/jirkapok/GasPlanner/commit/4d218b271ecbd5b5b901ba15855e754580b59aea))
+* Fixed error while rendering heatmap in Diff page ([83ce9d7](https://github.com/jirkapok/GasPlanner/commit/83ce9d7637c5ea1a70b82391cd87b6e3b13e38bc))
+
 # [0.16.0](https://github.com/jirkapok/GasPlanner/compare/v0.15.0...v0.16.0) (2026-10-23)
 
 

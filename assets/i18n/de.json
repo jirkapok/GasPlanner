@@ -59,7 +59,7 @@
     "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität"
   },
   "diffGasConsumed": { "cardTitle": "Gasverbrauch", "difference": "Differenz", "gasRemaining": "Verbleibendes Gas:", "notAvailable": "Nicht verfügbar", "reserve": "Reserve:" },
-  "diffProfileChart": { "cardTitle": "Profildiagramm" },
+  "diffProfileChart": { "cardTitle": "Profildiagramm", "alignByEnd": "Am Ende ausrichten" },
   "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
   "diffWaypoints": { "cardTitle": "Tauchgang-Wegpunkte", "profileA": "Profil A", "profileB": "Profil B", "run": "Laufzeit", "depth": "Tiefe", "duration": "Dauer" },
   "common": { "back": "Zurück", "use": "Verwenden" },

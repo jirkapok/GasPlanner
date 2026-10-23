@@ -59,7 +59,7 @@
     "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS"
   },
   "diffGasConsumed": { "cardTitle": "Spotřeba plynu", "difference": "Rozdíl", "gasRemaining": "Zbývající plyn:", "notAvailable": "Není k dispozici", "reserve": "Rezerva:" },
-  "diffProfileChart": { "cardTitle": "Graf profilu" },
+  "diffProfileChart": { "cardTitle": "Graf profilu", "alignByEnd": "Zarovnat podle konce" },
   "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
   "diffWaypoints": { "cardTitle": "Body ponoru", "profileA": "Profil A", "profileB": "Profil B", "run": "Run", "depth": "Hloubka", "duration": "Doba" },
   "common": { "back": "Zpět", "use": "Použít" },

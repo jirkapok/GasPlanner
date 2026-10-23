@@ -1,3 +1,10 @@
+# [0.16.0](https://github.com/jirkapok/GasPlanner/compare/v0.15.0...v0.16.0) (2026-10-23)
+
+
+### Features
+
+* [#114](https://github.com/jirkapok/GasPlanner/issues/114) Compare dives by end of profile ([#122](https://github.com/jirkapok/GasPlanner/issues/122)) ([4500403](https://github.com/jirkapok/GasPlanner/commit/45004037454d9e418b25103c437695393f5279be))
+
 # [0.15.0](https://github.com/jirkapok/GasPlanner/compare/v0.14.0...v0.15.0) (2026-10-20)
 
 

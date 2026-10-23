@@ -59,7 +59,7 @@
     "otuToxicity": "Toxicité OTU", "cnsToxicity": "Toxicité CNS"
   },
   "diffGasConsumed": { "cardTitle": "Gaz consommé", "difference": "Différence", "gasRemaining": "Gaz restant :", "notAvailable": "Non disponible", "reserve": "Réserve :" },
-  "diffProfileChart": { "cardTitle": "Graphique du profil" },
+  "diffProfileChart": { "cardTitle": "Graphique du profil", "alignByEnd": "Aligner sur la fin" },
   "diffTabs": { "profileA": "PROFIL A", "profileB": "PROFIL B" },
   "diffWaypoints": { "cardTitle": "Points de passage de la plongée", "profileA": "Profil A", "profileB": "Profil B", "run": "Cumul", "depth": "Profondeur", "duration": "Durée" },
   "common": { "back": "Retour", "use": "Utiliser" },

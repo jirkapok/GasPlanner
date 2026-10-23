@@ -196,7 +196,8 @@
     "reserve": "Reserve:"
   },
   "diffProfileChart": {
-    "cardTitle": "Profile chart"
+    "cardTitle": "Profile chart",
+    "alignByEnd": "Align by end"
   },
   "diffTabs": {
     "profileA": "PROFILE A",

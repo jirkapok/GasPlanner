@@ -9,6 +9,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { ProfileTissues } from 'scuba-physics';
 
 export class ProfileDifferenceChartPage {
     constructor(private fixture: ComponentFixture<ProfileDifferenceChartComponent>) { }
@@ -70,5 +71,34 @@ describe('ProfileDifferenceChartComponent', () => {
 
         const valueAfter = diff.alignByEnd;
         expect(valueAfter).not.toEqual(valueBefore);
+    });
+
+    it('plots heat maps when profiles are calculated after the view was rendered', async () => {
+        const diff = TestBed.inject(ProfileComparatorService);
+        const dispatcher = TestBed.inject(ReloadDispatcher);
+        diff.profileAResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        diff.profileBResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+
+        dispatcher.sendWayPointsCalculated();
+        // lets Plotly promises settle, so an unhandled rejection fails this spec
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const heatMap = fixture.debugElement.query(By.css('#heatmapPlotA')).nativeElement as HTMLElement;
+        expect(heatMap.classList).toContain('plot-display');
+        expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
+    });
+
+    it('plots heat maps when heat map is switched on', async () => {
+        const diff = TestBed.inject(ProfileComparatorService);
+        diff.profileAResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        diff.profileBResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+
+        page.heatMapButton.click();
+        page.heatMapButton.click();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const heatMap = fixture.debugElement.query(By.css('#heatmapPlotB')).nativeElement as HTMLElement;
+        expect(component.showHeatMap).toBeTrue();
+        expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
     });
 });

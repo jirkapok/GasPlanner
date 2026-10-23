@@ -7,7 +7,7 @@ describe('HeatMapPlotter', () => {
         expect(sut).toBeTruthy();
     });
 
-    it('plots the heat map', () => {
+    it('plots the heat map', async () => {
         const id = 'heatmap-dom-test';
         const graphDiv = document.createElement('div');
         graphDiv.id = id;
@@ -26,7 +26,7 @@ describe('HeatMapPlotter', () => {
         ).reverse();
 
         try {
-            new HeatMapPlotter(id).plotHeatMap(input);
+            await new HeatMapPlotter(id).plotHeatMap(input);
 
             const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.PlotData>;
             expect(plotted.type).toBe('heatmap');
@@ -35,6 +35,44 @@ describe('HeatMapPlotter', () => {
         } finally {
             // Causes error when uncommented
             // Plotly.purge(graphDiv);
+            graphDiv.remove();
+        }
+    });
+
+    it('resolves after the heat map is sized to its element', async () => {
+        const id = 'heatmap-resolve-test';
+        const graphDiv = document.createElement('div');
+        graphDiv.id = id;
+        graphDiv.style.width = '600px';
+        graphDiv.style.height = '50px';
+        document.body.appendChild(graphDiv);
+
+        try {
+            await expectAsync(new HeatMapPlotter(id).plotHeatMap([])).toBeResolved();
+
+            const layout = (graphDiv as unknown as { _fullLayout: Plotly.Layout })._fullLayout;
+            expect(layout.width).toBe(600);
+        } finally {
+            graphDiv.remove();
+        }
+    });
+
+    it('plots into hidden element without error', async () => {
+        const id = 'heatmap-hidden-test';
+        const graphDiv = document.createElement('div');
+        graphDiv.id = id;
+        graphDiv.style.display = 'none';
+        document.body.appendChild(graphDiv);
+        // zone.js reports unhandled promise rejections to the console
+        const consoleError = spyOn(console, 'error');
+
+        try {
+            await new HeatMapPlotter(id).plotHeatMap([]);
+
+            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.PlotData>;
+            expect(plotted.type).toBe('heatmap');
+            expect(consoleError).not.toHaveBeenCalled();
+        } finally {
             graphDiv.remove();
         }
     });

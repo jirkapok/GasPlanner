@@ -68,7 +68,7 @@ export class HeatMapPlotter {
      *  0: is equilibrium (tissue is not offgasing or ongasing).
      * +1: is 100% speed of ongasing.
      */
-    public plotHeatMap(dataValues: HeatMapOverPressures): void {
+    public async plotHeatMap(dataValues: HeatMapOverPressures): Promise<void> {
         let transponed = _.zip(...dataValues) as number[][];
         transponed = transponed.reverse();
 
@@ -82,9 +82,14 @@ export class HeatMapPlotter {
             }
         ];
 
-        void Plotly.newPlot(this.elementName, data, this.layout, this.config);
-        void Plotly.relayout(this.elementName, this.layout);
-        // fixes initial sizing issues when the plot is hidden on init
-        Plotly.Plots.resize(this.elementName);
+        await Plotly.newPlot(this.elementName, data, this.layout, this.config);
+        await Plotly.relayout(this.elementName, this.layout);
+        // fixes initial sizing issues when the plot is hidden on init,
+        // but Plotly can resize only displayed elements
+        const element = document.getElementById(this.elementName);
+        if (element?.offsetParent) {
+            // typings declare void, but Plotly returns a promise resolved after the delayed redraw
+            await (Plotly.Plots.resize(element) as unknown as Promise<void>);
+        }
     }
 }

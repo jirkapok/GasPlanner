@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -37,7 +37,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         private selectedWaypoints: SelectedDiffWaypoint,
         private profileComparatorService: ProfileComparatorService,
         private reloadDispatcher: ReloadDispatcher,
-        private translate: TranslateService) {
+        private translate: TranslateService,
+        private cd: ChangeDetectorRef) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
@@ -89,6 +90,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     protected toggleHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
+
+        if (this.profilesCalculated) {
+            this.redrawCharts();
+        }
     }
 
     protected toggleAlignByEnd(): void {
@@ -113,13 +118,19 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotCursor(wayPoint);
     }
 
+    /** Applies pending template changes first, because Plotly can't size hidden plot elements */
+    private redrawCharts(): void {
+        this.cd.detectChanges();
+        this.plotCharts();
+    }
+
     private plotCharts(): void {
         this.plotter.plotAllCharts();
 
         if(this.showHeatMap) {
             const overPressures = this.profileComparatorService.overPressures;
-            this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
-            this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
+            void this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
+            void this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
         }
     }
 
@@ -134,7 +145,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.plotCharts();
+                    this.redrawCharts();
                 }
             });
 
@@ -146,7 +157,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.plotCharts();
+                    this.redrawCharts();
                     this.plotlyHoverLeave();
                 }
             });
@@ -154,7 +165,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
-                    this.plotCharts();
+                    this.redrawCharts();
                 }
             });
     }

@@ -137,7 +137,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {
         if (this.showHeatMap) {
-            this.heatmapPlotter.plotHeatMap(tissueOverPressures);
+            void this.heatmapPlotter.plotHeatMap(tissueOverPressures);
         }
     }
 

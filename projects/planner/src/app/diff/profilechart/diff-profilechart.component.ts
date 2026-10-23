@@ -1,5 +1,4 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { NgClass } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
@@ -21,7 +20,7 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
     templateUrl: './diff-profilechart.component.html',
     styleUrls: ['./diff-profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
+    imports: [FaIconComponent, CalculatingComponent, TranslatePipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;

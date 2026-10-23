@@ -12,7 +12,7 @@
                 <label class="custom-control-label" for="alignByEnd">{{ 'diffProfileChart.alignByEnd' | translate }}</label>
             </div>
 
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button" data-toggle="button"
+            <button class="btn btn-sm btn-secondary" [class.active]="showHeatMap" type="button" data-toggle="button"
                 [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="toggleHeatMap()" data-testid="heat-map-button">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
@@ -21,22 +21,20 @@
 
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
-        <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated
-          }">
+        <div id="diveplotdiff" class="diff-dive-plot"
+            [class.plot-display]="profilesCalculated"
+            [class.plot-hidden]="!profilesCalculated"
+          >
         </div>
         <div id="heatmapPlotA" class="diff-heatmap-plot"
-             [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated || !showHeatMap
-          }">
+            [class.plot-display]="profilesCalculated"
+            [class.plot-hidden]="!profilesCalculated|| !showHeatMap"
+          >
         </div>
         <div id="heatmapPlotB" class="diff-heatmap-plot"
-                 [ngClass]="{
-            'plot-display': profilesCalculated,
-            'plot-hidden': !profilesCalculated || !showHeatMap
-          }">
+            [class.plot-display]="profilesCalculated"
+            [class.plot-hidden]="!profilesCalculated || !showHeatMap"
+          >
         </div>
     </div>
 </div>

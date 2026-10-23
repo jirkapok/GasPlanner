@@ -19,10 +19,12 @@ export class ShareDiveService extends Streamed {
     public async sharePlan(): Promise<void> {
         const url = window.location.href;
 
-        // Use the Web Share API if available
-        if (navigator.share) {
-            await navigator.share({ url: url });
-        } else {
+        // Some browsers get stuck on navigator.share() and never
+        // resolve the Promise, causing an error on the next call
+        try {
+            await navigator.share({ url });
+        } catch (error) {
+            console.log('navigator.share API not available, using fallback');
             this.clipboard.copy(url);
         }
     }

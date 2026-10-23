@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { Streamed } from './streamed';
 
@@ -9,9 +10,10 @@ export class ShareDiveService extends Streamed {
     constructor(private clipboard: ClipboardService) {
         super();
 
-        this.clipboard.copyResponse$.subscribe((res) => {
-            this.copyToClipBoard(res);
-        });
+        this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res) => {
+                this.copyToClipBoard(res);
+            });
     }
 
     public sharePlan(): void {

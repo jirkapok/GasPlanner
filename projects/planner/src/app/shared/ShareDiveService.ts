@@ -16,8 +16,15 @@ export class ShareDiveService extends Streamed {
             });
     }
 
-    public sharePlan(): void {
-        this.clipboard.copy(window.location.href);
+    public async sharePlan(): Promise<void> {
+        const url = window.location.href;
+
+        // Use the Web Share API if available
+        if (navigator.share) {
+            await navigator.share({ url: url });
+        } else {
+            this.clipboard.copy(url);
+        }
     }
 
     public hideToast(): void {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -45,7 +45,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
-        private translate: TranslateService) {
+        private translate: TranslateService,
+        private cd: ChangeDetectorRef) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
@@ -108,6 +109,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     public switchHeatMap(): void {
         this.showHeatMap = !this.showHeatMap;
+        // applies pending template changes first, because Plotly can't size hidden plot elements
+        this.cd.detectChanges();
         this.plotAllCharts();
     }
 

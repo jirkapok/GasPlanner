@@ -5,7 +5,7 @@
         [headerIcon]="profileIcon">
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showHeatMap }" type="button"
                 data-toggle="button" [attr.aria-pressed]="showHeatMap" title="{{ 'profileChart.heatmapTitle' | translate }}"
-                autocomplete="off" (click)="switchHeatMap()">
+                autocomplete="off" (click)="switchHeatMap()" data-testid="heat-map-button">
             <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
         </button>
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showEmergencyAscent }" type="button"

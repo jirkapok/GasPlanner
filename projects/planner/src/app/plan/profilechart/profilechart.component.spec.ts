@@ -99,6 +99,43 @@ describe('ProfileChartComponent', () => {
             expect(text).toContain('m');
         });
 
+        it('shows circle marker in line color in front of each value', () => {
+            hover(
+                point(TraceKind.averageDepth, 25.6),
+                point(TraceKind.depth, 21),
+                point(TraceKind.ceiling, 5),
+                point(TraceKind.emergency, 18),
+                point(TraceKind.events, 21, 'Gas switch to EAN50')
+            );
+
+            const markers = fixture.debugElement.queryAll(By.css('[data-testid="hover-values"] .hover-marker'))
+                .map(m => m.nativeElement as HTMLElement);
+            const colors = markers.map(m => getComputedStyle(m).backgroundColor);
+            expect(colors).toEqual([
+                'rgb(31, 119, 180)',
+                'rgb(62, 157, 223)',
+                'rgb(255, 160, 73)',
+                'rgb(255, 77, 77)',
+                'rgba(31, 119, 180, 0.7)'
+            ]);
+            markers.forEach(m => expect(getComputedStyle(m).borderRadius).toBe('50%'));
+        });
+
+        it('keeps marker together with its value when the line wraps', () => {
+            hover(point(TraceKind.depth, 21), point(TraceKind.events, 21, 'Gas switch to EAN50'));
+
+            const entries = fixture.debugElement.queryAll(By.css('[data-testid="hover-values"] .hover-marker'))
+                .map(m => (m.nativeElement as HTMLElement).parentElement as HTMLElement);
+            expect(entries.length).toBe(2);
+            entries.forEach(e => expect(getComputedStyle(e).whiteSpace).toBe('nowrap'));
+        });
+
+        it('aligns hover line right', () => {
+            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
+
+            expect(getComputedStyle(line).textAlign).toBe('right');
+        });
+
         it('hides emergency and events when absent', () => {
             hover(point(TraceKind.depth, 21));
 

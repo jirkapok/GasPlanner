@@ -5,6 +5,26 @@ import { UnitConversion } from './UnitConversion';
 import { DiveResults } from './diveresults';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
+describe('ChartPlotterFactory', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [ResamplingService, UnitConversion, provideTestTranslate()]
+        });
+    });
+
+    const createFactory = (): ChartPlotterFactory =>
+        new ChartPlotterFactory(TestBed.inject(ResamplingService), TestBed.inject(UnitConversion));
+
+    it('keeps unified hover box by default', () => {
+        expect(createFactory().createLayout().hovermode).toBe('x unified');
+    });
+
+    // unified hover box is drawn even when all traces have hoverinfo 'none'
+    it('uses hover mode without unified box when hover labels are hidden', () => {
+        expect(createFactory().withoutHoverLabels().createLayout().hovermode).toBe('x');
+    });
+});
+
 describe('DiveTracesBuilder', () => {
     let factory: ChartPlotterFactory;
     const dive = new DiveResults();
@@ -38,6 +58,16 @@ describe('DiveTracesBuilder', () => {
 
         expect(traces.length).toBe(5);
         traces.forEach(t => expect(t.hoverinfo).toBe('none'));
+    });
+
+    // hovertemplate takes precedence over hoverinfo, the label would still be drawn
+    it('removes hover templates when hover labels are hidden', () => {
+        const builder = factory.withoutHoverLabels().create(() => dive);
+        builder.showEmergencyAscent = true;
+
+        const traces = builder.allTraces();
+
+        traces.forEach(t => expect(t.hovertemplate).toBeUndefined());
     });
 
     it('keeps hover labels by default', () => {

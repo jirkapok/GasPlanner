@@ -16,7 +16,9 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { NgClass } from '@angular/common';
+import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { ProfileHoverValues } from '../../shared/profileHoverValues';
+import { DateFormats } from '../../shared/formaters';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -26,13 +28,14 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, DatePipe, DecimalPipe]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
+    public hoverValues: ProfileHoverValues | undefined;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -40,7 +43,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private profileTraces: DiveTracesBuilder;
 
     constructor(
-        units: UnitConversion,
+        private units: UnitConversion,
         resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
@@ -51,6 +54,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
+            .withoutHoverLabels()
             .create(() => this.dive);
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
@@ -92,6 +96,22 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return this.profileTraces.showEmergencyAscent;
     }
 
+    public get lengthUnit(): string {
+        return this.units.length;
+    }
+
+    public get timeFormat(): string {
+        return DateFormats.selectTimeFormat(this.dive.totalDuration);
+    }
+
+    public get hoverTime(): Date | undefined {
+        return this.hoverValues ? DateFormats.toDate(this.hoverValues.timeStamp) : undefined;
+    }
+
+    public get hoverEvents(): string {
+        return this.hoverValues?.events.join(', ') ?? '';
+    }
+
     private get dive(): DiveResults {
         return this.schedules.selected.diveResult;
     }
@@ -105,6 +125,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
+        this.hoverValues = ProfileHoverValues.fromPoints(data.points);
+        this.cd.markForCheck();
     }
 
     public switchHeatMap(): void {
@@ -119,9 +141,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.plotAllCharts();
     }
 
-    private plotlyHoverLeave() {
+    public plotlyHoverLeave(): void {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
+        this.hoverValues = undefined;
+        this.cd.markForCheck();
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {

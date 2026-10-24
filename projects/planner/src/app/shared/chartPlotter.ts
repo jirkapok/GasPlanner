@@ -90,7 +90,8 @@ export class ChartPlotterFactory {
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
-            hovermode: 'x unified',
+            // unified box ignores trace hoverinfo 'none', so it would still be drawn
+            hovermode: this.hideHoverLabels ? 'x' : 'x unified',
             hoverlabel: {
                 bgcolor: 'rgba(200, 200, 200, 0.25)',
                 bordercolor: 'rgba(200, 200, 200, 0.25)'
@@ -325,6 +326,8 @@ export class DiveTracesBuilder {
 
         if (this.hideHoverLabels) {
             trace.hoverinfo = 'none';
+            // takes precedence over hoverinfo
+            delete trace.hovertemplate;
         }
 
         return trace;

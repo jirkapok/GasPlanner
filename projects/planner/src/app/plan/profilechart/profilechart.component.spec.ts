@@ -1,5 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import * as Plotly from 'plotly.js-dist';
+import { TraceKind } from '../../shared/chartPlotter';
 import { ProfileTissues } from 'scuba-physics';
 import { ProfileChartComponent } from './profilechart.component';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
@@ -54,5 +56,70 @@ describe('ProfileChartComponent', () => {
         expect(component.showHeatMap).toBeTrue();
         expect(heatMap.classList).toContain('plot-display');
         expect(plot?.getAttribute('width')).toEqual(heatMap.clientWidth.toString());
+    });
+
+    describe('Hover values', () => {
+        const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
+            ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
+
+        const hover = (...points: Plotly.PlotDatum[]): void => {
+            component.plotlyHover({ points } as unknown as Plotly.PlotMouseEvent);
+            fixture.detectChanges();
+        };
+
+        const hoverText = (): string => {
+            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]'));
+            return (line.nativeElement as HTMLElement).textContent?.trim() ?? '';
+        };
+
+        it('reserves empty hover line when not hovering', () => {
+            expect(fixture.debugElement.query(By.css('[data-testid="hover-values"]'))).toBeTruthy();
+            expect(hoverText()).toBe('');
+        });
+
+        it('shows hover values while hovering', () => {
+            hover(
+                point(TraceKind.averageDepth, 25.6),
+                point(TraceKind.depth, 21),
+                point(TraceKind.ceiling, 5),
+                point(TraceKind.events, 21, 'Gas switch to EAN50')
+            );
+
+            const text = hoverText();
+            expect(text).toContain('profileChart.depthTraceName');
+            expect(text).toContain('21');
+            expect(text).toContain('profileChart.avgDepthTraceName');
+            expect(text).toContain('25.6');
+            expect(text).toContain('profileChart.ceilingTraceName');
+            expect(text).toContain('5');
+            expect(text).toContain('Gas switch to EAN50');
+            expect(text).toContain('m');
+        });
+
+        it('hides emergency and events when absent', () => {
+            hover(point(TraceKind.depth, 21));
+
+            const text = hoverText();
+            expect(text).not.toContain('profileChart.emergencyTraceName');
+            expect(text).not.toContain('profileChart.ceilingTraceName');
+        });
+
+        it('keeps hover line height, so the chart does not move', () => {
+            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
+            const emptyHeight = line.getBoundingClientRect().height;
+
+            hover(point(TraceKind.averageDepth, 25.6), point(TraceKind.depth, 21));
+
+            expect(line.getBoundingClientRect().height).toBe(emptyHeight);
+        });
+
+        it('clears values on unhover', () => {
+            hover(point(TraceKind.depth, 21));
+
+            component.plotlyHoverLeave();
+            fixture.detectChanges();
+
+            expect(hoverText()).toBe('');
+        });
     });
 });

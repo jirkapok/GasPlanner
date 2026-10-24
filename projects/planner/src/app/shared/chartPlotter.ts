@@ -73,7 +73,7 @@ export class ChartPlotterFactory {
     }
 
     public createLayout(): ChartLayout {
-        return {
+        const layout: ChartLayout = {
             autosize: true,
             showlegend: false,
             xaxis: {
@@ -98,6 +98,17 @@ export class ChartPlotterFactory {
             },
             shapes: []
         };
+
+        if (this.hideHoverLabels) {
+            // the same vertical line, which unified hover draws by default
+            layout.xaxis.showspikes = true;
+            layout.xaxis.spikemode = 'across';
+            layout.xaxis.spikedash = 'dot';
+            layout.xaxis.spikethickness = 1.5;
+            layout.xaxis.spikecolor = '#444';
+        }
+
+        return layout;
     }
 
     /** Translation key (e.g. 'diffResultsTable.profileA') for the trace-name prefix, or null for no prefix. */

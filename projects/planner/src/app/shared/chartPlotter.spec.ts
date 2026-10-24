@@ -23,6 +23,21 @@ describe('ChartPlotterFactory', () => {
     it('uses hover mode without unified box when hover labels are hidden', () => {
         expect(createFactory().withoutHoverLabels().createLayout().hovermode).toBe('x');
     });
+
+    // the same vertical line, which unified hover draws by default
+    it('draws vertical hover line when hover labels are hidden', () => {
+        const xaxis = createFactory().withoutHoverLabels().createLayout().xaxis;
+
+        expect(xaxis.showspikes).toBeTrue();
+        expect(xaxis.spikemode).toBe('across');
+        expect(xaxis.spikedash).toBe('dot');
+        expect(xaxis.spikethickness).toBe(1.5);
+        expect(xaxis.spikecolor).toBe('#444');
+    });
+
+    it('keeps default x axis spikes with unified hover box', () => {
+        expect(createFactory().createLayout().xaxis.showspikes).toBeUndefined();
+    });
 });
 
 describe('DiveTracesBuilder', () => {

@@ -42,11 +42,6 @@ test.describe('mCCR rebreather', () => {
         page = await context.newPage();
 
         await page.goto('/');
-        await page.evaluate(() => {
-            // TODO remove dirty hack to close the learn popup, after we replace the popups
-            localStorage.setItem('quizShown', 'confirmed');
-        });
-        await page.reload();
     });
 
     test('should calculate mCCR dive with oxygen tank and different runtime than open circuit', async () => {

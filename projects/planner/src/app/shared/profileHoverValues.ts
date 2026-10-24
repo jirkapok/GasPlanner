@@ -1,5 +1,5 @@
 import * as Plotly from 'plotly.js-dist';
-import { TraceKind } from './chartPlotter';
+import { TraceKind, traceKindOf } from './chartPlotter';
 import { DateFormats } from './formaters';
 
 /** Values of the profile chart traces at the hovered time */
@@ -21,8 +21,7 @@ export class ProfileHoverValues {
     }
 
     public static traceKind(uid: string | undefined): TraceKind | undefined {
-        const candidate = uid?.split('.').pop();
-        return Object.values(TraceKind).find(k => k === candidate);
+        return traceKindOf(uid);
     }
 
     private apply(point: Plotly.PlotDatum): void {

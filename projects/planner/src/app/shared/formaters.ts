@@ -88,6 +88,21 @@ export class DateFormats {
         return result;
     }
 
+    /**
+     *  Converts number of seconds to string in form "m:ss" or "h:mm:ss" for dives longer than one hour.
+     */
+    public static formatRuntime(seconds: number): string {
+        const hours = Math.trunc(seconds / Time.oneHour);
+        const minutes = Math.trunc((seconds % Time.oneHour) / Time.oneMinute);
+        const secondsPart = Math.trunc(seconds % Time.oneMinute).toString().padStart(2, '0');
+
+        if (hours >= 1) {
+            return `${hours}:${minutes.toString().padStart(2, '0')}:${secondsPart}`;
+        }
+
+        return `${minutes}:${secondsPart}`;
+    }
+
     private static hasHoursRuntime(seconds: number): boolean {
         const hoursCount = Time.toHours(seconds);
         return hoursCount >= 1;

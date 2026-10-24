@@ -2,7 +2,6 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import * as Plotly from 'plotly.js-dist';
 import { firstValueFrom } from 'rxjs';
-import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { TraceKind } from '../../shared/chartPlotter';
 import { ProfileTissues } from 'scuba-physics';
@@ -29,7 +28,7 @@ describe('ProfileChartComponent', () => {
                 WayPointsService, SelectedWaypoint,
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
-                DatePipe, provideTestTranslate()
+                provideTestTranslate()
             ]
         });
 
@@ -70,142 +69,106 @@ describe('ProfileChartComponent', () => {
         expect(plot.layout.legend?.orientation).toBe('h');
     });
 
-    describe('Hover values', () => {
-        const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
-            ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
+    describe('Hover values in legend', () => {
+        interface PlotElement {
+            data: Partial<Plotly.PlotData>[];
+            layout: Partial<Plotly.Layout>;
+        }
 
-        const hover = (...points: Plotly.PlotDatum[]): void => {
+        // lets Plotly promises settle
+        const settle = (): Promise<unknown> => new Promise((resolve) => setTimeout(resolve));
+        const plotElement = (): PlotElement => document.getElementById('diveplot') as unknown as PlotElement;
+        const traceNames = (): string[] => plotElement().data.map(t => t.name ?? '');
+        const hoverTitle = (): string => plotElement().layout.title?.text ?? '';
+
+        const point = (uid: string, y: number, text = '', x = '1970-02-01 00:29:00'): Plotly.PlotDatum =>
+            ({ x, y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
+
+        const hover = async (...points: Plotly.PlotDatum[]): Promise<void> => {
+            await settle();
             component.plotlyHover({ points } as unknown as Plotly.PlotMouseEvent);
-            fixture.detectChanges();
+            await settle();
         };
 
-        const hoverText = (): string => {
-            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]'));
-            return (line.nativeElement as HTMLElement).textContent?.trim() ?? '';
-        };
+        const plainNames = [
+            'profileChart.avgDepthTraceName',
+            'profileChart.depthTraceName',
+            'profileChart.ceilingTraceName',
+            'profileChart.eventTraceName'
+        ];
 
-        it('reserves empty hover line when not hovering', () => {
-            expect(fixture.debugElement.query(By.css('[data-testid="hover-values"]'))).toBeTruthy();
-            expect(hoverText()).toBe('');
+        it('shows plain names and no title when not hovering', async () => {
+            await settle();
+
+            expect(traceNames()).toEqual(plainNames);
+            expect(hoverTitle()).toBe('');
         });
 
-        it('shows hover values while hovering', () => {
-            hover(
-                point(TraceKind.averageDepth, 25.6),
-                point(TraceKind.depth, 21),
-                point(TraceKind.ceiling, 5),
-                point(TraceKind.events, 21, 'Gas switch to EAN50')
-            );
+        it('shows hovered values in legend entries', async () => {
+            await hover(point(TraceKind.averageDepth, 25.6), point(TraceKind.depth, 21), point(TraceKind.ceiling, 5));
 
-            const text = hoverText();
-            expect(text).toContain('profileChart.depthTraceName');
-            expect(text).toContain('21');
-            expect(text).toContain('profileChart.avgDepthTraceName');
-            expect(text).toContain('25.6');
-            expect(text).toContain('profileChart.ceilingTraceName');
-            expect(text).toContain('5');
-            expect(text).toContain('Gas switch to EAN50');
-            expect(text).toContain('m');
-        });
-
-        it('shows circle marker in line color in front of each value', () => {
-            hover(
-                point(TraceKind.averageDepth, 25.6),
-                point(TraceKind.depth, 21),
-                point(TraceKind.ceiling, 5),
-                point(TraceKind.emergency, 18),
-                point(TraceKind.events, 21, 'Gas switch to EAN50')
-            );
-
-            const markers = fixture.debugElement.queryAll(By.css('[data-testid="hover-values"] .hover-marker'))
-                .map(m => m.nativeElement as HTMLElement);
-            const colors = markers.map(m => getComputedStyle(m).backgroundColor);
-            expect(colors).toEqual([
-                'rgb(31, 119, 180)',
-                'rgb(62, 157, 223)',
-                'rgb(255, 160, 73)',
-                'rgb(255, 77, 77)',
-                'rgba(31, 119, 180, 0.7)'
+            expect(traceNames()).toEqual([
+                'profileChart.avgDepthTraceName 25.6 m',
+                'profileChart.depthTraceName 21 m',
+                'profileChart.ceilingTraceName 5 m',
+                'profileChart.eventTraceName'
             ]);
-            markers.forEach(m => expect(getComputedStyle(m).borderRadius).toBe('50%'));
         });
 
-        it('keeps marker together with its value when the line wraps', () => {
-            hover(point(TraceKind.depth, 21), point(TraceKind.events, 21, 'Gas switch to EAN50'));
+        it('shows time and events in hover title', async () => {
+            await hover(point(TraceKind.depth, 21), point(TraceKind.events, 21, 'Gas switch to EAN50'));
 
-            const entries = fixture.debugElement.queryAll(By.css('[data-testid="hover-values"] .hover-marker'))
-                .map(m => (m.nativeElement as HTMLElement).parentElement as HTMLElement);
-            expect(entries.length).toBe(2);
-            entries.forEach(e => expect(getComputedStyle(e).whiteSpace).toBe('nowrap'));
+            expect(hoverTitle()).toBe('29:00 | Gas switch to EAN50');
         });
 
-        it('aligns hover line left with start padding', () => {
-            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
+        it('shows only time in hover title without events', async () => {
+            await hover(point(TraceKind.depth, 21));
 
-            expect(getComputedStyle(line).textAlign).toBe('start');
-            expect(getComputedStyle(line).paddingLeft).toBe('48px');
+            expect(hoverTitle()).toBe('29:00');
         });
 
-        it('hides emergency and events when absent', () => {
-            hover(point(TraceKind.depth, 21));
+        it('shows hours in hover title on long dives', async () => {
+            await hover(point(TraceKind.depth, 21, '', '1970-02-01 01:05:30'));
 
-            const text = hoverText();
-            expect(text).not.toContain('profileChart.emergencyTraceName');
-            expect(text).not.toContain('profileChart.ceilingTraceName');
+            expect(hoverTitle()).toBe('1:05:30');
         });
 
-        it('keeps hover line height, so the chart does not move', () => {
-            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
-            const emptyHeight = line.getBoundingClientRect().height;
-
-            hover(point(TraceKind.averageDepth, 25.6), point(TraceKind.depth, 21));
-
-            expect(line.getBoundingClientRect().height).toBe(emptyHeight);
-        });
-
-        it('shows hours in hover time on long dives', () => {
-            const longDivePoint = ({ x: '1970-02-01 01:05:30', y: 21, text: '', data: { uid: TraceKind.depth } }) as
-                unknown as Plotly.PlotDatum;
-
-            hover(longDivePoint);
-
-            expect(hoverText()).toContain('1:05:30');
-        });
-
-        it('clears values when selected dive changes', () => {
-            hover(point(TraceKind.depth, 21));
-
-            TestBed.inject(ReloadDispatcher).sendSelectedChanged(2);
-            fixture.detectChanges();
-
-            expect(hoverText()).toBe('');
-        });
-
-        it('clears values when emergency ascent is switched', () => {
-            hover(point(TraceKind.emergency, 18));
-
+        it('shows emergency value when emergency ascent is shown', async () => {
             component.switchEmergencyAscent();
-            fixture.detectChanges();
 
-            expect(hoverText()).toBe('');
+            await hover(point(TraceKind.emergency, 18));
+
+            expect(traceNames()).toContain('profileChart.emergencyTraceName 18 m');
         });
 
-        it('clears values when language changes', async () => {
-            hover(point(TraceKind.depth, 21));
-
-            await firstValueFrom(TestBed.inject(TranslateService).use('cs'));
-            fixture.detectChanges();
-
-            expect(hoverText()).toBe('');
-        });
-
-        it('clears values on unhover', () => {
-            hover(point(TraceKind.depth, 21));
+        it('restores plain names on unhover', async () => {
+            await hover(point(TraceKind.depth, 21), point(TraceKind.events, 21, 'Gas switch to EAN50'));
 
             component.plotlyHoverLeave();
-            fixture.detectChanges();
+            await settle();
 
-            expect(hoverText()).toBe('');
+            expect(traceNames()).toEqual(plainNames);
+            expect(hoverTitle()).toBe('');
+        });
+
+        it('restores plain names when selected dive changes', async () => {
+            await hover(point(TraceKind.depth, 21));
+
+            TestBed.inject(ReloadDispatcher).sendSelectedChanged(2);
+            await settle();
+
+            expect(traceNames()).toEqual(plainNames);
+            expect(hoverTitle()).toBe('');
+        });
+
+        it('restores plain names when language changes', async () => {
+            await hover(point(TraceKind.depth, 21));
+
+            await firstValueFrom(TestBed.inject(TranslateService).use('cs'));
+            await settle();
+
+            expect(traceNames()).toEqual(plainNames);
+            expect(hoverTitle()).toBe('');
         });
     });
 });

@@ -25,6 +25,20 @@ describe('Date formatters', () => {
         });
     });
 
+    describe('Runtime', () => {
+        it('Shows minutes and seconds', () => {
+            expect(DateFormats.formatRuntime(65)).toEqual('1:05');
+        });
+
+        it('Shows minutes as number without leading zero', () => {
+            expect(DateFormats.formatRuntime(1740)).toEqual('29:00');
+        });
+
+        it('Shows also hours from 3600 seconds', () => {
+            expect(DateFormats.formatRuntime(3930)).toEqual('1:05:30');
+        });
+    });
+
     describe('Short time', () => {
         describe('From seconds', () => {
             it('Rounds to minutes', () => {

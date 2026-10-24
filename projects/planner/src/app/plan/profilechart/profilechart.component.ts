@@ -16,9 +16,8 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { DecimalPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { DurationPipe } from '../../pipes/duration.pipe';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,14 +27,13 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, DurationPipe, DecimalPipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
-    public hoverValues: ProfileHoverValues | undefined;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -43,7 +41,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private profileTraces: DiveTracesBuilder;
 
     constructor(
-        private units: UnitConversion,
+        units: UnitConversion,
         resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
@@ -104,14 +102,6 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         return this.profileTraces.showEmergencyAscent;
     }
 
-    public get lengthUnit(): string {
-        return this.units.length;
-    }
-
-    public get hoverEvents(): string {
-        return this.hoverValues?.events.join(', ') ?? '';
-    }
-
     private get dive(): DiveResults {
         return this.schedules.selected.diveResult;
     }
@@ -125,8 +115,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
-        this.hoverValues = ProfileHoverValues.fromPoints(data.points);
-        this.cd.markForCheck();
+        this.plotter.plotHoverValues(ProfileHoverValues.fromPoints(data.points));
     }
 
     public switchHeatMap(): void {
@@ -145,8 +134,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public plotlyHoverLeave(): void {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
-        this.hoverValues = undefined;
-        this.cd.markForCheck();
+        this.plotter.plotHoverValues(undefined);
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {

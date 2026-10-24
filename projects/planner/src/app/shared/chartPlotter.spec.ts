@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing';
-import { ChartPlotterFactory } from './chartPlotter';
+import { ChartLegend, ChartPlotterFactory, TraceKind } from './chartPlotter';
+import { ProfileHoverValues } from './profileHoverValues';
 import { ResamplingService } from './ResamplingService';
 import { UnitConversion } from './UnitConversion';
 import { DiveResults } from './diveresults';
@@ -54,6 +55,37 @@ describe('ChartPlotterFactory', () => {
         }));
     });
 
+    // hovered values make names longer, fixed columns keep the legend height, so the plot doesn't shrink
+    it('keeps legend height stable with fixed columns', () => {
+        const legend: ChartLegend | undefined = createFactory().withLegendAbove().createLayout().legend;
+
+        // smaller font fits names with values into half of the plot width on phones
+        expect(legend?.font?.size).toBe(10);
+        expect(legend?.entrywidth).toBe(0.5);
+        expect(legend?.entrywidthmode).toBe('fraction');
+        expect(legend?.title).toBeUndefined();
+    });
+
+    // legend title would shift the legend entries, chart title in reserved top margin doesn't affect the legend
+    it('reserves empty hover title above the legend', () => {
+        const layout = createFactory().withLegendAbove().createLayout();
+
+        expect(layout.margin?.t).toBe(70);
+        expect(layout.title).toEqual(jasmine.objectContaining({
+            text: '',
+            xref: 'paper',
+            x: 0,
+            xanchor: 'left',
+            yref: 'container',
+            y: 1,
+            yanchor: 'top'
+        }));
+    });
+
+    it('has no hover title without legend', () => {
+        expect(createFactory().createLayout().title).toBeUndefined();
+    });
+
     it('keeps default x axis spikes with unified hover box', () => {
         expect(createFactory().createLayout().xaxis.showspikes).toBeUndefined();
     });
@@ -102,6 +134,39 @@ describe('DiveTracesBuilder', () => {
         const traces = builder.allTraces();
 
         traces.forEach(t => expect(t.hovertemplate).toBeUndefined());
+    });
+
+    describe('Legend names', () => {
+        const hovered = (): ProfileHoverValues => {
+            const values = new ProfileHoverValues();
+            values.depth = 21;
+            values.averageDepth = 25.64;
+            return values;
+        };
+
+        it('uses plain trace name without hover values', () => {
+            const builder = factory.create(() => dive);
+
+            expect(builder.traceName(TraceKind.depth)).toBe('profileChart.depthTraceName');
+        });
+
+        it('appends rounded hovered value with units', () => {
+            const builder = factory.create(() => dive);
+
+            expect(builder.traceName(TraceKind.averageDepth, hovered())).toBe('profileChart.avgDepthTraceName 25.6 m');
+        });
+
+        it('keeps plain name for value missing at hovered time', () => {
+            const builder = factory.create(() => dive);
+
+            expect(builder.traceName(TraceKind.ceiling, hovered())).toBe('profileChart.ceilingTraceName');
+        });
+
+        it('keeps name prefix', () => {
+            const builder = factory.withNamePrefix('diffResultsTable.profileA').create(() => dive);
+
+            expect(builder.traceName(TraceKind.depth, hovered())).toBe('diffResultsTable.profileA profileChart.depthTraceName 21 m');
+        });
     });
 
     it('keeps hover labels by default', () => {

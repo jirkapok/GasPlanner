@@ -4,32 +4,6 @@
     height: 400px;
 }
 
-.hover-marker {
-    width: 0.6em;
-    height: 0.6em;
-    background-color: currentColor;
-}
-
-.hover-event {
-    color: rgba(31, 119, 180, 0.7);
-}
-
-.hover-depth {
-    color: rgb(31, 119, 180);
-}
-
-.hover-avg-depth {
-    color: rgb(62, 157, 223);
-}
-
-.hover-ceiling {
-    color: rgb(255, 160, 73);
-}
-
-.hover-emergency {
-    color: rgb(255, 77, 77);
-}
-
 .heatmap-plot {
     position: relative;
     width: 100%;

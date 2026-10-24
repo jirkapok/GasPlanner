@@ -4,12 +4,19 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling, Segment } from 'scuba-physics';
+import { Ceiling, Precision, Segment } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
+import type { ProfileHoverValues } from './profileHoverValues';
 
 /** Layout which always defines both axes, so they can be updated without null checks */
 type ChartLayout = Partial<Plotly.Layout> & Pick<Plotly.Layout, 'xaxis' | 'yaxis'>;
+
+/** Legend including properties supported by plotly, but missing in its typings */
+export type ChartLegend = Partial<Plotly.Legend> & {
+    entrywidth?: number;
+    entrywidthmode?: 'fraction' | 'pixels';
+};
 
 /** Last segment of every trace uid, identifies the trace in hover events */
 export enum TraceKind {
@@ -19,6 +26,12 @@ export enum TraceKind {
     ceiling = 'ceiling',
     events = 'events'
 }
+
+/** Resolves kind from trace uid, which may be prefixed (e.g. 'diffResultsTable.profileA.depth') */
+export const traceKindOf = (uid: string | undefined): TraceKind | undefined => {
+    const candidate = uid?.split('.').pop();
+    return Object.values(TraceKind).find(k => k === candidate);
+};
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
@@ -111,7 +124,7 @@ export class ChartPlotterFactory {
 
         if (this.legendAbove) {
             layout.showlegend = true;
-            layout.legend = {
+            const legend: ChartLegend = {
                 orientation: 'h',
                 x: 0,
                 xanchor: 'left',
@@ -119,7 +132,27 @@ export class ChartPlotterFactory {
                 yanchor: 'bottom',
                 // chart is redrawn after each calculation, which would reset the hidden lines
                 itemclick: false,
-                itemdoubleclick: false
+                itemdoubleclick: false,
+                // fixed columns, so longer names with hovered values don't add legend rows,
+                // smaller font fits names with values into the columns on phones
+                entrywidth: 0.5,
+                font: { size: 10 },
+                entrywidthmode: 'fraction'
+            };
+            layout.legend = legend;
+            // hovered time and events as chart title in reserved top margin above the legend,
+            // legend title would shift the legend entries
+            layout.margin = { ...layout.margin, t: 70 };
+            layout.title = {
+                text: '',
+                font: { size: 12 },
+                xref: 'paper',
+                x: 0,
+                xanchor: 'left',
+                yref: 'container',
+                y: 1,
+                yanchor: 'top',
+                pad: { t: 4 }
             };
         }
 
@@ -194,6 +227,14 @@ export class ChartPlotterFactory {
 }
 
 export class DiveTracesBuilder {
+    private static readonly nameKeys: Record<TraceKind, string> = {
+        [TraceKind.averageDepth]: 'profileChart.avgDepthTraceName',
+        [TraceKind.depth]: 'profileChart.depthTraceName',
+        [TraceKind.emergency]: 'profileChart.emergencyTraceName',
+        [TraceKind.ceiling]: 'profileChart.ceilingTraceName',
+        [TraceKind.events]: 'profileChart.eventTraceName'
+    };
+
     public showEmergencyAscent = false;
     private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
@@ -230,6 +271,33 @@ export class DiveTracesBuilder {
         return this.namePrefixKey ? this.translate(this.namePrefixKey) + ' ' : '';
     }
 
+    private static hoveredValue(kind: TraceKind, hovered: ProfileHoverValues): number | undefined {
+        switch (kind) {
+            case TraceKind.averageDepth:
+                return hovered.averageDepth;
+            case TraceKind.depth:
+                return hovered.depth;
+            case TraceKind.emergency:
+                return hovered.emergencyDepth;
+            case TraceKind.ceiling:
+                return hovered.ceiling;
+            default:
+                return undefined;
+        }
+    }
+
+    /** Name shown in legend, with value at hovered time if available */
+    public traceName(kind: TraceKind, hovered?: ProfileHoverValues): string {
+        const name = this.namePrefix + this.translate(DiveTracesBuilder.nameKeys[kind]);
+        const value = hovered ? DiveTracesBuilder.hoveredValue(kind, hovered) : undefined;
+
+        if (value === undefined) {
+            return name;
+        }
+
+        return `${name} ${Precision.round(value, 1)} ${this.units.length}`;
+    }
+
     public allTraces(): Partial<Plotly.PlotData>[] {
         const diveResult = this.dive();
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
@@ -262,7 +330,7 @@ export class DiveTracesBuilder {
             line: {
                 dash: <Plotly.Dash>'dot'
             },
-            name: this.namePrefix + this.translate('profileChart.avgDepthTraceName'),
+            name: this.traceName(TraceKind.averageDepth),
             marker: {
                 color: this.averageDepthLineColor
             },
@@ -277,7 +345,7 @@ export class DiveTracesBuilder {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
-            name: this.namePrefix + this.translate('profileChart.depthTraceName'),
+            name: this.traceName(TraceKind.depth),
             marker: {
                 color: this.depthLineColor
             },
@@ -292,7 +360,7 @@ export class DiveTracesBuilder {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
-            name: this.namePrefix + this.translate('profileChart.emergencyTraceName'),
+            name: this.traceName(TraceKind.emergency),
             line: {
                 dash: <Plotly.Dash>'dash'
             },
@@ -311,7 +379,7 @@ export class DiveTracesBuilder {
             y: resampled.yValues,
             type: <Plotly.PlotType>'scatter',
             fill: 'tozeroy',
-            name: this.namePrefix + this.translate('profileChart.ceilingTraceName'),
+            name: this.traceName(TraceKind.ceiling),
             marker: {
                 color: this.ceilingLineColor
             },
@@ -332,7 +400,7 @@ export class DiveTracesBuilder {
             type: <Plotly.PlotType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
-            name: this.namePrefix + this.translate('profileChart.eventTraceName'),
+            name: this.traceName(TraceKind.events),
             hovertemplate: '%{text}',
             texttemplate: '%{text}',
             // plotly supports position per point, but typings allow only single value
@@ -378,6 +446,10 @@ export class ChartPlotter {
     private options: Partial<Plotly.Config>;
     private cursor1: Partial<Plotly.Shape>;
     private layout: ChartLayout;
+    /** Builder and kind of each plotted trace in the same order as in the chart */
+    private plotted: { builder: DiveTracesBuilder; kind: TraceKind | undefined }[] = [];
+    /** prevents redrawing the legend, when the mouse moves but the values didn't change */
+    private lastLegend: string | undefined;
 
     /** Provide traces in reverse order to keep the last on top */
     constructor(public elementName: string,
@@ -413,10 +485,28 @@ export class ChartPlotter {
     public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.PlotData>[]): void {
         this.updateLayoutThickFormat();
         this.updateLayoutAxisTitles();
-        const traces: Plotly.Data[] = _(this.builders).map(b => getTraces(b))
-            .flatten()
-            .toArray().value();
+        const plotted = this.builders.map(b => getTraces(b).map(trace => ({ builder: b, trace })));
+        const flattened = _.flatten(plotted);
+        this.plotted = flattened.map(p => ({ builder: p.builder, kind: traceKindOf(p.trace.uid) }));
+        this.lastLegend = undefined;
+        const traces: Plotly.Data[] = flattened.map(p => p.trace);
         void Plotly.react(this.elementName, traces, this.layout, this.options);
+    }
+
+    /** Shows values at hovered time in legend entries and time with events in chart title, or plain names if nothing hovered */
+    public plotHoverValues(hovered: ProfileHoverValues | undefined): void {
+        const names = this.plotted.map(p => p.kind ? p.builder.traceName(p.kind, hovered) : '');
+        const title = hovered ? [DateFormats.formatRuntime(hovered.timeStamp), ...hovered.events].join(' | ') : '';
+        const legend = [title, ...names].join('\n');
+
+        if (legend === this.lastLegend) {
+            return;
+        }
+
+        this.lastLegend = legend;
+        const traceUpdate = { name: names } as unknown as Plotly.Data;
+        const layoutUpdate = { 'title.text': title } as unknown as Partial<Plotly.Layout>;
+        void Plotly.update(this.elementName, traceUpdate, layoutUpdate);
     }
 
     private updateLayoutThickFormat(): void {

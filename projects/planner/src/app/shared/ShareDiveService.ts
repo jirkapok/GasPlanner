@@ -18,17 +18,21 @@ export class ShareDiveService extends Streamed {
 
     public async sharePlan(): Promise<void> {
         const url = window.location.href;
+        const shareData: ShareData = { url };
+
+        if (!this.canUseShareApi(shareData)) {
+            this.clipboard.copy(url);
+            return;
+        }
 
         // Some browsers get stuck on navigator.share() and never resolve
         // the Promise, causing an InvalidStateError on the next call
-        // Other browsers just don't have navigator.share available (TypeError)
         try {
-            await navigator.share({ url });
+            await navigator.share(shareData);
         } catch (error) {
             const name = (error as DOMException)?.name;
 
-            // Aborting the share dialog is fine
-            if (name !== 'AbortError') {
+            if (name === 'InvalidStateError') {
                 this.clipboard.copy(url);
             }
         }
@@ -46,5 +50,11 @@ export class ShareDiveService extends Streamed {
                 this.hideToast();
             }, 5000);
         }
+    }
+
+    private canUseShareApi(shareData: ShareData): boolean {
+        return typeof navigator.share === 'function'
+            && typeof navigator.canShare === 'function'
+            && navigator.canShare(shareData);
     }
 }

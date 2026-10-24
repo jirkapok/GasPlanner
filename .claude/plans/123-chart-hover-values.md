@@ -1,5 +1,9 @@
 # Profile Chart Hover Values (#123) Implementation Plan
 
+> **Status: FINISHED** (2026-10-25, branch `feat/123-chart-hover-values`). Both tasks done, final review fixes applied.
+> Follow-up changes requested after the plan: restored the dotted vertical hover line (x axis spikes),
+> added colored circle markers in front of each value and left-aligned the line with start padding (`ps-5`).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Remove the floating Plotly hover box from the plan-page profile chart and show the hovered values in a single text line above the chart instead.

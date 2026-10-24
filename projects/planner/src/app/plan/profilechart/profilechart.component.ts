@@ -16,9 +16,9 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { DatePipe, DecimalPipe, NgClass } from '@angular/common';
+import { DecimalPipe, NgClass } from '@angular/common';
 import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { DateFormats } from '../../shared/formaters';
+import { DurationPipe } from '../../pipes/duration.pipe';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
     changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, DatePipe, DecimalPipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, DurationPipe, DecimalPipe]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
@@ -75,12 +75,19 @@ export class ProfileChartComponent extends Streamed implements OnInit {
                 }
             });
 
+        // touch devices don't always send unhover, so hovered values would be stale
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotAllCharts());
+            .subscribe(() => {
+                this.plotAllCharts();
+                this.plotlyHoverLeave();
+            });
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
         this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotAllCharts());
+            .subscribe(() => {
+                this.plotAllCharts();
+                this.plotlyHoverLeave();
+            });
     }
 
     public get profileCalculated(): boolean {
@@ -98,14 +105,6 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     public get lengthUnit(): string {
         return this.units.length;
-    }
-
-    public get timeFormat(): string {
-        return DateFormats.selectTimeFormat(this.dive.totalDuration);
-    }
-
-    public get hoverTime(): Date | undefined {
-        return this.hoverValues ? DateFormats.toDate(this.hoverValues.timeStamp) : undefined;
     }
 
     public get hoverEvents(): string {
@@ -139,6 +138,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public switchEmergencyAscent(): void {
         this.profileTraces.showEmergencyAscent = !this.profileTraces.showEmergencyAscent;
         this.plotAllCharts();
+        this.plotlyHoverLeave();
     }
 
     public plotlyHoverLeave(): void {

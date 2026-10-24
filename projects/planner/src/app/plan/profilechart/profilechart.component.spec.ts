@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import * as Plotly from 'plotly.js-dist';
+import { firstValueFrom } from 'rxjs';
+import { DatePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 import { TraceKind } from '../../shared/chartPlotter';
 import { ProfileTissues } from 'scuba-physics';
 import { ProfileChartComponent } from './profilechart.component';
@@ -26,7 +29,7 @@ describe('ProfileChartComponent', () => {
                 WayPointsService, SelectedWaypoint,
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
-                provideTestTranslate()
+                DatePipe, provideTestTranslate()
             ]
         });
 
@@ -111,6 +114,42 @@ describe('ProfileChartComponent', () => {
             hover(point(TraceKind.averageDepth, 25.6), point(TraceKind.depth, 21));
 
             expect(line.getBoundingClientRect().height).toBe(emptyHeight);
+        });
+
+        it('shows hours in hover time on long dives', () => {
+            const longDivePoint = ({ x: '1970-02-01 01:05:30', y: 21, text: '', data: { uid: TraceKind.depth } }) as
+                unknown as Plotly.PlotDatum;
+
+            hover(longDivePoint);
+
+            expect(hoverText()).toContain('1:05:30');
+        });
+
+        it('clears values when selected dive changes', () => {
+            hover(point(TraceKind.depth, 21));
+
+            TestBed.inject(ReloadDispatcher).sendSelectedChanged(2);
+            fixture.detectChanges();
+
+            expect(hoverText()).toBe('');
+        });
+
+        it('clears values when emergency ascent is switched', () => {
+            hover(point(TraceKind.emergency, 18));
+
+            component.switchEmergencyAscent();
+            fixture.detectChanges();
+
+            expect(hoverText()).toBe('');
+        });
+
+        it('clears values when language changes', async () => {
+            hover(point(TraceKind.depth, 21));
+
+            await firstValueFrom(TestBed.inject(TranslateService).use('cs'));
+            fixture.detectChanges();
+
+            expect(hoverText()).toBe('');
         });
 
         it('clears values on unhover', () => {

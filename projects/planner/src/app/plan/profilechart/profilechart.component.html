@@ -18,7 +18,7 @@
         <app-calculating [show]="!infoCalculated"></app-calculating>
         <div data-testid="hover-values" class="hover-values small">
             @if (hoverValues) {
-                <span class="fw-bold me-2">{{ hoverTime | date: timeFormat }}</span>
+                <span class="fw-bold me-2">{{ hoverValues.timeStamp | duration: hoverValues.timeStamp }}</span>
                 @if (hoverValues.depth !== undefined) {
                     <span>{{ 'profileChart.depthTraceName' | translate }}
                         <span class="hover-depth fw-bold">{{ hoverValues.depth | number:'1.0-1' }} {{ lengthUnit }}</span></span>

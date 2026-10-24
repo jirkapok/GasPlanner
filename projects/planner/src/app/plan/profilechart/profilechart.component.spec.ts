@@ -130,10 +130,11 @@ describe('ProfileChartComponent', () => {
             entries.forEach(e => expect(getComputedStyle(e).whiteSpace).toBe('nowrap'));
         });
 
-        it('aligns hover line right', () => {
+        it('aligns hover line left with start padding', () => {
             const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
 
-            expect(getComputedStyle(line).textAlign).toBe('right');
+            expect(getComputedStyle(line).textAlign).toBe('start');
+            expect(getComputedStyle(line).paddingLeft).toBe('48px');
         });
 
         it('hides emergency and events when absent', () => {

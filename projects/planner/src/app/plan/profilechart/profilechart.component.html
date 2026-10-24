@@ -16,7 +16,7 @@
     </app-card-header>
     <div class="card-body card-minheight">
         <app-calculating [show]="!infoCalculated"></app-calculating>
-        <div data-testid="hover-values" class="hover-values small text-end">
+        <div data-testid="hover-values" class="hover-values small ps-5">
             @if (hoverValues) {
                 <span class="fw-bold me-2">{{ hoverValues.timeStamp | duration: hoverValues.timeStamp }}</span>
                 @if (hoverValues.depth !== undefined) {

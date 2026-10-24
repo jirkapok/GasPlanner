@@ -19,13 +19,18 @@ export class ShareDiveService extends Streamed {
     public async sharePlan(): Promise<void> {
         const url = window.location.href;
 
-        // Some browsers get stuck on navigator.share() and never
-        // resolve the Promise, causing an error on the next call
+        // Some browsers get stuck on navigator.share() and never resolve
+        // the Promise, causing an InvalidStateError on the next call
+        // Other browsers just don't have navigator.share available (TypeError)
         try {
             await navigator.share({ url });
         } catch (error) {
-            console.log('navigator.share API not available, using fallback');
-            this.clipboard.copy(url);
+            const name = (error as DOMException)?.name;
+
+            // Aborting the share dialog is fine
+            if (name !== 'AbortError') {
+                this.clipboard.copy(url);
+            }
         }
     }
 

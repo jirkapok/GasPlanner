@@ -92,7 +92,12 @@
 
 ### Task 2: Hover value line on the plan-page profile chart
 
-- [ ] Status
+- [x] Status
+
+> **Deviations found during the manual check (fixed test-first):**
+> - `hoverinfo: 'none'` doesn't hide the `'x unified'` box, so `withoutHoverLabels()` also switches the layout to `hovermode: 'x'`.
+> - `hovertemplate` takes precedence over `hoverinfo`, so it is removed when labels are hidden.
+> - `min-height` still let the chart move 1.4 px, so the empty line renders `&nbsp;` instead.
 
 **Files:**
 - Modify: `projects/planner/src/app/plan/profilechart/profilechart.component.ts`

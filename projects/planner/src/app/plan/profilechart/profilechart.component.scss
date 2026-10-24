@@ -4,6 +4,16 @@
     height: 400px;
 }
 
+.hover-marker {
+    width: 0.6em;
+    height: 0.6em;
+    background-color: currentColor;
+}
+
+.hover-event {
+    color: rgba(31, 119, 180, 0.7);
+}
+
 .hover-depth {
     color: rgb(31, 119, 180);
 }

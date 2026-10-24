@@ -35,6 +35,25 @@ describe('ChartPlotterFactory', () => {
         expect(xaxis.spikecolor).toBe('#444');
     });
 
+    it('hides legend by default', () => {
+        expect(createFactory().createLayout().showlegend).toBeFalse();
+    });
+
+    it('shows horizontal not clickable legend above the chart when requested', () => {
+        const layout = createFactory().withLegendAbove().createLayout();
+
+        expect(layout.showlegend).toBeTrue();
+        expect(layout.legend).toEqual(jasmine.objectContaining({
+            orientation: 'h',
+            x: 0,
+            xanchor: 'left',
+            y: 1.02,
+            yanchor: 'bottom',
+            itemclick: false,
+            itemdoubleclick: false
+        }));
+    });
+
     it('keeps default x axis spikes with unified hover box', () => {
         expect(createFactory().createLayout().xaxis.showspikes).toBeUndefined();
     });

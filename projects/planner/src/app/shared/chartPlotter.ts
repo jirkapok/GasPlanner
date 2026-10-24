@@ -31,6 +31,7 @@ export class ChartPlotterFactory {
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
     private hideHoverLabels = false;
+    private legendAbove = false;
     /** in seconds */
     private timeOffset: () => number;
 
@@ -108,6 +109,20 @@ export class ChartPlotterFactory {
             layout.xaxis.spikecolor = '#444';
         }
 
+        if (this.legendAbove) {
+            layout.showlegend = true;
+            layout.legend = {
+                orientation: 'h',
+                x: 0,
+                xanchor: 'left',
+                y: 1.02,
+                yanchor: 'bottom',
+                // chart is redrawn after each calculation, which would reset the hidden lines
+                itemclick: false,
+                itemdoubleclick: false
+            };
+        }
+
         return layout;
     }
 
@@ -120,6 +135,12 @@ export class ChartPlotterFactory {
     /** Plotly doesn't draw the hover box, but still fires the hover events */
     public withoutHoverLabels(): ChartPlotterFactory {
         this.hideHoverLabels = true;
+        return this;
+    }
+
+    /** Static key of the chart lines above the plot area */
+    public withLegendAbove(): ChartPlotterFactory {
+        this.legendAbove = true;
         return this;
     }
 

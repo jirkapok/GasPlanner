@@ -61,6 +61,15 @@ describe('ProfileChartComponent', () => {
         expect(plot?.getAttribute('width')).toEqual(heatMap.clientWidth.toString());
     });
 
+    it('shows legend above the chart', async () => {
+        // lets Plotly promises settle
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const plot = document.getElementById('diveplot') as unknown as { layout: Partial<Plotly.Layout> };
+        expect(plot.layout.showlegend).toBeTrue();
+        expect(plot.layout.legend?.orientation).toBe('h');
+    });
+
     describe('Hover values', () => {
         const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
             ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;

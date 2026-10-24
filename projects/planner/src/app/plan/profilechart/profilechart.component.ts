@@ -55,6 +55,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .withoutHoverLabels()
+            .withLegendAbove()
             .create(() => this.dive);
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);

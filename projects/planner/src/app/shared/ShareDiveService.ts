@@ -53,8 +53,7 @@ export class ShareDiveService extends Streamed {
     }
 
     private canUseShareApi(shareData: ShareData): boolean {
-        return typeof navigator.share === 'function'
-            && typeof navigator.canShare === 'function'
-            && navigator.canShare(shareData);
+        return typeof navigator.share === 'function' &&
+                (typeof navigator.canShare !== 'function' || navigator.canShare(shareData));
     }
 }

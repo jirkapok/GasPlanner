@@ -13,11 +13,12 @@ export class BackgroundTask<TRequest, TResponse> implements IBackgroundTask<TReq
     private onCalculated = new Subject<TResponse>();
     private onFailed = new Subject<void>();
 
-    constructor(private worker: Worker) {
+    /** afterMessage is called after subscribers processed each message or failure, e.g. to refresh the view */
+    constructor(private worker: Worker, private afterMessage: () => void = () => {}) {
         this.calculated$ = this.onCalculated.asObservable();
         this.failed$ = this.onFailed.asObservable();
         this.worker.addEventListener('message', (m) => this.processMessage(m));
-        this.worker.addEventListener('error', () => this.onFailed.next());
+        this.worker.addEventListener('error', () => this.processFailure());
     }
 
     public calculate(request: TRequest): void {
@@ -26,6 +27,12 @@ export class BackgroundTask<TRequest, TResponse> implements IBackgroundTask<TReq
 
     private processMessage(message: MessageEvent<TResponse>): void {
         this.onCalculated.next(message.data);
+        this.afterMessage();
+    }
+
+    private processFailure(): void {
+        this.onFailed.next();
+        this.afterMessage();
     }
 }
 
@@ -42,7 +49,8 @@ export class RestartableBackgroundTask<TRequest, TResponse> implements IRestarta
     private onFailed = new Subject<void>();
     private worker: Worker;
 
-    constructor(private createWorker: () => Worker) {
+    /** afterMessage is called after subscribers processed each message or failure of the current worker */
+    constructor(private createWorker: () => Worker, private afterMessage: () => void = () => {}) {
         this.calculated$ = this.onCalculated.asObservable();
         this.failed$ = this.onFailed.asObservable();
         this.worker = this.startWorker();
@@ -65,12 +73,14 @@ export class RestartableBackgroundTask<TRequest, TResponse> implements IRestarta
         worker.addEventListener('message', (m: MessageEvent<TResponse>) => {
             if (isCurrent()) {
                 this.onCalculated.next(m.data);
+                this.afterMessage();
             }
         });
 
         worker.addEventListener('error', () => {
             if (isCurrent()) {
                 this.onFailed.next();
+                this.afterMessage();
             }
         });
 

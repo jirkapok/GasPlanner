@@ -146,8 +146,18 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     private hookChartEvents(): void {
         const chartElement: any = document.getElementById(this.elementName);
-        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
-        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
+        // Plotly events are outside Angular events, so they have to schedule the change detection
+        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => {
+            this.plotlyHover(e);
+            this.cd.markForCheck();
+        });
+        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => {
+            this.plotlyHover(e);
+            this.cd.markForCheck();
+        });
+        chartElement.on('plotly_unhover', () => {
+            this.plotlyHoverLeave();
+            this.cd.markForCheck();
+        });
     }
 }

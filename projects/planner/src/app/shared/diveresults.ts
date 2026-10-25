@@ -309,8 +309,8 @@ export class DiveResults {
         return count > 0 && this._wayPoints[count - 1].endDepthMeters === 0;
     }
 
-    /** Marks dive calculation in progress */
-    public start(): void {
+    /** Marks dive calculation in progress, afterStillRunning is called after the not yet calculated parts were emptied */
+    public start(afterStillRunning: () => void = () => {}): void {
         this.profileCalculation.start();
         this.consumptionCalculation.start();
         this.diveInfoCalculation.start();
@@ -318,6 +318,7 @@ export class DiveResults {
 
         setTimeout(() => {
             this.showStillRunning();
+            afterStillRunning();
         }, 500);
     }
 

@@ -23,6 +23,7 @@ import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
 import { BoundEvent } from './models';
+import { ViewRefresh } from './viewRefresh';
 
 
 @Injectable()
@@ -39,7 +40,8 @@ export class PlannerService extends Streamed {
         private viewSwitch: ViewSwitchService,
         private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
-        private units: UnitConversion) {
+        private units: UnitConversion,
+        private viewRefresh: ViewRefresh) {
         super();
 
         this.waypoints = new WayPointsService(units);
@@ -71,7 +73,8 @@ export class PlannerService extends Streamed {
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
-        this.schedules.markStart(diveId);
+        // the still running state is shown by timer outside Angular events
+        this.schedules.markStart(diveId, () => this.viewRefresh.refresh());
         const profileRequest = this.createPlanRequest(dive);
         this.profileTask.calculate(profileRequest);
     }

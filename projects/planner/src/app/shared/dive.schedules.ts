@@ -265,9 +265,9 @@ export class DiveSchedules {
         return ProfileTissues.createAtSurface(0);
     }
 
-    /** Marks all following repetitive dives as started. */
-    public markStart(diveId: number): void {
-        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
+    /** Marks all following repetitive dives as started, see DiveResults.start for afterStillRunning. */
+    public markStart(diveId: number, afterStillRunning: () => void = () => {}): void {
+        this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start(afterStillRunning));
     }
 
     private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {

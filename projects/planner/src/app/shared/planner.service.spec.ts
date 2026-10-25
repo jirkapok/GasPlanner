@@ -27,6 +27,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { ViewRefresh } from './viewRefresh';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -61,6 +62,21 @@ describe('PlannerService', () => {
         depthsService.plannedDepth = 30;
         dispatcher = TestBed.inject(ReloadDispatcher);
         planner.calculate(1);
+    });
+
+    describe('Still running', () => {
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('Refreshes view after still running check', () => {
+            vi.useFakeTimers();
+            const refresh = vi.spyOn(TestBed.inject(ViewRefresh), 'refresh').mockImplementation(() => {});
+            planner.calculate(1);
+
+            vi.advanceTimersByTime(500);
+            expect(refresh).toHaveBeenCalled();
+        });
     });
 
     describe('Events are fired', () => {

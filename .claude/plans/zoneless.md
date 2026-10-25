@@ -80,7 +80,7 @@
 - [ ] **Step 6: Commit:** `refactor: refresh view after web worker messages`.
 
 ### Task 2: Refresh after timers and chart events
-- [ ] Status
+- [x] Status (823 planner tests pass (+5), build ok, e2e 8 passed, lint at baseline. The planner test is named `'Refreshes view after still running check'`: the serial worker factory finishes the calculation synchronously, so it proves the timer wiring, not a really running calculation. `PlanUrlSerialization.spec.ts` constructs `PlannerService` by `new`, it got a no-op `ViewRefresh` stub. `ShareDiveService.spec.ts` also covers the failed copy (no toast, no refresh).)
 
 **Interfaces:**
 - Consumes: `ViewRefresh.refresh()` from Task 1.

@@ -12,6 +12,27 @@ describe('DiveResults', () => {
         sut = new DiveResults();
     });
 
+    describe('Still running', () => {
+        beforeEach(() => {
+            vi.useFakeTimers();
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('calls after still running callback after 500 ms', () => {
+            const profileCalculatedInCallback: boolean[] = [];
+            sut.start(() => profileCalculatedInCallback.push(sut.profileCalculated));
+
+            vi.advanceTimersByTime(499);
+            expect(profileCalculatedInCallback).toEqual([]);
+
+            vi.advanceTimersByTime(1);
+            expect(profileCalculatedInCallback).toEqual([false]);
+        });
+    });
+
     describe('CNS exceeded', () => {
         it('Not exceeded by default', () => {
             expect(sut.cnsExceeded).toBeFalsy();

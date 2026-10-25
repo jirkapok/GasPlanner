@@ -3,6 +3,9 @@
     [cardTitle]="'diveInfo.cardTitle' | translate"
     helpDocument="diveinfo"
     [headerIcon]="icon">
+    <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="shareQrCode()" title="{{ 'diveInfo.shareTitle' | translate }}">
+      <fa-icon [icon]="qrCodeIcon"></fa-icon>
+    </button>
     <button class="btn btn-sm btn-secondary ms-2" type="button" (click)="sharePlan()" title="{{ 'diveInfo.shareTitle' | translate }}">
       <fa-icon [icon]="iconShare" class="me-2"></fa-icon>{{ 'diveInfo.share' | translate }}
     </button>

@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import {
-    faSlidersH, faShareFromSquare, faExclamationTriangle
+    faSlidersH, faShareFromSquare, faExclamationTriangle, faQrcode
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
@@ -15,6 +15,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { TextConstants } from '../../shared/TextConstants';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ShareDiveService } from '../../shared/ShareDiveService';
+import { QrCodeService } from '../../shared/qr-code.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
@@ -52,12 +53,14 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
+    public readonly qrCodeIcon = faQrcode;
     public readonly warnIcon = faExclamationTriangle;
     private lastSelected = 0;
     private readonly issuesTabIndex = 2;
 
     constructor(
         private shareDive: ShareDiveService,
+        private qrCode: QrCodeService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
@@ -169,6 +172,10 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public sharePlan(): void {
         this.shareDive.sharePlan();
+    }
+
+    public shareQrCode(): void {
+        this.qrCode.showDivePlan();
     }
 
     public switchInLiters(): void {

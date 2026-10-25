@@ -2,7 +2,7 @@ import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Salinity } from '../physics/pressure-converter';
 import { Gas, Gases } from '../gases/Gases';
 import { Options, SafetyStop } from './Options';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Ceiling, EventType, Events, Event } from './CalculatedProfile';
 import { EventOptions, ProfileEvents } from './ProfileEvents';
 import { Segment, Segments } from '../depths/Segments';

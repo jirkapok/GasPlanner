@@ -3,7 +3,7 @@ import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';

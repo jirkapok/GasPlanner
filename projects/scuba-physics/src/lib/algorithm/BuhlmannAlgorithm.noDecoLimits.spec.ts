@@ -2,7 +2,7 @@ import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Salinity } from '../physics/pressure-converter';
 import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
@@ -90,7 +90,7 @@ describe('Buhlmann Algorithm - No decompression limits for every second', () => 
     it('Sequence yields the same limits one by one', () => {
         const sequence = algorithm.noDecoLimitsSequence(squareDive);
         const first = sequence.next();
-        expect(first.done).toBeFalse();
+        expect(first.done).toBe(false);
         expect([first.value, ...sequence]).toEqual(algorithm.noDecoLimits(squareDive));
     });
 

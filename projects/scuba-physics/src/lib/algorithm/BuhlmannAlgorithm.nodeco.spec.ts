@@ -2,7 +2,7 @@ import { Time } from '../physics/Time';
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Salinity } from '../physics/pressure-converter';
 import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
@@ -101,7 +101,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 options.salinity = salinity;
                 const parameters = AlgorithmParams.forSimpleDive(depth, StandardGases.air, options, OptionExtensions.openCircuit(options));
                 const ndl = algorithm.noDecoLimit(parameters);
-                expect(ndl).toBe(testCase[1], `No deco limit for ${depth} failed`);
+                expect(ndl, `No deco limit for ${depth} failed`).toBe(testCase[1]);
             });
         };
 

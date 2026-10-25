@@ -2,7 +2,7 @@ import { AlgorithmParams } from '../algorithm/BuhlmannAlgorithmParameters';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { CalculatedProfileStatistics } from '../algorithm/CalculatedProfile';
 import { Options } from '../algorithm/Options';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { Tissues } from '../algorithm/Tissues';
 import { Segments } from '../depths/Segments';
 import { Gases } from '../gases/Gases';

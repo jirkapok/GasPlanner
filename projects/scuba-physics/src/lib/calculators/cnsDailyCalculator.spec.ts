@@ -4,7 +4,7 @@ import { DepthConverter } from '../physics/depth-converter';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';
-import { ToxicityProfiles } from './OtuCalculator.spec';
+import { ToxicityProfiles } from './OtuCalculator.testing';
 import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 
 describe('CNS daily calculator', () => {

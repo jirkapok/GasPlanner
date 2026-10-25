@@ -52,3 +52,7 @@ Thumbs.db
 /playwright/.cache/
 
 .superpowers
+
+# Vitest browser mode failure screenshots and attachments
+.vitest-attachments/
+__screenshots__/

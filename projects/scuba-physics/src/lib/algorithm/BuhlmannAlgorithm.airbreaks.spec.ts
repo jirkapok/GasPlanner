@@ -1,11 +1,11 @@
 import { Time } from '../physics/Time';
 import { Gases } from '../gases/Gases';
 import { Segment, Segments } from '../depths/Segments';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
-import { calculatePlanFor } from './BuhlmannAlgorithm.spec';
+import { calculatePlanFor } from './BuhlmannAlgorithm.testing';
 
 describe('Buhlmann Algorithm - Air breaks', () => {
     const options = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.salt);

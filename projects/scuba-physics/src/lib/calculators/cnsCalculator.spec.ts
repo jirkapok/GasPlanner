@@ -1,6 +1,6 @@
 import { CnsCalculator } from './cnsCalculator';
 import { DepthConverter } from '../physics/depth-converter';
-import { ToxicityProfiles } from './OtuCalculator.spec';
+import { ToxicityProfiles } from './OtuCalculator.testing';
 import { Segment } from '../depths/Segments';
 import { Time } from '../physics/Time';
 import { StandardGases } from '../gases/StandardGases';

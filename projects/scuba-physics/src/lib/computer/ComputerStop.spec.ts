@@ -16,13 +16,13 @@ describe('ComputerStop', () => {
     });
 
     it('Stops happening at the same time overlap', () => {
-        expect(stopAt(900, 60).overlaps(stopAt(930, 60))).toBeTrue();
-        expect(stopAt(930, 60).overlaps(stopAt(900, 60))).toBeTrue();
+        expect(stopAt(900, 60).overlaps(stopAt(930, 60))).toBe(true);
+        expect(stopAt(930, 60).overlaps(stopAt(900, 60))).toBe(true);
     });
 
     it('Stop starting at the end of other stop does not overlap', () => {
-        expect(stopAt(900, 60).overlaps(stopAt(960, 60))).toBeFalse();
-        expect(stopAt(960, 60).overlaps(stopAt(900, 60))).toBeFalse();
+        expect(stopAt(900, 60).overlaps(stopAt(960, 60))).toBe(false);
+        expect(stopAt(960, 60).overlaps(stopAt(900, 60))).toBe(false);
     });
 
     describe('Algorithm events', () => {

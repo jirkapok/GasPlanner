@@ -6,7 +6,7 @@ import { Precision } from '../common/precision';
 import { Gases } from '../gases/Gases';
 import { Segments } from '../depths/Segments';
 import { Options } from './Options';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { StandardGases } from '../gases/StandardGases';
 import { LoadedTissues } from './Tissues.api';
 import {

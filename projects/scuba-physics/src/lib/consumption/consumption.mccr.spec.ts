@@ -4,7 +4,7 @@ import { Diver } from './Diver';
 import { Tank, Tanks } from './Tanks';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams } from '../algorithm/BuhlmannAlgorithmParameters';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { PlanFactory } from '../depths/PlanFactory';
 import { Segment } from '../depths/Segments';
 import { DepthConverter } from '../physics/depth-converter';

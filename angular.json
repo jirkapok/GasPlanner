@@ -182,11 +182,12 @@
           "defaultConfiguration": "production"
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/scuba-physics/src/test.ts",
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
-            "karmaConfig": "projects/scuba-physics/karma.conf.js"
+            "runnerConfig": "projects/scuba-physics/vitest-base.config.ts",
+            "browsers": ["ChromiumHeadless"],
+            "exclude": ["**/*.performance.spec.ts"]
           }
         },
         "lint": {

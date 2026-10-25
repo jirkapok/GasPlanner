@@ -99,7 +99,7 @@ describe('Average depth', () => {
             ];
             const averages = new AverageDepth().forProfile(segments);
             expect(averages[0]).toEqual(40);
-            expect(averages.every(a => !Number.isNaN(a))).toBeTrue();
+            expect(averages.every(a => !Number.isNaN(a))).toBe(true);
             expect(averages[60]).toBeCloseTo(40, 6);
         });
 

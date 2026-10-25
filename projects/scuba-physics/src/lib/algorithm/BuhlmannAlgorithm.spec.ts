@@ -1,10 +1,10 @@
 import { Time } from '../physics/Time';
-import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { Gas, Gases } from '../gases/Gases';
 import { Segment, Segments } from '../depths/Segments';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
+import { calculatePlanFor } from './BuhlmannAlgorithm.testing';
 import { Salinity } from '../physics/pressure-converter';
-import { Options, SafetyStop } from './Options';
+import { SafetyStop } from './Options';
 import { StandardGases } from '../gases/StandardGases';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
 
@@ -15,13 +15,6 @@ function concatenatePlan(decoPlan: Segment[]): string {
     });
 
     return planText.trim();
-}
-
-export function calculatePlanFor(gases: Gases, source: Segments, options: Options): Segment[] {
-    const algorithm = new BuhlmannAlgorithm();
-    const parameters = AlgorithmParams.forMultilevelDive(source, gases, options, OptionExtensions.openCircuit(options));
-    const decoPlan = algorithm.decompression(parameters);
-    return decoPlan.segments;
 }
 
 describe('Buhlmann Algorithm - Plan', () => {

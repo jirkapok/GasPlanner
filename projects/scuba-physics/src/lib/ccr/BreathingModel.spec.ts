@@ -37,8 +37,8 @@ describe('Breathing model', () => {
         });
 
         it('allows gas switching and air breaks', () => {
-            expect(sut.usesGasSwitching).toBeTrue();
-            expect(sut.usesAirBreaks).toBeTrue();
+            expect(sut.usesGasSwitching).toBe(true);
+            expect(sut.usesAirBreaks).toBe(true);
         });
 
         it('has no oxygen source', () => {
@@ -71,8 +71,8 @@ describe('Breathing model', () => {
         });
 
         it('uses bailout gas switching and air breaks', () => {
-            expect(sut.usesGasSwitching).toBeTrue();
-            expect(sut.usesAirBreaks).toBeTrue();
+            expect(sut.usesGasSwitching).toBe(true);
+            expect(sut.usesAirBreaks).toBe(true);
         });
 
         it('consumes as open circuit', () => {

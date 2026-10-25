@@ -1,6 +1,6 @@
 import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { ProfileEvents } from '../algorithm/ProfileEvents';
 import { Segments } from '../depths/Segments';
 import { GasDensity } from '../gases/GasDensity';
@@ -70,13 +70,13 @@ describe('DiveComputer', () => {
         const profile = DiveComputer.calculate(calculatedDecoDive).profile;
         expect(profile[0].depth).toBeCloseTo(0, 6);
         expect(profile[profile.length - 1].maxDepth).toBeCloseTo(40, 6);
-        expect(profile.some(p => p.ceiling > 0)).toBeTrue();
+        expect(profile.some(p => p.ceiling > 0)).toBe(true);
     });
 
     it('Contains stops of the calculated ascent only', () => {
         const stops = DiveComputer.calculate(calculatedDecoDive).events.filter(e => e.type === ComputerEventType.stop);
         expect(stops.length).toBeGreaterThan(0);
-        expect(stops.every(s => s.runTime >= userPlanEnd)).toBeTrue();
+        expect(stops.every(s => s.runTime >= userPlanEnd)).toBe(true);
     });
 
     it('User planned stop with close ceiling is a stop', () => {
@@ -88,7 +88,7 @@ describe('DiveComputer', () => {
         });
         const userStopStart = userPlanEnd + 204;
         const stops = DiveComputer.calculate(calculateDive(withUserStop)).events.filter(e => e.type === ComputerEventType.stop);
-        expect(stops.some(s => s.runTime === userStopStart && s.depth === 6)).toBeTrue();
+        expect(stops.some(s => s.runTime === userStopStart && s.depth === 6)).toBe(true);
     });
 
     it('Contains gas switch events', () => {
@@ -107,12 +107,12 @@ describe('DiveComputer', () => {
         });
         const events = DiveComputer.calculate(calculateDive(fastAscent)).events;
         expect(events.some(e => e.type === ComputerEventType.highAscentSpeed && e.runTime === Time.oneMinute * 12 && e.depth === 30))
-            .toBeTrue();
+            .toBe(true);
     });
 
     it('Calculated ascent has no high ascent speed warning', () => {
         const events = DiveComputer.calculate(calculatedDecoDive).events;
-        expect(events.some(e => e.type === ComputerEventType.highAscentSpeed)).toBeFalse();
+        expect(events.some(e => e.type === ComputerEventType.highAscentSpeed)).toBe(false);
     });
 
     it('Points contain calculated no decompression limit', () => {
@@ -150,7 +150,7 @@ describe('DiveComputer', () => {
         const data = DiveComputer.calculate(calculatedDecoDive);
         const withStop = data.profile.find(p => p.nextStop !== undefined);
         expect(withStop).toBeDefined();
-        expect(data.events.some(e => e === withStop?.nextStop)).toBeTrue();
+        expect(data.events.some(e => e === withStop?.nextStop)).toBe(true);
     });
 
     it('Repetitive dive has shorter no decompression limit', () => {

@@ -7,7 +7,7 @@ import { ConsumedGas, ConsumptionByGas } from './consumptionByGas';
 import { Time } from '../physics/Time';
 import { Segment } from '../depths/Segments';
 import { PlanFactory } from '../depths/PlanFactory';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
@@ -55,7 +55,7 @@ describe('Consumption by gas', () => {
     const sumOf = (tanks: Tank[], volume: (t: Tank) => number): number => tanks.reduce((sum, t) => sum + volume(t), 0);
 
     const expectEnoughGas = (consumed: ConsumedGas): void => {
-        expect(consumed.hasReserve).toBeTrue();
+        expect(consumed.hasReserve).toBe(true);
         expect(consumed.scale).toBeCloseTo(consumed.total, 6);
         expect(consumed.percentsAvailable).toBeCloseTo(100, 6);
         expect(consumed.percentsRequired).toBeLessThan(100);
@@ -75,7 +75,7 @@ describe('Consumption by gas', () => {
 
         it('Creates single gas', () => {
             expect(result.length).toEqual(1);
-            expect(result[0].gas.compositionEquals(tank.gas)).toBeTrue();
+            expect(result[0].gas.compositionEquals(tank.gas)).toBe(true);
         });
 
         it('Available is tank volume', () => {
@@ -96,7 +96,7 @@ describe('Consumption by gas', () => {
 
         it('Has enough gas', () => {
             expectEnoughGas(result[0]);
-            expect(ConsumptionByGas.haveReserve(result)).toBeTrue();
+            expect(ConsumptionByGas.haveReserve(result)).toBe(true);
         });
     });
 
@@ -119,8 +119,8 @@ describe('Consumption by gas', () => {
 
         it('Creates one item per gas in order of tanks', () => {
             expect(result.length).toEqual(2);
-            expect(result[0].gas.compositionEquals(airTank.gas)).toBeTrue();
-            expect(result[1].gas.compositionEquals(ean50Tank.gas)).toBeTrue();
+            expect(result[0].gas.compositionEquals(airTank.gas)).toBe(true);
+            expect(result[1].gas.compositionEquals(ean50Tank.gas)).toBe(true);
         });
 
         it('Available is volume of each tank', () => {
@@ -144,7 +144,7 @@ describe('Consumption by gas', () => {
         it('Has enough gas', () => {
             expectEnoughGas(result[0]);
             expectEnoughGas(result[1]);
-            expect(ConsumptionByGas.haveReserve(result)).toBeTrue();
+            expect(ConsumptionByGas.haveReserve(result)).toBe(true);
         });
     });
 
@@ -167,8 +167,8 @@ describe('Consumption by gas', () => {
 
         it('Creates one item per gas', () => {
             expect(result.length).toEqual(2);
-            expect(result[0].gas.compositionEquals(StandardGases.air)).toBeTrue();
-            expect(result[1].gas.compositionEquals(ean50Tank.gas)).toBeTrue();
+            expect(result[0].gas.compositionEquals(StandardGases.air)).toBe(true);
+            expect(result[1].gas.compositionEquals(ean50Tank.gas)).toBe(true);
         });
 
         it('Available is sum of all tanks with the same gas', () => {
@@ -222,9 +222,9 @@ describe('Consumption by gas', () => {
         });
 
         it('Has not enough gas', () => {
-            expect(result[0].hasReserve).toBeFalse();
-            expect(result[1].hasReserve).toBeFalse();
-            expect(ConsumptionByGas.haveReserve(result)).toBeFalse();
+            expect(result[0].hasReserve).toBe(false);
+            expect(result[1].hasReserve).toBe(false);
+            expect(ConsumptionByGas.haveReserve(result)).toBe(false);
         });
     });
 
@@ -258,9 +258,9 @@ describe('Consumption by gas', () => {
         });
 
         it('Only gas with not enough gas is marked', () => {
-            expect(air.hasReserve).toBeFalse();
+            expect(air.hasReserve).toBe(false);
             expectEnoughGas(result[1]);
-            expect(ConsumptionByGas.haveReserve(result)).toBeFalse();
+            expect(ConsumptionByGas.haveReserve(result)).toBe(false);
         });
     });
 
@@ -271,7 +271,7 @@ describe('Consumption by gas', () => {
             expect(empty.percentsRequired).toEqual(0);
             expect(empty.percentsConsumed).toEqual(0);
             expect(empty.percentsReserve).toEqual(0);
-            expect(empty.hasReserve).toBeTrue();
+            expect(empty.hasReserve).toBe(true);
         });
 
         it('Required is sum of consumed and reserve', () => {

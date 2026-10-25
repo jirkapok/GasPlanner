@@ -83,21 +83,21 @@ describe('Segments', () => {
                 const segment = new Segment(20, 20, StandardGases.air, 15);
                 const segment2 = new Segment(20, 20, StandardGases.air, 35);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeTrue();
+                expect(equals).toBe(true);
             });
 
             it('ascent segments', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
                 const segment2 = new Segment(10, 0, StandardGases.air, 15);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeTrue();
+                expect(equals).toBe(true);
             });
 
             it('descent segments', () => {
                 const segment = new Segment(20, 30, StandardGases.air, 15);
                 const segment2 = new Segment(30, 40, StandardGases.air, 15);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeTrue();
+                expect(equals).toBe(true);
             });
         });
 
@@ -106,21 +106,21 @@ describe('Segments', () => {
                 const segment = new Segment(10, 20, StandardGases.air, 15);
                 const segment2 = new Segment(10, 20, StandardGases.air, 35);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeFalse();
+                expect(equals).toBe(false);
             });
 
             it('different descent segments', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
                 const segment2 = new Segment(20, 10, StandardGases.air, 35);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeFalse();
+                expect(equals).toBe(false);
             });
 
             it('different gas', () => {
                 const segment = new Segment(20, 10, StandardGases.air, 15);
                 const segment2 = new Segment(20, 10, StandardGases.ean50, 35);
                 const equals = segment.contentEquals(segment2);
-                expect(equals).toBeFalse();
+                expect(equals).toBe(false);
             });
         });
     });
@@ -310,19 +310,19 @@ describe('Segments', () => {
 
     describe('Segment is flat', () => {
         it('Staying at the same depth is flat', () => {
-            expect(new Segment(10, 10, StandardGases.air, 60).isFlat).toBeTrue();
+            expect(new Segment(10, 10, StandardGases.air, 60).isFlat).toBe(true);
         });
 
         it('Descent is not flat', () => {
-            expect(new Segment(0, 10, StandardGases.air, 60).isFlat).toBeFalse();
+            expect(new Segment(0, 10, StandardGases.air, 60).isFlat).toBe(false);
         });
 
         it('Ascent is not flat', () => {
-            expect(new Segment(10, 6, StandardGases.air, 60).isFlat).toBeFalse();
+            expect(new Segment(10, 6, StandardGases.air, 60).isFlat).toBe(false);
         });
 
         it('Zero duration at the same depth is flat', () => {
-            expect(new Segment(10, 10, StandardGases.air, 0).isFlat).toBeTrue();
+            expect(new Segment(10, 10, StandardGases.air, 0).isFlat).toBe(true);
         });
     });
 

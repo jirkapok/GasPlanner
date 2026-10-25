@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { PscrBreathing } from '../ccr/PscrBreathing';
 import { CircuitType, RebreatherOptions } from '../ccr/RebreatherOptions';
 import { BreathingModel } from '../ccr/BreathingModel';
@@ -42,7 +42,7 @@ describe('Buhlmann Algorithm - pSCR', () => {
         const profile = algorithm.decompression(params).segments;
         const last = profile[profile.length - 1];
         // segments keep the supply gas, the loop gas is only used for tissues loading
-        expect(last.gas.compositionEquals(StandardGases.ean32)).toBeTrue();
+        expect(last.gas.compositionEquals(StandardGases.ean32)).toBe(true);
         expect(last.endDepth).toBe(0);
     });
 });

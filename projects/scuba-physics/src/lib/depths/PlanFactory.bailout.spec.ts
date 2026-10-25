@@ -1,7 +1,7 @@
 import { PlanFactory } from './PlanFactory';
 import { Segment, Segments } from './Segments';
 import { Tank } from '../consumption/Tanks';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { BreathingModel, OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { PscrBreathing } from '../ccr/PscrBreathing';
 import { MccrBreathing } from '../ccr/MccrBreathing';
@@ -29,7 +29,7 @@ describe('Plan factory - Bailout emergency ascent', () => {
         const pscr = new PscrBreathing(new RebreatherOptions(CircuitType.pscr), 20, depthConverter);
         const ascent = emergencyAscent(pscr);
         const last = ascent[ascent.length - 1];
-        expect(last.gas.compositionEquals(tank.gas)).toBeTrue();
+        expect(last.gas.compositionEquals(tank.gas)).toBe(true);
         expect(last.endDepth).toBe(0);
     });
 
@@ -41,6 +41,6 @@ describe('Plan factory - Bailout emergency ascent', () => {
         const mccr = new MccrBreathing(new RebreatherOptions(CircuitType.mccr), tanks, depthConverter);
         const ascent = PlanFactory.emergencyAscent(mccrPlan, options, tanks, mccr);
         const breathesOxygen = ascent.some(s => s.gas.compositionEquals(StandardGases.oxygen));
-        expect(breathesOxygen).toBeTrue();
+        expect(breathesOxygen).toBe(true);
     });
 });

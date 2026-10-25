@@ -29,10 +29,10 @@ describe('Gas Blender', () => {
         const precision = 6;
         const result = GasBlender.mix(request);
 
-        expect(result.addTop).withContext('top pressure').toBeCloseTo(expectedTop, precision);
-        expect(result.addO2).withContext('add O2').toBeCloseTo(expectedO2, precision);
-        expect(result.addHe).withContext('add He').toBeCloseTo(expectedHe, precision);
-        expect(result.removeFromSource).withContext('remove from source').toBeCloseTo(expectedRemove, precision);
+        expect(result.addTop, 'top pressure').toBeCloseTo(expectedTop, precision);
+        expect(result.addO2, 'add O2').toBeCloseTo(expectedO2, precision);
+        expect(result.addHe, 'add He').toBeCloseTo(expectedHe, precision);
+        expect(result.removeFromSource, 'remove from source').toBeCloseTo(expectedRemove, precision);
     };
 
     describe('Parameters validation', () => {

@@ -28,8 +28,8 @@ describe('pSCR breathing', () => {
     });
 
     it('switches gas but has no air breaks', () => {
-        expect(sut.usesGasSwitching).toBeTrue();
-        expect(sut.usesAirBreaks).toBeFalse();
+        expect(sut.usesGasSwitching).toBe(true);
+        expect(sut.usesAirBreaks).toBe(false);
     });
 
     it('has no oxygen source', () => {

@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { EventType } from './CalculatedProfile';
 import { MccrBreathing } from '../ccr/MccrBreathing';
 import { CircuitType, RebreatherOptions } from '../ccr/RebreatherOptions';
@@ -46,7 +46,7 @@ describe('Buhlmann Algorithm - mCCR', () => {
     it('stays on the diluent without gas switches or air breaks', () => {
         const profile = calculate(diluent.gas, createMccr(1.3, tanks), tanks);
         const allOnDiluent = profile.every(s => s.gas.compositionEquals(diluent.gas));
-        expect(allOnDiluent).toBeTrue();
+        expect(allOnDiluent).toBe(true);
         expect(profile[profile.length - 1].endDepth).toBe(0);
     });
 

@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
 import { AlgorithmParams, durationFor } from '../algorithm/BuhlmannAlgorithmParameters';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { ProfileEvents } from '../algorithm/ProfileEvents';
 import { Segments } from '../depths/Segments';
 import { GasDensity } from '../gases/GasDensity';

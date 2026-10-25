@@ -1,6 +1,6 @@
 import { EventOptions, ProfileEvents } from './ProfileEvents';
 import { EventType } from './CalculatedProfile';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Segments } from '../depths/Segments';
 import { Gas } from '../gases/Gases';
 import { DepthConverterFactory } from '../physics/depth-converter';

@@ -4,7 +4,7 @@ import { Tank } from './Tanks';
 import { Consumption, ConsumptionOptions } from './consumption';
 import { Time } from '../physics/Time';
 import { Segment, Segments } from '../depths/Segments';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';

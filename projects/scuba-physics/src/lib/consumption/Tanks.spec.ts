@@ -359,7 +359,7 @@ describe('Tank', () => {
             sut.startPressure = 150;
             sut.consumed = 100;
 
-            expect(sut.volume).toBeCloseTo(2225.388, 3);
+            expect(sut.volume).toBeCloseTo(2225.389, 3);
             expect(sut.consumedVolume).toBeCloseTo(1507.204, 3);
             expect(sut.endVolume).toBeCloseTo(718.184, 3);
         });

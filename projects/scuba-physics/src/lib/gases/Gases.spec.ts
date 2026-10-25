@@ -170,12 +170,12 @@ describe('Gases', () => {
             it('Gas as bottom gas is registered', () => {
                 gases.add(StandardGases.air);
                 const registered = gases.isRegistered(StandardGases.air);
-                expect(registered).toBeTrue();
+                expect(registered).toBe(true);
             });
 
             it('No gases, gas is not registered', () => {
                 const registered = gases.isRegistered(StandardGases.air);
-                expect(registered).toBeFalse();
+                expect(registered).toBe(false);
             });
         });
 

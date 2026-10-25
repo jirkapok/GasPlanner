@@ -70,7 +70,7 @@ describe('ComputerProfile', () => {
             new Segment(0, 10, air, 60)
         ]).profile;
         expect(profile[0].depth).toEqual(0);
-        expect(profile.every(p => !Number.isNaN(p.depth))).toBeTrue();
+        expect(profile.every(p => !Number.isNaN(p.depth))).toBe(true);
     });
 
     it('Fractional duration ends at last whole second', () => {
@@ -127,7 +127,7 @@ describe('ComputerProfile', () => {
         });
 
         it('No tissues history means no loading', () => {
-            expect(sample(simpleDive, zeroCeilings).profile.every(p => p.tissuesLoading === 0)).toBeTrue();
+            expect(sample(simpleDive, zeroCeilings).profile.every(p => p.tissuesLoading === 0)).toBe(true);
         });
     });
 
@@ -195,7 +195,7 @@ describe('ComputerProfile', () => {
 
         it('Zero duration segment has no ascent speed', () => {
             const profile = sample([new Segment(0, 10, air, 60), new Segment(10, 10, air, 0)]).profile;
-            expect(profile.every(p => Number.isFinite(p.ascentSpeed))).toBeTrue();
+            expect(profile.every(p => Number.isFinite(p.ascentSpeed))).toBe(true);
             expect(profile[60].ascentSpeed).toEqual(0);
         });
 

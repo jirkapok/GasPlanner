@@ -5,7 +5,7 @@ import { StandardGases } from '../gases/StandardGases';
 import { Consumption, ConsumptionOptions } from './consumption';
 import { Diver } from './Diver';
 import { DepthConverter } from '../physics/depth-converter';
-import { OptionExtensions } from '../algorithm/Options.spec';
+import { OptionExtensions } from '../algorithm/Options.testing';
 import { OpenCircuitBreathing } from '../ccr/BreathingModel';
 import { Salinity } from '../physics/pressure-converter';
 import { SafetyStop } from '../algorithm/Options';

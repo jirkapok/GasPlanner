@@ -170,6 +170,15 @@
             "exclude": ["**/*.performance.spec.ts"]
           }
         },
+        "test-performance": {
+          "builder": "@angular/build:unit-test",
+          "options": {
+            "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
+            "runnerConfig": "projects/scuba-physics/vitest-performance.config.mts",
+            "include": ["**/*.performance.spec.ts"],
+            "watch": false
+          }
+        },
         "lint": {
           "builder": "@angular-eslint/builder:lint",
           "options": {

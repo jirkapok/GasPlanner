@@ -9,7 +9,7 @@
     "build-lib": "ng build --configuration production scuba-physics",
     "test": "ng test planner",
     "test-ci": "ng test planner --no-watch --coverage",
-    "test-performance": "ng test --project scuba-physics --karma-config projects/scuba-physics/karma.performance.conf.js --no-watch --include=**/*.performance.spec.ts",
+    "test-performance": "ng run scuba-physics:test-performance",
     "test-lib": "ng test scuba-physics",
     "test-lib-ci": "ng test scuba-physics --no-watch --coverage",
     "lint": "ng lint",

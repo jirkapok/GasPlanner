@@ -94,7 +94,12 @@ Done differently than planned:
 5. Verify: `npx ng test planner --no-watch` → **809 passed**, 3 runs in a row without a hang or flake. `npm run lint` at baseline.
 
 ## Task 3: Performance specs
-- [ ] Status
+- [x] Status (7 performance tests pass, the "Memory measurement is available" spec proves both flags; lint at baseline)
+
+Done differently than planned:
+- **Separate target `scuba-physics:test-performance`** (`"test-performance": "ng run scuba-physics:test-performance"`) instead of overriding the `test` target from the command line. The builder creates its own Playwright provider from the `browsers` option and that provider can't receive launch arguments. Without `browsers`, the builder uses the `browser` section of the runner config as it is. The separate target also avoids fighting the `exclude` of the `test` target.
+- `projects/scuba-physics/vitest-performance.config.mts`: headless Chromium with `--enable-precise-memory-info` and `--js-flags=--expose-gc`, `testTimeout` 30 min, no failure screenshots, `verbose` reporter (the default reporter hides `console.log` of passed tests, but the logged durations and heap sizes are the result of these specs).
+- `projects/scuba-physics/karma.performance.conf.js` deleted, comments in `DiveComputer.performance.spec.ts` point to the new config.
 
 1. Create `projects/scuba-physics/vitest-performance.config.ts` that launches Chromium with `--enable-precise-memory-info` and `--js-flags=--expose-gc`, and a long test timeout (the longest dive takes seconds; the Karma config allowed 30 minutes of no activity).
 2. Script: `"test-performance": "ng test scuba-physics --no-watch --runner-config projects/scuba-physics/vitest-performance.config.ts --include **/*.performance.spec.ts"`. The `exclude` from `angular.json` must not drop these files, so override it or move the exclusion into the scripts.

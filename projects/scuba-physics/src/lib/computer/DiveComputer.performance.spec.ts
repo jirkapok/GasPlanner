@@ -11,7 +11,7 @@ import { Time } from '../physics/Time';
 import { RunTimePoint } from './ComputerData';
 import { CalculatedDive, DiveComputer } from './DiveComputer';
 
-/** Chrome only, precise values require --enable-precise-memory-info, see karma.performance.conf.js */
+/** Chrome only, precise values require --enable-precise-memory-info, see vitest-performance.config.mts */
 interface ChromeMemory {
     usedJSHeapSize: number;
 }
@@ -29,7 +29,7 @@ const usedHeap = (): number => {
     return memory?.usedJSHeapSize ?? Number.NaN;
 };
 
-/** Requires --js-flags=--expose-gc, see karma.performance.conf.js */
+/** Requires --js-flags=--expose-gc, see vitest-performance.config.mts */
 const garbageCollector = (): (() => void) | undefined => (globalThis as unknown as { gc?: () => void }).gc;
 
 const collectGarbage = (): void => {

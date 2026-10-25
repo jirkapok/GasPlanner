@@ -1,3 +1,10 @@
+# [0.17.0](https://github.com/jirkapok/GasPlanner/compare/v0.16.1...v0.17.0) (2026-10-25)
+
+
+### Features
+
+* [#120](https://github.com/jirkapok/GasPlanner/issues/120) extend sharing options ([#130](https://github.com/jirkapok/GasPlanner/issues/130)) ([28f6908](https://github.com/jirkapok/GasPlanner/commit/28f69088c8d1912c6d1e47ed93231b404598a1db))
+
 ## [0.16.1](https://github.com/jirkapok/GasPlanner/compare/v0.16.0...v0.16.1) (2026-10-23)
 
 

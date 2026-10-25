@@ -4,9 +4,10 @@
 module.exports = function (config) {
   config.set({
     basePath: '',
-    frameworks: ['jasmine', '@angular-devkit/build-angular'],
+    frameworks: ['jasmine', 'jasmine-classic', '@angular-devkit/build-angular'],
     plugins: [
       require('karma-jasmine'),
+      require('../karma-jasmine-classic'),
       require('karma-chrome-launcher'),
       require('karma-jasmine-html-reporter'),
       require('karma-verbose-reporter'),

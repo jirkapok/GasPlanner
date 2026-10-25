@@ -1,6 +1,6 @@
-import { Injectable } from "@angular/core";
-import { MdbModalService } from "mdb-angular-ui-kit/modal";
-import { QrCodeModalComponent } from "../qr-code-modal/qr-code-modal.component";
+import { Injectable } from '@angular/core';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
+import { QrCodeModalComponent } from '../qr-code-modal/qr-code-modal.component';
 
 @Injectable({
     providedIn: 'root'

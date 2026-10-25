@@ -1,3 +1,10 @@
+## [0.17.1](https://github.com/jirkapok/GasPlanner/compare/v0.17.0...v0.17.1) (2026-10-25)
+
+
+### Bug Fixes
+
+* add missing qr code modal localization texts ([e9fca59](https://github.com/jirkapok/GasPlanner/commit/e9fca59c5af2f6a9ee64385030334d5909476418))
+
 # [0.17.0](https://github.com/jirkapok/GasPlanner/compare/v0.16.1...v0.17.0) (2026-10-25)
 
 

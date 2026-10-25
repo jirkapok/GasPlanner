@@ -225,5 +225,10 @@
     "showHelp": "显示帮助",
     "openHelpPanel": "打开帮助面板",
     "resetCategory": "重置类别"
+  },
+  "qrCodeModal": {
+    "title": "潜水计划二维码",
+    "close": "关闭",
+    "qrCode": "包含潜水计划链接的二维码"
   }
 }

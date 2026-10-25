@@ -589,5 +589,10 @@
     "showHelp": "Show Help",
     "openHelpPanel": "Open help panel",
     "resetCategory": "Reset Category"
+  },
+  "qrCodeModal": {
+    "title": "Dive plan QR code",
+    "close": "Close",
+    "qrCode": "QR code with link to the dive plan"
   }
 }

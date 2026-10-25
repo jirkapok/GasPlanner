@@ -3,9 +3,8 @@ import eslint from '@eslint/js';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import jasmine from 'eslint-plugin-jasmine';
-import { fixupPluginRules } from '@eslint/compat';
 import globals from 'globals';
 
 export default defineConfig([{
@@ -20,7 +19,7 @@ export default defineConfig([{
     processor: angular.processInlineTemplates,
 
     plugins: {
-        import: fixupPluginRules(importPlugin),
+        import: importPlugin,
         jasmine,
     },
 

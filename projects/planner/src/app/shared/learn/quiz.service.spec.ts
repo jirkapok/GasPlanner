@@ -64,8 +64,8 @@ describe('Quiz Service', () => {
 
     it('Select selects always some category', () => {
         const sut = new QuizService(topics);
-        let selectedTopic!: Topic;
-        let selectedCategory!: Category;
+        const selectedTopic = undefined as unknown as Topic;
+        const selectedCategory = undefined as unknown as Category;
         sut.select(selectedTopic, selectedCategory);
 
         expect(sut.selectedCategory).not.toBeNull();

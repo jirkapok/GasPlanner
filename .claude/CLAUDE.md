@@ -84,6 +84,7 @@ The project rules in this file take precedence over the Superpowers skills where
 ## Conventions
 
 - Keep new UI/state code in the standalone-component style (no NgModules); don't reintroduce them.
+- The app runs zoneless (`provideZonelessChangeDetection()`, no zone.js). State changed outside Angular template events (web worker messages, timers, promises, third-party callbacks like Plotly events) must notify Angular: services call `ViewRefresh.refresh()` (`shared/viewRefresh.ts`, marks the root components for check), components call `ChangeDetectorRef.markForCheck()`. Worker messages already refresh the view in `BackgroundTask`.
 - Push logic into `scuba-physics` wherever it's pure computation/domain logic — keep `planner` focused on UI, routing, and orchestration.
 - Use test-driven development as defined by the `superpowers:test-driven-development` skill (failing test first, then minimal code to pass, then refactor) for every feature and bug fix. Write the tests as component tests for `planner` app code and as unit tests for library (`scuba-physics`) code.
 - Add E2E coverage only for the happy path of a key scenario when introducing a new page — not for every case.

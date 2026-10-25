@@ -1,41 +1,59 @@
-import { ApplicationRef } from '@angular/core';
+import { ApplicationRef, ChangeDetectionStrategy, Component, ComponentRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { MockInstance } from 'vitest';
 import { ViewRefresh } from './viewRefresh';
+
+@Component({
+    selector: 'app-refreshed-child',
+    template: '<span class="child">{{ state.value }}</span>',
+    changeDetection: ChangeDetectionStrategy.Eager
+})
+class RefreshedChildComponent {
+    public static readonly state = { value: 'initial' };
+    public readonly state = RefreshedChildComponent.state;
+}
+
+@Component({
+    selector: 'app-refreshed-root',
+    imports: [RefreshedChildComponent],
+    template: '<app-refreshed-child />',
+    changeDetection: ChangeDetectionStrategy.Eager
+})
+class RefreshedRootComponent {
+}
 
 describe('ViewRefresh', () => {
     let sut: ViewRefresh;
-    let tick: MockInstance<() => void>;
+    let appRef: ApplicationRef;
+    let root: ComponentRef<RefreshedRootComponent>;
+    let host: HTMLElement;
 
-    beforeEach(() => {
+    const childText = (): string | null | undefined => host.querySelector('.child')?.textContent;
+
+    beforeEach(async () => {
+        RefreshedChildComponent.state.value = 'initial';
+        host = document.createElement('app-refreshed-root');
+        document.body.appendChild(host);
         sut = TestBed.inject(ViewRefresh);
-        tick = vi.spyOn(TestBed.inject(ApplicationRef), 'tick').mockImplementation(() => {});
+        appRef = TestBed.inject(ApplicationRef);
+        root = appRef.bootstrap(RefreshedRootComponent, host);
+        await appRef.whenStable();
     });
 
-    it('does not tick synchronously', () => {
-        sut.refresh();
-        expect(tick).not.toHaveBeenCalled();
+    afterEach(() => {
+        root.destroy();
+        host.remove();
     });
 
-    it('ticks once after microtask', async () => {
-        sut.refresh();
-        await Promise.resolve();
-        expect(tick).toHaveBeenCalledTimes(1);
+    it('does not render state changed outside Angular events without refresh', async () => {
+        RefreshedChildComponent.state.value = 'changed';
+        await appRef.whenStable();
+        expect(childText()).toBe('initial');
     });
 
-    it('coalesces calls in one tick', async () => {
+    it('renders state of nested components changed outside Angular events', async () => {
+        RefreshedChildComponent.state.value = 'changed';
         sut.refresh();
-        sut.refresh();
-        sut.refresh();
-        await Promise.resolve();
-        expect(tick).toHaveBeenCalledTimes(1);
-    });
-
-    it('ticks again after previous refresh finished', async () => {
-        sut.refresh();
-        await Promise.resolve();
-        sut.refresh();
-        await Promise.resolve();
-        expect(tick).toHaveBeenCalledTimes(2);
+        await appRef.whenStable();
+        expect(childText()).toBe('changed');
     });
 });

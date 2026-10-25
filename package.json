@@ -49,8 +49,7 @@
     "plotly.js-dist": "^4.1.2",
     "rxjs": "^7.8.2",
     "scuba-physics": "file:dist/scuba-physics",
-    "tslib": "^2.7.0",
-    "zone.js": "^0.16.3"
+    "tslib": "^2.7.0"
   },
   "devDependencies": {
     "@angular-eslint/builder": "^22.6.0",

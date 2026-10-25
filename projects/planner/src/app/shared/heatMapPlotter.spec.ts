@@ -63,7 +63,7 @@ describe('HeatMapPlotter', () => {
         graphDiv.id = id;
         graphDiv.style.display = 'none';
         document.body.appendChild(graphDiv);
-        // zone.js reports unhandled promise rejections to the console
+        // Plotly reports its errors to the console, unhandled promise rejections fail the Vitest run
         const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         try {

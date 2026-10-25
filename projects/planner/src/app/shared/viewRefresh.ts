@@ -6,22 +6,18 @@ import { ApplicationRef, Injectable } from '@angular/core';
  */
 @Injectable({ providedIn: 'root' })
 export class ViewRefresh {
-    private scheduled = false;
-
     constructor(private appRef: ApplicationRef) {
     }
 
-    /** Schedules one change detection after the current task, multiple calls before it are coalesced */
+    /**
+     * Schedules change detection of the whole component tree.
+     * Zoneless ApplicationRef.tick refreshes only views marked dirty, so the root components are marked.
+     * Children of a refreshed view are checked in the global mode, which also refreshes all their descendants.
+     * The Angular scheduler coalesces multiple calls and it is safe to call while change detection is running.
+     */
     public refresh(): void {
-        if (this.scheduled) {
-            return;
+        for (const component of this.appRef.components) {
+            component.changeDetectorRef.markForCheck();
         }
-
-        this.scheduled = true;
-        // deferred, because tick fails, if called while change detection is running
-        queueMicrotask(() => {
-            this.scheduled = false;
-            this.appRef.tick();
-        });
     }
 }

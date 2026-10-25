@@ -107,7 +107,13 @@
 - [ ] **Step 5: Commit:** `refactor: refresh view after timers and chart events`.
 
 ### Task 3: Switch to zoneless and remove zone.js
-- [ ] Status
+- [x] Status (library 969, planner 821, performance 7, e2e 8 passed; polyfills 494 bytes (was ~36 kB); lint at baseline; a temporary spec confirmed `Zone` undefined and `NoopNgZone` in tests. Manual checklist confirmed by the user.)
+
+**Correction of Task 1 found here:** the first zoneless e2e run failed (4 of 8, calculation results never rendered). In zoneless mode `ApplicationRef.tick()` uses the "targeted" change detection mode even for a global tick (`useGlobalCheck && !this.zonelessEnabled ? Global : Targeted`), which refreshes only views marked dirty. The `Eager` components were never dirty, so the deferred `tick()` of the original `ViewRefresh` refreshed nothing. `ViewRefresh.refresh()` now calls `markForCheck()` on `appRef.components`. A marked root is refreshed and its children are checked in the global mode, so all `Eager` descendants refresh. The Angular scheduler coalesces calls and `markForCheck()` is safe during change detection, so the microtask and the coalescing flag are gone. The 4 spy based tests were replaced by 2 tests that bootstrap a real root with a nested `Eager` child (without refresh the change stays unrendered, with refresh it renders). Review Focus 1 and 2 are handled by Angular's scheduler now. Overlay and modal views (CDK `attachView`) are separate roots and are not marked by `refresh()`; their content changes only through their own template events.
+
+Other notes:
+- `heatMapPlotter.spec.ts`: the comment of the console spy updated, zone.js no longer reports unhandled rejections there (Vitest fails the run on them instead).
+- `projects/scuba-physics/package-lock.json` deleted on user request: stale (library 0.1.37, Angular 18), its only `zone.js` was the Angular 18 peer of `@angular/core`. No script reads it, `build/bump-version.ps1` changes only the library `package.json` (`npm pkg set`). The library never depended on zone.js.
 
 - [ ] **Step 1:** `projects/planner/src/main.ts`: replace `provideZoneChangeDetection()` with `provideZonelessChangeDetection()` (both from `@angular/core`).
 - [ ] **Step 2:** `angular.json` planner build `polyfills`: `["@angular/localize/init"]` (remove `"zone.js"`). Without zone.js in the polyfills, the unit-test builder omits `zone.js/testing` and TestBed runs zoneless. Remove the commented `zone.js/plugins/zone-error` import from `environments/environment.ts`.
@@ -118,7 +124,7 @@
   - `npm run lint` at the baseline.
   - e2e on port 4300: 8 passed.
   - `grep -rn "zone" --include=*.ts --include=*.json projects angular.json package.json` finds no zone.js reference.
-- [ ] **Step 6: Manual checklist for the user** (`npm start`, then each must update without a further click):
+- [x] **Step 6: Manual checklist for the user** (confirmed by the user) (`npm start`, then each must update without a further click):
   - Plan a deco dive: profile chart, dive info, consumption and stops table appear.
   - Change depth: the results recalculate and "still running" placeholders appear for long dives.
   - Hover the profile chart: the selected waypoint and the legend values follow the cursor.

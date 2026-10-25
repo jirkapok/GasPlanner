@@ -1,4 +1,4 @@
-import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
+import { enableProdMode, provideZonelessChangeDetection } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
 import localeDe from '@angular/common/locales/de';
 import localeCs from '@angular/common/locales/cs';
@@ -24,5 +24,5 @@ registerLocaleData(localeFr);
 registerLocaleData(localeRu);
 registerLocaleData(localeZhHans);
 
-bootstrapApplication(AppComponent, { ...CONFIG, providers: [provideZoneChangeDetection(), ...CONFIG.providers] })
+bootstrapApplication(AppComponent, { ...CONFIG, providers: [provideZonelessChangeDetection(), ...CONFIG.providers] })
     .catch((err) => console.error(err));

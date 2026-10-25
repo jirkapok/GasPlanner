@@ -26,8 +26,7 @@
             },
             "index": "projects/planner/src/index.html",
             "polyfills": [
-              "@angular/localize/init",
-              "zone.js"
+              "@angular/localize/init"
             ],
             "tsConfig": "projects/planner/tsconfig.app.json",
             "assets": [

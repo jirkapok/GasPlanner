@@ -16,12 +16,14 @@ Build order matters: the `scuba-physics` library must be built before the `plann
 - `npm start` — builds `scuba-physics` then serves `planner` via `ng serve` (dev mode, http://localhost:4200).
 - `npm run build` — production build of `planner` into `dist/planner`.
 - `npm run start-pwa` — production build of `planner`, then serves `dist/planner` via `http-server` on port `9090` (use this to test service-worker/offline/PWA behavior, which does not work under `ng serve`).
-- `npm test` — Karma unit tests for `planner` (interactive/watch, Chrome).
-- `npm run test-lib` — Karma unit tests for `scuba-physics` (interactive/watch, Chrome).
-- `npm run test-ci` / `npm run test-lib-ci` — headless, single-run variants used in CI.
+- `npm test` — Vitest unit tests for `planner` (Angular `@angular/build:unit-test` builder, Vitest browser mode in Playwright Chromium; interactive/watch with the Vitest UI).
+- `npm run test-lib` — Vitest unit tests for `scuba-physics` (interactive/watch, same setup).
+- `npm run test-ci` / `npm run test-lib-ci` — headless, single-run variants with coverage used in CI (Cobertura in `coverage/<project>`, JUnit in `test-results/<project>`).
+- `npm run test-performance` — `scuba-physics` `*.performance.spec.ts` (separate `test-performance` target, Chromium with memory measurement flags, see `projects/scuba-physics/vitest-performance.config.mts`).
+- Vitest runner settings (spy restore, reporters, module resolution) live in `projects/*/vitest-base.config.mts`, referenced by `runnerConfig` in `angular.json`. Test helpers shared between specs go to `*.testing.ts` files, never export them from a `*.spec.ts` (Vitest would run the exporting spec again in every importing file).
 - `npm run lint` — `ng lint` (Angular ESLint) across both projects.
 - `npm run e2e` — Playwright E2E (`playwright-ng-schematics` builder), auto-starts the dev server; single spec currently in `e2e/startupSmoke.spec.ts`.
-- Run a single spec file: `ng test --project planner --include='**/foo.spec.ts'` (swap `--project scuba-physics` for library specs).
+- Run a single spec file: `ng test planner --no-watch --include='**/foo.spec.ts'` (swap `planner` for `scuba-physics` for library specs).
 - Windows PowerShell equivalents of the main build/test flow are in `build/*.ps1`, but the npm scripts above are the primary workflow.
 
 ## Architecture
@@ -55,13 +57,13 @@ Heavy dive-profile/consumption/decompression math runs off the main thread. `pro
 
 ### Docs / Help
 
-Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob in `angular.json` (both `build` and `test` targets). They're rendered at runtime by `HelpComponent` using `ngx-md`, routed as `/help/:document/:anchor`.
+Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob of the `build` target in `angular.json` (the `test` target reuses it through `buildTarget`). They're rendered at runtime by `HelpComponent` using `ngx-md`, routed as `/help/:document/:anchor`.
 
 ### CI/CD pipeline (`.github/workflows/main.yml`, `build/*.ps1`)
 
 Tiered, each tier gated on the previous, later tiers restricted to `master`:
 
-1. **Unit tests** (every push) — `build/test.ps1`: `scuba-physics` Karma tests, then `build/install-lib.ps1` builds the lib and `npm install`s it from `dist/scuba-physics` (mirrors real consumption, not a workspace link), then `planner` Karma tests.
+1. **Unit tests** (every push) — `build/test.ps1`: installs Playwright Chromium, runs `scuba-physics` Vitest tests, then `build/install-lib.ps1` builds the lib and `npm install`s it from `dist/scuba-physics` (mirrors real consumption, not a workspace link), then `planner` Vitest tests.
 2. **E2E** (PRs + `master`, needs #1) — `build/e2e.ps1`: reinstalls the built lib, installs Playwright Chromium, runs `npm run e2e`.
 3. **Release** (`master` only, needs #1+#2) — `npx semantic-release` (`.releaserc.json`): derives next version from conventional commits, updates `doc/CHANGELOG.md`, runs `build/bump-version.ps1` to stamp the version into `scuba-physics/package.json` and the PWA manifest's `id`, commits as `chore(release): X.Y.Z`, creates a GitHub release.
 4. **Deploy** (after release) — `build/deploy.ps1`: builds lib+app, uses a `git worktree` to update `gh-pages` in place (wipes old build files, copies in `dist/planner`, duplicates `index.html` → `404.html` for SPA routing on GitHub Pages), pushes if changed. `build/wait-for-deploy.ps1` then polls the live `manifest.webmanifest` `id` until it matches the released version (cache-busted, 4 min timeout) before a Playwright smoke test runs against production. On any deploy-stage failure, `build/rollback-deploy.ps1` force-resets `gh-pages` to the pre-deploy SHA — deploys self-heal without manual intervention.

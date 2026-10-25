@@ -37,7 +37,7 @@
         "type": "npm",
         "script": "test",
         "label": "npm: test",
-        "detail": "ng test",
+        "detail": "ng test planner --no-headless",
         "problemMatcher": {
             "owner": "typescript",
             "source": "ts",
@@ -62,7 +62,7 @@
         "type": "npm",
         "script": "test-lib",
         "label": "npm: test-lib",
-        "detail": "ng test --project scuba-physics",
+        "detail": "ng test scuba-physics --no-headless",
         "problemMatcher": {
             "owner": "typescript",
             "source": "ts",

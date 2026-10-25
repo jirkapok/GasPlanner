@@ -285,12 +285,12 @@ describe('Gases', () => {
     });
 
     describe('Gas partial pressures', () => {
-        it('At 1 bar 0.79 volume fraction converts to ', () => {
+        it('At 1 bar 0.79 volume fraction converts to 0.79 bar', () => {
             const result = GasMixtures.partialPressure(1, 0.79);
             expect(result).toBe(0.79);
         });
 
-        it('At 3 bar 0.79 volume fraction converts to ', () => {
+        it('At 6.667 bar 0.21 volume fraction converts to 1.4 bar', () => {
             const result = GasMixtures.partialPressure(6.667, 0.21);
             expect(result).toBeCloseTo(1.40, 3);
         });

@@ -446,13 +446,13 @@ describe('Url Serialization', () => {
     });
 
     describe('Surface interval', () => {
-        it('Creates 1. dive url without surface interval ', () => {
+        it('Creates 1. dive url without surface interval', () => {
             const sut = createSimplePlan();
             const diveUrl = sut.urlSerialization.toUrlFor(1);
             expect(diveUrl.indexOf('&si=')).toEqual(-1);
         });
 
-        it('Creates 2. dive url with surface interval ', () => {
+        it('Creates 2. dive url with surface interval', () => {
             const sut = createSimplePlan();
             const dive = sut.schedules.add();
             dive.apply30MinutesSurfaceInterval(); // default dive has no surface interval

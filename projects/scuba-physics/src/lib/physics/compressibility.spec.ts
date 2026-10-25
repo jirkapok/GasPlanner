@@ -139,7 +139,7 @@ describe('Gas compressibility', () => {
             expect(result).toBeCloseTo(200, 3);
         });
 
-        it(' 3861 l in 20 l tank of air is 200 b', () => {
+        it('3861 l in 20 l tank of air is 200 b', () => {
             const result = sut.tankPressure(StandardGases.air, 20, 3857.303);
             expect(result).toBeCloseTo(200, 3);
         });

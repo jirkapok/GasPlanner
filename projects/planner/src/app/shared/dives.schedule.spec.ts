@@ -36,7 +36,7 @@ describe('Scheduled dives', () => {
     });
 
     describe('Selected dive', () => {
-        it('it is first by default', () => {
+        it('Is first by default', () => {
             const emptySut = createSut();
             expect(emptySut.selected).toBe(emptySut.dives[0]);
         });

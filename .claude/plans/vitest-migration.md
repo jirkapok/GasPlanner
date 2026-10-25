@@ -124,7 +124,15 @@ Done:
 5. Verify: run `npm run test-lib-ci` and `npm run test-ci` and check that both cobertura and junit files exist with the expected test counts.
 
 ## Task 5: Remove Karma/Jasmine, lint and docs
-- [ ] Status
+- [x] Status (`build/test.ps1` 969 + 809 passed, `test-performance` 7 passed, production build ok, e2e 8 passed; lint 102 + 12 errors, 0 warnings, better than the baseline 121 errors / 28 warnings)
+
+Done:
+- Uninstalled `karma*`, `jasmine-core`, `@types/jasmine`, `istanbul-lib-instrument` (only the Karma builder used it, `@vitest/coverage-istanbul` has its own), `eslint-plugin-jasmine`. Removed the `overrides` block. Deleted both `karma.conf.js`, `projects/karma-jasmine-classic.js` and the migration codemod `build/jasmine2vitest.ts`.
+- ESLint: `@vitest/eslint-plugin` recommended rules, `globals.vitest`. `vitest/expect-expect` accepts helper names `expect*`, `assert*`, `verify*` and `measure`, because most assertions are wrapped in spec helpers. Renamed one helper that asserts (`calculateNoDecompressionLimit` → `assertNoDecompressionLimits`) and fixed 8 test titles for `vitest/valid-title` (trailing/leading spaces, duplicate "it"/"It is" prefix, two incomplete `Gases` partial pressure titles completed by their assertions).
+- `.vscode`: removed the Karma Test Explorer recommendation and its settings, updated the `npm: test`/`npm: test-lib` task details.
+- `.claude/CLAUDE.md`: Commands (test runners, `test-performance`, runner configs, `*.testing.ts` rule, single-spec command), docs assets note and CI tier 1.
+- Not done: clean `npm ci` (the user's `ng serve` on port 4200 locks `node_modules`). `npm ls` confirms no removed package is installed. E2E ran against an own dev server on port 4300.
+- Remaining "Jasmine" mentions are three comments explaining Vitest code by its Jasmine equivalent. `karma` remains in `package-lock.json` only as an optional peer dependency of `@angular/build`.
 
 1. Uninstall: `karma`, `karma-chrome-launcher`, `karma-coverage`, `karma-jasmine`, `karma-jasmine-html-reporter`, `karma-junit-reporter`, `karma-verbose-reporter`, `jasmine-core`, `@types/jasmine`, `istanbul-lib-instrument` (only if nothing else needs it). Remove the `overrides` block.
 2. Delete the Karma config files and `projects/karma-jasmine-classic.js`.

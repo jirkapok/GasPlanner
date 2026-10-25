@@ -4,7 +4,7 @@ import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import angular from 'angular-eslint';
 import importPlugin from 'eslint-plugin-import-x';
-import jasmine from 'eslint-plugin-jasmine';
+import vitest from '@vitest/eslint-plugin';
 import globals from 'globals';
 
 export default defineConfig([{
@@ -20,14 +20,14 @@ export default defineConfig([{
 
     plugins: {
         import: importPlugin,
-        jasmine,
+        vitest,
     },
 
     languageOptions: {
         globals: {
             ...globals.browser,
             ...globals.node,
-            ...globals.jasmine,
+            ...globals.vitest,
         },
 
         sourceType: 'module',
@@ -39,8 +39,9 @@ export default defineConfig([{
     },
 
     rules: {
-        ...jasmine.configs.recommended.rules,
-        'jasmine/new-line-before-expect': 'off',
+        ...vitest.configs.recommended.rules,
+        // assertions are often wrapped in test helper functions
+        'vitest/expect-expect': ['error', { assertFunctionNames: ['expect', 'expect*', 'assert*', 'verify*', 'measure'] }],
         '@angular-eslint/component-class-suffix': 'error',
 
         '@angular-eslint/component-selector': ['error', {

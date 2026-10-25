@@ -12,10 +12,6 @@
         "typescriptreact",
         "html"
     ],
-    "karmaTestExplorer.testFiles": [
-        "**/*{.,-,_}{test,spec}.{ts,js}",
-        "**/{test,spec}{.,-,_}*.{ts,js}"
-    ],
     "cSpell.words": [
         "inputcontrols",
         "Nitrox"

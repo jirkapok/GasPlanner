@@ -108,7 +108,7 @@ describe('Dive options component', () => {
         expect(dispatchSpy).toHaveBeenCalledWith();
     });
 
-    it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger ', () => {
+    it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger', () => {
         const dispatcherSpy = vi.spyOn(reloadDispatcher, 'sendOptionsChanged').mockImplementation(() => {});
 
         const form = component.optionsForm;

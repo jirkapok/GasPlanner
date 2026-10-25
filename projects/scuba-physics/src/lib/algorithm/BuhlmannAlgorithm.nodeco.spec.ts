@@ -94,7 +94,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
     describe('No decompression limits for air at depth', () => {
         const options = OptionExtensions.createOptions(1, 1, 1.6, 1.6, Salinity.fresh);
 
-        const calculateNoDecompressionLimit = (testCases: number[][], salinity: Salinity) => {
+        const assertNoDecompressionLimits = (testCases: number[][], salinity: Salinity) => {
             testCases.forEach(testCase => {
                 const algorithm = new BuhlmannAlgorithm();
                 const depth = testCase[0];
@@ -123,7 +123,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 [100, 5], // Where is the limit for no decompression depth?
             ];
 
-            calculateNoDecompressionLimit(noDecoLimitTestCases, Salinity.fresh);
+            assertNoDecompressionLimits(noDecoLimitTestCases, Salinity.fresh);
         });
 
         it('Fresh water with gradient factor 40/85', () => {
@@ -145,7 +145,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
 
             options.gfLow = .4;
             options.gfHigh = .85;
-            calculateNoDecompressionLimit(noDecoLimitTestCases, Salinity.fresh);
+            assertNoDecompressionLimits(noDecoLimitTestCases, Salinity.fresh);
             options.gfLow = 1;
             options.gfHigh = 1;
         });
@@ -167,7 +167,7 @@ describe('Buhlmann Algorithm - No decompression times', () => {
                 [100, 5], // Where is the limit for no decompression depth?
             ];
 
-            calculateNoDecompressionLimit(noDecoLimitTestCasesSalt, Salinity.salt);
+            assertNoDecompressionLimits(noDecoLimitTestCasesSalt, Salinity.salt);
         });
     });
 });

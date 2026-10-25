@@ -4,7 +4,6 @@
         "dbaeumer.vscode-eslint",
         "streetsidesoftware.code-spell-checker",
         "editorconfig.editorconfig",
-        "lucono.karma-test-explorer",
         "davidanson.vscode-markdownlint"
     ],
     "unwantedRecommendations": [

@@ -196,7 +196,7 @@ describe('Segments', () => {
             segments.add(0, StandardGases.air, 10);
         });
 
-        it('It is called for remove', () => {
+        it('Is called for remove', () => {
             segments.remove(middle);
 
             expect(segments.last().startDepth).toBe(20);

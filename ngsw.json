@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1792963707487,
+  "timestamp": 1792966107790,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -20,7 +20,7 @@
         "/assets/i18n/zh.json",
         "/favicon.ico",
         "/index.html",
-        "/main-XFCUH2WE.js",
+        "/main-ZAX5GM2C.js",
         "/manifest.cs.webmanifest",
         "/manifest.de.webmanifest",
         "/manifest.es.webmanifest",
@@ -215,8 +215,8 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "ff8a0c4ad698133613b8161e7f0dd08002851f7f",
-    "/main-XFCUH2WE.js": "412070f33f091b511e8cec44189c15afdd997fad",
+    "/index.html": "cad00df25f665af60d97666237bb7cfe14a403b0",
+    "/main-ZAX5GM2C.js": "5fa8235c0511b8d57e448d36189f7fcff2e0e09d",
     "/manifest.cs.webmanifest": "43e20754c25d82a9431093e38471c1d87a6915b7",
     "/manifest.de.webmanifest": "78dd9e9f7dba09c13c1293d9cdd2441629a0c33d",
     "/manifest.es.webmanifest": "103c033b9a01151b07bbaf5fdb21bddccc72a48a",

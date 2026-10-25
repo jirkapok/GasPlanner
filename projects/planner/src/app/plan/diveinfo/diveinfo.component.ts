@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import {
-    faSlidersH, faShareFromSquare, faExclamationTriangle
+    faSlidersH, faShareFromSquare, faExclamationTriangle, faQrcode
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
@@ -52,6 +52,7 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     @ViewChild('tabs') public tabs: MdbTabsComponent | undefined;
     public icon = faSlidersH;
     public iconShare = faShareFromSquare;
+    public readonly qrCodeIcon = faQrcode;
     public readonly warnIcon = faExclamationTriangle;
     private lastSelected = 0;
     private readonly issuesTabIndex = 2;
@@ -169,6 +170,10 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public sharePlan(): void {
         this.shareDive.sharePlan();
+    }
+
+    public sharePlanQrCode(): void {
+        this.shareDive.sharePlanQrCode();
     }
 
     public switchInLiters(): void {

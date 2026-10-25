@@ -1,8 +1,22 @@
 <div class="modal-header">
-    <!-- TODO: add translated close text -->
+    <h2 class="modal-title w-100">{{ 'qrCodeModal.title' | translate }}</h2>
     <button type="button" class="btn-close" aria-label="{{ 'qrCodeModal.close' | translate }}" (click)="closeModal()"></button>
 </div>
 
-<div class="modal-body">
-    <p>QR code placeholder</p>
+<div class="modal-body d-flex justify-content-center align-items-center w-100">
+    <qrcode
+        [qrdata]="data"
+        [width]="400"
+        [imageSrc]="'../../../favicon.ico'"
+        [imageHeight]="60"
+        [imageWidth]="60"
+        [allowEmptyString]="true"
+        ariaLabel="{{ 'qrCodeModal.qrCode' | translate }}"
+    ></qrcode>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">
+        {{ 'qrCodeModal.close' | translate }}
+    </button>
 </div>

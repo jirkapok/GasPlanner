@@ -46,7 +46,7 @@
     "mdb-angular-ui-kit": "^11.0.0",
     "ngx-clipboard": "^16.0.0",
     "ngx-md": "^19.0.0",
-    "plotly.js-dist": "^3.7.0",
+    "plotly.js-dist": "^4.1.2",
     "rxjs": "^7.8.2",
     "tslib": "^2.7.0",
     "zone.js": "^0.16.3"

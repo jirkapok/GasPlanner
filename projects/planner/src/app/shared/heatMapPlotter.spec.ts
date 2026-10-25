@@ -28,7 +28,7 @@ describe('HeatMapPlotter', () => {
         try {
             await new HeatMapPlotter(id).plotHeatMap(input);
 
-            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.PlotData>;
+            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.HeatmapData>;
             expect(plotted.type).toBe('heatmap');
             expect(plotted.z).toEqual(expectedZ);
             expect(graphDiv.querySelector('svg.main-svg')).not.toBeNull();
@@ -69,7 +69,7 @@ describe('HeatMapPlotter', () => {
         try {
             await new HeatMapPlotter(id).plotHeatMap([]);
 
-            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.PlotData>;
+            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.HeatmapData>;
             expect(plotted.type).toBe('heatmap');
             expect(consoleError).not.toHaveBeenCalled();
         } finally {

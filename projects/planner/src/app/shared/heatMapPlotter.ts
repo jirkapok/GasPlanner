@@ -12,7 +12,7 @@ export type HeatMapOverPressures =
     number | null, number | null, number | null, number | null][];
 
 export class HeatMapPlotter {
-    private readonly colorScale = [
+    private readonly colorScale: Plotly.ColorScale = [
         [0, 'rgb(31, 119, 180)'],
         [0.3, 'white'],
         [0.4, 'lightgrey'],
@@ -72,11 +72,11 @@ export class HeatMapPlotter {
         let transponed = _.zip(...dataValues) as number[][];
         transponed = transponed.reverse();
 
-        const data: Plotly.Data[] = [
+        const data: Partial<Plotly.HeatmapData>[] = [
             {
                 z: transponed,
-                type: <Plotly.PlotType>'heatmap',
-                colorscale: this.colorScale as Plotly.ColorScale,
+                type: 'heatmap',
+                colorscale: this.colorScale,
                 showscale: false,
                 hoverinfo: 'none',
             }

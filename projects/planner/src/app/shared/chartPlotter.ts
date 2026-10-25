@@ -9,7 +9,7 @@ import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 
 /** Layout which always defines both axes, so they can be updated without null checks */
-type ChartLayout = Partial<Plotly.Layout> & Pick<Plotly.Layout, 'xaxis' | 'yaxis'>;
+type ChartLayout = Partial<Plotly.Layout> & Required<Pick<Plotly.Layout, 'xaxis' | 'yaxis'>>;
 
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
@@ -179,7 +179,7 @@ export class DiveTracesBuilder {
         return this.namePrefixKey ? this.translate(this.namePrefixKey) + ' ' : '';
     }
 
-    public allTraces(): Partial<Plotly.PlotData>[] {
+    public allTraces(): Partial<Plotly.ScatterData>[] {
         const diveResult = this.dive();
         // performance: number of samples shown in chart doesn't speedup the drawing significantly
         const profileTraces = this.profileTraces();
@@ -194,14 +194,14 @@ export class DiveTracesBuilder {
         return [ ...profileTraces, ceilings, events ];
     }
 
-    public profileTraces(): Partial<Plotly.PlotData>[] {
+    public profileTraces(): Partial<Plotly.ScatterData>[] {
         const diveResult = this.dive();
         const averageDepths = this.plotAverageDepth(diveResult.profile);
         const depths = this.plotDepths(diveResult.wayPoints);
         return [averageDepths, depths];
     }
 
-    private plotAverageDepth(profile: Segment[]): Partial<Plotly.PlotData> {
+    private plotAverageDepth(profile: Segment[]): Partial<Plotly.ScatterData> {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(profile);
 
         return {
@@ -219,7 +219,7 @@ export class DiveTracesBuilder {
         };
     }
 
-    private plotDepths(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
+    private plotDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
         return {
@@ -234,7 +234,7 @@ export class DiveTracesBuilder {
         };
     }
 
-    private plotEmergencyDepths(wayPoints: WayPoint[]): Partial<Plotly.PlotData> {
+    private plotEmergencyDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
         return {
@@ -252,7 +252,7 @@ export class DiveTracesBuilder {
         };
     }
 
-    private plotCeilings(ceilings: Ceiling[]): Partial<Plotly.PlotData> {
+    private plotCeilings(ceilings: Ceiling[]): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.resampleCeilings(ceilings);
 
         const dataCeilings = {
@@ -267,10 +267,10 @@ export class DiveTracesBuilder {
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
-        return <Partial<Plotly.PlotData>>dataCeilings;
+        return <Partial<Plotly.ScatterData>>dataCeilings;
     }
 
-    private plotEvents(events: BoundEvent[], totalDuration: number): Partial<Plotly.PlotData> {
+    private plotEvents(events: BoundEvent[], totalDuration: number): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.convertEvents(events, totalDuration);
 
         const dataEvents = {
@@ -285,7 +285,7 @@ export class DiveTracesBuilder {
             hovertemplate: '%{text}',
             texttemplate: '%{text}',
             // plotly supports position per point, but typings allow only single value
-            textposition: <Plotly.PlotData['textposition']><unknown>resampled.textPositions,
+            textposition: <Plotly.ScatterData['textposition']><unknown>resampled.textPositions,
             fillcolor: 'rgba(0, 0, 0, 0)',
             marker: {
                 color: this.eventFillColor,
@@ -299,7 +299,7 @@ export class DiveTracesBuilder {
             showlegend: false
         };
 
-        return <Partial<Plotly.PlotData>>dataEvents;
+        return <Partial<Plotly.ScatterData>>dataEvents;
     }
 
     private applyTimeOffset(timestamps: Date[]): Date[] {
@@ -347,7 +347,7 @@ export class ChartPlotter {
         void Plotly.relayout(this.elementName, update);
     }
 
-    public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.PlotData>[]): void {
+    public plotCharts(getTraces: (b: DiveTracesBuilder) => Partial<Plotly.ScatterData>[]): void {
         this.updateLayoutThickFormat();
         this.updateLayoutAxisTitles();
         const traces: Plotly.Data[] = _(this.builders).map(b => getTraces(b))

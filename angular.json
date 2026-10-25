@@ -114,6 +114,8 @@
             "buildTarget": "planner:build:development",
             "tsConfig": "projects/planner/tsconfig.spec.json",
             "runnerConfig": "projects/planner/vitest-base.config.mts",
+            "coverageExclude": ["**/*.spec.ts", "**/*.testing.ts", "**/testing/**", "projects/scuba-physics/**"],
+            "coverageReporters": ["html", "text-summary", ["cobertura", { "file": "cobertura.xml" }]],
             "browsers": ["ChromiumHeadless"]
           }
         },
@@ -166,6 +168,8 @@
           "options": {
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
             "runnerConfig": "projects/scuba-physics/vitest-base.config.mts",
+            "coverageExclude": ["**/*.spec.ts", "**/*.testing.ts", "**/testing/**"],
+            "coverageReporters": ["html", "text-summary", ["cobertura", { "file": "cobertura.xml" }]],
             "browsers": ["ChromiumHeadless"],
             "exclude": ["**/*.performance.spec.ts"]
           }

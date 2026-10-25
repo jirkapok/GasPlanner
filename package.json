@@ -7,10 +7,10 @@
     "start-pwa": "ng build --configuration production planner && npx http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production planner",
     "build-lib": "ng build --configuration production scuba-physics",
-    "test": "ng test planner",
+    "test": "ng test planner --no-headless",
     "test-ci": "ng test planner --no-watch --coverage",
     "test-performance": "ng run scuba-physics:test-performance",
-    "test-lib": "ng test scuba-physics",
+    "test-lib": "ng test scuba-physics --no-headless",
     "test-lib-ci": "ng test scuba-physics --no-watch --coverage",
     "lint": "ng lint",
     "e2e": "ng e2e"
@@ -48,6 +48,7 @@
     "ngx-md": "^19.0.0",
     "plotly.js-dist": "^4.1.2",
     "rxjs": "^7.8.2",
+    "scuba-physics": "file:dist/scuba-physics",
     "tslib": "^2.7.0",
     "zone.js": "^0.16.3"
   },
@@ -74,8 +75,8 @@
     "@types/plotly.js": "^3.0.15",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
     "@typescript-eslint/parser": "^8.72.0",
-    "@vitest/browser-playwright": "^4.1.11",
-    "@vitest/coverage-istanbul": "^4.1.11",
+    "@vitest/browser-playwright": "4.1.11",
+    "@vitest/coverage-istanbul": "4.1.11",
     "angular-eslint": "^22.6.0",
     "eslint": "^10.13.0",
     "eslint-plugin-html": "^8.2.1",
@@ -97,7 +98,7 @@
     "semantic-release": "^25.0.9",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.0",
-    "vitest": "^4.1.11"
+    "vitest": "4.1.11"
   },
   "overrides": {
     "karma-jasmine": {

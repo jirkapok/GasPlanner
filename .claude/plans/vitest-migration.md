@@ -106,7 +106,14 @@ Done differently than planned:
 3. Verify: `npm run test-performance` runs both performance specs. `performance.memory` and `gc` are defined, so the memory measurements aren't NaN.
 
 ## Task 4: npm scripts, coverage and CI reporting
-- [ ] Status
+- [x] Status (`pwsh ./build/test.ps1` passes: 969 + 809 tests, cobertura and junit files at the CI paths; lint unchanged)
+
+Done:
+- Scripts: `test` = `ng test planner --no-headless`, `test-lib` = `ng test scuba-physics --no-headless` (headed Chromium with the Vitest UI in watch mode, like Karma's Chrome window), `test-ci`/`test-lib-ci` = `--no-watch --coverage`.
+- Coverage: `coverageReporters: ["html", "text-summary", ["cobertura", { "file": "cobertura.xml" }]]` in both `test` targets. The builder writes to `coverage/<project>` by default. `coverageExclude` removes spec files, `*.testing.ts` and `testing/**` helpers. The planner also excludes `projects/scuba-physics/**`: it resolves the library from `dist/`, whose source maps point to the library sources. `coverageInclude` isn't used. It adds files no test loads (and fails on `index.html`), while Karma reported only loaded files.
+- JUnit: `reporters: ['default', ['junit', { suiteName }]]` and `outputFile: { junit: 'test-results/<project>/junit.xml' }` in both `vitest-base.config.mts` files. Root level options of the runner config reach Vitest.
+- `build/test.ps1` installs Playwright Chromium first (`npx playwright install chromium`, the same as `build/e2e.ps1`). The CI unit test job had no Playwright browser, Karma used the preinstalled Chrome.
+- The Vitest packages are pinned to exact versions (`4.1.11`). `build/install-lib.ps1` runs `npm install ./dist/scuba-physics --no-package-lock`, which ignores the lock file and resolves all packages again within their `package.json` ranges. With `^4.1.11` the planner tests in CI would run on a newer Vitest than the library tests. Existing behavior for the other packages, not changed here.
 
 1. Scripts:
    - `test`, `test-lib`: watch mode with a headed browser (`--browsers Chromium` or `--no-headless`).

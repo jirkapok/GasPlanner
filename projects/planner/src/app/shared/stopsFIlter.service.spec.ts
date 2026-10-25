@@ -3,7 +3,7 @@ import { StopsFilter } from './stopsFilter.service';
 import { UnitConversion } from './UnitConversion';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { TestBedExtensions } from './TestbedExtensions.spec';
+import { TestBedExtensions } from './TestbedExtensions.testing';
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';

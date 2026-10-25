@@ -18,7 +18,7 @@
 - `zone.js` is added by the builder automatically for the library too (no `test.ts` needed).
 - Vitest JSON reporter for counting/duplicate analysis: `ng test <p> --no-watch --reporters=json --output-file=<file>`.
 
-**Tech Stack:** Angular 22.2, `vitest` 4.1.x (Angular 22 peer is `^4.0.8`; 5.x not supported yet), `@vitest/browser-playwright` 4.1.x, `@vitest/coverage-v8` 4.1.x, `@vitest/eslint-plugin` 1.6.x. Pin versions at least two weeks old (now: 4.1.11, eslint plugin 1.6.27).
+**Tech Stack:** Angular 22.2, `vitest` 4.1.x (Angular 22 peer is `^4.0.8`; 5.x not supported yet), `@vitest/browser-playwright` 4.1.x, `@vitest/coverage-istanbul` 4.1.x (see Task 2), `@vitest/eslint-plugin` 1.6.x. Pin versions at least two weeks old (now: 4.1.11, eslint plugin 1.6.27).
 
 ## Global Constraints
 - Branch: `chore/vitest` from local `master` (which already contains the tier 2 upgrades).
@@ -62,7 +62,7 @@
 ## Task 1: Vitest infrastructure + `scuba-physics` specs
 - [x] Status (969 passed; `test-lib`/`test-lib-ci` scripts updated; coverage lands in `coverage/scuba-physics`; lint errors at baseline, +5 `jasmine/expect-single-argument` warnings until Task 5)
 
-1. `npm install --save-dev --legacy-peer-deps vitest@4.1.11 @vitest/browser-playwright@4.1.11 @vitest/coverage-v8@4.1.11`.
+1. `npm install --save-dev --legacy-peer-deps vitest@4.1.11 @vitest/browser-playwright@4.1.11 @vitest/coverage-istanbul@4.1.11`.
 2. `angular.json` → `projects.scuba-physics.architect.test`: builder `@angular/build:unit-test`, options `tsConfig: projects/scuba-physics/tsconfig.spec.json`, `browsers: ["ChromiumHeadless"]`, `exclude: ["**/*.performance.spec.ts"]`. A library has no `build` target with application options; if the builder requires `buildTarget`, check how the builder handles libraries (`node_modules/@angular/build/src/builders/unit-test/`) and document the choice here.
 3. `projects/scuba-physics/tsconfig.spec.json`: `types: ["vitest/globals"]`, remove `files: ["src/test.ts"]`. Delete `projects/scuba-physics/src/test.ts` (zone.js import: the builder adds zone.js from the polyfills, check that the library specs don't need it at all).
 4. Run `npx ng g @schematics/angular:refactor-jasmine-vitest --project scuba-physics --browser-mode`. Read the generated report and fix every TODO it lists.
@@ -71,7 +71,21 @@
 7. Keep `npm run test-lib`/`test-lib-ci` working for this project (scripts are finalized in Task 4).
 
 ## Task 2: `planner` specs
-- [ ] Status
+- [x] Status (809 passed, 3 runs without coverage + 2 `test-ci` runs; lint errors below the baseline (100 vs 109), +4 `jasmine/expect-single-argument` warnings until Task 5)
+
+Done differently than planned:
+- **Polyfills:** the builder imports `zone.js/testing` statically only if the build target `polyfills` lists `zone.js` by name. With `polyfills.ts`, it generates a top-level `await import('zone.js/testing')` that fails to compile with zone.js. `projects/planner/src/polyfills.ts` (only `@angular/localize/init` + `zone.js`) was replaced by `"polyfills": ["@angular/localize/init", "zone.js"]` in the build target. The production polyfills bundle is unchanged (36.3 kB).
+- **TestBed teardown:** the builder always initializes TestBed with `destroyAfterEach: true` (there is no option). The old `false` from `test.ts` isn't needed, all specs pass.
+- **`restoreMocks: true`** in `projects/planner/vitest-base.config.mts`: Jasmine removes spies after each test, Vitest doesn't by default. Without it, spies on static `PlanningTasks` methods leaked into later tests (calls counted from 42 tests).
+- **Coverage provider `@vitest/coverage-istanbul`** instead of `-v8`: V8 browser coverage made the planner suite ~30x slower (919 s test time vs 29 s) and the heavy CNS/rebreather specs exceeded the 15 s browser-mode test timeout at random. Istanbul: 45 s wall time, slowest test 2.5 s. The Angular builder prefers Istanbul in browser mode when it is installed.
+- Runner config files are `.mts`, a `.ts` file triggers Vite's "ESM syntax in a file loaded as CommonJS" warning.
+- `jasmine.createSpyObj` → `createSpyObj<T>(methods)` helper in `projects/planner/src/testing/spy-testing.helpers.ts`.
+- `jasmine.clock()` → `vi.useFakeTimers()`/`vi.setSystemTime()`/`vi.advanceTimersByTime()`/`vi.useRealTimers()`.
+- `done` callbacks → `async` tests awaiting `new Promise(resolve => setTimeout(resolve, ms))`, so a failed `expect` fails the test instead of becoming an unhandled error.
+- Stub spy later switched to call through (`spy.and.callThrough()`) → `spy.mockReset()` (Vitest 4 restores the original implementation of a `vi.spyOn` spy).
+- `shared/Options.spec.ts` and `shared/TestbedExtensions.spec.ts` contained only helpers, renamed to `*.testing.ts`. The exported page objects of component specs are not imported anywhere, left as they are.
+- Two more borderline `toBeCloseTo` values corrected at the same precision (`ApplicationSettings.spec.ts`, `tanks-simple.component.spec.ts`).
+- Scripts `test` and `test-ci` already switched to the new builder (`ng test planner`, `ng test planner --no-watch --coverage`).
 
 1. `angular.json` → `projects.planner.architect.test`: builder `@angular/build:unit-test`, `buildTarget: planner:build:development` (provides polyfills incl. `@angular/localize/init` + zone.js, assets, styles), `tsConfig: projects/planner/tsconfig.spec.json`, `browsers: ["ChromiumHeadless"]`. Check that the spec-only assets (doc markdown, i18n) are served; the old Karma target listed its own `assets`/`styles`.
 2. `projects/planner/tsconfig.spec.json`: `types: ["vitest/globals"]`, `files: ["src/polyfills.ts"]` only if still needed. Delete `projects/planner/src/test.ts`. The builder's TestBed setup must keep `teardown: { destroyAfterEach: false }`. If the builder doesn't allow that, use a `providersFile`/setup file and note it here.

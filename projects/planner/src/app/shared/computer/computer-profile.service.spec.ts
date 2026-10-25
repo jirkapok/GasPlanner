@@ -312,7 +312,7 @@ describe('ComputerProfileService', () => {
 
         /** Worker reports next point after given time elapsed */
         const pointAfter = (milliseconds: number, index: number): void => {
-            jasmine.clock().tick(milliseconds);
+            vi.advanceTimersByTime(milliseconds);
             worker.calculated.next({ calculationId: calculationId, type: 'point', index: index, point: point(index) });
         };
 
@@ -321,8 +321,8 @@ describe('ComputerProfileService', () => {
         };
 
         beforeEach(() => {
-            jasmine.clock().install();
-            jasmine.clock().mockDate(new Date(2026, 9, 17, 10, 0, 0));
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(2026, 9, 17, 10, 0, 0));
             calculate(schedules.dives[0], 10);
             calculationId = worker.lastRequest.calculationId;
             // only the reports of the running calculation, not the reset when it started
@@ -331,7 +331,7 @@ describe('ComputerProfileService', () => {
         });
 
         afterEach(() => {
-            jasmine.clock().uninstall();
+            vi.useRealTimers();
         });
 
         it('Started without points is not reported', () => {

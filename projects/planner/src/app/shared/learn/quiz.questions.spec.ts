@@ -16,8 +16,7 @@ describe('Quiz questions definition', () => {
             })))
             .filter(s => s.questions <= 0);
 
-        expect(wrongCategories.length)
-            .withContext(`There are categories without questions: ${ JSON.stringify(wrongCategories) }`)
+        expect(wrongCategories.length, `There are categories without questions: ${ JSON.stringify(wrongCategories) }`)
             .toBe(0);
     });
 
@@ -38,8 +37,7 @@ describe('Quiz questions definition', () => {
             topic.categories.forEach((category: Category) => {
                 category.questions.forEach((q: QuestionTemplate) => {
                     const questionText = englishTextFor(q.question);
-                    expect(questionText)
-                        .withContext(`Missing en.json translation for key '${q.question}'`)
+                    expect(questionText, `Missing en.json translation for key '${q.question}'`)
                         .toBeTruthy();
 
                     const placeholders = new Set<string>();
@@ -60,17 +58,18 @@ describe('Quiz questions definition', () => {
         topics.forEach(topic => {
             topic.categories.forEach(category => {
                 category.questions.forEach(template => {
-                    const calculateSpy = spyOn(template, 'calculateAnswer').and.callThrough();
+                    const calculateSpy = vi.spyOn(template, 'calculateAnswer');
 
                     for (let iteration = 0; iteration < 1000; iteration++) {
                         const question = new Question(template);
 
-                        const variables = calculateSpy.calls.mostRecent().args[0];
-                        variables.forEach(v => expect(Number.isFinite(v))
-                            .withContext(`Generated invalid variables for: '${template.question}' with variables [${ variables }].`)
+                        // the same as jasmine mostRecent, throws if not called
+                        const [variables] = calculateSpy.mock.lastCall as [number[]];
+                        variables.forEach(v => expect(Number.isFinite(v),
+                            `Generated invalid variables for: '${template.question}' with variables [${ variables }].`)
                             .toBeTruthy());
-                        expect(Number.isFinite(question.correctAnswer))
-                            .withContext(`Generated invalid answer for: '${template.question}' with variables [${ variables }].`)
+                        expect(Number.isFinite(question.correctAnswer),
+                            `Generated invalid answer for: '${template.question}' with variables [${ variables }].`)
                             .toBeTruthy();
                     }
                 });

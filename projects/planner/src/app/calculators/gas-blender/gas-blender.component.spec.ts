@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -74,7 +75,7 @@ class GasBlenderPage {
 describe('GasBlenderComponent', () => {
     let component: GasBlenderComponent;
     let fixture: ComponentFixture<GasBlenderComponent>;
-    let calculateSpy: jasmine.Spy<() => void>;
+    let calculateSpy: MockInstance<() => void>;
     let simplePage: GasBlenderPage;
     beforeEach(async() => {
         await TestBed.configureTestingModule({
@@ -96,7 +97,7 @@ describe('GasBlenderComponent', () => {
         component = fixture.componentInstance;
         fixture.detectChanges();
         const calc = TestBed.inject(GasBlenderService);
-        calculateSpy = spyOn(calc, 'calculate');
+        calculateSpy = vi.spyOn(calc, 'calculate').mockImplementation(() => {});
         simplePage = new GasBlenderPage(fixture);
     });
 
@@ -145,7 +146,8 @@ describe('GasBlenderComponent', () => {
 
         beforeEach(() => {
             calc = TestBed.inject(GasBlenderService);
-            calculateSpy.and.callThrough();
+            // vitest restores the original implementation of spied method
+            calculateSpy.mockReset();
         });
 
         it('Starts in blend mode with editable target mix', () => {
@@ -226,7 +228,9 @@ describe('GasBlenderComponent', () => {
         });
 
         it('Identify failure not caused by final pressure shows generic message', () => {
-            spyOn(GasBlender, 'identify').and.throwError('Source mix contains invalid N2 content.');
+            vi.spyOn(GasBlender, 'identify').mockImplementation(() => {
+                throw new Error('Source mix contains invalid N2 content.');
+            });
             switchToIdentify();
 
             expect(calc.finalPressureBelowSource).toBeFalsy();

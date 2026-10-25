@@ -51,7 +51,7 @@ describe('ProfileChartComponent', () => {
 
         const heatMap = fixture.debugElement.query(By.css('#heatmapplot')).nativeElement as HTMLElement;
         const plot = heatMap.querySelector('svg.main-svg');
-        expect(component.showHeatMap).toBeTrue();
+        expect(component.showHeatMap).toBe(true);
         expect(heatMap.classList).toContain('plot-display');
         expect(plot?.getAttribute('width')).toEqual(heatMap.clientWidth.toString());
     });

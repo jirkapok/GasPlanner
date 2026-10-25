@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { inject, TestBed } from '@angular/core/testing';
 import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
@@ -82,15 +83,14 @@ describe('ProfileComparatorService', () => {
     }));
 
     describe('Tanks combined consumption', () => {
-        let combineMethod: jasmine.Spy<(tanks: Tank[]) => IConsumedMix[]>;
+        let combineMethod: MockInstance<(tanks: Tank[]) => IConsumedMix[]>;
 
         beforeEach(() => {
             schedules.add();
             schedules.dives[0].tanksService.tankData[0].consumed = 50;
             schedules.dives[1].tanksService.tankData[0].consumed = 100;
             sut.selectProfile(1);
-            combineMethod = spyOn(ConsumptionByMix, 'combine')
-                .and.callThrough();
+            combineMethod = vi.spyOn(ConsumptionByMix, 'combine');
         });
 
         it('profileACombinedTanks call combined consumption for Profile A', () => {

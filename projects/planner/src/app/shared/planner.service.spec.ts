@@ -1,10 +1,11 @@
+import { MockInstance } from 'vitest';
 import {
     CalculatedProfile, CalculatedProfileStatistics,
     Event, EventType, StandardGases, Time
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
@@ -96,9 +97,10 @@ describe('PlannerService', () => {
         });
 
         it('Tissues history is kept as received from the worker without copying', () => {
-            const diveInfoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
+            const diveInfoSpy = vi.spyOn(PlanningTasks, 'diveInfo');
             planner.calculate(1);
-            const received = diveInfoSpy.calls.mostRecent().returnValue.tissues;
+            const lastResult = diveInfoSpy.mock.results[diveInfoSpy.mock.results.length - 1];
+            const received = (lastResult.value as DiveInfoResultDto).tissues;
             expect(dive.tissues).toBe(received);
         });
 
@@ -219,7 +221,7 @@ describe('PlannerService', () => {
             const tank = tanksService.firstTank.tank;
             expect(air.total).toBeCloseTo(tank.volume, 6);
             expect(air.reserve).toBeGreaterThan(0);
-            expect(dive.notEnoughGasByGas).toBeFalse();
+            expect(dive.notEnoughGasByGas).toBe(false);
         });
     });
 
@@ -294,19 +296,19 @@ describe('PlannerService', () => {
         };
 
         describe('Profile calculated with errors', () => {
-            let noDecoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
-            let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
+            let noDecoSpy: MockInstance<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
+            let consumptionSpy: MockInstance<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             let infoFinished = false;
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callFake(() => createProfileResultDto());
+                vi.spyOn(PlanningTasks, 'calculateDecompression')
+                    .mockImplementation(() => createProfileResultDto());
 
                 dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
                 dispatcher.infoCalculated$.subscribe(() => infoFinished = true);
-                noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
-                consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
+                noDecoSpy = vi.spyOn(PlanningTasks, 'diveInfo');
+                consumptionSpy = vi.spyOn(PlanningTasks, 'calculateConsumption');
                 planner.calculate(1);
             });
 
@@ -340,20 +342,22 @@ describe('PlannerService', () => {
         });
 
         describe('Profile task failed', () => {
-            let noDecoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
-            let consumptionSpy: jasmine.Spy<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
+            let noDecoSpy: MockInstance<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
+            let consumptionSpy: MockInstance<(data: ConsumptionRequestDto) => ConsumptionResultDto>;
             let wayPointsFinished = false;
             // serial processing in tests results in wrong behavior, the task is still finished
             const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.throwError('Profile failed');
+                vi.spyOn(PlanningTasks, 'calculateDecompression')
+                    .mockImplementation(() => {
+                        throw new Error('Profile failed');
+                    });
 
                 dispatcher.wayPointsCalculated$.subscribe(() => wayPointsFinished = true);
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
-                noDecoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
-                consumptionSpy = spyOn(PlanningTasks, 'calculateConsumption').and.callThrough();
+                noDecoSpy = vi.spyOn(PlanningTasks, 'diveInfo');
+                consumptionSpy = vi.spyOn(PlanningTasks, 'calculateConsumption');
                 planner.calculate(1);
             });
 
@@ -383,8 +387,10 @@ describe('PlannerService', () => {
             const infoFinished: (number | undefined)[] = [];
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'diveInfo')
-                    .and.throwError('No deco failed');
+                vi.spyOn(PlanningTasks, 'diveInfo')
+                    .mockImplementation(() => {
+                        throw new Error('No deco failed');
+                    });
 
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished.push(source));
                 planner.calculate(1);
@@ -403,8 +409,10 @@ describe('PlannerService', () => {
             let infoFinished: number | undefined = -1; // unknown id
 
             beforeEach(() => {
-                spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.throwError('Consumption failed');
+                vi.spyOn(PlanningTasks, 'calculateConsumption')
+                    .mockImplementation(() => {
+                        throw new Error('Consumption failed');
+                    });
 
                 dispatcher.infoCalculated$.subscribe((source) => infoFinished = source);
                 planner.calculate(1);
@@ -429,8 +437,7 @@ describe('PlannerService', () => {
             });
 
             it('skips calculate', () => {
-                const calculateDecoSpy = spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callThrough();
+                const calculateDecoSpy = vi.spyOn(PlanningTasks, 'calculateDecompression');
 
                 planner.calculate(unknownDiveId);
                 expect(calculateDecoSpy).toHaveBeenCalledTimes(0);
@@ -438,14 +445,12 @@ describe('PlannerService', () => {
             });
 
             it('interrupts calculation processing calculated profile', () => {
-                const calculateConsumptionSpy = spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.callThrough();
+                const calculateConsumptionSpy = vi.spyOn(PlanningTasks, 'calculateConsumption');
 
-                const calculateInfoSpy = spyOn(PlanningTasks, 'diveInfo')
-                    .and.callThrough();
+                const calculateInfoSpy = vi.spyOn(PlanningTasks, 'diveInfo');
 
-                spyOn(PlanningTasks, 'calculateDecompression')
-                    .and.callFake(() => ({
+                vi.spyOn(PlanningTasks, 'calculateDecompression')
+                    .mockImplementation(() => ({
                         diveId: unknownDiveId,
                         profile: {
                             segments: [],
@@ -465,8 +470,8 @@ describe('PlannerService', () => {
             });
 
             it('does not apply consumption result', () => {
-                spyOn(PlanningTasks, 'calculateConsumption')
-                    .and.callFake(() => ({
+                vi.spyOn(PlanningTasks, 'calculateConsumption')
+                    .mockImplementation(() => ({
                         diveId: unknownDiveId,
                         maxTime: 0,
                         timeToSurface: 0,
@@ -480,8 +485,8 @@ describe('PlannerService', () => {
             });
 
             it('does not apply dive info result', () => {
-                spyOn(PlanningTasks, 'diveInfo')
-                    .and.callFake(() => ({
+                vi.spyOn(PlanningTasks, 'diveInfo')
+                    .mockImplementation(() => ({
                         diveId: unknownDiveId,
                         noDeco: 0,
                         otu: 0,
@@ -513,7 +518,7 @@ describe('PlannerService', () => {
     });
 
     describe('App settings are applied', () => {
-        let diveInfoSpy: jasmine.Spy<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
+        let diveInfoSpy: MockInstance<(data: DiveInfoRequestDto) => DiveInfoResultDto>;
 
         beforeEach(() => {
             const appSettings = TestBed.inject(ApplicationSettingsService);
@@ -524,14 +529,14 @@ describe('PlannerService', () => {
             depthsService.planDuration = 20; // enforce small deco, but don't hurt the second tank reserve
             appSettings.noDecoIgnored = true;
 
-            diveInfoSpy = spyOn(PlanningTasks, 'diveInfo').and.callThrough();
+            diveInfoSpy = vi.spyOn(PlanningTasks, 'diveInfo');
             planner.calculate(1);
         });
 
         it('Uses gas density', () => {
             expect(diveInfoSpy).toHaveBeenCalledWith(
-                jasmine.objectContaining({
-                    eventOptions: jasmine.objectContaining({ maxDensity: 6 })
+                expect.objectContaining({
+                    eventOptions: expect.objectContaining({ maxDensity: 6 }) as unknown
                 })
             );
         });
@@ -546,7 +551,7 @@ describe('PlannerService', () => {
         });
 
         it('Keeps all algorithm events for the dive computer', () => {
-            expect(dive.algorithmEvents.some(e => e.type === EventType.noDecoEnd)).toBeTrue();
+            expect(dive.algorithmEvents.some(e => e.type === EventType.noDecoEnd)).toBe(true);
         });
     });
 

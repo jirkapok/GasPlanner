@@ -3,7 +3,7 @@ import { PreferencesStore } from './preferencesStore';
 import { PlannerService } from './planner.service';
 import { Options, Tank, Salinity, SafetyStop, AirBreakOptions, CircuitType, RebreatherDefaults } from 'scuba-physics';
 import { AppPreferences } from './serialization.model';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
@@ -175,7 +175,7 @@ describe('PreferencesStore', () => {
 
         it('Simple profile is loaded after save and trims tank', inject([PlannerService],
             (planner: PlannerService) => {
-                const optionsResetToSimple = spyOn(options, 'resetToSimple').and.callThrough();
+                const optionsResetToSimple = vi.spyOn(options, 'resetToSimple');
 
                 // invalid operations for simple profile simulate wrong data
                 tanksService.addTank();
@@ -375,7 +375,7 @@ describe('PreferencesStore', () => {
                 sut.load();
 
                 const loadedOptions = TestBed.inject(DiveSchedules).dives[0].optionsService;
-                expect(loadedOptions.isRebreather).toBeFalse();
+                expect(loadedOptions.isRebreather).toBe(false);
             }));
     });
 });

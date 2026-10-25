@@ -60,7 +60,7 @@ describe('RestartableBackgroundTask', () => {
     it('Cancel terminates the worker and uses new one', () => {
         sut.cancel();
         sut.calculate(2);
-        expect(created[0].terminated).toBeTrue();
+        expect(created[0].terminated).toBe(true);
         expect(created[1].posted).toEqual([2]);
     });
 

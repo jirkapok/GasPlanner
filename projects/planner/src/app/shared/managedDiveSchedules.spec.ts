@@ -12,7 +12,7 @@ import { ViewStates } from './viewStates';
 import { DelayedScheduleService } from './delayedSchedule.service';
 import { SubViewStorage } from './subViewStorage';
 import { ManagedDiveSchedules } from './managedDiveSchedules';
-import Spy = jasmine.Spy;
+import { MockInstance as Spy } from 'vitest';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DepthsService } from './depths.service';
 import { ApplicationSettingsService } from './ApplicationSettings';
@@ -78,13 +78,13 @@ describe('Managed Schedules', () => {
 
         localStorage.clear();
         preferencesStore = TestBed.inject(PreferencesStore);
-        loadPreferencesSpy = spyOn(preferencesStore, 'load').and.callThrough();
-        ensureDefaultPreferencesSpy = spyOn(preferencesStore, 'ensureDefault').and.callThrough();
+        loadPreferencesSpy = vi.spyOn(preferencesStore, 'load');
+        ensureDefaultPreferencesSpy = vi.spyOn(preferencesStore, 'ensureDefault');
         schedules = TestBed.inject(DiveSchedules);
         sut = TestBed.inject(ManagedDiveSchedules);
-        savePreferencesSpy = spyOn(preferencesStore, 'save').and.callThrough();
+        savePreferencesSpy = vi.spyOn(preferencesStore, 'save');
         const dispatcher = TestBed.inject(ReloadDispatcher);
-        dispatcherSpy = spyOn(dispatcher, 'sendDepthsReloaded').and.callThrough();
+        dispatcherSpy = vi.spyOn(dispatcher, 'sendDepthsReloaded');
     });
 
     describe('Application startup', () => {
@@ -143,7 +143,7 @@ describe('Managed Schedules', () => {
     describe('Clone dive', () => {
         let loadFromPreferencesSpy: Spy<() => void>;
         beforeEach(() => {
-            loadFromPreferencesSpy = spyOn(preferencesStore, 'loadFrom').and.callThrough();
+            loadFromPreferencesSpy = vi.spyOn(preferencesStore, 'loadFrom');
             localStorage.clear();
             sut.cloneSelected();
         });
@@ -192,7 +192,7 @@ describe('Managed Schedules', () => {
             expect(clonedRebreather).toEqual(options.getOptions().rebreather);
             expect(clonedRebreather).not.toBe(options.getOptions().rebreather);
             const oxygen = cloned().tanksService.oxygenTank;
-            expect(oxygen?.tank.gas.compositionEquals(StandardGases.oxygen)).toBeTrue();
+            expect(oxygen?.tank.gas.compositionEquals(StandardGases.oxygen)).toBe(true);
         });
 
         it('Clone keeps own options', () => {
@@ -220,7 +220,7 @@ describe('Managed Schedules', () => {
             source = schedules.selected;
             sourceDepth = source.depths.plannedDepthMeters;
             sourceBottomTime = bottomTime(source);
-            savePreferencesSpy.calls.reset();
+            savePreferencesSpy.mockClear();
         });
 
         const assertSourceNotChanged = () => {
@@ -297,10 +297,10 @@ describe('Managed Schedules', () => {
             sut.add();
             sut.add();
 
-            savePreferencesSpy.calls.reset();
-            scheduleRemoveSpy = spyOn(schedules, 'remove').and.callThrough();
+            savePreferencesSpy.mockClear();
+            scheduleRemoveSpy = vi.spyOn(schedules, 'remove');
             const dispatcher = TestBed.inject(ReloadDispatcher);
-            depthChangedSpy = spyOn(dispatcher, 'sendDepthChanged').and.callThrough();
+            depthChangedSpy = vi.spyOn(dispatcher, 'sendDepthChanged');
             toRemove = schedules.dives[2];
             sut.remove(toRemove);
         });
@@ -344,7 +344,7 @@ describe('Managed Schedules', () => {
 
     describe('Save dive as default', () => {
         it('Calls save preferences with selected dive', () => {
-            const saveDefaultSpy = spyOn(preferencesStore, 'saveDefault').and.callThrough();
+            const saveDefaultSpy = vi.spyOn(preferencesStore, 'saveDefault');
             sut.add();
             const secondDive = schedules.dives[1];
             schedules.selected = secondDive;

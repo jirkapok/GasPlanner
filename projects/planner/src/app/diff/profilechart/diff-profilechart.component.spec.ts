@@ -98,7 +98,7 @@ describe('ProfileDifferenceChartComponent', () => {
         await new Promise((resolve) => setTimeout(resolve));
 
         const heatMap = fixture.debugElement.query(By.css('#heatmapPlotB')).nativeElement as HTMLElement;
-        expect(component.showHeatMap).toBeTrue();
+        expect(component.showHeatMap).toBe(true);
         expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
     });
 });

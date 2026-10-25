@@ -4,7 +4,7 @@ import { Plan } from './plan.service';
 import {
     Tank, Salinity, SafetyStop
 } from 'scuba-physics';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { UnitConversion } from './UnitConversion';
 
 describe('WayPointsService', () => {

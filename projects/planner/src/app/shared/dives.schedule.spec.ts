@@ -156,7 +156,7 @@ describe('Scheduled dives', () => {
     });
 
     describe('Calculating', () => {
-        it('Marks Still running also all following repetitive dives', (done) => {
+        it('Marks Still running also all following repetitive dives', async () => {
             const sut = createSut();
             sut.add();
             const third = sut.add();
@@ -172,11 +172,9 @@ describe('Scheduled dives', () => {
 
             sut.markStart(2);
 
-            setTimeout(() => {
-                const states = _(sut.dives).map(d => d.diveResult.calculated).value();
-                expect(states).toEqual([ true, false, false, true ]);
-                done();
-            }, 500);
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const states = _(sut.dives).map(d => d.diveResult.calculated).value();
+            expect(states).toEqual([ true, false, false, true ]);
         });
     });
 });

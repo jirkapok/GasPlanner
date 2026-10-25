@@ -18,7 +18,7 @@ describe('Options Service - Rebreather', () => {
 
     it('is open circuit by default', () => {
         expect(service.circuit).toBe(CircuitType.oc);
-        expect(service.isRebreather).toBeFalse();
+        expect(service.isRebreather).toBe(false);
     });
 
     it('applies pSCR values', () => {
@@ -27,7 +27,7 @@ describe('Options Service - Rebreather', () => {
         service.metabolicO2 = 1.5;
 
         const rebreather = service.getOptions().rebreather;
-        expect(service.isRebreather).toBeTrue();
+        expect(service.isRebreather).toBe(true);
         expect(rebreather.circuit).toBe(CircuitType.pscr);
         expect(rebreather.injectionRatio).toBe(10);
         expect(rebreather.metabolicO2).toBeCloseTo(1.5, 6);
@@ -47,8 +47,8 @@ describe('Options Service - Rebreather', () => {
         service.loopVolume = 5;
 
         const rebreather = service.getOptions().rebreather;
-        expect(service.isMccr).toBeTrue();
-        expect(service.isPscr).toBeFalse();
+        expect(service.isMccr).toBe(true);
+        expect(service.isPscr).toBe(false);
         expect(rebreather.setpoint).toBeCloseTo(1.2, 6);
         expect(rebreather.o2Flow).toBeCloseTo(1.1, 6);
         expect(rebreather.loopVolume).toBeCloseTo(5, 6);
@@ -56,8 +56,8 @@ describe('Options Service - Rebreather', () => {
 
     it('identifies pSCR', () => {
         service.circuit = CircuitType.pscr;
-        expect(service.isPscr).toBeTrue();
-        expect(service.isMccr).toBeFalse();
+        expect(service.isPscr).toBe(true);
+        expect(service.isMccr).toBe(false);
     });
 
     it('stores mCCR volumes in liters for imperial units', () => {
@@ -81,12 +81,12 @@ describe('Options Service - Rebreather', () => {
     it('reset to simple switches mCCR to open circuit', () => {
         service.circuit = CircuitType.mccr;
         service.resetToSimple();
-        expect(service.isRebreather).toBeFalse();
+        expect(service.isRebreather).toBe(false);
     });
 
     it('reset to simple switches to open circuit', () => {
         service.circuit = CircuitType.pscr;
         service.resetToSimple();
-        expect(service.isRebreather).toBeFalse();
+        expect(service.isRebreather).toBe(false);
     });
 });

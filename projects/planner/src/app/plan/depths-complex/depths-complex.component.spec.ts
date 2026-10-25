@@ -129,8 +129,7 @@ describe('Depths Complex Component', () => {
 
     describe('Invalid form prevents calculation after', () => {
         it('wrong level enddepth', () => {
-            const durationSpy = spyOn(depths, 'levelChanged')
-                .and.callThrough();
+            const durationSpy = vi.spyOn(depths, 'levelChanged');
 
             complexPage.durationInput(1).value = 'aaa';
             complexPage.durationInput(1).dispatchEvent(new Event('input'));
@@ -138,8 +137,7 @@ describe('Depths Complex Component', () => {
         });
 
         it('wrong level duration', () => {
-            const durationSpy = spyOn(depths, 'levelChanged')
-                .and.callThrough();
+            const durationSpy = vi.spyOn(depths, 'levelChanged');
 
             complexPage.depthInput(1).value = 'aaa';
             complexPage.depthInput(1).dispatchEvent(new Event('input'));

@@ -48,14 +48,62 @@ const withContext = (text: string): string => {
         const argOpen = at + marker.length - 1;
         const argClose = closingOf(text, argOpen);
         const message = text.substring(argOpen + 1, argClose);
-        // the expect(...) call closes right before the marker
-        const expectStart = text.lastIndexOf('expect(', at);
+        // the expect(...) call closes right before the marker, optionally followed by white space
+        const expectClose = text.substring(0, at).trimEnd().length - 1;
+        const expectStart = text.lastIndexOf('expect(', expectClose);
         const expectOpen = expectStart + 'expect'.length;
-        if (closingOf(text, expectOpen) !== at - 1) {
+        if (closingOf(text, expectOpen) !== expectClose) {
             throw new Error('withContext not directly after expect at ' + at);
         }
-        text = text.substring(0, at - 1) + ', ' + message + ')' + text.substring(argClose + 1);
+        // drop the marker including its leading white space, the next matcher keeps its own line
+        text = text.substring(0, expectClose) + ', ' + message + ')' + text.substring(argClose + 1);
         at = text.indexOf(marker);
+    }
+    return text;
+};
+
+/**
+ * spyOn(o, 'm') -> vi.spyOn(o, 'm') with the chained `.and.*` strategy.
+ * Jasmine spies are stubs by default, Vitest spies call through, so a spy without strategy becomes a stub.
+ */
+const spies = (text: string): string => {
+    const spyPattern = /(?<![.\w])spyOn(Property)?\(/g;
+    let match: RegExpExecArray | null;
+    while ((match = spyPattern.exec(text)) !== null) {
+        const isProperty = match[1] !== undefined;
+        const argOpen = match.index + match[0].length - 1;
+        const argClose = closingOf(text, argOpen);
+        let args = text.substring(argOpen + 1, argClose);
+        if (isProperty && !/,\s*'(get|set)'\s*$/.test(args)) {
+            args += ', \'get\'';
+        }
+        let rest = text.substring(argClose + 1);
+        const strategy = /^\s*\.and\.(callThrough|returnValue|callFake|throwError)\(/.exec(rest);
+        let call = `vi.spyOn(${args})`;
+        if (!strategy) {
+            call += '.mockImplementation(() => {})';
+        } else {
+            const strategyOpen = strategy[0].length - 1;
+            const strategyClose = closingOf(rest, strategyOpen);
+            const strategyArgs = rest.substring(strategyOpen + 1, strategyClose);
+            const whitespace = /^\s*/.exec(rest)![0];
+            switch (strategy[1]) {
+                case 'callThrough':
+                    break;
+                case 'returnValue':
+                    call += `${whitespace}.mockReturnValue(${strategyArgs})`;
+                    break;
+                case 'callFake':
+                    call += `${whitespace}.mockImplementation(${strategyArgs})`;
+                    break;
+                case 'throwError':
+                    call += `${whitespace}.mockImplementation(() => { throw new Error(${strategyArgs}); })`;
+                    break;
+            }
+            rest = rest.substring(strategyClose + 1);
+        }
+        text = text.substring(0, match.index) + call + rest;
+        spyPattern.lastIndex = match.index + call.length;
     }
     return text;
 };
@@ -63,12 +111,19 @@ const withContext = (text: string): string => {
 const simple: [RegExp, string][] = [
     [/\.toBeTrue\(\)/g, '.toBe(true)'],
     [/\.toBeFalse\(\)/g, '.toBe(false)'],
+    [/\.toHaveBeenCalledOnceWith\(/g, '.toHaveBeenCalledExactlyOnceWith('],
+    [/jasmine\.objectContaining\(/g, 'expect.objectContaining('],
+    [/jasmine\.createSpy\('\w+'\)/g, 'vi.fn()'],
+    [/\.and\.returnValue\(/g, '.mockReturnValue('],
+    [/\.and\.callFake\(/g, '.mockImplementation('],
+    [/\.calls\.reset\(\)/g, '.mockClear()'],
+    [/\.calls\.allArgs\(\)/g, '.mock.calls'],
 ];
 
 let changed = 0;
 for (const file of specFiles(process.argv[2])) {
     const source = readFileSync(file, 'utf8');
-    let text = source;
+    let text = spies(source);
     for (const [pattern, replacement] of simple) {
         text = text.replace(pattern, replacement);
     }

@@ -60,12 +60,12 @@ describe('SubView', () => {
 
     it('Saves view state', inject([SubViewStorage, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage, viewStates: ViewStates, preferences: PreferencesStore) => {
-            spyOn(viewStates, 'set');
-            spyOn(preferences, 'save');
+            vi.spyOn(viewStates, 'set').mockImplementation(() => {});
+            vi.spyOn(preferences, 'save').mockImplementation(() => {});
 
             viewStorage.saveView(changedSate);
 
-            expect(viewStates.set).toHaveBeenCalledOnceWith(changedSate);
+            expect(viewStates.set).toHaveBeenCalledExactlyOnceWith(changedSate);
             expect(preferences.save).toHaveBeenCalledWith();
         }));
 
@@ -109,7 +109,7 @@ describe('SubView', () => {
                 loadViews(viewStates);
                 viewStorage.saveView(changedSate);
 
-                expect(viewStates.redirectToView).toBeFalse();
+                expect(viewStates.redirectToView).toBe(false);
             }));
     });
 });

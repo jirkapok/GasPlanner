@@ -25,9 +25,10 @@
               "browser": ""
             },
             "index": "projects/planner/src/index.html",
-              "polyfills": [
-                  "projects/planner/src/polyfills.ts"
-              ],
+            "polyfills": [
+              "@angular/localize/init",
+              "zone.js"
+            ],
             "tsConfig": "projects/planner/tsconfig.app.json",
             "assets": [
               "projects/planner/src/assets",
@@ -108,33 +109,12 @@
           }
         },
         "test": {
-          "builder": "@angular/build:karma",
+          "builder": "@angular/build:unit-test",
           "options": {
-            "main": "projects/planner/src/test.ts",
-            "polyfills": ["projects/planner/src/polyfills.ts"],
+            "buildTarget": "planner:build:development",
             "tsConfig": "projects/planner/tsconfig.spec.json",
-            "karmaConfig": "projects/planner/karma.conf.js",
-            "assets": [
-              "projects/planner/src/favicon.ico",
-              "projects/planner/src/assets",
-              "projects/planner/src/manifest.webmanifest",
-              "projects/planner/src/manifest.de.webmanifest",
-              "projects/planner/src/manifest.cs.webmanifest",
-              "projects/planner/src/manifest.es.webmanifest",
-              "projects/planner/src/manifest.fr.webmanifest",
-              "projects/planner/src/manifest.ru.webmanifest",
-              "projects/planner/src/manifest.zh.webmanifest",
-              {
-                "glob": "**/*.(md,png)",
-                "input": "doc",
-                "output": "assets/doc"
-              }
-            ],
-            "styles": [
-              "projects/planner/src/styles.scss"
-            ],
-            "scripts": [],
-            "webWorkerTsConfig": "projects/planner/tsconfig.worker.json"
+            "runnerConfig": "projects/planner/vitest-base.config.mts",
+            "browsers": ["ChromiumHeadless"]
           }
         },
         "lint": {
@@ -185,7 +165,7 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "tsConfig": "projects/scuba-physics/tsconfig.spec.json",
-            "runnerConfig": "projects/scuba-physics/vitest-base.config.ts",
+            "runnerConfig": "projects/scuba-physics/vitest-base.config.mts",
             "browsers": ["ChromiumHeadless"],
             "exclude": ["**/*.performance.spec.ts"]
           }

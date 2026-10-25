@@ -48,7 +48,7 @@ describe('HeatMapPlotter', () => {
         document.body.appendChild(graphDiv);
 
         try {
-            await expectAsync(new HeatMapPlotter(id).plotHeatMap([])).toBeResolved();
+            await expect(new HeatMapPlotter(id).plotHeatMap([])).resolves.toBeUndefined();
 
             const layout = (graphDiv as unknown as { _fullLayout: Plotly.Layout })._fullLayout;
             expect(layout.width).toBe(600);
@@ -64,7 +64,7 @@ describe('HeatMapPlotter', () => {
         graphDiv.style.display = 'none';
         document.body.appendChild(graphDiv);
         // zone.js reports unhandled promise rejections to the console
-        const consoleError = spyOn(console, 'error');
+        const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
 
         try {
             await new HeatMapPlotter(id).plotHeatMap([]);

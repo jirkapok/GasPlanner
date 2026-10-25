@@ -1,30 +1,30 @@
 import { TestBed } from '@angular/core/testing';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayPositionBuilder, OverlayRef } from '@angular/cdk/overlay';
 import { of, Subject } from 'rxjs';
 
 import { HelpService } from './help.service';
 import { LayoutService } from '../layout.service';
 import { Urls } from '../navigation.service';
+import { createSpyObj } from '../../../testing/spy-testing.helpers';
+import { Mocked } from 'vitest';
 
 describe('HelpService', () => {
     let service: HelpService;
     let urls: Urls;
-    let overlay: jasmine.SpyObj<Overlay>;
-    let overlayRef: jasmine.SpyObj<OverlayRef>;
+    let overlay: Mocked<Overlay>;
+    let overlayRef: Mocked<OverlayRef>;
     let keydownEvents: Subject<KeyboardEvent>;
 
     beforeEach(() => {
-        const position = jasmine.createSpyObj(
-            'position',
+        const position = createSpyObj<Record<'global' | 'top' | 'right', () => unknown>>(
             ['global', 'top', 'right']
         );
 
-        position.global.and.returnValue(position);
-        position.top.and.returnValue(position);
-        position.right.and.returnValue(position);
+        position.global.mockReturnValue(position);
+        position.top.mockReturnValue(position);
+        position.right.mockReturnValue(position);
 
-        overlayRef = jasmine.createSpyObj<OverlayRef>(
-            'OverlayRef',
+        overlayRef = createSpyObj<OverlayRef>(
             [
                 'attach',
                 'detach',
@@ -36,21 +36,20 @@ describe('HelpService', () => {
 
         keydownEvents = new Subject<KeyboardEvent>();
 
-        overlayRef.keydownEvents.and.returnValue(
+        overlayRef.keydownEvents.mockReturnValue(
             keydownEvents.asObservable()
         );
 
-        overlayRef.detachments.and.returnValue(of());
+        overlayRef.detachments.mockReturnValue(of());
 
-        overlay = jasmine.createSpyObj<Overlay>(
-            'Overlay',
+        overlay = createSpyObj<Overlay>(
             ['position', 'create']
         );
 
-        overlay.position.and.returnValue(position);
-        overlay.create.and.returnValue(overlayRef);
+        overlay.position.mockReturnValue(position as unknown as OverlayPositionBuilder);
+        overlay.create.mockReturnValue(overlayRef);
         (overlay as any).scrollStrategies = {
-            noop: jasmine.createSpy('noop').and.returnValue({})
+            noop: vi.fn().mockReturnValue({})
         };
 
         TestBed.configureTestingModule({
@@ -96,7 +95,7 @@ describe('HelpService', () => {
 
         const event = {
             key: 'Escape',
-            preventDefault: jasmine.createSpy('preventDefault')
+            preventDefault: vi.fn()
         } as unknown as KeyboardEvent;
 
         keydownEvents.next(event);

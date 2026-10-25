@@ -288,7 +288,7 @@ describe('Url Serialization', () => {
             complexSut.urlSerialization.fromUrl(preCcrUrl);
             const loaded = complexSut.schedules.selected.optionsService;
             expect(loaded.getOptions().rebreather).toEqual(new RebreatherOptions());
-            expect(loaded.isRebreather).toBeFalse();
+            expect(loaded.isRebreather).toBe(false);
             const reserialized = complexSut.urlSerialization.toUrl();
             expect(reserialized).not.toContain('&r=');
         });

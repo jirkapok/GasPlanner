@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { DecimalPipe } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
@@ -55,7 +56,7 @@ describe('Tanks Simple component', () => {
     let component: TanksSimpleComponent;
     let fixture: ComponentFixture<TanksSimpleComponent>;
     let simplePage: SimpleTanksPage;
-    let dispatcherSpy: jasmine.Spy<() => void>;
+    let dispatcherSpy: MockInstance<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -80,8 +81,8 @@ describe('Tanks Simple component', () => {
         component = fixture.componentInstance;
         simplePage = new SimpleTanksPage(fixture);
         const dispatcher = TestBed.inject(ReloadDispatcher);
-        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
-            .and.callFake(() => { });
+        dispatcherSpy = vi.spyOn(dispatcher, 'sendTankChanged')
+            .mockImplementation(() => { });
     });
 
     it('Switch to simple view rebinds first tank', () => {
@@ -156,7 +157,7 @@ describe('Tanks Simple component', () => {
             (units: UnitConversion) => {
                 units.imperialUnits = true;
                 const sac = component.gasSac();
-                expect(sac).toBeCloseTo(19.33836, 5);
+                expect(sac).toBeCloseTo(19.33837, 5);
             }));
     });
 });

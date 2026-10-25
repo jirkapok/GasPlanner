@@ -56,8 +56,7 @@ describe('Dive options component', () => {
     });
 
     it('Set complex calls wiew switch', inject([ViewSwitchService], (viewSwitch: ViewSwitchService) => {
-        const spy = spyOnProperty(viewSwitch, 'isComplex', 'set')
-            .and.callThrough();
+        const spy = vi.spyOn(viewSwitch, 'isComplex', 'set');
         fixture.detectChanges();
         component.isComplex = false;
         expect(spy).toHaveBeenCalledWith(false);
@@ -66,22 +65,22 @@ describe('Dive options component', () => {
 
     describe('View switch saves preferences', () => {
         it('Switch to complex view saves preferences', inject([PreferencesStore], (preferences: PreferencesStore) => {
-            const saveSpy = spyOn(preferences, 'save');
+            const saveSpy = vi.spyOn(preferences, 'save').mockImplementation(() => {});
             component.isComplex = true;
             expect(saveSpy).toHaveBeenCalledWith();
         }));
 
         it('Switch to simple view saves preferences', inject([PreferencesStore], (preferences: PreferencesStore) => {
             component.isComplex = true;
-            const saveSpy = spyOn(preferences, 'save');
+            const saveSpy = vi.spyOn(preferences, 'save').mockImplementation(() => {});
             component.isComplex = false;
             expect(saveSpy).toHaveBeenCalledWith();
         }));
     });
 
     it('should call switchAirBreaks on selectedOptions', () => {
-        const switchSpy = spyOn(schedules.selectedOptions, 'switchAirBreaks');
-        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged');
+        const switchSpy = vi.spyOn(schedules.selectedOptions, 'switchAirBreaks').mockImplementation(() => {});
+        const dispatchSpy = vi.spyOn(TestBed.inject(ReloadDispatcher),'sendOptionsChanged').mockImplementation(() => {});
 
         component.switchAirBreaks();
 
@@ -90,8 +89,8 @@ describe('Dive options component', () => {
     });
 
     it('should call useRecreational on selectedOptions and notify scheduler', () => {
-        const recSpy = spyOn(schedules.selectedOptions, 'useRecreational');
-        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+        const recSpy = vi.spyOn(schedules.selectedOptions, 'useRecreational').mockImplementation(() => {});
+        const dispatchSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').mockImplementation(() => {});
 
         component.useRecreational();
 
@@ -100,8 +99,8 @@ describe('Dive options component', () => {
     });
 
     it('should call useRecommended on selectedOptions and notify scheduler', () => {
-        const recoSpy = spyOn(schedules.selectedOptions, 'useRecommended');
-        const dispatchSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
+        const recoSpy = vi.spyOn(schedules.selectedOptions, 'useRecommended').mockImplementation(() => {});
+        const dispatchSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').mockImplementation(() => {});
 
         component.useRecommended();
 
@@ -110,7 +109,7 @@ describe('Dive options component', () => {
     });
 
     it('should propagate new value of decoStopDistance to OptionsService and fire recalculate trigger ', () => {
-        const dispatcherSpy = spyOn(reloadDispatcher, 'sendOptionsChanged');
+        const dispatcherSpy = vi.spyOn(reloadDispatcher, 'sendOptionsChanged').mockImplementation(() => {});
 
         const form = component.optionsForm;
         form.controls.decoStopDistance.setValue(5);

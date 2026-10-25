@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatePipe } from '@angular/common';
 import { MdbTabComponent, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
@@ -49,7 +50,7 @@ describe('DiveInfoComponent', () => {
     describe('In liters switch', () => {
         let planner: PlannerService;
         let viewSwitch: ViewSwitchService;
-        let saveSpy: jasmine.Spy;
+        let saveSpy: MockInstance;
 
         const consumedTab = (): HTMLElement => {
             component.tabs?.setActiveTab(1);
@@ -66,7 +67,7 @@ describe('DiveInfoComponent', () => {
         beforeEach(() => {
             planner = TestBed.inject(PlannerService);
             viewSwitch = TestBed.inject(ViewSwitchService);
-            saveSpy = spyOn(TestBed.inject(PreferencesStore), 'save');
+            saveSpy = vi.spyOn(TestBed.inject(PreferencesStore), 'save').mockImplementation(() => {});
             planner.calculate(1);
             consumedTab();
         });
@@ -80,7 +81,7 @@ describe('DiveInfoComponent', () => {
         it('Switch shows consumption by gas', () => {
             toggle();
             const element = consumedTab();
-            expect(viewSwitch.consumptionInLiters).toBeTrue();
+            expect(viewSwitch.consumptionInLiters).toBe(true);
             expect(element.querySelectorAll('app-gaschart').length).toEqual(1);
             expect(element.querySelectorAll('app-tankchart').length).toEqual(0);
         });
@@ -91,10 +92,10 @@ describe('DiveInfoComponent', () => {
         });
 
         it('Switch does not recalculate', () => {
-            const calculateSpy = spyOn(planner, 'calculate');
+            const calculateSpy = vi.spyOn(planner, 'calculate').mockImplementation(() => {});
             toggle();
             toggle();
-            expect(viewSwitch.consumptionInLiters).toBeFalse();
+            expect(viewSwitch.consumptionInLiters).toBe(false);
             expect(calculateSpy).not.toHaveBeenCalled();
         });
     });

@@ -10,10 +10,12 @@ import { LanguageService } from '../shared/language.service';
 import { Urls } from '../shared/navigation.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { LayoutService } from '../shared/layout.service';
+import { createSpyObj } from '../../testing/spy-testing.helpers';
+import { Mocked } from 'vitest';
 
 describe('Main menu component', () => {
     let fixture: ComponentFixture<MainMenuComponent>;
-    let schedules: jasmine.SpyObj<ManagedDiveSchedules>;
+    let schedules: Mocked<ManagedDiveSchedules>;
 
     const clickItem = (id: string) => {
         const toggle = fixture.debugElement.query(By.css('#dive')).nativeElement as HTMLElement;
@@ -24,7 +26,7 @@ describe('Main menu component', () => {
     };
 
     beforeEach(async () => {
-        schedules = jasmine.createSpyObj<ManagedDiveSchedules>('ManagedDiveSchedules',
+        schedules = createSpyObj<ManagedDiveSchedules>(
             ['cloneSelected', 'cloneSelectedDeeper', 'cloneSelectedLonger', 'cloneSelectedDeeperAndLonger']);
 
         await TestBed.configureTestingModule({
@@ -36,8 +38,8 @@ describe('Main menu component', () => {
                 LayoutService,
                 Urls,
                 { provide: ManagedDiveSchedules, useValue: schedules },
-                { provide: ShareDiveService, useValue: jasmine.createSpyObj<ShareDiveService>('ShareDiveService', ['sharePlan']) },
-                { provide: PreferencesStore, useValue: jasmine.createSpyObj<PreferencesStore>('PreferencesStore', ['save']) }
+                { provide: ShareDiveService, useValue: createSpyObj<ShareDiveService>(['sharePlan']) },
+                { provide: PreferencesStore, useValue: createSpyObj<PreferencesStore>(['save']) }
             ]
         }).compileComponents();
 

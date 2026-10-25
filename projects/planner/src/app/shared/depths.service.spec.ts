@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { DepthsService } from './depths.service';
@@ -119,12 +120,12 @@ describe('Depths service', () => {
 
     describe('Extend deepest segment', () => {
         let originalBottomTime: number;
-        let reloadedSpy: jasmine.Spy<(source: DepthsService) => void>;
+        let reloadedSpy: MockInstance<(source: DepthsService) => void>;
 
         beforeEach(() => {
             originalBottomTime = depthService.segments[1].duration;
             const dispatcher = TestBed.inject(ReloadDispatcher);
-            reloadedSpy = spyOn(dispatcher, 'sendDepthsReloaded').and.callThrough();
+            reloadedSpy = vi.spyOn(dispatcher, 'sendDepthsReloaded');
         });
 
         it('Depth adds 5 m to the deepest segment only', () => {

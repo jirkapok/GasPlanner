@@ -185,7 +185,7 @@ describe('WayPoint', () => {
             10
         );
 
-        expect(waypoint.fits(10) && waypoint.fits(30) && waypoint.fits(69.99)).toBeTrue();
+        expect(waypoint.fits(10) && waypoint.fits(30) && waypoint.fits(69.99)).toBe(true);
     });
 
     it('does not fit when actually does not fit', () => {
@@ -195,7 +195,7 @@ describe('WayPoint', () => {
             10
         );
 
-        expect(waypoint.fits(9.99) || waypoint.fits(70)).toBeFalse();
+        expect(waypoint.fits(9.99) || waypoint.fits(70)).toBe(false);
     });
 
     it('updates swim action to hover', () => {

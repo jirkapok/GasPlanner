@@ -104,22 +104,18 @@ describe('WayPoints Difference Service', () => {
         expect(current).toEqual(expected);
     };
 
-    it('Not calculated profile A', (done) => {
+    it('Not calculated profile A', async () => {
         setCalculationRunning(0);
 
-        setTimeout(() => {
-            assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
-            done();
-        }, 500);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
     });
 
-    it('Not calculated profile B', (done) => {
+    it('Not calculated profile B', async () => {
         setCalculationRunning(1);
 
-        setTimeout(() => {
-            assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
-            done();
-        }, 500);
+        await new Promise(resolve => setTimeout(resolve, 500));
+        assertDivesWayPointsCompare(segments3Minutes6, segments3Minutes6, []);
     });
 
     it('Failed profile A with valid profile B', () => {

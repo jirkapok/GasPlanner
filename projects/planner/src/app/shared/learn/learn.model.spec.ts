@@ -15,7 +15,7 @@ describe('Question variable', () => {
     });
 
     it('Rounds generates value', () => {
-        spyOn(Math, 'random').and.returnValue(0.56789);
+        vi.spyOn(Math, 'random').mockReturnValue(0.56789);
         const variable = new NumberVariable('variable', 0, 10, 2);
         const value = variable.nextRandomValue();
         expect(value).toBeCloseTo(5.68, 7);

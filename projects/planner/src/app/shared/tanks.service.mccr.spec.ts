@@ -59,7 +59,7 @@ describe('TanksService - mCCR', () => {
             const tanks = service.tanks;
             expect(tanks.length).toBe(3);
             expect(tanks[0]).toBe(air);
-            expect(isOxygen(tanks[1])).toBeTrue();
+            expect(isOxygen(tanks[1])).toBe(true);
             expect(tanks[1].tank.size).toBeCloseTo(3, 6);
             expect(tanks[1].tank.startPressure).toBeCloseTo(200, 6);
             expect(tanks[2]).toBe(ean50);
@@ -71,30 +71,30 @@ describe('TanksService - mCCR', () => {
             service.prepareForMccr();
             const tanks = service.tanks;
             expect(tanks.length).toBe(2);
-            expect(tanks[0].tank.gas.compositionEquals(StandardGases.air)).toBeTrue();
+            expect(tanks[0].tank.gas.compositionEquals(StandardGases.air)).toBe(true);
             expect(tanks[1]).toBe(oxygen);
         });
 
         it('notifies tanks reloaded once', () => {
             load(21);
-            const reloaded = spyOn(dispatcher, 'sendTanksReloaded').and.callThrough();
+            const reloaded = vi.spyOn(dispatcher, 'sendTanksReloaded');
             service.prepareForMccr();
-            expect(reloaded).toHaveBeenCalledOnceWith(service);
+            expect(reloaded).toHaveBeenCalledExactlyOnceWith(service);
         });
     });
 
     describe('Can remove', () => {
         it('protects diluent and oxygen in mCCR', () => {
             const tanks = load(21, 100, 50);
-            expect(service.canRemove(tanks[0], CircuitType.mccr)).toBeFalse();
-            expect(service.canRemove(tanks[1], CircuitType.mccr)).toBeFalse();
-            expect(service.canRemove(tanks[2], CircuitType.mccr)).toBeTrue();
+            expect(service.canRemove(tanks[0], CircuitType.mccr)).toBe(false);
+            expect(service.canRemove(tanks[1], CircuitType.mccr)).toBe(false);
+            expect(service.canRemove(tanks[2], CircuitType.mccr)).toBe(true);
         });
 
         it('allows removing second tank in other circuits', () => {
             const tanks = load(21, 100);
-            expect(service.canRemove(tanks[1], CircuitType.oc)).toBeTrue();
-            expect(service.canRemove(tanks[1], CircuitType.pscr)).toBeTrue();
+            expect(service.canRemove(tanks[1], CircuitType.oc)).toBe(true);
+            expect(service.canRemove(tanks[1], CircuitType.pscr)).toBe(true);
         });
     });
 });

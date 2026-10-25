@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -60,7 +61,7 @@ class MccrOptionsPage {
 describe('MccrOptionsComponent', () => {
     let fixture: ComponentFixture<MccrOptionsComponent>;
     let options: OptionsService;
-    let changedSpy: jasmine.Spy<() => void>;
+    let changedSpy: MockInstance<() => void>;
     let page: MccrOptionsPage;
 
     beforeEach(async () => {
@@ -74,7 +75,7 @@ describe('MccrOptionsComponent', () => {
 
         options = TestBed.inject(DiveSchedules).selectedOptions;
         options.circuit = CircuitType.mccr;
-        changedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
+        changedSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').mockImplementation(() => { });
         fixture = TestBed.createComponent(MccrOptionsComponent);
         page = new MccrOptionsPage(fixture);
         fixture.detectChanges();

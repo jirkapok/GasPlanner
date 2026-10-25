@@ -56,7 +56,7 @@ describe('View Switch service', () => {
 
         it('Sets simple profile to all dives', inject([DiveSchedules], (schedules: DiveSchedules) => {
             schedules.add();
-            const schedulesSpy = spyOn(schedules, 'setSimple');
+            const schedulesSpy = vi.spyOn(schedules, 'setSimple').mockImplementation(() => {});
             viewSwitch.isComplex = false;
 
             expect(schedulesSpy).toHaveBeenCalledWith();
@@ -72,7 +72,7 @@ describe('View Switch service', () => {
 
                 viewSwitch.isComplex = false;
 
-                expect(options.isRebreather).toBeFalse();
+                expect(options.isRebreather).toBe(false);
                 expect(tanksService.tanks.length).toBe(1);
                 expect(tanksService.firstTank.he).toBe(0);
             }));

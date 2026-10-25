@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -81,7 +82,7 @@ describe('Tanks Complex component', () => {
     let component: TanksComplexComponent;
     let fixture: ComponentFixture<TanksComplexComponent>;
     let complexPage: ComplexTanksPage;
-    let dispatcherSpy: jasmine.Spy<() => void>;
+    let dispatcherSpy: MockInstance<() => void>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -106,8 +107,8 @@ describe('Tanks Complex component', () => {
         component = fixture.componentInstance;
         complexPage = new ComplexTanksPage(fixture);
         const dispatcher = TestBed.inject(ReloadDispatcher);
-        dispatcherSpy = spyOn(dispatcher, 'sendTankChanged')
-            .and.callFake(() => { });
+        dispatcherSpy = vi.spyOn(dispatcher, 'sendTankChanged')
+            .mockImplementation(() => { });
     });
 
     it('Switch to complex view rebinds all tanks', inject([DiveSchedules],

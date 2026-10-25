@@ -4,7 +4,7 @@ import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { TestBedExtensions } from './TestbedExtensions.spec';
+import { TestBedExtensions } from './TestbedExtensions.testing';
 import { WayPoint } from './wayPoint';
 
 describe('Selected Waypoint', () => {

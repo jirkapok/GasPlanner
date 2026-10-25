@@ -61,19 +61,19 @@ describe('ComputerTasks', () => {
 
     it('Every message has the calculation id', () => {
         const messages = calculate(createRequest());
-        expect(messages.every(m => m.calculationId === 7)).toBeTrue();
+        expect(messages.every(m => m.calculationId === 7)).toBe(true);
     });
 
     it('Points are calculated from the calculated dive', () => {
         const points = pointsOf(calculate(createRequest()));
         expect(points[points.length - 1].point.maxDepth).toBeCloseTo(40, 6);
-        expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
+        expect(points.some(p => p.point.ceiling > 0)).toBe(true);
     });
 
     it('Points contain ascent speed and tissues loading', () => {
         const points = pointsOf(calculate(createRequest()));
-        expect(points.some(p => p.point.ascentSpeed > 0)).toBeTrue();
-        expect(points.some(p => p.point.tissuesLoading === 100)).toBeTrue();
+        expect(points.some(p => p.point.ascentSpeed > 0)).toBe(true);
+        expect(points.some(p => p.point.tissuesLoading === 100)).toBe(true);
     });
 
     it('Points contain no decompression limit of the planned dive', () => {
@@ -87,7 +87,7 @@ describe('ComputerTasks', () => {
 
     it('Started contains stop events of deco dive', () => {
         const started = calculate(createRequest())[0] as ComputerStartedDto;
-        expect(started.events.some(e => e.type === ComputerEventType.stop)).toBeTrue();
+        expect(started.events.some(e => e.type === ComputerEventType.stop)).toBe(true);
     });
 
     it('Next stop is sent as index of the stop event', () => {
@@ -97,13 +97,13 @@ describe('ComputerTasks', () => {
         const stopIndex = withStop?.point.nextStopIndex ?? -1;
         expect(stopIndex).toBeGreaterThanOrEqual(0);
         expect([ComputerEventType.stop, ComputerEventType.safetyStop]).toContain(started.events[stopIndex]?.type);
-        expect('nextStop' in (withStop?.point ?? {})).toBeFalse();
+        expect('nextStop' in (withStop?.point ?? {})).toBe(false);
     });
 
     it('Calculates request transferred to the worker as plain objects', () => {
         const transferred = structuredClone(createRequest());
         const points = pointsOf(calculate(transferred));
-        expect(points.some(p => p.point.ceiling > 0)).toBeTrue();
+        expect(points.some(p => p.point.ceiling > 0)).toBe(true);
     });
 
     it('Empty profile posts no points', () => {

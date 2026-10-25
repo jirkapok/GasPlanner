@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -41,7 +42,7 @@ class PscrOptionsPage {
 describe('PscrOptionsComponent', () => {
     let fixture: ComponentFixture<PscrOptionsComponent>;
     let options: OptionsService;
-    let changedSpy: jasmine.Spy<() => void>;
+    let changedSpy: MockInstance<() => void>;
     let optionsPage: PscrOptionsPage;
 
     beforeEach(async () => {
@@ -55,7 +56,7 @@ describe('PscrOptionsComponent', () => {
 
         options = TestBed.inject(DiveSchedules).selectedOptions;
         options.circuit = CircuitType.pscr;
-        changedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
+        changedSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').mockImplementation(() => { });
         fixture = TestBed.createComponent(PscrOptionsComponent);
         optionsPage = new PscrOptionsPage(fixture);
         fixture.detectChanges();

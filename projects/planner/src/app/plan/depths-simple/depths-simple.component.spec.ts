@@ -95,7 +95,7 @@ describe('Depths Simple Component', () => {
                 dispatcher.depthChanged$.subscribe(() => eventFired = true );
                 schedule.selected.diveResult.updateDiveInfo(21, false, 0,0,0,0,0,0,0, HighestDensity.createDefault(),
                     [], [], [], 0, [], []);
-                const assignDurationSpy = spyOn(schedule.selected.depths, 'applyNdlDuration').and.callThrough();
+                const assignDurationSpy = vi.spyOn(schedule.selected.depths, 'applyNdlDuration');
                 simplePage.applyNdlButton.click();
                 expect(assignDurationSpy).toHaveBeenCalledWith();
                 expect(schedule.selected.depths.planDuration).toBe(21);
@@ -114,8 +114,7 @@ describe('Depths Simple Component', () => {
     });
 
     it('wrong duration doesn\'t call calculate', () => {
-        const durationSpy = spyOnProperty(depths, 'planDuration')
-            .and.callThrough();
+        const durationSpy = vi.spyOn(depths, 'planDuration', 'get');
 
         simplePage.durationInput.value = 'aaa';
         simplePage.durationInput.dispatchEvent(new Event('input'));

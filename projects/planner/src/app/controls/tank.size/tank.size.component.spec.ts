@@ -53,7 +53,7 @@ describe('TankSizeComponent', () => {
     });
 
     it('Changing size applies the value', () => {
-        spyOn(component.sizeChange, 'emit');
+        vi.spyOn(component.sizeChange, 'emit').mockImplementation(() => {});
         const sizeField = page.sizeInput;
         sizeField.value = '12';
         sizeField.dispatchEvent(new Event('input'));
@@ -63,7 +63,7 @@ describe('TankSizeComponent', () => {
     });
 
     it('Prevents update of invalid value', () => {
-        spyOn(component.sizeChange, 'emit');
+        vi.spyOn(component.sizeChange, 'emit').mockImplementation(() => {});
         const sizeField = page.sizeInput;
         sizeField.value = '0';
         sizeField.dispatchEvent(new Event('input'));
@@ -73,7 +73,7 @@ describe('TankSizeComponent', () => {
     });
 
     it('Assign standard tank applies imperial values', () => {
-        spyOn(component.applyTemplate, 'emit');
+        vi.spyOn(component.applyTemplate, 'emit').mockImplementation(() => {});
         const templateButtons = page.templateButtons[2].nativeElement as HTMLInputElement;
         templateButtons.dispatchEvent(new Event('click'));
 

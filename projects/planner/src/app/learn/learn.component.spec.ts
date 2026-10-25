@@ -78,9 +78,9 @@ describe('LearnComponent', () => {
     });
 
     it('Reset session resets session and switches to new question', () => {
-        const resetSpy = spyOn(component.quizService.session, 'reset').and.callThrough();
-        const nextQuestionSpy = spyOn(component.quizService, 'goToNextQuestion').and.callThrough();
-        const prefsSpy = spyOn(prefs, 'save').and.callThrough();
+        const resetSpy = vi.spyOn(component.quizService.session, 'reset');
+        const nextQuestionSpy = vi.spyOn(component.quizService, 'goToNextQuestion');
+        const prefsSpy = vi.spyOn(prefs, 'save');
 
         component.resetSession();
 
@@ -94,8 +94,8 @@ describe('LearnComponent', () => {
             component.session.answerCorrectly();
         }
 
-        const validationSpy = spyOn(component.question, 'validateAnswer').and.callThrough();
-        const prefsSpy = spyOn(prefs, 'save').and.callThrough();
+        const validationSpy = vi.spyOn(component.question, 'validateAnswer');
+        const prefsSpy = vi.spyOn(prefs, 'save');
 
         component.validateCurrentAnswer();
 

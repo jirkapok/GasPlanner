@@ -29,7 +29,7 @@ describe('ApplicationSettingsService', () => {
         });
 
         it('Applies gas density in lbs/cuft', () => {
-            expect(sut.maxGasDensity).toBeCloseTo(0.35583938, 8);
+            expect(sut.maxGasDensity).toBeCloseTo(0.35583937, 8);
         });
     });
 });

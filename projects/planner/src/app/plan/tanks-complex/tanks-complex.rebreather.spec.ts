@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -159,7 +160,7 @@ class RebreatherTabPage {
 describe('Tanks Complex component - Rebreather', () => {
     let fixture: ComponentFixture<TanksComplexComponent>;
     let schedules: DiveSchedules;
-    let optionsChangedSpy: jasmine.Spy<() => void>;
+    let optionsChangedSpy: MockInstance<() => void>;
     let rebreatherPage: RebreatherTabPage;
 
     beforeEach(async () => {
@@ -177,7 +178,7 @@ describe('Tanks Complex component - Rebreather', () => {
         }).compileComponents();
 
         schedules = TestBed.inject(DiveSchedules);
-        optionsChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callThrough();
+        optionsChangedSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged');
         fixture = TestBed.createComponent(TanksComplexComponent);
         rebreatherPage = new RebreatherTabPage(fixture);
         fixture.detectChanges();
@@ -207,7 +208,7 @@ describe('Tanks Complex component - Rebreather', () => {
         rebreatherPage.showRebreatherTab();
 
         expect(rebreatherPage.rebreatherOptions).toBeDefined();
-        expect(fixture.componentInstance.rebreatherTab).toBeTrue();
+        expect(fixture.componentInstance.rebreatherTab).toBe(true);
     });
 
     it('rebreather tab is closed, when switched back to open circuit', () => {
@@ -216,7 +217,7 @@ describe('Tanks Complex component - Rebreather', () => {
         rebreatherPage.selectOpenCircuit();
         rebreatherPage.selectPscr();
 
-        expect(fixture.componentInstance.rebreatherTab).toBeFalse();
+        expect(fixture.componentInstance.rebreatherTab).toBe(false);
     });
 
     it('invalid tank marks tanks tab with error', () => {
@@ -235,7 +236,7 @@ describe('Tanks Complex component - Rebreather', () => {
 
         expect(rebreatherPage.rebreatherTabError).toBeDefined();
         expect(rebreatherPage.tanksTabError).toBeUndefined();
-        expect(fixture.componentInstance.rootForm.valid).toBeFalse();
+        expect(fixture.componentInstance.rootForm.valid).toBe(false);
     });
 
     it('fixed rebreather value removes the error', () => {
@@ -254,13 +255,13 @@ describe('Tanks Complex component - Rebreather', () => {
         rebreatherPage.typeInjectionRatio('2');
         rebreatherPage.selectOpenCircuit();
 
-        expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+        expect(fixture.componentInstance.rootForm.valid).toBe(true);
     });
 
     describe('Invalid values prevent recalculation', () => {
         it('switch to pSCR with invalid tank', () => {
             rebreatherPage.typeTankPressure(0, '9999');
-            optionsChangedSpy.calls.reset();
+            optionsChangedSpy.mockClear();
             rebreatherPage.selectPscr();
 
             expect(optionsChangedSpy).not.toHaveBeenCalled();
@@ -269,14 +270,14 @@ describe('Tanks Complex component - Rebreather', () => {
         it('switch to open circuit with invalid tank', () => {
             rebreatherPage.selectPscr();
             rebreatherPage.typeTankPressure(0, '9999');
-            optionsChangedSpy.calls.reset();
+            optionsChangedSpy.mockClear();
             rebreatherPage.selectOpenCircuit();
 
             expect(optionsChangedSpy).not.toHaveBeenCalled();
         });
 
         it('tank template applied with invalid rebreather value', () => {
-            const tankChangedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendTankChanged');
+            const tankChangedSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendTankChanged').mockImplementation(() => {});
             rebreatherPage.selectPscr();
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeInjectionRatio('2');
@@ -289,7 +290,7 @@ describe('Tanks Complex component - Rebreather', () => {
             rebreatherPage.selectPscr();
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeInjectionRatio('2');
-            optionsChangedSpy.calls.reset();
+            optionsChangedSpy.mockClear();
             rebreatherPage.selectOpenCircuit();
 
             expect(optionsChangedSpy).toHaveBeenCalledWith();
@@ -308,7 +309,7 @@ describe('Tanks Complex component - Rebreather', () => {
         it('switches circuit and inserts oxygen as second tank', () => {
             expect(schedules.selectedOptions.circuit).toBe(CircuitType.mccr);
             expect(tanks().tanks.length).toBe(4);
-            expect(tanks().oxygenTank?.tank.gas.compositionEquals(StandardGases.oxygen)).toBeTrue();
+            expect(tanks().oxygenTank?.tank.gas.compositionEquals(StandardGases.oxygen)).toBe(true);
             expect(optionsChangedSpy).toHaveBeenCalledWith();
         });
 
@@ -318,14 +319,14 @@ describe('Tanks Complex component - Rebreather', () => {
 
         it('rebreather tab shows only mCCR options', () => {
             rebreatherPage.showRebreatherTab();
-            expect(rebreatherPage.mccrOptions?.hidden).toBeFalse();
-            expect(rebreatherPage.rebreatherOptions?.hidden).toBeTrue();
+            expect(rebreatherPage.mccrOptions?.hidden).toBe(false);
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBe(true);
         });
 
         it('pSCR shows only pSCR options', () => {
             rebreatherPage.selectPscr();
-            expect(rebreatherPage.rebreatherOptions?.hidden).toBeFalse();
-            expect(rebreatherPage.mccrOptions?.hidden).toBeTrue();
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBe(false);
+            expect(rebreatherPage.mccrOptions?.hidden).toBe(true);
         });
 
         it('invalid pSCR value doesn\'t block the planner after switch to mCCR', () => {
@@ -333,14 +334,14 @@ describe('Tanks Complex component - Rebreather', () => {
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeInjectionRatio('2');
             rebreatherPage.selectMccr();
-            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+            expect(fixture.componentInstance.rootForm.valid).toBe(true);
         });
 
         it('invalid mCCR value doesn\'t block the planner after switch to pSCR', () => {
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeSetpoint('2');
             rebreatherPage.selectPscr();
-            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+            expect(fixture.componentInstance.rootForm.valid).toBe(true);
             expect(schedules.selectedOptions.setpoint).toBeCloseTo(1.3, 6);
         });
 
@@ -355,7 +356,7 @@ describe('Tanks Complex component - Rebreather', () => {
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeSetpoint('2');
             rebreatherPage.selectOpenCircuit();
-            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+            expect(fixture.componentInstance.rootForm.valid).toBe(true);
         });
 
         it('labels diluent and oxygen tanks in both layouts', () => {
@@ -367,10 +368,10 @@ describe('Tanks Complex component - Rebreather', () => {
         });
 
         it('oxygen gas can\'t be changed', () => {
-            expect(rebreatherPage.tankO2Input(1).disabled).toBeTrue();
-            expect(rebreatherPage.tankO2Menu(1).disabled).toBeTrue();
-            expect(rebreatherPage.tankHeInput(1).disabled).toBeTrue();
-            expect(rebreatherPage.tankO2Input(0).disabled).toBeFalse();
+            expect(rebreatherPage.tankO2Input(1).disabled).toBe(true);
+            expect(rebreatherPage.tankO2Menu(1).disabled).toBe(true);
+            expect(rebreatherPage.tankHeInput(1).disabled).toBe(true);
+            expect(rebreatherPage.tankO2Input(0).disabled).toBe(false);
         });
 
         it('oxygen tank pressure change keeps the oxygen', () => {
@@ -390,7 +391,7 @@ describe('Tanks Complex component - Rebreather', () => {
             const order = tanks().tanks;
             rebreatherPage.selectOpenCircuit();
             expect(tanks().tanks).toEqual(order);
-            expect(rebreatherPage.tankO2Input(1).disabled).toBeFalse();
+            expect(rebreatherPage.tankO2Input(1).disabled).toBe(false);
             expect(rebreatherPage.removeTankBtn(1)).toBeDefined();
         });
 
@@ -405,6 +406,6 @@ describe('Tanks Complex component - Rebreather', () => {
         rebreatherPage.selectPscr();
         rebreatherPage.selectOpenCircuit();
 
-        expect(schedules.selectedOptions.isRebreather).toBeFalse();
+        expect(schedules.selectedOptions.isRebreather).toBe(false);
     });
 });

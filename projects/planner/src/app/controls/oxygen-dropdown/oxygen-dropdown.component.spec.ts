@@ -85,7 +85,7 @@ describe('Oxygen DropDown component', () => {
     describe('Apply Standard gas', () => {
         beforeEach(() => {
             fixture.detectChanges();
-            spyOn(component.standardGasApplied, 'emit');
+            vi.spyOn(component.standardGasApplied, 'emit').mockImplementation(() => {});
             component.assignStandardGas('Oxygen');
         });
 
@@ -94,7 +94,7 @@ describe('Oxygen DropDown component', () => {
         });
 
         it('Fires event', () => {
-            expect(component.standardGasApplied.emit).toHaveBeenCalledOnceWith('Oxygen');
+            expect(component.standardGasApplied.emit).toHaveBeenCalledExactlyOnceWith('Oxygen');
         });
     });
 });

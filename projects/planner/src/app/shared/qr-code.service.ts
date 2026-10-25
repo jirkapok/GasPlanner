@@ -10,6 +10,10 @@ export class QrCodeService {
         private modalService: MdbModalService
     ) {}
 
+    public showDivePlan(): void {
+        this.showQrCode(window.location.href);
+    }
+
     public showQrCode(data: string): void {
         this.modalService.open(QrCodeModalComponent, {
             data: { data }

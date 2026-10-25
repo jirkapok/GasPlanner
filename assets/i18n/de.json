@@ -225,5 +225,10 @@
     "showHelp": "Hilfe anzeigen",
     "openHelpPanel": "Hilfebereich öffnen",
     "resetCategory": "Kategorie zurücksetzen"
+  },
+  "qrCodeModal": {
+    "title": "QR-Code des Tauchplans",
+    "close": "Schließen",
+    "qrCode": "QR-Code mit Link zum Tauchplan"
   }
 }

@@ -225,5 +225,10 @@
     "showHelp": "Zobrazit nápovědu",
     "openHelpPanel": "Otevřít panel nápovědy",
     "resetCategory": "Resetovat kategorii"
+  },
+  "qrCodeModal": {
+    "title": "QR kód plánu ponoru",
+    "close": "Zavřít",
+    "qrCode": "QR kód s odkazem na plán ponoru"
   }
 }

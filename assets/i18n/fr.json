@@ -225,5 +225,10 @@
     "showHelp": "Afficher l'aide",
     "openHelpPanel": "Ouvrir le panneau d'aide",
     "resetCategory": "Réinitialiser la catégorie"
+  },
+  "qrCodeModal": {
+    "title": "QR code du plan de plongée",
+    "close": "Fermer",
+    "qrCode": "QR code avec lien vers le plan de plongée"
   }
 }

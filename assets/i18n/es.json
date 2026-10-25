@@ -225,5 +225,10 @@
     "showHelp": "Mostrar ayuda",
     "openHelpPanel": "Abrir panel de ayuda",
     "resetCategory": "Reiniciar categoría"
+  },
+  "qrCodeModal": {
+    "title": "Código QR del plan de inmersión",
+    "close": "Cerrar",
+    "qrCode": "Código QR con enlace al plan de inmersión"
   }
 }

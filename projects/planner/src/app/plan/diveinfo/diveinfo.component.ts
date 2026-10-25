@@ -15,7 +15,6 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { TextConstants } from '../../shared/TextConstants';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ShareDiveService } from '../../shared/ShareDiveService';
-import { QrCodeService } from '../../shared/qr-code.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
@@ -60,7 +59,6 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     constructor(
         private shareDive: ShareDiveService,
-        private qrCode: QrCodeService,
         private viewSwitch: ViewSwitchService,
         public units: UnitConversion,
         private dispatcher: ReloadDispatcher,
@@ -174,8 +172,8 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
         this.shareDive.sharePlan();
     }
 
-    public shareQrCode(): void {
-        this.qrCode.showDivePlan();
+    public sharePlanQrCode(): void {
+        this.shareDive.sharePlanQrCode();
     }
 
     public switchInLiters(): void {

@@ -13,7 +13,6 @@ import { QRCodeComponent } from 'angularx-qrcode';
     imports: [QRCodeComponent, TranslatePipe],
 })
 export class QrCodeModalComponent {
-    private _data = window.location.href;
     // 320px on mobile, 440px everywhere else
     protected qrWidth = toSignal(
         this.breakpointObserver.observe(Breakpoints.XSmall).pipe(
@@ -28,12 +27,7 @@ export class QrCodeModalComponent {
     ) {}
 
     public get data(): string {
-        return this._data;
-    }
-
-    @Input()
-    public set data(value: string) {
-        this._data = value;
+        return window.location.href;
     }
 
     protected closeModal(): void {

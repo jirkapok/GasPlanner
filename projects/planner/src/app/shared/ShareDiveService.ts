@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
+import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { Streamed } from './streamed';
+import { QrCodeModalComponent } from '../qr-code-modal/qr-code-modal.component';
 
 @Injectable()
 export class ShareDiveService extends Streamed {
     public toastVisible = false;
 
-    constructor(private clipboard: ClipboardService) {
+    constructor(
+        private clipboard: ClipboardService,
+        private modalService: MdbModalService
+    ) {
         super();
 
         this.clipboard.copyResponse$.pipe(takeUntil(this.unsubscribe$))
@@ -40,6 +45,10 @@ export class ShareDiveService extends Streamed {
 
     public hideToast(): void {
         this.toastVisible = false;
+    }
+
+    public sharePlanQrCode(): void {
+        this.modalService.open(QrCodeModalComponent);
     }
 
     private copyToClipBoard(res: IClipboardResponse) {

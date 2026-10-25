@@ -39,6 +39,7 @@
     "@ngx-translate/http-loader": "^18.0.0",
     "@popperjs/core": "^2.11.8",
     "add-to-homescreen": "github:docluv/add-to-homescreen",
+    "angularx-qrcode": "^22.0.1",
     "canvas-confetti": "^1.9.4",
     "flag-icons": "^7.5.0",
     "lodash": "^4.18.1",

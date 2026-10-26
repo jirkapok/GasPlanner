@@ -2188,7 +2188,7 @@ The user does this step. The agent prepares the inputs and records the results, 
   1. **pSCR**: 30 m / 40 min, supply EAN32, injection ratio 8, metabolic O2 1 l/min.
   2. **mCCR**: 40 m / 25 min, diluent air, target ppO2 1.3, O2 flow 0.8 l/min, metabolic O2 1 l/min.
   3. **eCCR**: 40 m / 25 min, diluent air, setpoints descent 0.7 / bottom 1.3 / deco 1.3, switch depth 20 m.
-  4. **eCCR deep** (the Stage 4 E2E dive): 60 m, diluent 18/45, bailout 18/45, EAN50, oxygen, setpoints 1.1 / 1.1 / 1.4.
+  4. **eCCR deep** (the Stage 4 E2E dive): 60 m / 12 min, fresh water, GF 40/85 (app defaults), diluent 18/45, bailout 18/45, EAN50, oxygen, setpoints 1.1 / 1.1 / 1.3, switch depth 20 m. Dugong today: runtime 31:57, CCR oxygen tank 188/200 bar (`e2e/eccr.spec.ts`, `planner.service.eccr.spec.ts`).
 - **User fills in** the same results from reference planners (e.g. MultiDeco, Subsurface; any planner with that rebreather type), plus the software name and version.
 - **Acceptance**:
   - each stop within ±1 min;
@@ -2216,7 +2216,7 @@ Depends on 5e: only values the user confirmed in 5e (or Dugong values the user a
 #### 5g. Default rebreather oxygen tank template (metric and imperial)
 - [ ] Status
 
-Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForMccr` (Stage 3 ruling and deferred minor: imperial shows about 25 cuft).
+Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForClosedCircuit` (Stage 3 ruling and deferred minor: imperial shows about 25 cuft).
 
 - **Lib**: `StandardTanks.rebreatherOxygen: TankTemplate` in `consumption/StandardTanks.ts`, also listed in `available`:
   - `MetricTanks`: `{ name: '3 L', size: 3, workingPressure: 0 }`, start pressure 200 bar;
@@ -2224,8 +2224,8 @@ Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForMccr` 
   - The imperial cylinder is a proposal; the user confirms the template (name/size/pressure) when the stage starts.
   - Spec in `StandardTanks.spec.ts`.
 - **Planner**: `TanksService` creates the oxygen tank from `units.defaults.tanks.rebreatherOxygen` (size and working pressure in current units, like `addTankBy`, gas oxygen).
-  - It is used when switching to **mCCR and eCCR** (the eCCR switch reuses `prepareForMccr`, renamed to `prepareForClosedCircuit` in Stage 4 if not done there).
-  - Specs in `tanks.service.mccr.spec.ts`: metric 3 L/200 bar and imperial 19 cuft/3000 psi oxygen tank inserted; existing tanks unchanged.
+  - It is used when switching to **mCCR and eCCR** (both use `prepareForClosedCircuit`, renamed in Stage 4).
+  - Specs in `tanks.service.ccr.spec.ts`: metric 3 L/200 bar and imperial 19 cuft/3000 psi oxygen tank inserted; existing tanks unchanged.
 
 #### 5h. Clean E2E console
 - [ ] Status
@@ -2233,6 +2233,7 @@ Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForMccr` 
 The `npm run e2e` log contains:
 - 2× `ERROR Error: Resize must be passed a displayed plot div element.` (plotly `Plots.resize` on a chart that isn't displayed);
 - 1× `NG0956: The configured tracking expression (track by identity) caused re-creation of the entire collection of size 2`.
+- several `ERROR TypeError: Cannot read properties of undefined (reading 'consumed')` in `e2e/eccr.spec.ts` (stale consumption results, fixed in 5i first, otherwise the fixture below fails the eCCR test).
 
 None of them fail a test today.
 
@@ -2245,6 +2246,28 @@ None of them fail a test today.
   - track by a stable key (e.g. id/index) instead of identity where the items are recreated.
 - **Prevent regressions**: a shared E2E fixture (e.g. `e2e/fixtures.ts`) collects `console.error` messages and the Angular `NG0` warnings during each test, and fails the test when there are any. All E2E specs use it.
 - Verification: `npm run e2e` passes with an empty console log for errors and NG0 warnings.
+
+#### 5i. Known issues from Stage 4
+- [ ] Status
+
+Found during Stage 4 (eCCR), deferred to this stage. Each fix follows TDD (failing test first).
+
+1. **Stale consumption results throw** (bug, also in open circuit, already on master before Stage 4):
+   - Repro: complex view, add 3 tanks quickly → console `TypeError: Cannot read properties of undefined (reading 'consumed')`.
+   - Cause: `PlannerService.finishConsumption` applies a consumption result calculated for an older tank list. `TanksService.copyTanksConsumption` reads `result.tanks[index]` for every current tank and throws, so `diveResult.updateConsumption` is skipped and the dive shows "Calculating ..." until a later matching result arrives.
+   - Fix direction (decide with `superpowers:systematic-debugging`): ignore results that don't belong to the current tank list (e.g. compare the tank count/ids of the request, or a request sequence number per dive), instead of copying partial data. Check the same for the profile and dive info results.
+   - Spec: `planner.service` spec with a consumption result for fewer tanks than the dive has → no exception, the stale result is ignored, the next result is applied.
+2. **Bailout calculation uses the bottom setpoint for user levels after the deepest point** (eCCR):
+   - `PlanFactory.emergencyAscent` passes `startAscentIndex = emergencyPlan.length`, so user-defined ascent levels after the deepest point stay on the loop (Stage 2 decision), but `BailoutBreathing` asks the eCCR primary with `isAscent = false` → bottom/descent setpoint. The main plan breathes the same levels with the deco setpoint.
+   - Effect: conservative (lower ppO2 → more inert gas loading → larger bailout reserve), only multilevel eCCR plans.
+   - Fix direction: `BailoutBreathing` gets the dive's deepest-part index, so the primary is asked with the same ascent flag as the main plan, while only the generated ascent is open circuit. Spec in `PlanFactory.bailout.spec.ts` with a recording primary.
+3. **"Descent setpoint higher than bottom" error placement** (eCCR options UI):
+   - The cross-field error is always shown under `#descentSetpoint`, also when the user lowered the bottom setpoint.
+   - Fix: mark the control the user changed last (or both) with `is-invalid` and show the message below it. Spec in `eccr-options.component.spec.ts`.
+4. **Duplicate ids in the Rebreather tab** (pre-existing since Stage 3):
+   - `app-pscr-options` and `app-mccr-options` are both always rendered and both contain `#metabolicO2`. eCCR already uses prefixed ids (`#eccrLoopVolume`, `#eccrMetabolicO2`).
+   - Fix: prefix the pSCR/mCCR ids (`#pscrMetabolicO2`, `#mccrMetabolicO2`, `#mccrLoopVolume`) and update the component specs (no E2E test uses these ids today).
+5. **Reference-planner check of the eCCR E2E values** is covered by 5e scenario 4; if the user's values differ beyond the 5e tolerances, the analysis happens there before 5f hardcodes anything new.
 
 #### Stage 5 E2E
 - [ ] Status

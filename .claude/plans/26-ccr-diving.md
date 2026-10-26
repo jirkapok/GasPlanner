@@ -1907,7 +1907,7 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
 - [x] Mark `### Stage 3: mCCR` `- [x] Status` in this plan.
 
 ### Stage 4: eCCR
-- [ ] Status
+- [x] Status
 
 - **Lib**:
   - `RebreatherOptions.setpoints { descent 0.7, bottom 1.1, deco 1.3, switchDepth 20 m }` and `o2Loss` 0.1.
@@ -1925,7 +1925,7 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
 - **Stage 4 finish (issue #26 stays open)**: the same steps as "Stage 3 finish" (keyword check of the branch, `Part of #26` in the PR, issue still `OPEN` after the push), but tick the one task-list row of the issue description that mentions **eCCR**. When this stage gets its detailed tasks, copy them as a "Stage 4 finish" task with its own checkboxes.
 
 #### Stage 4 detailed tasks (branch `feat/26-ccr-eccr`)
-- [ ] Status
+- [x] Status
 
 Decisions made while detailing (confirmed with the user 2026-10-21, or derived from the code):
 - **Deco setpoint starts after the deepest point** (user 2026-10-21): every segment from `Segments.startAscentIndex` (end of the deepest part) on is "ascent", the same index CNS/OTU/density/`ProfileEvents` already use. A multilevel user level after the deepest point uses the deco setpoint.
@@ -2106,10 +2106,10 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
 
 Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
 
-- [ ] Check the branch for closing keywords: `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`. Expected: no output; reword any match with my approval.
+- [x] Check the branch for closing keywords: `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`. Expected: no output; reword any match with my approval.
 - [ ] The PR body (if a PR is used) says `Part of #26`; a local merge commit message gets the same check.
 - [ ] After the merge into `master` is pushed: `gh issue view 26 --json state,body` → `OPEN` (otherwise `gh issue reopen 26` and tell me which commit closed it). Tick exactly the one task-list row mentioning eCCR (save body to the scratchpad, change `- [ ]` → `- [x]`, show me the diff, `gh issue edit 26 --body-file <file>` after my confirmation). Zero or several matching rows → ask me.
-- [ ] Mark `### Stage 4: eCCR` `- [x] Status` in this plan.
+- [x] Mark `### Stage 4: eCCR` `- [x] Status` in this plan.
 
 ### Stage 5: CCR results UI
 - [ ] Status

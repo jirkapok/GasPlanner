@@ -160,7 +160,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             });
 
         this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((selected: ComparedWaypoint) => {
+            .subscribe((selected) => {
                 this.selectWayPoint(selected);
             });
 

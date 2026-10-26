@@ -72,8 +72,6 @@ test.describe('eCCR rebreather', () => {
     });
 
     test('should calculate trimix eCCR dive with bailout tanks', async () => {
-        // results of the intermediate plans (fewer tanks) delay the final result, when running in parallel
-        test.setTimeout(90000);
         const planner = new EccrPlannerPage(page);
         await expect(planner.totalTime()).toHaveText('21:00');
         await planner.setDepth('60');
@@ -97,7 +95,7 @@ test.describe('eCCR rebreather', () => {
         await expect(async () => {
             await planner.openResultsTab();
             await expect(planner.totalTime()).toHaveText('31:57', { timeout: 1000 });
-        }).toPass({ timeout: 60000 });
+        }).toPass({ timeout: 10000 });
         await planner.openConsumedTab();
         await expect(planner.tankRemaining(2)).toHaveText('188/200');
     });

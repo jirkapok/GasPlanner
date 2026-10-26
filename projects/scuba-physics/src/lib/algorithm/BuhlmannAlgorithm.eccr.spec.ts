@@ -1,6 +1,6 @@
 import { BuhlmannAlgorithm } from './BuhlmannAlgorithm';
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { EventType } from './CalculatedProfile';
 import { EccrBreathing } from '../ccr/EccrBreathing';
 import { CircuitType, RebreatherOptions } from '../ccr/RebreatherOptions';
@@ -54,8 +54,8 @@ describe('Buhlmann Algorithm - eCCR', () => {
             algorithm.decompression(createParams(createMultilevel(), recording));
             const flags = ascentFlags(recording);
             expect(flags.length).toBeGreaterThan(deepestPartDuration);
-            expect(flags.slice(0, deepestPartDuration).every(f => !f)).toBeTrue();
-            expect(flags.slice(deepestPartDuration).every(f => f)).toBeTrue();
+            expect(flags.slice(0, deepestPartDuration).every(f => !f)).toBe(true);
+            expect(flags.slice(deepestPartDuration).every(f => f)).toBe(true);
         });
 
         it('statistics of calculated profile use the same ascent flags', () => {
@@ -64,8 +64,8 @@ describe('Buhlmann Algorithm - eCCR', () => {
             algorithm.decompressionStatistics(createParams(Segments.fromCollection(profile), recording));
             const flags = ascentFlags(recording);
             expect(flags.length).toBeGreaterThan(deepestPartDuration);
-            expect(flags.slice(0, deepestPartDuration).every(f => !f)).toBeTrue();
-            expect(flags.slice(deepestPartDuration).every(f => f)).toBeTrue();
+            expect(flags.slice(0, deepestPartDuration).every(f => !f)).toBe(true);
+            expect(flags.slice(deepestPartDuration).every(f => f)).toBe(true);
         });
 
         it('no decompression limits of calculated profile use the same ascent flags', () => {
@@ -76,9 +76,9 @@ describe('Buhlmann Algorithm - eCCR', () => {
             const flags = ascentFlags(recording);
             const firstAscent = flags.indexOf(true);
             expect(firstAscent).toBeGreaterThan(0);
-            expect(flags.slice(firstAscent).every(f => f)).toBeTrue();
-            expect(recording.calls.some(c => c.depth === 21 && c.isAscent)).toBeTrue();
-            expect(recording.calls.some(c => c.depth === 40 && !c.isAscent)).toBeTrue();
+            expect(flags.slice(firstAscent).every(f => f)).toBe(true);
+            expect(recording.calls.some(c => c.depth === 21 && c.isAscent)).toBe(true);
+            expect(recording.calls.some(c => c.depth === 40 && !c.isAscent)).toBe(true);
         });
     });
 
@@ -111,7 +111,7 @@ describe('Buhlmann Algorithm - eCCR', () => {
         it('stays on the diluent without gas switches or air breaks', () => {
             const profile = calculate(createEccr(1.1, 1.3, tanks));
             const allOnDiluent = profile.every(s => s.gas.compositionEquals(diluent.gas));
-            expect(allOnDiluent).toBeTrue();
+            expect(allOnDiluent).toBe(true);
             expect(profile[profile.length - 1].endDepth).toBe(0);
         });
 

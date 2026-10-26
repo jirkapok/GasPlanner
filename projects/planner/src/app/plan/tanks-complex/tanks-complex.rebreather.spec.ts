@@ -423,7 +423,7 @@ describe('Tanks Complex component - Rebreather', () => {
         it('eCCR switches circuit and inserts oxygen as second tank', () => {
             expect(schedules.selectedOptions.circuit).toBe(CircuitType.eccr);
             expect(tanks().tanks.length).toBe(4);
-            expect(tanks().oxygenTank?.tank.gas.compositionEquals(StandardGases.oxygen)).toBeTrue();
+            expect(tanks().oxygenTank?.tank.gas.compositionEquals(StandardGases.oxygen)).toBe(true);
             expect(optionsChangedSpy).toHaveBeenCalledWith();
         });
 
@@ -433,9 +433,9 @@ describe('Tanks Complex component - Rebreather', () => {
 
         it('rebreather tab shows only eCCR options', () => {
             rebreatherPage.showRebreatherTab();
-            expect(rebreatherPage.eccrOptions?.hidden).toBeFalse();
-            expect(rebreatherPage.mccrOptions?.hidden).toBeTrue();
-            expect(rebreatherPage.rebreatherOptions?.hidden).toBeTrue();
+            expect(rebreatherPage.eccrOptions?.hidden).toBe(false);
+            expect(rebreatherPage.mccrOptions?.hidden).toBe(true);
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBe(true);
         });
 
         it('invalid mCCR value doesn\'t block the planner after switch to eCCR', () => {
@@ -443,7 +443,7 @@ describe('Tanks Complex component - Rebreather', () => {
             rebreatherPage.showRebreatherTab();
             rebreatherPage.typeSetpoint('2');
             rebreatherPage.selectEccr();
-            expect(fixture.componentInstance.rootForm.valid).toBeTrue();
+            expect(fixture.componentInstance.rootForm.valid).toBe(true);
         });
 
         it('invalid eCCR value marks rebreather tab with error', () => {
@@ -460,8 +460,8 @@ describe('Tanks Complex component - Rebreather', () => {
         });
 
         it('eCCR oxygen gas can\'t be changed', () => {
-            expect(rebreatherPage.tankO2Input(1).disabled).toBeTrue();
-            expect(rebreatherPage.tankHeInput(1).disabled).toBeTrue();
+            expect(rebreatherPage.tankO2Input(1).disabled).toBe(true);
+            expect(rebreatherPage.tankHeInput(1).disabled).toBe(true);
         });
 
         it('eCCR diluent and oxygen can\'t be removed', () => {

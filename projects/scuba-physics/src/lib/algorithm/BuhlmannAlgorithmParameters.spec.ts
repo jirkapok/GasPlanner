@@ -1,5 +1,5 @@
 import { AlgorithmParams } from './BuhlmannAlgorithmParameters';
-import { OptionExtensions } from './Options.spec';
+import { OptionExtensions } from './Options.testing';
 import { Gases } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
 import { Segments } from '../depths/Segments';

@@ -1,3 +1,4 @@
+import { MockInstance } from 'vitest';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DecimalPipe } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -58,7 +59,7 @@ class EccrOptionsPage {
 describe('EccrOptionsComponent', () => {
     let fixture: ComponentFixture<EccrOptionsComponent>;
     let options: OptionsService;
-    let changedSpy: jasmine.Spy<() => void>;
+    let changedSpy: MockInstance<() => void>;
     let page: EccrOptionsPage;
 
     beforeEach(async () => {
@@ -72,7 +73,7 @@ describe('EccrOptionsComponent', () => {
 
         options = TestBed.inject(DiveSchedules).selectedOptions;
         options.circuit = CircuitType.eccr;
-        changedSpy = spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').and.callFake(() => { });
+        changedSpy = vi.spyOn(TestBed.inject(ReloadDispatcher), 'sendOptionsChanged').mockImplementation(() => { });
         fixture = TestBed.createComponent(EccrOptionsComponent);
         page = new EccrOptionsPage(fixture);
         fixture.detectChanges();

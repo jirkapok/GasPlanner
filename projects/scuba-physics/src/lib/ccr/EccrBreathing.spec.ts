@@ -48,8 +48,8 @@ describe('eCCR breathing', () => {
         });
 
         it('doesn\'t switch gases nor applies air breaks', () => {
-            expect(sut.usesGasSwitching).toBeFalse();
-            expect(sut.usesAirBreaks).toBeFalse();
+            expect(sut.usesGasSwitching).toBe(false);
+            expect(sut.usesAirBreaks).toBe(false);
         });
     });
 

@@ -1,3 +1,10 @@
+## [0.17.2](https://github.com/jirkapok/GasPlanner/compare/v0.17.1...v0.17.2) (2026-10-26)
+
+
+### Performance Improvements
+
+* remove zone.js ([de551ef](https://github.com/jirkapok/GasPlanner/commit/de551ef82392292364ce5964670360e0123d26cc))
+
 ## [0.17.1](https://github.com/jirkapok/GasPlanner/compare/v0.17.0...v0.17.1) (2026-10-25)
 
 

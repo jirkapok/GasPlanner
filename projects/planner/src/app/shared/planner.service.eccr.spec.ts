@@ -54,7 +54,7 @@ describe('PlannerService - eCCR reference dive', () => {
     });
 
     it('calculates runtime 31:57', () => {
-        expect(dive.diveResult.hasErrors).toBeFalse();
+        expect(dive.diveResult.hasErrors).toBe(false);
         expect(dive.diveResult.totalDuration).toBe(31 * 60 + 57);
     });
 

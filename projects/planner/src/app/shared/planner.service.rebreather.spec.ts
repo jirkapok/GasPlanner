@@ -93,15 +93,15 @@ describe('PlannerService - Rebreathers', () => {
 
             expect(eccr.duration).not.toBe(openCircuit.duration);
             expect(dive.tanksService.tanks[1].tank.consumed).toBeGreaterThan(0);
-            expect(dive.diveResult.hasErrors).toBeFalse();
+            expect(dive.diveResult.hasErrors).toBe(false);
         });
 
         it('eCCR without oxygen in second tank ends with profile error', () => {
             prepareEccr(50);
             planner.calculate(dive.id);
 
-            expect(dive.diveResult.hasErrors).toBeTrue();
-            expect(dive.diveResult.calculated).toBeTrue();
+            expect(dive.diveResult.hasErrors).toBe(true);
+            expect(dive.diveResult.calculated).toBe(true);
         });
     });
 });

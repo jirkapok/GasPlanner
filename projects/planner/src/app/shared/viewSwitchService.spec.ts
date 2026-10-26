@@ -86,7 +86,7 @@ describe('View Switch service', () => {
 
                 viewSwitch.isComplex = false;
 
-                expect(options.isRebreather).toBeFalse();
+                expect(options.isRebreather).toBe(false);
                 expect(tanksService.tanks.length).toBe(1);
             }));
     });

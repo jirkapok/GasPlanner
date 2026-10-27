@@ -7,6 +7,8 @@ import { DiveSchedules } from '../../../shared/dive.schedules';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ReloadDispatcher } from '../../../shared/reloadDispatcher';
 import { provideTestTranslate } from '../../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../../testing/onPush.testing';
+import { diffTestProviders } from '../../../../testing/diff.testing';
 
 class DiffTabsButtonPage {
     constructor(private fixture: ComponentFixture<DiffTabsButtonComponent>) {}
@@ -84,5 +86,31 @@ describe('DiffTabsButtonComponent', () => {
         fixture.detectChanges();
 
         expect(page.profileBLabel).toBeTruthy();
+    });
+});
+
+describe('DiffTabsButtonComponent OnPush', () => {
+    let fixture: ComponentFixture<DiffTabsButtonComponent>;
+
+    const buttonClasses = (): DOMTokenList | undefined =>
+        (fixture.nativeElement as HTMLElement).querySelector('button')?.classList;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [DiffTabsButtonComponent],
+            providers: diffTestProviders
+        });
+        fixture = await renderOnPush(DiffTabsButtonComponent, { index: 1, title: 'second' });
+    });
+
+    it('renders selected profile changed by service', async () => {
+        TestBed.inject(DiveSchedules).add();
+        await fixture.whenStable();
+        expect(buttonClasses()).toContain('btn-secondary');
+
+        TestBed.inject(ProfileComparatorService).selectProfile(1);
+        await fixture.whenStable();
+
+        expect(buttonClasses()).toContain('btn-outline-secondary');
     });
 });

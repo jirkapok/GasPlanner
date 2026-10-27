@@ -1,19 +1,17 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { Streamed } from './streamed';
 import { QrCodeModalComponent } from '../qr-code-modal/qr-code-modal.component';
-import { ViewRefresh } from './viewRefresh';
 
 @Injectable()
 export class ShareDiveService extends Streamed {
-    public toastVisible = false;
+    private readonly _toastVisible = signal(false);
 
     constructor(
         private clipboard: ClipboardService,
-        private modalService: MdbModalService,
-        private viewRefresh: ViewRefresh
+        private modalService: MdbModalService
     ) {
         super();
 
@@ -21,6 +19,10 @@ export class ShareDiveService extends Streamed {
             .subscribe((res) => {
                 this.copyToClipBoard(res);
             });
+    }
+
+    public get toastVisible(): boolean {
+        return this._toastVisible();
     }
 
     public async sharePlan(): Promise<void> {
@@ -46,8 +48,7 @@ export class ShareDiveService extends Streamed {
     }
 
     public hideToast(): void {
-        this.toastVisible = false;
-        this.viewRefresh.refresh();
+        this._toastVisible.set(false);
     }
 
     public sharePlanQrCode(): void {
@@ -56,10 +57,8 @@ export class ShareDiveService extends Streamed {
 
     private copyToClipBoard(res: IClipboardResponse) {
         // stupid replacement of Bootstrap toasts, because not part of the free mdb package
-        // the clipboard response may arrive asynchronously, outside Angular events
         if (res.isSuccess) {
-            this.toastVisible = true;
-            this.viewRefresh.refresh();
+            this._toastVisible.set(true);
             setTimeout(() => {
                 this.hideToast();
             }, 5000);

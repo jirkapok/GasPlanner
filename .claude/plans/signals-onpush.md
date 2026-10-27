@@ -67,7 +67,7 @@ It calls `TestBed.overrideComponent(component, { set: { changeDetection: ChangeD
 ---
 
 ### Task 1: Toast and learn welcome as signals, test helper
-- [ ] Status
+- [x] Status (baseline before the task: lint planner 102 / library 12 errors, planner 821 tests, library 969 tests. After: planner 822 tests pass (+1 learn welcome; the 3 ShareDiveService tests were rewritten), lint at baseline. The learn welcome test passed already before the change: attaching the CDK overlay portal view notifies the zoneless scheduler, so `StartUp` just dropped `refresh()` and `HelpService` needed no signal. The tests fake only `setTimeout`/`clearTimeout`, so the Angular scheduler keeps real animation frames and `whenStable()` resolves. `renderOnPush` must be called before any `TestBed.inject`, since `overrideComponent` fails after the test module is instantiated. `startUp.spec.ts` needs `provideLocationMocks()`, because the overlay subscribes to `Location`. `ShareDiveService.spec.ts` uses a minimal host component, because `DashboardComponent` has no spec and many dependencies.)
 
 **Files:**
 - Create `projects/planner/src/testing/onPush.testing.ts`.

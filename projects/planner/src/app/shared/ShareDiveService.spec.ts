@@ -1,19 +1,31 @@
-import { TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
-import { MockInstance } from 'vitest';
 import { ShareDiveService } from './ShareDiveService';
-import { ViewRefresh } from './viewRefresh';
 import { createSpyObj } from '../../testing/spy-testing.helpers';
+import { renderOnPush } from '../../testing/onPush.testing';
+
+@Component({
+    selector: 'app-toast-host',
+    template: '@if (share.toastVisible) { <span class="toast">copied</span> }'
+})
+class ToastHostComponent {
+    constructor(public share: ShareDiveService) {
+    }
+}
 
 describe('ShareDiveService', () => {
     let sut: ShareDiveService;
     let copyResponse: Subject<IClipboardResponse>;
-    let refresh: MockInstance<() => void>;
+    let fixture: ComponentFixture<ToastHostComponent>;
 
-    beforeEach(() => {
-        vi.useFakeTimers();
+    const toast = (): Element | null => (fixture.nativeElement as HTMLElement).querySelector('.toast');
+
+    beforeEach(async () => {
+        // only the share timers, Angular scheduler still uses real animation frames
+        vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
         copyResponse = new Subject<IClipboardResponse>();
         const clipboard = { copyResponse$: copyResponse.asObservable(), copy: vi.fn() };
 
@@ -25,35 +37,39 @@ describe('ShareDiveService', () => {
             ]
         });
 
+        fixture = await renderOnPush(ToastHostComponent);
         sut = TestBed.inject(ShareDiveService);
-        refresh = vi.spyOn(TestBed.inject(ViewRefresh), 'refresh').mockImplementation(() => {});
     });
 
     afterEach(() => {
         vi.useRealTimers();
     });
 
-    it('Refreshes view when toast is shown', () => {
+    it('renders toast shown by clipboard response outside Angular events', async () => {
         copyResponse.next({ isSuccess: true });
+        await fixture.whenStable();
 
         expect(sut.toastVisible).toBe(true);
-        expect(refresh).toHaveBeenCalledTimes(1);
+        expect(toast()).not.toBeNull();
     });
 
-    it('Refreshes view when toast hides', () => {
+    it('renders toast hidden by timer outside Angular events', async () => {
         copyResponse.next({ isSuccess: true });
-        refresh.mockClear();
+        await fixture.whenStable();
+        expect(toast()).not.toBeNull();
 
         vi.advanceTimersByTime(5000);
+        await fixture.whenStable();
 
         expect(sut.toastVisible).toBe(false);
-        expect(refresh).toHaveBeenCalledTimes(1);
+        expect(toast()).toBeNull();
     });
 
-    it('Does not show toast for failed copy', () => {
+    it('Does not show toast for failed copy', async () => {
         copyResponse.next({ isSuccess: false });
+        await fixture.whenStable();
 
         expect(sut.toastVisible).toBe(false);
-        expect(refresh).not.toHaveBeenCalled();
+        expect(toast()).toBeNull();
     });
 });

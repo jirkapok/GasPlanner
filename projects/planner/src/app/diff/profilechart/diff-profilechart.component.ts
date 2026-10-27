@@ -15,6 +15,7 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { WayPoint } from '../../shared/wayPoint';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -106,13 +107,13 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
-        const wayPoints = [];
+        const wayPoints: WayPoint[] = [];
 
-        if (selected?.wayPointA) {
-            wayPoints.push(selected.wayPointA);
+        if (selected?.durationA) {
+            wayPoints.push(selected.wayPointA!);
         }
-        if (selected?.wayPointB) {
-            wayPoints.push(selected.wayPointB);
+        if (selected?.durationB) {
+            wayPoints.push(selected.wayPointB!);
         }
 
         this.plotter.plotCursors(wayPoints);

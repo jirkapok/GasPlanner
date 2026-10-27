@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -20,12 +20,13 @@ export interface SaturationComparison {
 
 @Injectable()
 export class ProfileComparatorService extends Streamed {
-    private _profileAIndex = 0;
-    private _profileBIndex = 0;
-    private _alignByEnd = false;
+    // selection is shown by several components, way points are updated by web worker results
+    private readonly _profileAIndex = signal(0);
+    private readonly _profileBIndex = signal(0);
+    private readonly _alignByEnd = signal(false);
     private _onSelectionChanged = new Subject<void>();
     private _selectionChanged$: Observable<void>;
-    private _wayPoints: ComparedWaypoint[] = [];
+    private readonly _wayPoints = signal<ComparedWaypoint[]>([]);
 
     constructor(private schedules: DiveSchedules, private dispatcher: ReloadDispatcher) {
         super();
@@ -47,11 +48,11 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get profileAIndex(): number {
-        return this._profileAIndex;
+        return this._profileAIndex();
     }
 
     public get profileA(): DiveSchedule {
-        return this.schedules.dives[this._profileAIndex];
+        return this.schedules.dives[this.profileAIndex];
     }
 
     public get profileATitle(): string {
@@ -72,11 +73,11 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get profileBIndex(): number {
-        return this._profileBIndex;
+        return this._profileBIndex();
     }
 
     public get profileB(): DiveSchedule {
-        return this.schedules.dives[this._profileBIndex];
+        return this.schedules.dives[this.profileBIndex];
     }
 
     public get profileBTitle(): string {
@@ -114,7 +115,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get difference(): ComparedWaypoint[] {
-        return this._wayPoints;
+        return this._wayPoints();
     }
 
     public get hasTwoProfiles(): boolean {
@@ -154,7 +155,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get alignByEnd(): boolean {
-        return this._alignByEnd;
+        return this._alignByEnd();
     }
 
     /** Deep-copied waypoints with offset applied */
@@ -174,29 +175,29 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public set alignByEnd(value: boolean) {
-        this._alignByEnd = value;
+        this._alignByEnd.set(value);
         this._onSelectionChanged.next();
     }
 
     public selectProfile(index: number): void {
-        if(this._profileAIndex === index || this._profileBIndex === index){
-            index = this._profileAIndex; // switch selected profiles
+        if(this.profileAIndex === index || this.profileBIndex === index){
+            index = this.profileAIndex; // switch selected profiles
         }
 
-        this._profileAIndex = this._profileBIndex;
-        this._profileBIndex = index;
+        this._profileAIndex.set(this.profileBIndex);
+        this._profileBIndex.set(index);
         this._onSelectionChanged.next();
     }
 
     private resetSelection(): void {
         const maxIndex = this.schedules.length;
 
-        if(this._profileAIndex >= maxIndex) {
-            this._profileAIndex = 0;
+        if(this.profileAIndex >= maxIndex) {
+            this._profileAIndex.set(0);
         }
 
-        if(this._profileBIndex >= maxIndex) {
-            this._profileBIndex = 0;
+        if(this.profileBIndex >= maxIndex) {
+            this._profileBIndex.set(0);
         }
 
         this.updateWayPoints();
@@ -213,14 +214,13 @@ export class ProfileComparatorService extends Streamed {
 
     /** Waypoints need to be cached to preserve the selection */
     private updateWayPoints(): void {
-        this._wayPoints = [];
-
         if(!this.bothResultsCalculated){
+            this._wayPoints.set([]);
             return;
         }
 
         const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
-        this._wayPoints = builder.createDiveComparison();
+        this._wayPoints.set(builder.createDiveComparison());
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {

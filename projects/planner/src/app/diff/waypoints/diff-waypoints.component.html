@@ -33,7 +33,7 @@
         </thead>
         <tbody>
           @for (row of profileDiff.difference; track row.runTime) {
-            <tr [ngClass]="{'table-active': row.selected }"
+            <tr [ngClass]="{'table-active': isSelected(row) }"
               (mouseover)="highlightRow(row)" (mouseleave)="highlightRow(undefined)">
               <td class="px-1 vertical-right-border">
                 {{ row.runTime | duration:profileDiff.totalDuration }}

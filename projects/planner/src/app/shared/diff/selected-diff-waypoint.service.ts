@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Input, Output } from '@angular/core';
+import { EventEmitter, Injectable, Input, Output, signal } from '@angular/core';
 import { DateFormats } from '../formaters';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ProfileComparatorService } from './profileComparatorService';
@@ -6,7 +6,8 @@ import { ProfileComparatorService } from './profileComparatorService';
 @Injectable()
 export class SelectedDiffWaypoint {
     @Output() public selectedChanged = new EventEmitter<ComparedWaypoint | undefined>();
-    private lastSelected: ComparedWaypoint | undefined;
+    // selected by hovering the profile chart, while the way points table shows it
+    private readonly _lastSelected = signal<ComparedWaypoint | undefined>(undefined);
 
     constructor(private profilesDiff: ProfileComparatorService) {
     }
@@ -25,18 +26,20 @@ export class SelectedDiffWaypoint {
 
     @Input()
     public set selected(point: ComparedWaypoint | undefined) {
-        if (this.lastSelected) {
-            this.lastSelected.selected = false;
+        const lastSelected = this._lastSelected();
+        if (lastSelected) {
+            lastSelected.selected = false;
         }
-
-        this.lastSelected = point;
 
         if (point) {
-            if (this.lastSelected) {
-                this.lastSelected.selected = true;
-            }
+            point.selected = true;
         }
 
-        this.selectedChanged.emit(this.lastSelected);
+        this._lastSelected.set(point);
+        this.selectedChanged.emit(point);
+    }
+
+    public isSelected(point: ComparedWaypoint): boolean {
+        return this._lastSelected() === point;
     }
 }

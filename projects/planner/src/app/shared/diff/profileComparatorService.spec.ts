@@ -248,4 +248,15 @@ describe('ProfileComparatorService', () => {
 
         expect(emitted).toEqual(true);
     });
+
+    it('Replaces difference array after info calculated', () => {
+        const planner = TestBed.inject(PlannerService);
+        planner.calculate(1);
+        const before = sut.difference;
+
+        planner.calculate(1);
+
+        expect(sut.difference.length).toBeGreaterThan(0);
+        expect(sut.difference).not.toBe(before);
+    });
 });

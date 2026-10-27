@@ -157,7 +157,7 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: plan results components ready for OnPush`.
 
 ### Task 4: Group "diff" components
-- [ ] Status
+- [x] Status (planner 842 tests in 98 files pass (+9), planner lint 98 errors. Red before the change: profiles swapped by the service in diff waypoints, the results table and gas consumed; the selected profile in the tab button; the way point highlighted from the diff profile chart. `profileComparatorService.spec` `'Replaces difference array after info calculated'` already passed, because `updateWayPoints` always started with a new array; it now builds the array locally and sets it once. The two calculated dives are prepared by the shared `projects/planner/src/testing/diff.testing.ts` (`diffTestProviders`, `compareTwoCalculatedDives`, `swapComparedProfiles`). Same pattern as Task 3: `SelectedDiffWaypoint` keeps the selected row in a signal, and `diff-waypoints` asks `isSelected(row)` instead of reading `ComparedWaypoint.selected`. Profile A/B consumption (`ConsumptionByMix.combine(tankData)`) reads the `Tank`s directly. That's fine, because a recalculation always also changes the `DiveResults` signals read by `showConsumption`.)
 
 **Components:** `diff/diff`, `diff/tabs`, `diff/tabs/profile-button`, `diff/diveresults`, `diff/diveresults/table`, `diff/gasconsumed/diff-gas-consumed`, `diff/gasconsumed/.../tank-chart`, `diff/profilechart`, `diff/waypoints`.
 

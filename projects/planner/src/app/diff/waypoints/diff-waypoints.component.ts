@@ -26,6 +26,10 @@ export class WaypointsDifferenceComponent {
         private selectedDiff: SelectedDiffWaypoint) {
     }
 
+    public isSelected(point: ComparedWaypoint): boolean {
+        return this.selectedDiff.isSelected(point);
+    }
+
     public highlightRow(point: ComparedWaypoint | undefined): void {
         this.selectedDiff.selected = point;
     }

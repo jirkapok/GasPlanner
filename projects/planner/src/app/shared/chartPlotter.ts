@@ -313,7 +313,7 @@ export class DiveTracesBuilder {
 export class ChartPlotter {
     private builders: DiveTracesBuilder[];
     private options: Partial<Plotly.Config>;
-    private cursor1: Partial<Plotly.Shape>;
+    private cursor: Partial<Plotly.Shape>;
     private layout: ChartLayout;
 
     /** Provide traces in reverse order to keep the last on top */
@@ -322,7 +322,7 @@ export class ChartPlotter {
                 private chartPlotterFactory: ChartPlotterFactory,
                 ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
-        this.cursor1 = chartPlotterFactory.createCursor();
+        this.cursor = chartPlotterFactory.createCursor();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();
     }
@@ -335,12 +335,13 @@ export class ChartPlotter {
         this.plotCharts(b => b.profileTraces());
     }
 
-    public plotCursor(wayPoint: WayPoint | undefined): void {
+    public plotCursors(wayPoints: WayPoint[]): void {
         const shapes: Partial<Plotly.Shape>[] = [];
 
-        if(wayPoint) {
-            this.updateCursor(wayPoint, this.cursor1);
-            shapes.push(this.cursor1);
+        for (const wayPoint of wayPoints) {
+            const cursor = structuredClone(this.cursor);
+            this.updateCursor(wayPoint, cursor);
+            shapes.push(cursor);
         }
 
         const update: Partial<Plotly.Layout> = { shapes };

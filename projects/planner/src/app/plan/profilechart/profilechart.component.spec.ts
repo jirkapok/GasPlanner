@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { ProfileTissues } from 'scuba-physics';
+import { HighestDensity, ProfileTissues } from 'scuba-physics';
 import { ProfileChartComponent } from './profilechart.component';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -11,6 +11,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -54,5 +55,35 @@ describe('ProfileChartComponent', () => {
         expect(component.showHeatMap).toBe(true);
         expect(heatMap.classList).toContain('plot-display');
         expect(plot?.getAttribute('width')).toEqual(heatMap.clientWidth.toString());
+    });
+});
+
+describe('ProfileChartComponent OnPush', () => {
+    let fixture: ComponentFixture<ProfileChartComponent>;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [ProfileChartComponent],
+            providers: [
+                WorkersFactoryCommon, ReloadDispatcher,
+                WayPointsService, SelectedWaypoint,
+                UnitConversion, DiveSchedules,
+                ResamplingService, MdbModalService,
+                provideTestTranslate()
+            ]
+        });
+
+        fixture = await renderOnPush(ProfileChartComponent);
+    });
+
+    it('renders calculating indicator hidden after info calculated outside Angular events', async () => {
+        const calculating = (): Element | null => (fixture.nativeElement as HTMLElement).querySelector('app-calculating .spinner-grow');
+        expect(calculating()).not.toBeNull();
+
+        const dive = TestBed.inject(DiveSchedules).selected.diveResult;
+        dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
+        await fixture.whenStable();
+
+        expect(calculating()).toBeNull();
     });
 });

@@ -8,7 +8,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { BoundEvent } from '../../shared/models';
-import { EventsFactory, Time } from 'scuba-physics';
+import { EventsFactory, HighestDensity, Time } from 'scuba-physics';
+import { renderOnPush } from '../../../testing/onPush.testing';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -42,5 +43,33 @@ describe('DiveIssuesComponent', () => {
         expect(element.querySelectorAll('.alert-danger').length).toBe(1);
         expect(element.querySelectorAll('.alert-warning').length).toBe(0);
         expect(highPpO2.isError).toBe(true);
+    });
+});
+
+describe('DiveIssuesComponent OnPush', () => {
+    let fixture: ComponentFixture<DiveIssuesComponent>;
+    // not injected, because renderOnPush can't override the component after TestBed injected anything
+    const units = new UnitConversion();
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [DiveIssuesComponent],
+            providers: [
+                { provide: UnitConversion, useValue: units }, DiveSchedules,
+                ReloadDispatcher, provideTestTranslate(), LanguageService,
+                DatePipe
+            ]
+        });
+        fixture = await renderOnPush(DiveIssuesComponent);
+    });
+
+    it('renders events changed outside Angular events', async () => {
+        const highPpO2 = new BoundEvent(units, EventsFactory.createHighPpO2(Time.oneMinute, 30));
+        const dive = TestBed.inject(DiveSchedules).selected.diveResult;
+        dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [highPpO2], 0, [], []);
+        await fixture.whenStable();
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelectorAll('.alert-danger').length).toBe(1);
     });
 });

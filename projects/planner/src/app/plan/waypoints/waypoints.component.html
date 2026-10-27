@@ -31,7 +31,7 @@
           </tr>
         }
         @for (point of stops.wayPoints; track point) {
-          <tr [ngClass]="{'table-active': point.selected }"
+          <tr [ngClass]="{'table-active': isSelected(point) }"
             (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
             <td class="px-1 text-center">
               <fa-icon [icon]="swimActionIcon(point)" [ngClass]="iconClasses(point)"

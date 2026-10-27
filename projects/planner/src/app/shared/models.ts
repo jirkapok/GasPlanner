@@ -4,6 +4,7 @@ import {
     Diver, GasDensity, Consumption,
     Event, EventType, GasNames
 } from 'scuba-physics';
+import { signal } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -145,6 +146,8 @@ export interface ITankSize {
 
 export class TankBound implements IGasContent, ITankSize {
     private _workingPressureBars: number;
+    // consumption is calculated by web worker outside Angular events, getters read it to track the change
+    private readonly _consumption = signal({ consumed: 0, reserve: 0 });
 
     constructor(public tank: Tank, private units: UnitConversion) {
         const defaultTanks = this.units.defaults.tanks;
@@ -182,6 +185,43 @@ export class TankBound implements IGasContent, ITankSize {
 
     public get n2(): number {
         return this.tank.n2;
+    }
+
+    public get name(): string {
+        return this.tank.name;
+    }
+
+    /** In respective pressure units */
+    public get consumed(): number {
+        this._consumption();
+        return this.units.fromBar(this.tank.consumed);
+    }
+
+    /** In respective pressure units */
+    public get reserve(): number {
+        this._consumption();
+        return this.units.fromBar(this.tank.reserve);
+    }
+
+    /** In respective pressure units */
+    public get endPressure(): number {
+        this._consumption();
+        return this.units.fromBar(this.tank.endPressure);
+    }
+
+    public get percentsReserve(): number {
+        this._consumption();
+        return this.tank.percentsReserve;
+    }
+
+    public get percentsRemaining(): number {
+        this._consumption();
+        return this.tank.percentsRemaining;
+    }
+
+    public get hasReserve(): boolean {
+        this._consumption();
+        return this.tank.hasReserve;
     }
 
     public get label(): string {
@@ -241,6 +281,13 @@ export class TankBound implements IGasContent, ITankSize {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
+    }
+
+    /** Values in bars, as calculated by the consumption worker */
+    public assignConsumption(consumed: number, reserve: number): void {
+        this.tank.consumed = consumed;
+        this.tank.reserve = reserve;
+        this._consumption.set({ consumed, reserve });
     }
 
     private assignSize(newValue: number): void {

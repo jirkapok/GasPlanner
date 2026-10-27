@@ -5,8 +5,9 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
-import { Tank, GasToxicity, Ceiling } from 'scuba-physics';
+import { GasToxicity, Ceiling } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
+import { TankBound } from '../../shared/models';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { Streamed } from '../../shared/streamed';
 import { DepthsService } from '../../shared/depths.service';
@@ -85,8 +86,8 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
         return this.inLiters ? this.dive.notEnoughGasByGas : this.dive.notEnoughGas;
     }
 
-    public get tanks(): Tank[] {
-        return this.schedules.selectedTanks.tankData;
+    public get tanks(): TankBound[] {
+        return this.schedules.selectedTanks.tanks;
     }
 
     public get noDeco(): number {

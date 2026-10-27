@@ -73,8 +73,7 @@ export class PlannerService extends Streamed {
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
-        // the still running state is shown by timer outside Angular events
-        this.schedules.markStart(diveId, () => this.viewRefresh.refresh());
+        this.schedules.markStart(diveId);
         const profileRequest = this.createPlanRequest(dive);
         this.profileTask.calculate(profileRequest);
     }

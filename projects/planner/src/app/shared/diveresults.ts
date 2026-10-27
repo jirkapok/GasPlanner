@@ -6,156 +6,202 @@ import {
     Event, Segment
 } from 'scuba-physics';
 import _ from 'lodash';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 
 class CalculationState {
-    private _calculating = false;
-    private _calculated = false;
+    private readonly _calculating = signal(false);
+    private readonly _calculated = signal(false);
 
     public get calculated(): boolean {
-        return this._calculated;
+        return this._calculated();
     }
 
     public get running(): boolean {
-        return this._calculating;
+        return this._calculating();
     }
 
     public start(): void {
-        this._calculating = true;
+        this._calculating.set(true);
     }
 
     public stillRunning(): void {
-        if (this._calculating) {
-            this._calculated = false;
+        if (this._calculating()) {
+            this._calculated.set(false);
         }
     }
 
     public finished(): void {
-        this._calculated = true;
-        this._calculating = false;
+        this._calculated.set(true);
+        this._calculating.set(false);
     }
 }
 
+interface ProfileState {
+    wayPoints: WayPoint[];
+    finalTissues: LoadedTissues;
+    profile: Segment[];
+}
+
+interface DiveInfoState {
+    noDecoTime: number;
+    notEnoughTime: boolean;
+    planDuration: number;
+    averageDepth: number;
+    surfaceGradient: number;
+    offgasingStartTime: number;
+    offgasingStartDepth: number;
+    otu: number;
+    cns: number;
+    dailyCns: number;
+    cnsExposures: CnsExposure[];
+    highestDensity: HighestDensity;
+    ceilings: Ceiling[];
+    maxCeiling?: Ceiling;
+    // 16 tissues overpressure history
+    tissueOverPressures: TissueOverPressures[];
+    events: BoundEvent[];
+    algorithmEvents: Event[];
+    // tissues history sampled every second at the same times as the ceilings, kept as received from the worker
+    tissues: Float64Array;
+}
+
+interface ConsumptionState {
+    maxTime: number;
+    timeToSurface: number;
+    emergencyAscentStart: number;
+    emergencyAscent: WayPoint[];
+    turnPressure: number;
+    turnTime: number;
+    needsReturn: boolean;
+    notEnoughGas: boolean;
+    consumedGases: ConsumedGas[];
+}
+
+const emptyProfile = (): ProfileState => ({
+    wayPoints: [],
+    finalTissues: ProfileTissues.createAtSurface(0),
+    profile: []
+});
+
+const emptyDiveInfo = (): DiveInfoState => ({
+    noDecoTime: 0,
+    notEnoughTime: false,
+    planDuration: 0,
+    averageDepth: 0,
+    surfaceGradient: 0,
+    offgasingStartTime: 0,
+    offgasingStartDepth: 0,
+    otu: 0,
+    cns: 0,
+    dailyCns: 0,
+    cnsExposures: [],
+    highestDensity: HighestDensity.createDefault(),
+    ceilings: [],
+    tissueOverPressures: [],
+    events: [],
+    algorithmEvents: [],
+    tissues: new Float64Array(0)
+});
+
+const emptyConsumption = (): ConsumptionState => ({
+    maxTime: 0,
+    timeToSurface: 0,
+    emergencyAscentStart: 0,
+    emergencyAscent: [],
+    turnPressure: 0,
+    turnTime: 0,
+    needsReturn: false,
+    notEnoughGas: false,
+    consumedGases: []
+});
+
+/** Results of one dive. Kept in signals, because they are updated by web workers and timers outside Angular events. */
 @Injectable()
 export class DiveResults {
     private static readonly maxAcceptableNdl = 1000;
 
-    // Profile related
-    private _wayPoints: WayPoint[] = [];
-    private _profile: Segment[] = [];
-    private _finalTissues: LoadedTissues = ProfileTissues.createAtSurface(0);
-
-    // Dive info related
-    private _noDecoTime = 0;
-    private _notEnoughTime = false;
-    private _planDuration = 0;
-    private _averageDepth = 0;
-    private _surfaceGradient = 0;
-    private _offgasingStartTime = 0;
-    private _offgasingStartDepth = 0;
-    private _otu = 0;
-    private _cns = 0;
-    private _dailyCns = 0;
-    private _cnsExposures: CnsExposure[] = [];
-    private _highestDensity = HighestDensity.createDefault();
-    private _ceilings: Ceiling[] = [];
-    private _maxCeiling?: Ceiling;
-    // 16 tissues overpressure history
-    private _tissueOverPressures: TissueOverPressures[] = [];
-    private _events: BoundEvent[] = [];
-    private _algorithmEvents: Event[] = [];
-    // tissues history sampled every second at the same times as the ceilings, kept as received from the worker
-    private _tissues: Float64Array = new Float64Array(0);
-
-    // Consumption related
-    private _maxTime = 0;
-    private _timeToSurface = 0;
-    private _emergencyAscentStart = 0;
-    private _emergencyAscent: WayPoint[]  = [];
-    private _turnPressure = 0;
-    private _turnTime = 0;
-    private _needsReturn = false;
-    private _notEnoughGas = false;
-    private _consumedGases: ConsumedGas[] = [];
+    private readonly _profileState = signal(emptyProfile());
+    private readonly _diveInfoState = signal(emptyDiveInfo());
+    private readonly _consumptionState = signal(emptyConsumption());
 
     private profileCalculation = new CalculationState();
     private consumptionCalculation = new CalculationState();
     private diveInfoCalculation = new CalculationState();
-    private _calculationFailed = false;
+    private readonly _calculationFailed = signal(false);
 
     public get wayPoints(): WayPoint[] {
-        return this._wayPoints;
+        return this._profileState().wayPoints;
     }
 
     /** Calculated profile in meters: user defined segments followed by the calculated ascent */
     public get profile(): Segment[] {
-        return this._profile;
+        return this._profileState().profile;
     }
 
     public get emergencyAscent(): WayPoint[] {
-        return this._emergencyAscent;
+        return this._consumptionState().emergencyAscent;
     }
 
     /** In meaning of at end of the dive */
     public get finalTissues(): LoadedTissues {
-        return this._finalTissues;
+        return this._profileState().finalTissues;
     }
 
     public get noDecoTime(): number {
-        return this._noDecoTime;
+        return this._diveInfoState().noDecoTime;
     }
 
     public get notEnoughTime(): boolean {
-        return this._notEnoughTime;
+        return this._diveInfoState().notEnoughTime;
     }
 
     public get planDuration(): number {
-        return this._planDuration;
+        return this._diveInfoState().planDuration;
     }
 
     public get averageDepth(): number {
-        return this._averageDepth;
+        return this._diveInfoState().averageDepth;
     }
 
     public get surfaceGradient(): number {
-        return this._surfaceGradient;
+        return this._diveInfoState().surfaceGradient;
     }
 
     public get offgasingStartTime(): number {
-        return this._offgasingStartTime;
+        return this._diveInfoState().offgasingStartTime;
     }
 
     public get offgasingStartDepth(): number {
-        return this._offgasingStartDepth;
+        return this._diveInfoState().offgasingStartDepth;
     }
 
     public get otu(): number {
-        return this._otu;
+        return this._diveInfoState().otu;
     }
 
     /** CNS % at end of the dive including residual CNS from previous dive */
     public get cns(): number {
-        return this._cns;
+        return this._diveInfoState().cns;
     }
 
     /** CNS % of the daily limit consumed by all dives within last 24 hours */
     public get dailyCns(): number {
-        return this._dailyCns;
+        return this._diveInfoState().dailyCns;
     }
 
     /** Daily CNS exposures within last 24 hours at end of the dive */
     public get cnsExposures(): CnsExposure[] {
-        return this._cnsExposures;
+        return this._diveInfoState().cnsExposures;
     }
 
     public get highestDensity(): HighestDensity {
-        return this._highestDensity;
+        return this._diveInfoState().highestDensity;
     }
 
     public get ceilings(): Ceiling[] {
-        return this._ceilings;
+        return this._diveInfoState().ceilings;
     }
 
     /**
@@ -163,62 +209,62 @@ export class DiveResults {
      * Packed and kept as received from the worker, see DtoSerialization.packTissuesHistory.
      */
     public get tissues(): Float64Array {
-        return this._tissues;
+        return this._diveInfoState().tissues;
     }
 
     public get maxCeiling(): Ceiling | undefined {
-        return this._maxCeiling;
+        return this._diveInfoState().maxCeiling;
     }
 
     public get tissueOverPressures(): TissueOverPressures[] {
-        return this._tissueOverPressures;
+        return this._diveInfoState().tissueOverPressures;
     }
 
     public get events(): BoundEvent[] {
-        return this._events;
+        return this._diveInfoState().events;
     }
 
     /** All events calculated by the algorithm, not filtered by the ignored issues. Used by the dive computer. */
     public get algorithmEvents(): Event[] {
-        return this._algorithmEvents;
+        return this._diveInfoState().algorithmEvents;
     }
 
     public get maxTime(): number {
-        return this._maxTime;
+        return this._consumptionState().maxTime;
     }
 
     public get timeToSurface(): number {
-        return this._timeToSurface;
+        return this._consumptionState().timeToSurface;
     }
 
     public get emergencyAscentStart(): number {
-        return this._emergencyAscentStart;
+        return this._consumptionState().emergencyAscentStart;
     }
 
     public get turnPressure(): number {
-        return this._turnPressure;
+        return this._consumptionState().turnPressure;
     }
 
     public get turnTime(): number {
-        return this._turnTime;
+        return this._consumptionState().turnTime;
     }
 
     public get needsReturn(): boolean {
-        return this._needsReturn;
+        return this._consumptionState().needsReturn;
     }
 
     public get notEnoughGas(): boolean {
-        return this._notEnoughGas;
+        return this._consumptionState().notEnoughGas;
     }
 
     /** Consumption grouped by gas in liters, ignoring tanks */
     public get consumedGases(): ConsumedGas[] {
-        return this._consumedGases;
+        return this._consumptionState().consumedGases;
     }
 
     /** Not enough gas evaluated from consumption grouped by gas */
     public get notEnoughGasByGas(): boolean {
-        return !ConsumptionByGas.haveReserve(this._consumedGases);
+        return !ConsumptionByGas.haveReserve(this.consumedGases);
     }
 
     /**
@@ -246,25 +292,26 @@ export class DiveResults {
     }
 
     public get failed(): boolean {
-        return this._calculationFailed;
+        return this._calculationFailed();
     }
 
     /** can't use plan duration, because it doesn't contain ascent */
     public get totalDuration(): number {
-        if (this._wayPoints.length === 0) {
+        const wayPoints = this.wayPoints;
+        if (wayPoints.length === 0) {
             return 0;
         }
 
-        return this._wayPoints[this._wayPoints.length - 1].endTime;
+        return wayPoints[wayPoints.length - 1].endTime;
     }
 
     public get ndlValid(): boolean {
-        return this.diveInfoCalculated && this._noDecoTime < DiveResults.maxAcceptableNdl;
+        return this.diveInfoCalculated && this.noDecoTime < DiveResults.maxAcceptableNdl;
     }
 
     /** the only errors preventing draw chart */
     public get hasErrors(): boolean {
-        return this.calculated && (this.failed || this._notEnoughTime);
+        return this.calculated && (this.failed || this.notEnoughTime);
     }
 
     public get showResults(): boolean {
@@ -272,17 +319,17 @@ export class DiveResults {
     }
 
     public get otuExceeded(): boolean {
-        return this._otu > (.8 * OtuCalculator.dailyLimit);
+        return this.otu > (.8 * OtuCalculator.dailyLimit);
     }
 
     public get cnsExceeded(): boolean {
-        return this._cns > (.8 * CnsCalculator.limit) ||
-            this._dailyCns > (.8 * CnsDailyCalculator.dailyLimit);
+        return this.cns > (.8 * CnsCalculator.limit) ||
+            this.dailyCns > (.8 * CnsDailyCalculator.dailyLimit);
     }
 
     /** The higher of the dive CNS and daily CNS in % */
     public get cnsWarningLevel(): number {
-        return Math.max(this._cns, this._dailyCns);
+        return Math.max(this.cns, this.dailyCns);
     }
 
     public get showMaxDuration(): boolean {
@@ -290,69 +337,50 @@ export class DiveResults {
     }
 
     public get showMaxBottomTime(): boolean {
-        return this._maxTime > 0;
+        return this.maxTime > 0;
     }
 
     public get hasErrorEvent(): boolean {
         return this.hasErrors || this.notEnoughGas ||
-            this._events.some(e => e.isError);
+            this.events.some(e => e.isError);
     }
 
     public get hasWarningEvent(): boolean {
         // TODO move csn and otu to events
         return this.otuExceeded || this.cnsExceeded ||
-            this._events.some(e => e.isWarning);
+            this.events.some(e => e.isWarning);
     }
 
     public get endsOnSurface(): boolean {
-        const count = this._wayPoints.length;
-        return count > 0 && this._wayPoints[count - 1].endDepthMeters === 0;
+        const wayPoints = this.wayPoints;
+        const count = wayPoints.length;
+        return count > 0 && wayPoints[count - 1].endDepthMeters === 0;
     }
 
-    /** Marks dive calculation in progress, afterStillRunning is called after the not yet calculated parts were emptied */
-    public start(afterStillRunning: () => void = () => {}): void {
+    /** Marks dive calculation in progress, after 500 ms the not yet calculated parts are emptied */
+    public start(): void {
         this.profileCalculation.start();
         this.consumptionCalculation.start();
         this.diveInfoCalculation.start();
-        this._calculationFailed = false;
+        this._calculationFailed.set(false);
 
         setTimeout(() => {
             this.showStillRunning();
-            afterStillRunning();
         }, 500);
-    }
-
-    /** Marks each part as not calculated */
-    private showStillRunning(): void {
-        if(this.profileCalculation.running) {
-            this.emptyProfile();
-        }
-
-        if(this.diveInfoCalculation.running) {
-            this.emptyDiveInfo();
-        }
-
-        if(this.consumptionCalculation.running) {
-            this.emptyConsumption();
-        }
-
-        this.profileCalculation.stillRunning();
-        this.consumptionCalculation.stillRunning();
-        this.diveInfoCalculation.stillRunning();
     }
 
     public endFailed(): void {
         this.profileCalculation.finished();
         this.consumptionCalculation.finished();
         this.diveInfoCalculation.finished();
-        this.emptyProfile();
-        this.emptyDiveInfo();
+        this._profileState.set(emptyProfile());
+        this._diveInfoState.set(emptyDiveInfo());
         this.emptyConsumption();
-        this._calculationFailed = true;
+        this._calculationFailed.set(true);
     }
 
     public updateProfile(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[]): void {
-        this.updateProfileInternal(wayPoints, finalTissues, profile);
+        this._profileState.set({ wayPoints, finalTissues, profile });
         this.profileCalculation.finished();
     }
 
@@ -374,12 +402,26 @@ export class DiveResults {
         cnsExposures: CnsExposure[],
         algorithmEvents: Event[],
         tissues: Float64Array = new Float64Array(0)): void {
-        this.updateDiveInfoInternal(noDecoTime, notEnoughTime, planDuration, averageDepth, surfaceGradient,
-            offgasingStartTime, offgasingStartDepth, otu, cns, highestDensity, ceilings, tissueOverPressures, events);
-        this._dailyCns = dailyCns;
-        this._cnsExposures = cnsExposures;
-        this._algorithmEvents = algorithmEvents;
-        this._tissues = tissues;
+        this._diveInfoState.set({
+            noDecoTime,
+            notEnoughTime,
+            planDuration,
+            averageDepth,
+            surfaceGradient,
+            offgasingStartTime,
+            offgasingStartDepth,
+            otu,
+            cns,
+            dailyCns,
+            cnsExposures,
+            highestDensity,
+            ceilings,
+            maxCeiling: _(ceilings).maxBy(c => c.depth),
+            tissueOverPressures,
+            events,
+            algorithmEvents,
+            tissues
+        });
         this.diveInfoCalculation.finished();
     }
 
@@ -393,80 +435,42 @@ export class DiveResults {
         notEnoughGas: boolean,
         emergencyAscent: WayPoint[],
         consumedGases: ConsumedGas[] = []): void {
-        this.updateConsumptionInternal(maxTime, timeToSurface, emergencyAscentStart,
-            turnPressure, turnTime, needsReturn, notEnoughGas, consumedGases);
+        this._consumptionState.set({
+            maxTime,
+            timeToSurface,
+            emergencyAscentStart,
+            emergencyAscent,
+            turnPressure,
+            turnTime,
+            needsReturn,
+            notEnoughGas,
+            consumedGases
+        });
         this.consumptionCalculation.finished();
-        this._emergencyAscent = emergencyAscent;
     }
 
-    private emptyProfile(): void {
-        this.updateProfileInternal([], ProfileTissues.createAtSurface(0), []);
+    /** Marks each part as not calculated */
+    private showStillRunning(): void {
+        if(this.profileCalculation.running) {
+            this._profileState.set(emptyProfile());
+        }
+
+        if(this.diveInfoCalculation.running) {
+            this._diveInfoState.set(emptyDiveInfo());
+        }
+
+        if(this.consumptionCalculation.running) {
+            this.emptyConsumption();
+        }
+
+        this.profileCalculation.stillRunning();
+        this.consumptionCalculation.stillRunning();
+        this.diveInfoCalculation.stillRunning();
     }
 
-    private emptyDiveInfo(): void {
-        this.updateDiveInfoInternal(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], []);
-        this._algorithmEvents = [];
-        this._tissues = new Float64Array(0);
-        this._dailyCns = 0;
-        this._cnsExposures = [];
-    }
-
+    /** Keeps the emergency ascent of the previous calculation, as before the results were kept in signals */
     private emptyConsumption(): void {
-        this.updateConsumptionInternal(0, 0, 0, 0, 0, false, false, []);
-    }
-
-    private updateProfileInternal(wayPoints: WayPoint[], finalTissues: LoadedTissues, profile: Segment[]): void {
-        this._wayPoints = wayPoints;
-        this._finalTissues = finalTissues;
-        this._profile = profile;
-    }
-
-    private updateDiveInfoInternal(
-        noDecoTime: number,
-        notEnoughTime: boolean,
-        planDuration: number,
-        averageDepth: number,
-        surfaceGradient: number,
-        offgasingStartTime: number,
-        offgasingStartDepth: number,
-        otu: number,
-        cns: number,
-        highestDensity: HighestDensity,
-        ceilings: Ceiling[],
-        tissueOverPressures: TissueOverPressures[],
-        events: BoundEvent[]): void {
-        this._noDecoTime = noDecoTime;
-        this._notEnoughTime = notEnoughTime;
-        this._planDuration = planDuration;
-        this._averageDepth = averageDepth;
-        this._surfaceGradient = surfaceGradient;
-        this._offgasingStartTime = offgasingStartTime;
-        this._offgasingStartDepth = offgasingStartDepth;
-        this._otu = otu;
-        this._cns = cns;
-        this._highestDensity = highestDensity;
-        this._ceilings = ceilings;
-        this._tissueOverPressures = tissueOverPressures;
-        this._events = events;
-        this._maxCeiling = _(this._ceilings).maxBy(c => c.depth);
-    }
-
-    private updateConsumptionInternal(
-        maxTime: number,
-        timeToSurface: number,
-        emergencyAscentStart: number,
-        turnPressure: number,
-        turnTime: number,
-        needsReturn: boolean,
-        notEnoughGas: boolean,
-        consumedGases: ConsumedGas[]): void {
-        this._maxTime = maxTime;
-        this._timeToSurface = timeToSurface;
-        this._emergencyAscentStart = emergencyAscentStart;
-        this._turnPressure = turnPressure;
-        this._turnTime = turnTime;
-        this._needsReturn = needsReturn;
-        this._notEnoughGas = notEnoughGas;
-        this._consumedGases = consumedGases;
+        const emergencyAscent = this._consumptionState().emergencyAscent;
+        this._consumptionState.set({ ...emptyConsumption(), emergencyAscent });
     }
 }

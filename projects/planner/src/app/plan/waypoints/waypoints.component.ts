@@ -73,6 +73,10 @@ export class WayPointsComponent {
         return classes;
     }
 
+    public isSelected(point: WayPoint): boolean {
+        return this.selectedWaypoint.isSelected(point);
+    }
+
     public highlightRow(point: WayPoint | undefined): void {
         this.selectedWaypoint.selected = point;
     }

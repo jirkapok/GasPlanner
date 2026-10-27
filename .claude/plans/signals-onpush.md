@@ -124,7 +124,13 @@ It calls `TestBed.overrideComponent(component, { set: { changeDetection: ChangeD
 - [ ] **Step 5: Commit** `refactor: dive results state as signals`.
 
 ### Task 3: Group "plan results" components
-- [ ] Status
+- [x] Status (planner 833 tests in 98 files pass (+9), planner lint 98 errors. Red before the change: the tank chart under OnPush (compile error, then values) and the way point highlighted from the profile chart. The other new tests (diveinfo, dive-issues, profilechart + calculating) already passed, thanks to Task 2's `DiveResults` signals. The gas chart is covered by the diveinfo test, because it only takes the `ConsumedGas` input from a new array.
+
+Deviations from this task's text:
+- **Units:** the `TankBound` consumption getters (`consumed`, `reserve`, `endPressure`) are in UI pressure units, like the existing `startPressure`. `tank-chart` no longer converts units, and its `aria-value*` attributes are now in UI units too.
+- **Live values:** the getters read the `_consumption` signal only to track the change, and return the live `Tank` values.
+- **Way point highlight:** a signal in `WayPoint` broke `toEqual` of copied way points (signals compare by reference). So `SelectedWaypoint` keeps the selected point in a signal, and the table asks `isSelected(point)`.
+- **`renderOnPush` fix:** JIT compiling an overridden component that extends `Streamed` (`@Injectable` with `ngOnDestroy`) defined getter-only `ɵfac`/`ɵdir` on `Streamed` (`addDirectiveDefToUndecoratedParents`). Spec files share modules, so other `Streamed` subclasses failed to load at random ("Cannot set property ɵfac … which has only a getter"). The helper now restores the parents' definitions, pinned by `testing/onPush.testing.spec.ts`.)
 
 **Components:** `plan/diveinfo`, `plan/tank-chart`, `plan/gas-chart`, `plan/dive-issues`, `plan/waypoints`, `plan/profilechart`, `controls/calculating`.
 

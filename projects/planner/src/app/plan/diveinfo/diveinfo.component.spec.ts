@@ -20,24 +20,75 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { renderOnPush } from '../../../testing/onPush.testing';
+
+const configureTestBed = (): void => {
+    TestBed.configureTestingModule({
+        imports: [DiveInfoComponent],
+        declarations: [MdbTabComponent, MdbTabsComponent],
+        providers: [
+            UnitConversion, PlannerService, SubViewStorage,
+            WorkersFactoryCommon, WayPointsService,
+            ViewStates, PreferencesStore, Preferences,
+            ViewSwitchService, ReloadDispatcher,
+            DiveSchedules, ShareDiveService, ApplicationSettingsService, DatePipe,
+            MdbModalService, provideTestTranslate(), LanguageService
+        ]
+    });
+};
+
+describe('DiveInfoComponent OnPush', () => {
+    let fixture: ComponentFixture<DiveInfoComponent>;
+    let element: HTMLElement;
+
+    const showConsumedTab = async (): Promise<void> => {
+        fixture.componentInstance.tabs?.setActiveTab(1);
+        await fixture.whenStable();
+    };
+
+    beforeEach(async () => {
+        configureTestBed();
+        fixture = await renderOnPush(DiveInfoComponent);
+        element = fixture.nativeElement as HTMLElement;
+    });
+
+    it('renders total dive time calculated outside Angular events', async () => {
+        const before = element.querySelector('#total-dive-time-value')?.textContent;
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        const after = element.querySelector('#total-dive-time-value')?.textContent;
+        expect(after).not.toEqual(before);
+    });
+
+    it('renders tank chart after consumption finished outside Angular events', async () => {
+        await showConsumedTab();
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(0);
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(1);
+    });
+
+    it('renders gas chart after consumption finished outside Angular events', async () => {
+        TestBed.inject(ViewSwitchService).switchConsumption();
+        await showConsumedTab();
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelectorAll('app-gaschart').length).toEqual(1);
+    });
+});
 
 describe('DiveInfoComponent', () => {
     let component: DiveInfoComponent;
     let fixture: ComponentFixture<DiveInfoComponent>;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [DiveInfoComponent],
-            declarations: [MdbTabComponent, MdbTabsComponent],
-            providers: [
-                UnitConversion, PlannerService, SubViewStorage,
-                WorkersFactoryCommon, WayPointsService,
-                ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService, ReloadDispatcher,
-                DiveSchedules, ShareDiveService, ApplicationSettingsService, DatePipe,
-                MdbModalService, provideTestTranslate(), LanguageService
-            ]
-        });
+        configureTestBed();
         fixture = TestBed.createComponent(DiveInfoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

@@ -8,7 +8,8 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { BoundEvent } from '../../shared/models';
-import { EventsFactory, StandardGases, Time } from 'scuba-physics';
+import { EventsFactory, HighestDensity, StandardGases, Time } from 'scuba-physics';
+import { renderOnPush } from '../../../testing/onPush.testing';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -47,12 +48,40 @@ describe('DiveIssuesComponent', () => {
     it('shows nitrogen over the limit for isobaric counter diffusion', () => {
         const units = TestBed.inject(UnitConversion);
         const icd = new BoundEvent(units, EventsFactory.createIsobaricCounterDiffusion(Time.oneMinute, 21, StandardGases.ean50, 0.04));
-        vi.spyOn(component.dive, 'events', 'get').mockReturnValue([icd]);
-        fixture.componentRef.changeDetectorRef.detectChanges();
+        component.dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [icd], 0, [], []);
+        fixture.detectChanges();
 
         const element = fixture.nativeElement as HTMLElement;
         const overLimit = element.querySelector('.alert-warning #icdOverLimit');
         expect(overLimit?.textContent).toContain('diveIssues.highN2SwitchOverLimit');
         expect(icd.n2OverLimit).toBe(4);
+    });
+});
+
+describe('DiveIssuesComponent OnPush', () => {
+    let fixture: ComponentFixture<DiveIssuesComponent>;
+    // not injected, because renderOnPush can't override the component after TestBed injected anything
+    const units = new UnitConversion();
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [DiveIssuesComponent],
+            providers: [
+                { provide: UnitConversion, useValue: units }, DiveSchedules,
+                ReloadDispatcher, provideTestTranslate(), LanguageService,
+                DatePipe
+            ]
+        });
+        fixture = await renderOnPush(DiveIssuesComponent);
+    });
+
+    it('renders events changed outside Angular events', async () => {
+        const highPpO2 = new BoundEvent(units, EventsFactory.createHighPpO2(Time.oneMinute, 30));
+        const dive = TestBed.inject(DiveSchedules).selected.diveResult;
+        dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [highPpO2], 0, [], []);
+        await fixture.whenStable();
+
+        const element = fixture.nativeElement as HTMLElement;
+        expect(element.querySelectorAll('.alert-danger').length).toBe(1);
     });
 });

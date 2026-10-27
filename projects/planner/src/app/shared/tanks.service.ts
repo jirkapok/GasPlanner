@@ -116,8 +116,7 @@ export class TanksService {
         for (let index = 0; index < this.tanks.length; index++) {
             const source = tanks[index];
             const target = this.tanks[index];
-            target.tank.consumed = source.consumed;
-            target.tank.reserve = source.reserve;
+            target.assignConsumption(source.consumed, source.reserve);
         }
     }
 

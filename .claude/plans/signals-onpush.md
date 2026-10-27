@@ -97,7 +97,7 @@ It calls `TestBed.overrideComponent(component, { set: { changeDetection: ChangeD
 - [ ] **Step 6: Commit** `refactor: toast and learn welcome state as signals`.
 
 ### Task 2: `DiveResults` state as signals
-- [ ] Status
+- [x] Status (planner 824 tests pass (+3 render tests, −1 callback test), planner lint 98 errors (was 102: the 4 member-ordering errors of `diveresults.ts` are fixed by moving `showStillRunning` to the private methods). The empty states are module-level factory functions (`emptyProfile`, `emptyDiveInfo`, `emptyConsumption`), so they don't affect member ordering. Emptying the consumption keeps the previous `emergencyAscent`, as before (it was never part of `updateConsumptionInternal`). The planner test was replaced by `'Keeps finished results after still running check'`. The serial worker finishes synchronously, so it proves the timer doesn't empty finished results.)
 
 **Files:** modify `shared/diveresults.ts`, `shared/diveresults.spec.ts`, `shared/dive.schedules.ts`, `shared/dives.schedule.spec.ts`, `shared/planner.service.ts`, `shared/planner.service.spec.ts`.
 

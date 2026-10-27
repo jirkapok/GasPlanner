@@ -27,7 +27,6 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { ViewRefresh } from './viewRefresh';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -69,13 +68,14 @@ describe('PlannerService', () => {
             vi.useRealTimers();
         });
 
-        it('Refreshes view after still running check', () => {
+        it('Keeps finished results after still running check', () => {
             vi.useFakeTimers();
-            const refresh = vi.spyOn(TestBed.inject(ViewRefresh), 'refresh').mockImplementation(() => {});
             planner.calculate(1);
 
             vi.advanceTimersByTime(500);
-            expect(refresh).toHaveBeenCalled();
+            expect(dive.calculated).toBe(true);
+            expect(dive.running).toBe(false);
+            expect(dive.wayPoints.length).toBeGreaterThan(0);
         });
     });
 

@@ -1,5 +1,18 @@
-import { HighestDensity } from 'scuba-physics';
+import { Component, Input } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
+import { HighestDensity, ProfileTissues } from 'scuba-physics';
 import { DiveResults } from './diveresults';
+import { renderOnPush } from '../../testing/onPush.testing';
+
+@Component({
+    selector: 'app-results-host',
+    template: '<span class="ndl">{{ results.noDecoTime }}</span>' +
+        '<span class="calculated">{{ results.calculated }}</span>' +
+        '<span class="failed">{{ results.failed }}</span>'
+})
+class ResultsHostComponent {
+    @Input() public results = new DiveResults();
+}
 
 describe('DiveResults', () => {
     let sut: DiveResults;
@@ -12,24 +25,56 @@ describe('DiveResults', () => {
         sut = new DiveResults();
     });
 
-    describe('Still running', () => {
-        beforeEach(() => {
-            vi.useFakeTimers();
+    describe('Rendering', () => {
+        let fixture: ComponentFixture<ResultsHostComponent>;
+
+        const text = (selector: string): string | null | undefined =>
+            (fixture.nativeElement as HTMLElement).querySelector(selector)?.textContent;
+
+        const finishCalculation = (): void => {
+            sut.updateProfile([], ProfileTissues.createAtSurface(0), []);
+            sut.updateDiveInfo(42, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
+            sut.updateConsumption(0, 0, 0, 0, 0, false, false, []);
+        };
+
+        beforeEach(async () => {
+            // only the still running timer, Angular scheduler still uses real animation frames
+            vi.useFakeTimers({ toFake: ['setTimeout', 'clearTimeout'] });
+            fixture = await renderOnPush(ResultsHostComponent, { results: sut });
         });
 
         afterEach(() => {
             vi.useRealTimers();
         });
 
-        it('calls after still running callback after 500 ms', () => {
-            const profileCalculatedInCallback: boolean[] = [];
-            sut.start(() => profileCalculatedInCallback.push(sut.profileCalculated));
+        it('renders dive info changed outside Angular events', async () => {
+            finishCalculation();
+            await fixture.whenStable();
 
+            expect(text('.ndl')).toBe('42');
+            expect(text('.calculated')).toBe('true');
+        });
+
+        it('renders still running state after 500 ms', async () => {
+            finishCalculation();
+            await fixture.whenStable();
+
+            sut.start();
             vi.advanceTimersByTime(499);
-            expect(profileCalculatedInCallback).toEqual([]);
+            await fixture.whenStable();
+            expect(text('.calculated')).toBe('true');
 
             vi.advanceTimersByTime(1);
-            expect(profileCalculatedInCallback).toEqual([false]);
+            await fixture.whenStable();
+            expect(text('.calculated')).toBe('false');
+            expect(text('.ndl')).toBe('0');
+        });
+
+        it('renders failed state', async () => {
+            sut.endFailed();
+            await fixture.whenStable();
+
+            expect(text('.failed')).toBe('true');
         });
     });
 

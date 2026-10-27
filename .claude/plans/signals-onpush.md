@@ -177,7 +177,7 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: diff components ready for OnPush`.
 
 ### Task 5: Remove `ViewRefresh`
-- [ ] Status
+- [x] Status (planner 838 tests in 97 files pass (−2 `viewRefresh.spec`, −5 `afterMessage` tests, +3 new `BackgroundTask` tests for posting, message and error reporting, because the class had no other tests). Library 969 pass. Lint planner 98 / library 12. e2e 8 passed against `ng serve --port 4300`. `workers.factory.ts` is restored to its pre-zoneless version (`git checkout d8bbeab4^`, no `@Injectable`, no constructor); only the zoneless commit had touched it. No `ViewRefresh`/`afterMessage` reference remains. The CLAUDE.md zoneless convention now describes signals, `markForCheck()` only for third-party callbacks, replacing arrays/records, no signals in copied value-like classes, and testing with `renderOnPush`.)
 
 **Files:**
 - Delete `shared/viewRefresh.ts` and `shared/viewRefresh.spec.ts`.

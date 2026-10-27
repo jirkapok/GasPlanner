@@ -23,7 +23,6 @@ import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
 import { BoundEvent } from './models';
-import { ViewRefresh } from './viewRefresh';
 
 
 @Injectable()
@@ -40,8 +39,7 @@ export class PlannerService extends Streamed {
         private viewSwitch: ViewSwitchService,
         private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
-        private units: UnitConversion,
-        private viewRefresh: ViewRefresh) {
+        private units: UnitConversion) {
         super();
 
         this.waypoints = new WayPointsService(units);

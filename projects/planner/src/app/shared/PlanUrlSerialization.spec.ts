@@ -10,7 +10,6 @@ import { ViewSwitchService } from './viewSwitchService';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
-import { ViewRefresh } from './viewRefresh';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import {
     AirBreakOptions, CircuitType, Diver,
@@ -55,8 +54,7 @@ describe('Url Serialization', () => {
         const schedules = new DiveSchedules(units, dispatcher);
         const viewSwitch = new ViewSwitchService(schedules);
         const appSettings = new ApplicationSettingsService(units);
-        const viewRefresh = { refresh: () => { /* noop */ } } as unknown as ViewRefresh;
-        const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units, viewRefresh);
+        const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);
         const language = { currentLanguage: 'en', setLanguage: () => { /* noop */ } } as unknown as LanguageService;
         const preferences = new Preferences(viewSwitch, units, schedules, appSettings, new ViewStates(), new QuizService(), language);
         const normalization = new SettingsNormalizationService(units, appSettings, schedules);

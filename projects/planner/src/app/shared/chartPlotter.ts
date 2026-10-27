@@ -278,7 +278,7 @@ export class DiveTracesBuilder {
             y: resampled.yValues,
             labels: resampled.labels,
             text: resampled.labels,
-            type: <Plotly.PlotType>'scatter',
+            type: <Plotly.TraceType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
             name: this.namePrefix + this.translate('profileChart.eventTraceName'),

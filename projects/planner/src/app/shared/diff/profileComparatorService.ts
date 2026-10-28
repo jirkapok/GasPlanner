@@ -344,12 +344,12 @@ class WaypointsDiffContext2 {
             const soonerEndWayPoint = wayPointA.endTime < wayPointB.endTime
                 ? wayPointA
                 : wayPointB;
-            // Just for the next const
+            // Used only for the next const ternary
             const laterEndWayPoint = wayPointA.endTime >= wayPointB.endTime
                 ? wayPointA
                 : wayPointB;
 
-            // We want to use the waypoint that ends later only of it start before the shorter one is over
+            // We want to use the waypoint that ends later only of it starts before the shorter one is over
             const otherWayPoint = laterEndWayPoint.startTime <= soonerEndWayPoint.endTime
                 ? laterEndWayPoint
                 : undefined;
@@ -359,7 +359,7 @@ class WaypointsDiffContext2 {
             this.resultComparedWayPoints.push(firstWayPoint);
 
             // Pop from array with earlier end waypoint
-            // Also pop from the other array with if the current waypoint from it ends before the middle of the just-popped waypoint
+            // Also pop from the other array if the current waypoint from it ends before the middle of the just-popped waypoint
             if (soonerEndWayPoint === wayPointA) {
                 wayPointA = wayPointsA.pop();
                 if (wayPointB.endTime < this.middleTimeOf(wayPointA)) {

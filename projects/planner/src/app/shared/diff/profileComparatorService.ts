@@ -329,62 +329,61 @@ class WaypointsDiffContext2 {
 
         let wayPointA = wayPointsA.pop();
         let wayPointB = wayPointsB.pop();
-        let next: ComparedWaypoint;
 
         while (wayPointA || wayPointB) {
             if (!wayPointA) {
                 this.finishWithWayPointsB();
-                return this.resultComparedWayPoints;
+                break;
             }
             if (!wayPointB) {
                 this.finishWithWayPointsA();
-                return this.resultComparedWayPoints;
+                break;
             }
 
-            // Get the waypoint that ends sooner
-            const soonerEndWayPoint = wayPointA.endTime < wayPointB.endTime
-                ? wayPointA
-                : wayPointB;
-            // Used only for the next const ternary
-            const laterEndWayPoint = wayPointA.endTime >= wayPointB.endTime
-                ? wayPointA
-                : wayPointB;
+            if (wayPointA.endTime === wayPointB.endTime) {
+                const runtime = wayPointA.endTime;
+                const next = new ComparedWaypoint(runtime, wayPointA, wayPointB);
+                this.resultComparedWayPoints.push(next);
 
-            // We want to use the waypoint that ends later only of it starts before the shorter one is over
-            const otherWayPoint = laterEndWayPoint.startTime <= soonerEndWayPoint.endTime
-                ? laterEndWayPoint
-                : undefined;
+                wayPointA = this.wayPointsA.pop();
+                wayPointB = this.wayPointsB.pop();
 
-            const runTime = soonerEndWayPoint.endTime;
-            if (soonerEndWayPoint === wayPointA) {
-                next = new ComparedWaypoint(runTime, soonerEndWayPoint, otherWayPoint);
-                if (wayPointA.endTime !== wayPointB.endTime) {
-                    next.durationB = undefined;
-                    next.depthB = undefined;
-                }
-            } else {
-                next = new ComparedWaypoint(runTime, otherWayPoint, soonerEndWayPoint);
-                if (wayPointB.endTime !== wayPointA.endTime) {
-                    next.durationA = undefined;
-                    next.depthA = undefined;
-                }
-            }
-            this.resultComparedWayPoints.push(next);
+            } else if (wayPointA.endTime < wayPointB.endTime) {
+                const otherWayPoint = wayPointB.startTime <= wayPointA.endTime
+                    ? wayPointB
+                    : undefined;
 
-            // Pop from array with earlier end waypoint
-            // Also pop from the other array if the current waypoint from it ends before the middle of the just-popped waypoint
-            if (soonerEndWayPoint === wayPointA) {
-                wayPointA = wayPointsA.pop();
+                const runtime = wayPointA.endTime;
+                const next = new ComparedWaypoint(runtime, wayPointA, otherWayPoint);
+                next.durationB = undefined;
+                next.depthB = undefined;
+
+                this.resultComparedWayPoints.push(next);
+
                 if (wayPointB.endTime < this.middleTimeOf(wayPointA)) {
                     wayPointB = wayPointsB.pop();
                 }
+                wayPointA = wayPointsA.pop();
+
             } else {
-                wayPointB = wayPointsB.pop();
+                const otherWayPoint = wayPointA.startTime <= wayPointB.endTime
+                    ? wayPointA
+                    : undefined;
+
+                const runtime = wayPointB.endTime;
+                const next = new ComparedWaypoint(runtime, otherWayPoint, wayPointB);
+                next.durationA = undefined;
+                next.depthA = undefined;
+
+                this.resultComparedWayPoints.push(next);
+
                 if (wayPointA.endTime < this.middleTimeOf(wayPointB)) {
                     wayPointA = wayPointsA.pop();
                 }
+                wayPointB = wayPointsB.pop();
             }
         }
+
         return this.resultComparedWayPoints;
     }
 

@@ -392,11 +392,20 @@ class WaypointsDiffContext2 {
         return waypoint ? (waypoint.endTime + waypoint.startTime) / 2 : Infinity;
     }
 
+    private pushWayPointA(wayPoint: WayPoint) {
+        const next = new ComparedWaypoint(wayPoint.endTime, wayPoint, undefined);
+        this.resultComparedWayPoints.push(next);
+    }
+
+    private pushWayPointB(wayPoint: WayPoint) {
+        const next = new ComparedWaypoint(wayPoint.endTime, undefined, wayPoint);
+        this.resultComparedWayPoints.push(next);
+    }
+
     private finishWithWayPointsA(): void {
         let wayPoint = this.wayPointsA.pop();
         while (wayPoint) {
-            const next = new ComparedWaypoint(wayPoint.endTime, wayPoint, undefined);
-            this.resultComparedWayPoints.push(next);
+            this.pushWayPointA(wayPoint);
             wayPoint = this.wayPointsA.pop();
         }
     }
@@ -404,8 +413,7 @@ class WaypointsDiffContext2 {
     private finishWithWayPointsB(): void {
         let wayPoint = this.wayPointsB.pop();
         while (wayPoint) {
-            const next = new ComparedWaypoint(wayPoint.endTime, undefined, wayPoint);
-            this.resultComparedWayPoints.push(next);
+            this.pushWayPointB(wayPoint);
             wayPoint = this.wayPointsB.pop();
         }
     }

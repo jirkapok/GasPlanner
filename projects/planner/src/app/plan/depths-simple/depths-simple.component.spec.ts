@@ -25,6 +25,8 @@ import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.c
 import { DepthComponent } from '../depth/depth.component';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 
 export class SimpleDepthsPage {
@@ -180,5 +182,41 @@ describe('Depths Simple Component', () => {
             simplePage.depthInput.dispatchEvent(new Event('input'));
             expect(depths.plannedDepth).toBeCloseTo(20);
         });
+    });
+});
+
+describe('Depths Simple Component OnPush', () => {
+    it('renders surface interval of the dive selected outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DepthsSimpleComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(DepthsSimpleComponent);
+        const surfaceInterval = (): Element | null => (fixture.nativeElement as HTMLElement).querySelector('app-surface-interval');
+        expect(surfaceInterval()).toBeNull();
+        const schedules = TestBed.inject(DiveSchedules);
+
+        schedules.selected = schedules.add();
+        await fixture.whenStable();
+
+        expect(surfaceInterval()).not.toBeNull();
+    });
+});
+
+describe('Depths Simple Component OnPush best mix', () => {
+    it('renders best mix of maximum ppO2 changed outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DepthsSimpleComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(DepthsSimpleComponent);
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        const before = text();
+
+        TestBed.inject(DiveSchedules).selectedOptions.maxPpO2 = 1.6;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await fixture.whenStable();
+
+        expect(text()).not.toEqual(before);
     });
 });

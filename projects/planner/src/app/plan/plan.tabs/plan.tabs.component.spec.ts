@@ -19,6 +19,8 @@ import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -47,5 +49,40 @@ describe('PlanTabsComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+});
+
+describe('PlanTabsComponent OnPush', () => {
+    let fixture: ComponentFixture<PlanTabsComponent>;
+
+    const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        fixture = await renderOnPush(PlanTabsComponent);
+    });
+
+    it('renders tab of dive added outside the component', async () => {
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        await fixture.whenStable();
+
+        expect(text()).toContain(second.title);
+    });
+
+    it('renders removed dive tab', async () => {
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        await fixture.whenStable();
+        const title = second.title;
+        expect(text()).toContain(title);
+
+        schedules.remove(second);
+        await fixture.whenStable();
+
+        expect(text()).not.toContain(title);
     });
 });

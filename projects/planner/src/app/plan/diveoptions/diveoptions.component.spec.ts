@@ -19,6 +19,8 @@ import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { OptionsService } from '../../shared/options.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 import { LanguageService } from '../../shared/language.service';
 
 describe('Dive options component', () => {
@@ -120,3 +122,24 @@ describe('Dive options component', () => {
     });
 });
 
+
+describe('DiveOptionsComponent OnPush', () => {
+    it('renders gradients reloaded outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DiveOptionsComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(DiveOptionsComponent);
+        const conservatism = (): string | undefined =>
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('#gfLowField')?.value;
+        const before = conservatism();
+        const options = TestBed.inject(DiveSchedules).selectedOptions;
+
+        options.gfLow = 0.2;
+        options.gfHigh = 0.7;
+        TestBed.inject(ReloadDispatcher).sendOptionsReloaded(options);
+        await fixture.whenStable();
+
+        expect(conservatism()).not.toEqual(before);
+    });
+});

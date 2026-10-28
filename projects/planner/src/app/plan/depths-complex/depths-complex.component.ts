@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -51,7 +51,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        public dispatcher: ReloadDispatcher) {
+        public dispatcher: ReloadDispatcher,
+        private cd: ChangeDetectorRef) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -134,6 +135,10 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
                 }
             });
 
+        // tank labels of the levels show tanks edited in place by the tanks component
+        this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.cd.markForCheck());
+
         this.rootForm.addControl('depths', this.complexForm);
     }
 
@@ -190,6 +195,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));
+        // reload comes from outside of this component (e.g. url, other dive or applied duration), levels are edited in place
+        this.cd.markForCheck();
     }
 
     private createLevelControls(): FormGroup<LevelRow>[] {

@@ -26,6 +26,8 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -236,5 +238,43 @@ describe('Tanks Complex component', () => {
         fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
         expect(complexPage.sizeInput(0).value).toBe('30');
+    });
+});
+
+describe('Tanks Complex component OnPush', () => {
+    let fixture: ComponentFixture<TanksComplexComponent>;
+
+    const element = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const tankRows = (): number => element().querySelectorAll('app-gaslabel').length;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            providers: planTestProviders,
+            imports: [ReactiveFormsModule, TanksComplexComponent]
+        });
+        fixture = await renderOnPush(TanksComplexComponent);
+    });
+
+    it('renders tanks of the dive selected outside the component', async () => {
+        const before = tankRows();
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.tanksService.addTank();
+
+        schedules.selected = second;
+        await fixture.whenStable();
+
+        expect(tankRows()).toBeGreaterThan(before);
+    });
+
+    it('renders gas label of maximum ppO2 changed outside the component', async () => {
+        const label = (): string | null | undefined => element().querySelector('app-gaslabel')?.textContent;
+        const before = label();
+
+        TestBed.inject(DiveSchedules).selectedOptions.maxPpO2 = 1.6;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await fixture.whenStable();
+
+        expect(label()).not.toEqual(before);
     });
 });

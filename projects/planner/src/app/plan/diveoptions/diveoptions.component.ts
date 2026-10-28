@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -70,7 +70,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         private viewSwitch: ViewSwitchService,
         private schedules: DiveSchedules,
         private preferences: PreferencesStore,
-        private dispatcher: ReloadDispatcher) {
+        private dispatcher: ReloadDispatcher,
+        private cd: ChangeDetectorRef) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -352,5 +353,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
             decoStopDistance: Precision.round(this.options.decoStopDistance, 0)
 
         });
+        // reload comes from outside of this component (e.g. url or other dive), options are edited in place
+        this.cd.markForCheck();
     }
 }

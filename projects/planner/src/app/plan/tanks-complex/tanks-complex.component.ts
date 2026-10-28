@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { faBatteryHalf, faPlus, faMinus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity, CircuitType, RebreatherTanks } from 'scuba-physics';
@@ -41,7 +41,6 @@ interface TanksForm {
     selector: 'app-tanks-complex',
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule,
         CardHeaderComponent,

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { faSlidersH } from '@fortawesome/free-solid-svg-icons';
 import { GasesComparisonService, ConsumedGasDifference } from '../../../shared/diff/gases-comparison.service';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-diff-gas-consumed',
     templateUrl: './diff-gas-consumed.component.html',
     styleUrls: ['./diff-gas-consumed.component.scss', '../../diff.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent, GasConsumedDifferenceTankComponent, TranslatePipe]
 })
 export class GasConsumedDifferenceComponent {

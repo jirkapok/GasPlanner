@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import {
     faSlidersH, faShareFromSquare, faExclamationTriangle, faQrcode
@@ -34,7 +34,6 @@ import { GasChartComponent } from '../gas-chart/gas-chart.component';
     selector: 'app-diveinfo',
     templateUrl: './diveinfo.component.html',
     styleUrls: ['./diveinfo.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         CardHeaderComponent,
         FaIconComponent,

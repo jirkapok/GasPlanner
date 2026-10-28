@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +32,6 @@ interface GasForm {
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent,
         LocaleNumberPipe, TranslatePipe]
 })

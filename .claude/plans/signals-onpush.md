@@ -221,7 +221,24 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: form controls ready for OnPush`.
 
 ### Task 7: Group "plan inputs"
-- [ ] Status
+- [x] Status (planner 857 tests in 100 files pass (+12), planner lint 98 errors, e2e 8 passed on port 4300. Shared providers are in `projects/planner/src/testing/plan.testing.ts` (`planTestProviders`).
+
+**Signals:**
+- `DiveSchedules` keeps `_dives` and `_selected` in signals; the first dive is created in the constructor.
+- `TanksService._tanks` is a signal; `addTankBy` builds a copy.
+- **Options:** `ReloadDispatcher` counts options changes in an `optionsVersion` signal, bumped by `sendOptionsChanged`/`sendOptionsReloaded`. `OptionsService.toxicity` returns a new `GasToxicity` whenever that count changed. So templates reading it are refreshed and pass a new `toxicity` reference to the OnPush gas labels. `DepthsService` reads the toxicity through a private getter instead of capturing it, which also refreshes the best mix label.
+- `DepthsService._levels` stays a plain field. The levels are edited in place, so components refresh on reload anyway.
+
+**`markForCheck()` only where a test required it:**
+- `depths-complex`: in `reload()`, and on `tankChanged$` (the level tank label is a `TankBound` edited in tanks).
+- `diveoptions`: in `reload()`, because the gradients/altitude/salinity child inputs read options mutated in place.
+
+`refreshOnFormEvents` is not needed (see Task 6). No test for `dashboard` (no spec, its own state is changed by its own events), `diver`, `mccr-options`, `pscr-options` or `depth`: their templates bind only form controls (refreshed by the forms' status signals) and `ranges$` steps, set at init.
+
+**Test defects fixed during the task:**
+- A new dive is repetitive only after its surface interval is set.
+- `[value]`-bound labels don't appear in `textContent`.
+- The tank dropdown items render only when the menu is open, so the "tank added" test was replaced by "levels reloaded outside the component".)
 
 **Components:** `plan/dashboard`, `plan/plan.tabs`, `plan/tanks-simple`, `plan/tanks-complex`, `plan/depths-simple`, `plan/depths-complex`, `plan/depth`, `plan/diveoptions`, `plan/diver`, `plan/mccr-options`, `plan/pscr-options`, `plan/surface-interval`.
 

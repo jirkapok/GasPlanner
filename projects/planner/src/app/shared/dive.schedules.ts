@@ -1,7 +1,7 @@
 import { UnitConversion } from './UnitConversion';
 import { OptionsService } from './options.service';
 import { TanksService } from './tanks.service';
-import { Injectable } from '@angular/core';
+import { Injectable, signal, WritableSignal } from '@angular/core';
 import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
@@ -133,24 +133,26 @@ export class DiveSchedule {
 
 @Injectable()
 export class DiveSchedules {
-    private _dives: DiveSchedule[] = [];
-    private _selected: DiveSchedule;
+    // dives are added, removed and selected by other components than the ones showing them
+    private readonly _dives: WritableSignal<DiveSchedule[]>;
+    private readonly _selected: WritableSignal<DiveSchedule>;
 
     constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
-        this.add();
-        this._selected = this._dives[0];
+        const first = new DiveSchedule(0, this.units, this.dispatcher);
+        this._dives = signal([first]);
+        this._selected = signal(first);
     }
 
     public get dives(): DiveSchedule[] {
-        return this._dives.slice();
+        return this._dives().slice();
     }
 
     public get selected(): DiveSchedule {
-        return this._selected;
+        return this._selected();
     }
 
     public get length(): number {
-        return this._dives.length;
+        return this._dives().length;
     }
 
     public get empty(): boolean {
@@ -178,29 +180,29 @@ export class DiveSchedules {
     }
 
     public set selected(newValue: DiveSchedule) {
-        if (this._dives.includes(newValue)) {
-            this._selected = newValue;
+        if (this._dives().includes(newValue)) {
+            this._selected.set(newValue);
             this.dispatcher.sendSelectedChanged(newValue.id);
         }
     }
 
     // consider unify usage by id or by diveId
     public setSelectedIndex(newIndex: number): void {
-        if(newIndex >= 0 && newIndex < this._dives.length) {
-            this.selected = this._dives[newIndex];
+        if(newIndex >= 0 && newIndex < this.length) {
+            this.selected = this._dives()[newIndex];
         }
     }
 
     public add(): DiveSchedule {
         const newDive = this.createDiveSchedule();
-        this._dives.push(newDive);
-        this._selected = newDive;
+        this._dives.set([...this._dives(), newDive]);
+        this._selected.set(newDive);
         return newDive;
     }
 
     public remove(dive: DiveSchedule): void {
         if (!this.empty) {
-            this._dives = this._dives.filter(g => g !== dive);
+            this._dives.set(this._dives().filter(g => g !== dive));
             this.renumber();
             this.selectPreviousDive(dive);
             this.dispatcher.sendDepthChanged();
@@ -209,14 +211,14 @@ export class DiveSchedules {
 
     public clear(): void {
         // there should always be at least one dive
-        this._dives.splice(1, this._dives.length);
+        this._dives.set(this._dives().slice(0, 1));
     }
 
     /**
      * Since the View switch is global, we need to switch all dives.
      */
     public setSimple(): void {
-        this._dives.forEach((dive) => {
+        this._dives().forEach((dive) => {
             dive.setSimple();
         });
 
@@ -225,7 +227,7 @@ export class DiveSchedules {
 
     public validId(diveId: number): boolean {
         // the dives are always ordered by Id
-        const maxDiveId = this._dives[this._dives.length - 1].id;
+        const maxDiveId = this._dives()[this.length - 1].id;
         return maxDiveId >= diveId && diveId > 0;
     }
 
@@ -279,8 +281,8 @@ export class DiveSchedules {
 
         action(dive);
 
-        for (let index = dive.index + 1; index < this._dives.length; index++) {
-            const currentDive = this._dives[index];
+        for (let index = dive.index + 1; index < this.length; index++) {
+            const currentDive = this._dives()[index];
             if(!currentDive.isRepetitive) {
                 return;
             }
@@ -294,7 +296,7 @@ export class DiveSchedules {
     }
 
     private renumber(): void {
-        this._dives.forEach((dive, index) => {
+        this._dives().forEach((dive, index) => {
             dive.assignIndex(index);
         });
     }
@@ -303,6 +305,6 @@ export class DiveSchedules {
         // to be independent on the collection, dive already removed
         const currentIndex = dive.id - 1;
         const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
-        this._selected = this._dives[newIndex];
+        this._selected.set(this._dives()[newIndex]);
     }
 }

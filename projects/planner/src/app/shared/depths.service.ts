@@ -17,7 +17,6 @@ export class DepthsService extends Streamed {
     /** in seconds */
     private static readonly extendDuration = Time.toSeconds(5);
     private _levels: Level[] = [];
-    private toxicity: GasToxicity;
     private plan = new Plan();
 
     constructor(
@@ -27,7 +26,6 @@ export class DepthsService extends Streamed {
         private optionsService: OptionsService,
         private dispatcher: ReloadDispatcher) {
         super();
-        this.toxicity = this.optionsService.toxicity;
 
         // this enforces to initialize the levels, needs to be called after subscribe to plan
         if(this.plan.maxDepth === 0) {
@@ -91,6 +89,11 @@ export class DepthsService extends Streamed {
 
     private get firstTank(): Tank {
         return this.tanksService.firstTank.tank;
+    }
+
+    /** Read from the options each time to track their changes */
+    private get toxicity(): GasToxicity {
+        return this.optionsService.toxicity;
     }
 
     /** in meters */

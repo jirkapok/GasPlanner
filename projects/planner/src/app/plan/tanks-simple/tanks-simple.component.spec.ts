@@ -25,6 +25,8 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { BrowserAnimationsModule, } from '@angular/platform-browser/animations';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -159,5 +161,25 @@ describe('Tanks Simple component', () => {
                 const sac = component.gasSac();
                 expect(sac).toBeCloseTo(19.33837, 5);
             }));
+    });
+});
+
+describe('Tanks Simple component OnPush', () => {
+    it('renders tank of the dive selected outside the component', async () => {
+        TestBed.configureTestingModule({
+            providers: planTestProviders,
+            imports: [ReactiveFormsModule, TanksSimpleComponent]
+        });
+        const fixture = await renderOnPush(TanksSimpleComponent);
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).not.toContain('EAN32');
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.tanksService.firstTank.o2 = 32;
+
+        schedules.selected = second;
+        await fixture.whenStable();
+
+        expect(text()).toContain('EAN32');
     });
 });

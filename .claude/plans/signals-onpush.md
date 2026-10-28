@@ -198,7 +198,11 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: remove ViewRefresh`.
 
 ### Task 6: Group "controls" (shared form controls)
-- [ ] Status
+- [x] Status (planner 845 tests in 100 files pass (+7), planner lint 98 errors.
+
+**`refreshOnFormEvents` is not implemented.** All 6 "renders invalid state after parent patched form outside Angular events" tests (altitude, gradients, oxygen-dropdown, oxygen, pp-o2, tank size) passed before any change. Angular's reactive forms keep control status in internal signals, read by the `NgControlStatus` host bindings (`ng-invalid`, `ng-dirty`). So an OnPush component whose template contains the form control directive is refreshed when its control's status changes, even if a parent patched it in code. The tests stay to pin this behaviour. Task 7 doesn't need the helper either.
+
+**Gas label was red.** `gaslabel` now takes the `TankBound` instead of `tankBound.tank`, in all 3 usages (`oxygen`, `tank-chart`, `tanks-complex`). `TankBound` tracks its gas content in a signal: the `o2`/`he` setters and `assignStandardGas` write it, and the `o2`/`he`/`n2`/`name`/`gasTank` getters read it. The gas label's MOD values also depend on the mutated `OptionsService.toxicity`; that is left for Task 7 (options).)
 
 **Components:** `card-header`, `controls/altitude`, `controls/gaslabel`, `controls/gradients`, `controls/oxygen-dropdown`, `controls/oxygen`, `controls/pp-o2`, `controls/salinity`, `controls/tank.size`.
 

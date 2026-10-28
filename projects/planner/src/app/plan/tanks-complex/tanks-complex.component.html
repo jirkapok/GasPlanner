@@ -226,7 +226,7 @@
                             </small>
                             <small class="form-text text-muted">{{ 'tanksComplex.sac' | translate }} {{gasSac(i) | number:'1.0-2'}}
                             {{units.sac}}</small>
-                            <app-gaslabel [tank]="tanks[i].tank" [toxicity]="toxicity" class="float-end">
+                            <app-gaslabel [tank]="tanks[i]" [toxicity]="toxicity" class="float-end">
                             </app-gaslabel>
                           </div>
                         </div>

@@ -148,6 +148,8 @@ export class TankBound implements IGasContent, ITankSize {
     private _workingPressureBars: number;
     // consumption is calculated by web worker outside Angular events, getters read it to track the change
     private readonly _consumption = signal({ consumed: 0, reserve: 0 });
+    // gas is edited by other components than the ones showing it (e.g. gas label), getters read it to track the change
+    private readonly _gasContent = signal({ o2: 0, he: 0 });
 
     constructor(public tank: Tank, private units: UnitConversion) {
         const defaultTanks = this.units.defaults.tanks;
@@ -176,19 +178,29 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get o2(): number {
+        this._gasContent();
         return this.tank.o2;
     }
 
     public get he(): number {
+        this._gasContent();
         return this.tank.he;
     }
 
     public get n2(): number {
+        this._gasContent();
         return this.tank.n2;
     }
 
     public get name(): string {
+        this._gasContent();
         return this.tank.name;
+    }
+
+    /** The tank with tracked gas content, use it to calculate gas properties shown in the view */
+    public get gasTank(): Tank {
+        this._gasContent();
+        return this.tank;
     }
 
     /** In respective pressure units */
@@ -268,10 +280,12 @@ export class TankBound implements IGasContent, ITankSize {
 
     public set o2(newValue: number) {
         this.tank.o2 = newValue;
+        this.gasChanged();
     }
 
     public set he(newValue: number) {
         this.tank.he = newValue;
+        this.gasChanged();
     }
 
     public assignTemplate(template: TankTemplate): void {
@@ -281,6 +295,7 @@ export class TankBound implements IGasContent, ITankSize {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
+        this.gasChanged();
     }
 
     /** Values in bars, as calculated by the consumption worker */
@@ -292,6 +307,10 @@ export class TankBound implements IGasContent, ITankSize {
 
     private assignSize(newValue: number): void {
         this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+    }
+
+    private gasChanged(): void {
+        this._gasContent.set({ o2: this.tank.o2, he: this.tank.he });
     }
 }
 

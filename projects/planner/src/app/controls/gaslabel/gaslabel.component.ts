@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
+import { TankBound } from '../../shared/models';
 import { CommonModule } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -20,7 +21,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class GaslabelComponent {
     @Input()
-    public tank: Tank = Tank.createDefault();
+    public tank = new TankBound(Tank.createDefault(), this.units);
 
     @Input()
     public showName = true;
@@ -31,13 +32,13 @@ export class GaslabelComponent {
     constructor(public units: UnitConversion) { }
 
     public get gasMod(): number {
-        const mod = this.toxicity.modForGas(this.tank);
+        const mod = this.toxicity.modForGas(this.tank.gasTank);
         const result = this.units.fromMeters(mod);
         return Precision.floor(result);
     }
 
     public get gasMnd(): number {
-        const mnd = this.toxicity.mndForGas(this.tank.gas);
+        const mnd = this.toxicity.mndForGas(this.tank.gasTank.gas);
         const result = this.units.fromMeters(mnd);
         return Precision.floor(result);
     }
@@ -47,7 +48,7 @@ export class GaslabelComponent {
     }
 
     public get gasDecoMod(): number {
-        const mod = this.toxicity.switchDepth(this.tank);
+        const mod = this.toxicity.switchDepth(this.tank.gasTank);
         const result = this.units.fromMeters(mod);
         return Precision.floor(result);
     }

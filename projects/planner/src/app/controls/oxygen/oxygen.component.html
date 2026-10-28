@@ -2,6 +2,6 @@
     <app-oxygen-dropdown [showBestMix]="showBestMix" [controlName]="controlName" [nitroxForm]="nitroxForm"
         (gasChange)="gasChange.emit($event)" (standardGasApplied)="standardGasApplied.emit($event)"
         (assignBestMix)="fireAssignBestMix()" [tank]="tank" #oxygenDropdown />
-    <app-gaslabel [tank]="tank.tank" [toxicity]="toxicity"
+    <app-gaslabel [tank]="tank" [toxicity]="toxicity"
         [class.invisible]="oxygenDropdown.gasO2Invalid"></app-gaslabel>
 </ng-container>

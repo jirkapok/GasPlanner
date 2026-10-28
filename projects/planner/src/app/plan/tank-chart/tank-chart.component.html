@@ -3,7 +3,7 @@
     <strong class="text-start">@if (showId) {
       <span> {{ tank.id }}.</span>
     } {{ tank.name }}</strong>
-    <app-gaslabel [tank]="tank.tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
+    <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
   </div>
   <div class="d-flex flex-row justify-content-between">
     <small class="text-start text-muted">{{ 'tankChart.gasRemaining' | translate }} {{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }} {{units.pressure}}</small>

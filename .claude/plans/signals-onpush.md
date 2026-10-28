@@ -262,7 +262,13 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: plan input components ready for OnPush`.
 
 ### Task 8: Group "calculators"
-- [ ] Status
+- [x] Status (planner 866 tests in 101 files pass (+9), planner lint 98 errors.
+
+**Pin tests:** all calculator tests are in one parameterized spec, `calculators/calculators.onpush.spec.ts`. Each calculator is rendered OnPush; typing into a number input must change what is rendered (text and the other inputs' values). All 8 pass without changes; no calculator subscribes to anything, so their state changes only through their own template events. Altitude, gas blender and weight use explicit inputs and values: +1 on the first input left the rounded results unchanged, the same with Eager.
+
+**The units-switch test was dropped:** units are switched on the settings page, so the calculators are always created again with the new units.
+
+**`ndl-limits` was red:** it mutated the options of its own `GasToxicity`. An OnPush gas label (via `app-oxygen`) kept the same input reference and showed the old MOD. `calculate()` now creates a new `GasToxicity`. `renderOnPush` got an optional `onPushChildren` list to verify inputs passed to children.)
 
 **Components:** `calculators/altitude-calc`, `calculators/gas-blender`, `calculators/gas.props`, `calculators/ndl-limits`, `calculators/nitrox`, `calculators/redundancies`, `calculators/sac`, `calculators/weight`.
 

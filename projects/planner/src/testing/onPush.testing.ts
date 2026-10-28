@@ -39,14 +39,20 @@ const restoreParentDefinitions = (saved: ParentDefinitions): void => {
  * Renders the component with OnPush change detection and automatic change detection, as in the running app.
  * Configure the TestBed providers before calling it, but don't inject anything before (TestBed can't override then).
  * Change the state outside Angular events and await fixture.whenStable() to verify, that the view notices it.
+ * Children stay with their own strategy, list the children in onPushChildren to verify also inputs passed to them.
  */
-export async function renderOnPush<T>(component: Type<T>, inputs: Record<string, unknown> = {}): Promise<ComponentFixture<T>> {
+export async function renderOnPush<T>(
+    component: Type<T>,
+    inputs: Record<string, unknown> = {},
+    onPushChildren: Type<unknown>[] = []
+): Promise<ComponentFixture<T>> {
+    const overridden = [component, ...onPushChildren];
     // The overridden component is compiled by JIT, which adds getter only definitions to its parents not being a directive.
     // Spec files share the modules, so other classes extending the parent would fail to assign their own AOT definitions.
-    const savedDefinitions = saveParentDefinitions(component);
+    const savedDefinitions = overridden.flatMap(c => saveParentDefinitions(c));
 
     try {
-        TestBed.overrideComponent(component, { set: { changeDetection: ChangeDetectionStrategy.OnPush } });
+        overridden.forEach(c => TestBed.overrideComponent(c, { set: { changeDetection: ChangeDetectionStrategy.OnPush } }));
         const fixture = TestBed.createComponent(component);
 
         for (const [name, value] of Object.entries(inputs)) {

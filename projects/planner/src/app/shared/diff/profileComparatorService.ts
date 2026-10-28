@@ -358,8 +358,16 @@ class WaypointsDiffContext2 {
             const runTime = soonerEndWayPoint.endTime;
             if (soonerEndWayPoint === wayPointA) {
                 next = new ComparedWaypoint(runTime, soonerEndWayPoint, otherWayPoint);
+                if (wayPointA.endTime !== wayPointB.endTime) {
+                    next.durationB = undefined;
+                    next.depthB = undefined;
+                }
             } else {
                 next = new ComparedWaypoint(runTime, otherWayPoint, soonerEndWayPoint);
+                if (wayPointB.endTime !== wayPointA.endTime) {
+                    next.durationA = undefined;
+                    next.depthA = undefined;
+                }
             }
             this.resultComparedWayPoints.push(next);
 

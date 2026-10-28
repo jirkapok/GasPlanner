@@ -109,11 +109,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
         const wayPoints: WayPoint[] = [];
 
-        if (selected?.durationA) {
-            wayPoints.push(selected.wayPointA!);
+        if (selected?.wayPointA) {
+            wayPoints.push(selected.wayPointA);
         }
-        if (selected?.durationB) {
-            wayPoints.push(selected.wayPointB!);
+        if (selected?.wayPointB) {
+            wayPoints.push(selected.wayPointB);
         }
 
         this.plotter.plotCursors(wayPoints);

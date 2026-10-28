@@ -219,13 +219,8 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
-
-        while(context.hasNext) {
-            const row = context.toRow();
-            this._wayPoints.unshift(row);
-            context.next();
-        }
+        const context = new WaypointsDiffContext2([...this.wayPointsA].reverse(), [...this.wayPointsB].reverse());
+        this._wayPoints = context.create();
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
@@ -317,5 +312,88 @@ class WaypointsDiffContext {
     private updateB(): void {
         this.waypointB = this.wayPointsB.pop();
         this._endTimeB = this.waypointB?.endTime ?? this.defaultTime;
+    }
+}
+
+class WaypointsDiffContext2 {
+    private resultComparedWayPoints: ComparedWaypoint[] = [];
+
+    constructor(
+        private wayPointsA: WayPoint[],
+        private wayPointsB: WayPoint[]
+    ) {};
+
+    create() {
+        const wayPointsA = this.wayPointsA;
+        const wayPointsB = this.wayPointsB;
+
+        let wayPointA = wayPointsA.pop();
+        let wayPointB = wayPointsB.pop();
+
+        while (wayPointA || wayPointB) {
+            if (!wayPointA) {
+                this.finishWithWayPointsB();
+                return this.resultComparedWayPoints;
+            }
+            if (!wayPointB) {
+                this.finishWithWayPointsA();
+                return this.resultComparedWayPoints;
+            }
+
+            // Get the waypoint that ends sooner
+            const soonerEndWayPoint = wayPointA.endTime < wayPointB.endTime
+                ? wayPointA
+                : wayPointB;
+            // Just for the next const
+            const laterEndWayPoint = wayPointA.endTime >= wayPointB.endTime
+                ? wayPointA
+                : wayPointB;
+
+            // We want to use the waypoint that ends later only of it start before the shorter one is over
+            const otherWayPoint = laterEndWayPoint.startTime <= soonerEndWayPoint.endTime
+                ? laterEndWayPoint
+                : undefined;
+
+            const runTime = soonerEndWayPoint.endTime;
+            const firstWayPoint = new ComparedWaypoint(runTime, soonerEndWayPoint, otherWayPoint);
+            this.resultComparedWayPoints.push(firstWayPoint);
+
+            // Pop from array with earlier end waypoint
+            // Also pop from the other array with if the current waypoint from it ends before the middle of the just-popped waypoint
+            if (soonerEndWayPoint === wayPointA) {
+                wayPointA = wayPointsA.pop();
+                if (wayPointB.endTime < this.middleTimeOf(wayPointA)) {
+                    wayPointB = wayPointsB.pop();
+                }
+            } else {
+                wayPointB = wayPointsB.pop();
+                if (wayPointA.endTime < this.middleTimeOf(wayPointB)) {
+                    wayPointA = wayPointsA.pop();
+                }
+            }
+        }
+        return this.resultComparedWayPoints;
+    }
+
+    private middleTimeOf(waypoint: WayPoint | undefined): number {
+        return waypoint ? (waypoint.endTime + waypoint.startTime) / 2 : Infinity;
+    }
+
+    private finishWithWayPointsA(): void {
+        let wayPoint = this.wayPointsA.pop();
+        while (wayPoint) {
+            const next = new ComparedWaypoint(wayPoint.endTime, wayPoint, undefined);
+            this.resultComparedWayPoints.push(next);
+            wayPoint = this.wayPointsA.pop();
+        }
+    }
+
+    private finishWithWayPointsB(): void {
+        let wayPoint = this.wayPointsB.pop();
+        while (wayPoint) {
+            const next = new ComparedWaypoint(wayPoint.endTime, undefined, wayPoint);
+            this.resultComparedWayPoints.push(next);
+            wayPoint = this.wayPointsB.pop();
+        }
     }
 }

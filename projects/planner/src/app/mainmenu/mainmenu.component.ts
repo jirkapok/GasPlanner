@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ElementRef, AfterViewInit, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ElementRef, AfterViewInit, ViewChild, signal } from '@angular/core';
 import { Urls } from '../shared/navigation.service';
 import {
     faBars, faMountainSun, faHouse, faLungs, faTable,
@@ -54,7 +54,8 @@ export class MainMenuComponent extends Streamed implements AfterViewInit {
     public iconShare = faShareFromSquare;
     public iconClone = faClone;
     public iconDelete = faTrashCan;
-    public inPlanner = false;
+    // changed by router events outside Angular template events
+    private readonly _inPlanner = signal(false);
 
     constructor(
         private router: Router,
@@ -70,8 +71,12 @@ export class MainMenuComponent extends Streamed implements AfterViewInit {
             map(() => this.rootRoute(this.route)),
             filter((r: ActivatedRoute) => r.outlet === 'primary'),
         ).subscribe((currentRoute: ActivatedRoute) => {
-            this.inPlanner = currentRoute.snapshot.url.length === 0;
+            this._inPlanner.set(currentRoute.snapshot.url.length === 0);
         });
+    }
+
+    public get inPlanner(): boolean {
+        return this._inPlanner();
     }
 
     // Register component's height with LayoutService

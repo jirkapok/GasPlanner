@@ -4,7 +4,8 @@ import { HelpComponent } from './help.component';
 import { Urls } from '../shared/navigation.service';
 import { NgxMdModule } from 'ngx-md';
 import { provideHttpClient, withXhr } from '@angular/common/http';
-import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { renderOnPush } from '../../testing/onPush.testing';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { ViewStates } from '../shared/viewStates';
 import { PreferencesStore } from '../shared/preferencesStore';
@@ -56,5 +57,26 @@ describe('Help component', () => {
         expect(component.path).toBe('assets/doc/depths.md');
         const isActive = component.isActiveSection({ id: 'plan' });
         expect(isActive).toBeTruthy();
+    });
+});
+
+describe('Help component OnPush', () => {
+    it('renders document loaded asynchronously', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, NgxMdModule],
+            providers: [
+                provideHttpClient(withXhr()), provideHttpClientTesting(),
+                Urls, SubViewStorage, ViewStates, PreferencesStore, Preferences,
+                ViewSwitchService, DiveSchedules, UnitConversion, ReloadDispatcher,
+                ApplicationSettingsService, provideTestTranslate(), LanguageService
+            ]
+        });
+        const fixture = await renderOnPush(HelpComponent);
+        const http = TestBed.inject(HttpTestingController);
+
+        http.match(r => r.url.endsWith('application.md')).forEach(r => r.flush('# Loaded help title'));
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('Loaded help title');
     });
 });

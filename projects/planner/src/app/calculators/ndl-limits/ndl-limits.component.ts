@@ -81,6 +81,8 @@ export class NdlLimitsComponent implements OnInit {
         }
 
         this.limits = this.ndl.calculate(this.tank.tank.gas, this.options);
+        // new instance, so the gas label shows maximum depths of the changed options
+        this.toxicity = new GasToxicity(this.options);
         const indexOffset = 4; // 4 times the minimum 3 m depth (= 12 m)
 
         for (let index = 0; index < this.limits.length; index++) {

@@ -329,6 +329,7 @@ class WaypointsDiffContext2 {
 
         let wayPointA = wayPointsA.pop();
         let wayPointB = wayPointsB.pop();
+        let next: ComparedWaypoint;
 
         while (wayPointA || wayPointB) {
             if (!wayPointA) {
@@ -355,8 +356,12 @@ class WaypointsDiffContext2 {
                 : undefined;
 
             const runTime = soonerEndWayPoint.endTime;
-            const firstWayPoint = new ComparedWaypoint(runTime, soonerEndWayPoint, otherWayPoint);
-            this.resultComparedWayPoints.push(firstWayPoint);
+            if (soonerEndWayPoint === wayPointA) {
+                next = new ComparedWaypoint(runTime, soonerEndWayPoint, otherWayPoint);
+            } else {
+                next = new ComparedWaypoint(runTime, otherWayPoint, soonerEndWayPoint);
+            }
+            this.resultComparedWayPoints.push(next);
 
             // Pop from array with earlier end waypoint
             // Also pop from the other array if the current waypoint from it ends before the middle of the just-popped waypoint

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,6 @@ interface AltitudeDepthForm {
     selector: 'app-altitude-calc',
     templateUrl: './altitude-calc.component.html',
     styleUrls: ['./altitude-calc.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class AltitudeCalcComponent implements OnInit {

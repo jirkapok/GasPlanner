@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { TankBound } from '../../shared/models';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-tankchart',
     templateUrl: './tank-chart.component.html',
     styleUrls: ['./tank-chart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [GaslabelComponent, NgClass, LocaleNumberPipe, TranslatePipe]
 })
 export class TankChartComponent {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,6 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,6 @@ interface WeightForm {
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class WeightCalcComponent implements OnInit {

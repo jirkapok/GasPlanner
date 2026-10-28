@@ -36,8 +36,8 @@ describe('DiveIssuesComponent', () => {
     it('shows high ppO2 as error', () => {
         const units = TestBed.inject(UnitConversion);
         const highPpO2 = new BoundEvent(units, EventsFactory.createHighPpO2(Time.oneMinute, 30));
-        vi.spyOn(component.dive, 'events', 'get').mockReturnValue([highPpO2]);
-        fixture.componentRef.changeDetectorRef.detectChanges();
+        component.dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [highPpO2], 0, [], []);
+        fixture.detectChanges();
 
         const element = fixture.nativeElement as HTMLElement;
         expect(element.querySelectorAll('.alert-danger').length).toBe(1);

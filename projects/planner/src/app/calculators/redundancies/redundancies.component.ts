@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faCalculator } from '@fortawesome/free-solid-svg-icons';
@@ -29,7 +29,6 @@ interface RedundanciesForm {
     selector: 'app-redundancies',
     templateUrl: './redundancies.component.html',
     styleUrls: ['./redundancies.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class RedundanciesComponent implements OnInit {

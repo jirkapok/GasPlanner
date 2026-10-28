@@ -60,7 +60,8 @@ export default defineConfig([{
 
         '@angular-eslint/prefer-standalone': 'warn',
         '@angular-eslint/prefer-inject': 'off',
-        '@angular-eslint/prefer-on-push-component-change-detection': 'off',
+        // the app runs zoneless, state changed outside template events is kept in signals
+        '@angular-eslint/prefer-on-push-component-change-detection': 'error',
         '@angular-eslint/no-input-rename': 'error',
         '@angular-eslint/no-output-on-prefix': 'error',
         '@angular-eslint/no-output-rename': 'error',

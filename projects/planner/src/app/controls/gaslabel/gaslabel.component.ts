@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Precision, Tank, GasToxicity } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { TankBound } from '../../shared/models';
@@ -16,8 +16,7 @@ import { TranslatePipe } from '@ngx-translate/core';
         ReactiveFormsModule,
         LocaleNumberPipe,
         TranslatePipe
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager
+    ]
 })
 export class GaslabelComponent {
     @Input()

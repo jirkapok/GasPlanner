@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { OptionDefaults, Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-gradients',
     templateUrl: './gradients.component.html',
     styleUrls: ['./gradients.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, NgClass, MdbFormsModule, MdbDropdownModule, TranslatePipe]
 })
 export class GradientsComponent implements OnInit {

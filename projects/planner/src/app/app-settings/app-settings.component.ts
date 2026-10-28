@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
@@ -32,8 +32,7 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
         MdbFormsModule,
         TranslatePipe,
         LanguageDropdownComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager
+    ]
 })
 export class AppSettingsComponent implements OnInit {
     public readonly flagIcon = faFlag;

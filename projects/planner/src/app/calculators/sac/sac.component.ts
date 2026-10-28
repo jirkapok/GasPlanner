@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +32,6 @@ interface SacForm {
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class SacComponent implements OnInit {

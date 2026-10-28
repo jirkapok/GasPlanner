@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -22,7 +22,6 @@ interface MccrForm {
 @Component({
     selector: 'app-mccr-options',
     templateUrl: './mccr-options.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, TranslatePipe]
 })
 export class MccrOptionsComponent extends Streamed implements OnInit, OnDestroy {

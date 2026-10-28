@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
@@ -18,7 +18,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-dive-issues',
     templateUrl: './dive-issues.component.html',
     styleUrls: ['./dive-issues.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class DiveIssuesComponent {

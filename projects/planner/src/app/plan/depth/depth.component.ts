@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-depth',
     templateUrl: './depth.component.html',
     styleUrls: ['./depth.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, TranslatePipe]
 })
 export class DepthComponent implements OnInit {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, NonNullableFormBuilder } from '@angular/forms';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
@@ -27,7 +27,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-ndl-limits',
     templateUrl: './ndl-limits.component.html',
     styleUrls: ['./ndl-limits.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, OxygenComponent, PpO2Component, SalinityComponent, AltitudeComponent, GradientsComponent,
         LocaleNumberPipe, TranslatePipe]
 })

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {
     faArrowDown, faArrowUp, faArrowRight, faTasks,
     faRandom, IconDefinition, faFilter
@@ -20,7 +20,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
     styleUrls: ['./waypoints.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class WayPointsComponent {

@@ -316,7 +316,17 @@ No tests for `app.component`, `footer`, `about`, `appinfo`, `language-dropdown`,
 - [ ] **Step 5: Commit** `refactor: app shell components ready for OnPush`.
 
 ### Task 10: Switch to OnPush and enforce it by lint
-- [ ] Status
+- [x] Status (planner 869 tests in 101 files pass, library 969 pass, e2e 8 passed on port 4300, lint planner 98 / library 12.
+
+**Lint rule:** the root `eslint.config.mjs` already contained `'@angular-eslint/prefer-on-push-component-change-detection': 'off'` (from the Angular 22 update), which overrode a newly added entry. That entry is now `'error'`; before the switch it reported exactly the 54 `Eager` components.
+
+**`changeDetection` removed instead of an explicit `OnPush`:** the angular-eslint 22.6 rule doesn't require the property. OnPush is the Angular 22 default, and the rule's suggested fix removes the property, as `help-sidebar` and `qr-code-modal` already did. A scratchpad PowerShell script removed the property and the then-unused `ChangeDetectionStrategy` import from the 54 components.
+
+**One test fixed:** `dive-issues` `'shows high ppO2 as error'` mocked the `events` getter with a spy, which an OnPush view doesn't notice. It now sets the events through `DiveResults.updateDiveInfo`.
+
+**Flaky runs:** the first full run also failed to load `ndl-limits.component.spec.ts` ("Failed to fetch dynamically imported module"). It passed alone and in the full re-run.
+
+**Manual checklist (Step 4):** waiting for the user's review.)
 
 **Files:** all 56 `*.component.ts` under `projects/planner/src/app`, the `ChangeDetectionStrategy.Eager` test hosts in specs, `eslint.config.mjs`, `.claude/CLAUDE.md`.
 

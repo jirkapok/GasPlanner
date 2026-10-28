@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, AbstractControl, ReactiveFormsModule } from '@angular/forms';
 import { InputControls } from '../../shared/inputcontrols';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-altitude',
     templateUrl: './altitude.component.html',
     styleUrls: ['./altitude.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule,
         MdbFormsModule,

@@ -285,7 +285,15 @@ Deviations from this task's text:
 - [ ] **Step 5: Commit** `refactor: calculators ready for OnPush`.
 
 ### Task 9: Group "app shell and help"
-- [ ] Status
+- [x] Status (planner 869 tests in 101 files pass (+3), planner lint 98 errors.
+
+**Mainmenu was red:** `inPlanner` was set by router events. It is now a getter over a private signal. The existing spec navigates to `/` instead of assigning `inPlanner`.
+
+**Already passing:**
+- `learn` (question retranslated after `TranslateService.use`): the `translate` pipe in its template marks the view on language change. `QuizService` stays without signals.
+- `help` (markdown loaded through `HttpClient` by `ngx-md`).
+
+No tests for `app.component`, `footer`, `about`, `appinfo`, `language-dropdown`, `qr-code-modal` and `app-settings`. They show static content, or state changed by their own template events; `app-settings` already calls `ChangeDetectorRef`.)
 
 **Components:** `app.component`, `mainmenu`, `footer`, `about`, `appinfo`, `app-settings`, `help`, `help-sidebar`, `language-dropdown`, `learn`, `qr-code-modal`.
 

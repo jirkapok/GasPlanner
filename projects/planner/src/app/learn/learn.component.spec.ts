@@ -21,6 +21,8 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { LanguageService } from '../shared/language.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../testing/onPush.testing';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LearnComponent', () => {
     let component: LearnComponent;
@@ -118,5 +120,28 @@ describe('LearnComponent', () => {
 
         expect(component.showScore).toBeFalsy();
         expect(component.question).not.toBe(oldQuestion);
+    });
+});
+
+describe('LearnComponent OnPush', () => {
+    it('renders question retranslated after language change', async () => {
+        TestBed.configureTestingModule({
+            imports: [LearnComponent],
+            providers: [
+                provideHttpClient(withXhr()), provideHttpClientTesting(),
+                Urls, QuizService, SubViewStorage, ViewStates, Preferences, PreferencesStore,
+                ViewSwitchService, DiveSchedules, UnitConversion, ReloadDispatcher,
+                ApplicationSettingsService, LanguageService, provideTestTranslate()
+            ]
+        });
+        const fixture = await renderOnPush(LearnComponent);
+        const templateKey = TestBed.inject(QuizService).question.templateKey;
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('cs', { [templateKey]: 'Ceska otazka' });
+
+        translate.use('cs');
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('Ceska otazka');
     });
 });

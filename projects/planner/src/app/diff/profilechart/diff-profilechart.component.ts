@@ -48,11 +48,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
-            .wthAverageDepthColor('rgb(188,191,192)')
+            .wthAverageDepthColor('rgb(120, 191, 140)')
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
-            .wthEventLineColor('rgb(118,119,120)')
+            .wthEventLineColor('rgb(0, 150, 60)')
             .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
             .create(() => this.profileComparatorService.profileBResults);
 

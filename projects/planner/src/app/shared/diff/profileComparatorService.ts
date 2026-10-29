@@ -310,7 +310,6 @@ class WaypointsDiffContext {
     }
 
     private next() {
-        // this.endTimeA < this.endTimeB;
         if (this.shorterA) {
             this.updateA();
         } else if (this.shorterB) {

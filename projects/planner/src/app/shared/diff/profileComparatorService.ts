@@ -219,8 +219,9 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffContext2([...this.wayPointsA].reverse(), [...this.wayPointsB].reverse());
-        this._wayPoints = context.create();
+        const context = new WaypointsDiffContext([...this.wayPointsA].reverse(), [...this.wayPointsB].reverse());
+        context.createDiveComparison();
+        this._wayPoints = context.diveComparison;
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
@@ -255,33 +256,64 @@ export class ProfileComparatorService extends Streamed {
 }
 
 class WaypointsDiffContext {
-    public waypointA: WayPoint | undefined;
-    public waypointB: WayPoint | undefined;
-    private readonly defaultTime = -1;
-    private _endTimeA = this.defaultTime;
-    private _endTimeB = this.defaultTime;
+    public diveComparison: ComparedWaypoint[] = [];
+    private wayPointA: WayPoint | undefined;
+    private wayPointB: WayPoint | undefined;
+    private startTimeA = Infinity;
+    private startTimeB = Infinity;
+    private endTimeA = -Infinity;
+    private endTimeB = -Infinity;
 
-    constructor(private wayPointsA: WayPoint[], private wayPointsB: WayPoint[]) {
+    constructor(
+        private wayPointsA: WayPoint[],
+        private wayPointsB: WayPoint[]
+    ) {
         this.updateA();
         this.updateB();
+    };
+
+    private get shorterA(): boolean {
+        return this.endTimeA < this.endTimeB;
     }
 
-    public get hasNext(): boolean {
-        return !!(this.waypointA || this.waypointB);
+    private get shorterB(): boolean {
+        return this.endTimeB < this.endTimeA;
     }
 
-    private get dominantA(): boolean {
-        return this._endTimeA > this._endTimeB;
+    private get otherWayPoint(): WayPoint | undefined {
+        // If one dive hasn't started yet, don't compare it
+        if (this.startTimeB > this.endTimeA || this.startTimeA > this.endTimeB) {
+            return undefined;
+        }
+
+        return this.shorterA ? this.wayPointB : this.wayPointA;
     }
 
-    private get dominantB(): boolean {
-        return this._endTimeB > this._endTimeA;
+    public createDiveComparison() {
+        while (this.wayPointA && this.wayPointB) {
+            if (this.shorterA) {
+                const next = this.pushAWith(this.otherWayPoint);
+                next.durationB = undefined;
+                next.depthB = undefined;
+            } else if (this.shorterB) {
+                const next = this.pushBWith(this.otherWayPoint);
+                next.durationA = undefined;
+                next.depthA = undefined;
+            } else {
+                this.pushBoth();
+            }
+
+            this.next();
+        }
+
+        this.finishWithRemaining();
     }
 
-    public next(): void {
-        if (this.dominantA) {
+    private next() {
+        // this.endTimeA < this.endTimeB;
+        if (this.shorterA) {
             this.updateA();
-        } else if (this.dominantB) {
+        } else if (this.shorterB) {
             this.updateB();
         } else {
             this.updateA();
@@ -289,135 +321,55 @@ class WaypointsDiffContext {
         }
     }
 
-    public toRow(): ComparedWaypoint {
-        const runtime = this.dominantA ? this._endTimeA : this._endTimeB;
-        const row = new ComparedWaypoint(runtime, this.waypointA, this.waypointB);
-
-        if (this.dominantA) {
-            row.durationB = undefined;
-            row.depthB = undefined;
-        } else if (this.dominantB) {
-            row.durationA = undefined;
-            row.depthA = undefined;
-        }
-
-        return row;
-    }
-
     private updateA(): void {
-        this.waypointA = this.wayPointsA.pop();
-        this._endTimeA = this.waypointA?.endTime ?? this.defaultTime;
+        this.wayPointA = this.wayPointsA.pop();
+        this.startTimeA = this.wayPointA?.startTime || Infinity;
+        this.endTimeA = this.wayPointA?.endTime || -Infinity;
     }
 
     private updateB(): void {
-        this.waypointB = this.wayPointsB.pop();
-        this._endTimeB = this.waypointB?.endTime ?? this.defaultTime;
-    }
-}
-
-class WaypointsDiffContext2 {
-    private resultComparedWayPoints: ComparedWaypoint[] = [];
-    private wayPointA: WayPoint | undefined = this.wayPointsA.pop();
-    private wayPointB: WayPoint | undefined = this.wayPointsB.pop();
-
-    constructor(
-        private wayPointsA: WayPoint[],
-        private wayPointsB: WayPoint[]
-    ) {};
-
-    create() {
-        const wayPointsA = this.wayPointsA;
-        const wayPointsB = this.wayPointsB;
-
-        let wayPointA = this.wayPointA;
-        let wayPointB = this.wayPointB;
-
-        while (wayPointA || wayPointB) {
-            if (!wayPointA) {
-                this.wayPointB = wayPointB;
-                this.finishWithWayPointsB();
-                break;
-            }
-            if (!wayPointB) {
-                this.wayPointA = wayPointA;
-                this.finishWithWayPointsA();
-                break;
-            }
-
-            if (wayPointA.endTime === wayPointB.endTime) {
-                const runtime = wayPointA.endTime;
-                const next = new ComparedWaypoint(runtime, wayPointA, wayPointB);
-                this.resultComparedWayPoints.push(next);
-
-                wayPointA = this.wayPointsA.pop();
-                wayPointB = this.wayPointsB.pop();
-
-            } else if (wayPointA.endTime < wayPointB.endTime) {
-                const otherWayPoint = wayPointB.startTime <= wayPointA.endTime
-                    ? wayPointB
-                    : undefined;
-
-                const runtime = wayPointA.endTime;
-                const next = new ComparedWaypoint(runtime, wayPointA, otherWayPoint);
-                next.durationB = undefined;
-                next.depthB = undefined;
-
-                this.resultComparedWayPoints.push(next);
-
-                if (wayPointB.endTime < this.middleTimeOf(wayPointA)) {
-                    wayPointB = wayPointsB.pop();
-                }
-                wayPointA = wayPointsA.pop();
-
-            } else {
-                const otherWayPoint = wayPointA.startTime <= wayPointB.endTime
-                    ? wayPointA
-                    : undefined;
-
-                const runtime = wayPointB.endTime;
-                const next = new ComparedWaypoint(runtime, otherWayPoint, wayPointB);
-                next.durationA = undefined;
-                next.depthA = undefined;
-
-                this.resultComparedWayPoints.push(next);
-
-                if (wayPointA.endTime < this.middleTimeOf(wayPointB)) {
-                    wayPointA = wayPointsA.pop();
-                }
-                wayPointB = wayPointsB.pop();
-            }
-        }
-
-        return this.resultComparedWayPoints;
+        this.wayPointB = this.wayPointsB.pop();
+        this.startTimeB = this.wayPointB?.startTime || Infinity;
+        this.endTimeB = this.wayPointB?.endTime || -Infinity;
     }
 
-    private middleTimeOf(waypoint: WayPoint | undefined): number {
-        return waypoint ? (waypoint.endTime + waypoint.startTime) / 2 : Infinity;
+    private pushBoth(): ComparedWaypoint {
+        const next = new ComparedWaypoint(this.endTimeA, this.wayPointA, this.wayPointB);
+        this.diveComparison.push(next);
+        return next;
     }
 
-    private pushWayPointA(wayPoint: WayPoint) {
-        const next = new ComparedWaypoint(wayPoint.endTime, wayPoint, undefined);
-        this.resultComparedWayPoints.push(next);
+    private pushAWith(otherWayPoint: WayPoint | undefined): ComparedWaypoint {
+        const next = new ComparedWaypoint(this.endTimeA, this.wayPointA, otherWayPoint);
+        this.diveComparison.push(next);
+        return next;
     }
 
-    private pushWayPointB(wayPoint: WayPoint) {
-        const next = new ComparedWaypoint(wayPoint.endTime, undefined, wayPoint);
-        this.resultComparedWayPoints.push(next);
+    private pushBWith(otherWayPoint: WayPoint | undefined): ComparedWaypoint {
+        const next = new ComparedWaypoint(this.endTimeB, otherWayPoint, this.wayPointB);
+        this.diveComparison.push(next);
+        return next;
     }
 
-    private finishWithWayPointsA(): void {
-        let wayPoint = this.wayPointA;
-        while (wayPoint) {
-            this.pushWayPointA(wayPoint);
-            wayPoint = this.wayPointsA.pop();
+    private finishWithRemaining() {
+        if (!this.wayPointA) {
+            this.finishWithDiveB();
+        } else if (!this.wayPointB) {
+            this.finishWithDiveA();
         }
     }
 
-    private finishWithWayPointsB(): void {
-        let wayPoint = this.wayPointB;
-        while (wayPoint) {
-            this.pushWayPointB(wayPoint);
-            wayPoint = this.wayPointsB.pop();
+    private finishWithDiveA(): void {
+        while (this.wayPointA) {
+            this.pushAWith(undefined);
+            this.updateA();
+        }
+    }
+
+    private finishWithDiveB(): void {
+        while (this.wayPointB) {
+            this.pushBWith(undefined);
+            this.updateB();
         }
     }
 }

@@ -317,6 +317,8 @@ class WaypointsDiffContext {
 
 class WaypointsDiffContext2 {
     private resultComparedWayPoints: ComparedWaypoint[] = [];
+    private wayPointA: WayPoint | undefined = this.wayPointsA.pop();
+    private wayPointB: WayPoint | undefined = this.wayPointsB.pop();
 
     constructor(
         private wayPointsA: WayPoint[],
@@ -327,15 +329,17 @@ class WaypointsDiffContext2 {
         const wayPointsA = this.wayPointsA;
         const wayPointsB = this.wayPointsB;
 
-        let wayPointA = wayPointsA.pop();
-        let wayPointB = wayPointsB.pop();
+        let wayPointA = this.wayPointA;
+        let wayPointB = this.wayPointB;
 
         while (wayPointA || wayPointB) {
             if (!wayPointA) {
+                this.wayPointB = wayPointB;
                 this.finishWithWayPointsB();
                 break;
             }
             if (!wayPointB) {
+                this.wayPointA = wayPointA;
                 this.finishWithWayPointsA();
                 break;
             }
@@ -402,7 +406,7 @@ class WaypointsDiffContext2 {
     }
 
     private finishWithWayPointsA(): void {
-        let wayPoint = this.wayPointsA.pop();
+        let wayPoint = this.wayPointA;
         while (wayPoint) {
             this.pushWayPointA(wayPoint);
             wayPoint = this.wayPointsA.pop();
@@ -410,7 +414,7 @@ class WaypointsDiffContext2 {
     }
 
     private finishWithWayPointsB(): void {
-        let wayPoint = this.wayPointsB.pop();
+        let wayPoint = this.wayPointB;
         while (wayPoint) {
             this.pushWayPointB(wayPoint);
             wayPoint = this.wayPointsB.pop();

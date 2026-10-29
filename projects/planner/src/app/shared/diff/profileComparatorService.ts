@@ -219,7 +219,7 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffContext([...this.wayPointsA].reverse(), [...this.wayPointsB].reverse());
+        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
         context.createDiveComparison();
         this._wayPoints = context.diveComparison;
     }
@@ -322,13 +322,13 @@ class WaypointsDiffContext {
     }
 
     private updateA(): void {
-        this.wayPointA = this.wayPointsA.pop();
+        this.wayPointA = this.wayPointsA.shift();
         this.startTimeA = this.wayPointA?.startTime || Infinity;
         this.endTimeA = this.wayPointA?.endTime || -Infinity;
     }
 
     private updateB(): void {
-        this.wayPointB = this.wayPointsB.pop();
+        this.wayPointB = this.wayPointsB.shift();
         this.startTimeB = this.wayPointB?.startTime || Infinity;
         this.endTimeB = this.wayPointB?.endTime || -Infinity;
     }

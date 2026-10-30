@@ -219,7 +219,7 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffContext([...this.wayPointsA], [...this.wayPointsB]);
+        const context = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
         context.createDiveComparison();
         this._wayPoints = context.diveComparison;
     }
@@ -255,7 +255,8 @@ export class ProfileComparatorService extends Streamed {
     }
 }
 
-class WaypointsDiffContext {
+/** Creates a ComparedWaypoint array from two WayPoint arrays */
+export class WaypointsDiffBuilder {
     public diveComparison: ComparedWaypoint[] = [];
     private wayPointA: WayPoint | undefined;
     private wayPointB: WayPoint | undefined;
@@ -270,7 +271,7 @@ class WaypointsDiffContext {
     ) {
         this.updateA();
         this.updateB();
-    };
+    }
 
     private get shorterA(): boolean {
         return this.endTimeA < this.endTimeB;
@@ -281,7 +282,7 @@ class WaypointsDiffContext {
     }
 
     private get otherWayPoint(): WayPoint | undefined {
-        // If one dive hasn't started yet, don't compare it
+        // If either dive hasn't started yet, don't compare it yet
         if (this.startTimeB > this.endTimeA || this.startTimeA > this.endTimeB) {
             return undefined;
         }
@@ -289,7 +290,7 @@ class WaypointsDiffContext {
         return this.shorterA ? this.wayPointB : this.wayPointA;
     }
 
-    public createDiveComparison() {
+    public createDiveComparison(): void {
         while (this.wayPointA && this.wayPointB) {
             if (this.shorterA) {
                 const next = this.pushAWith(this.otherWayPoint);
@@ -322,14 +323,14 @@ class WaypointsDiffContext {
 
     private updateA(): void {
         this.wayPointA = this.wayPointsA.shift();
-        this.startTimeA = this.wayPointA?.startTime || Infinity;
-        this.endTimeA = this.wayPointA?.endTime || -Infinity;
+        this.startTimeA = this.wayPointA?.startTime ?? Infinity;
+        this.endTimeA = this.wayPointA?.endTime ?? -Infinity;
     }
 
     private updateB(): void {
         this.wayPointB = this.wayPointsB.shift();
-        this.startTimeB = this.wayPointB?.startTime || Infinity;
-        this.endTimeB = this.wayPointB?.endTime || -Infinity;
+        this.startTimeB = this.wayPointB?.startTime ?? Infinity;
+        this.endTimeB = this.wayPointB?.endTime ?? -Infinity;
     }
 
     private pushBoth(): ComparedWaypoint {

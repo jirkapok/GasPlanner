@@ -1,0 +1,21 @@
+// Workaround for size
+.header-container {
+    height: 21px;
+}
+
+.flip-in {
+  animation: flip-up 550ms both;
+}
+
+.flip-out {
+  animation: flip-down 200ms both;
+}
+
+@keyframes flip-up {
+  from { transform: rotateX(90deg); }
+  to { transform: rotateX(0); }
+}
+
+@keyframes flip-down {
+  to { transform: rotateX(90deg); }
+}

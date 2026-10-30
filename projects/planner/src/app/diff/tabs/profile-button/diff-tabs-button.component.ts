@@ -2,6 +2,8 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 
+type ProfileState = 'primary' | 'secondary' | 'disabled';
+
 @Component({
     selector: 'app-diff-tabs-button',
     templateUrl: './diff-tabs-button.component.html',
@@ -12,28 +14,20 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
 export class DiffTabsButtonComponent {
     @Input({ required: true }) index = 0;
     @Input({ required: true }) title = '';
-    private readonly disabled = 'disabled';
 
-    public constructor(private profilesDiff: ProfileComparatorService) {
+    constructor(private profilesDiff: ProfileComparatorService) {}
+
+    protected get state(): ProfileState {
+        if (this.index === this.profilesDiff.profileAIndex) return 'primary';
+        if (this.index === this.profilesDiff.profileBIndex) return 'secondary';
+        return 'disabled';
     }
 
-    public get state(): string {
-        if(this.index === this.profilesDiff.profileAIndex) {
-            return 'primary';
-        }
-
-        if(this.index === this.profilesDiff.profileBIndex) {
-            return 'secondary';
-        }
-
-        return this.disabled;
+    protected get selected(): boolean {
+        return this.state !== 'disabled';
     }
 
-    public get selected(): boolean {
-        return this.state !== this.disabled;
-    }
-
-    public selectProfile() {
+    protected selectProfile() {
         this.profilesDiff.selectProfile(this.index);
     }
 }

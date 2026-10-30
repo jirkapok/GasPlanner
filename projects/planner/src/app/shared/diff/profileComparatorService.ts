@@ -219,9 +219,9 @@ export class ProfileComparatorService extends Streamed {
             return;
         }
 
-        const context = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
-        context.createDiveComparison();
-        this._wayPoints = context.diveComparison;
+        const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
+        builder.createDiveComparison();
+        this._wayPoints = builder.diveComparison;
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {

@@ -15,6 +15,7 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { WayPoint } from '../../shared/wayPoint';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -47,11 +48,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
-            .wthAverageDepthColor('rgb(188,191,192)')
+            .wthAverageDepthColor('rgb(120, 191, 140)')
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
             .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
-            .wthEventLineColor('rgb(118,119,120)')
+            .wthEventLineColor('rgb(0, 150, 60)')
             .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
             .create(() => this.profileComparatorService.profileBResults);
 
@@ -106,16 +107,16 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
-        if (!selected) {
-            this.plotter.plotCursor(undefined);
-            return;
+        const wayPoints: WayPoint[] = [];
+
+        if (selected?.wayPointA) {
+            wayPoints.push(selected.wayPointA);
+        }
+        if (selected?.wayPointB) {
+            wayPoints.push(selected.wayPointB);
         }
 
-        const wayPoint = selected.durationA
-            ? selected.wayPointA
-            : selected.wayPointB;
-
-        this.plotter.plotCursor(wayPoint);
+        this.plotter.plotCursors(wayPoints);
     }
 
     /** Applies pending template changes first, because Plotly can't size hidden plot elements */
@@ -160,7 +161,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             });
 
         this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((selected: ComparedWaypoint) => {
+            .subscribe((selected) => {
                 this.selectWayPoint(selected);
             });
 

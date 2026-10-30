@@ -27,7 +27,7 @@ export class DiffTabsButtonComponent {
         return this.state !== 'disabled';
     }
 
-    protected selectProfile() {
+    protected selectProfile(): void {
         this.profilesDiff.selectProfile(this.index);
     }
 }

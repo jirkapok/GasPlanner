@@ -1,13 +1,15 @@
 <div class="ms-2">
-    <div class="label-header" [@labelState]="state">
-        <div
-        class="rounded-top text-white text-center initialism"
-        [class.bg-primary]="state === 'primary'"
-        [class.bg-success]="state === 'secondary'">
-        {{ 'profile C' | translate }}
-      </div>
+    <div>
+        <div class="rounded-top text-white text-center initialism"
+            [class.bg-primary]="state === 'primary'"
+            [class.bg-success]="state === 'secondary'">
+            {{ 'profile C' | translate }}
+        </div>
     </div>
-    <button type="button" class="btn" [ngClass]="{'btn-outline-secondary': selected, 'btn-secondary': !selected}" (click)="selectProfile()">
-        {{this.title}}
+    <button type="button" class="btn"
+        [class.btn-outline-secondary]="selected"
+        [class.btn-secondary]="!selected"
+        (click)="selectProfile()">
+        {{ this.title }}
     </button>
 </div>

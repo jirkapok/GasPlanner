@@ -25,10 +25,10 @@ class DiffTabsButtonPage {
 }
 
 describe('DiffTabsButtonComponent', () => {
-    let component: DiffTabsButtonComponent;
     let fixture: ComponentFixture<DiffTabsButtonComponent>;
     let diff: ProfileComparatorService;
     let page: DiffTabsButtonPage;
+    let schedules: DiveSchedules;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -41,21 +41,45 @@ describe('DiffTabsButtonComponent', () => {
                 provideTestTranslate()
             ]
         });
+        schedules = TestBed.inject(DiveSchedules);
+        schedules.add();
+        schedules.add();
+
+        diff = TestBed.inject(ProfileComparatorService);
+        diff.selectProfile(0);
+        diff.selectProfile(2);
+
         fixture = TestBed.createComponent(DiffTabsButtonComponent);
         page = new DiffTabsButtonPage(fixture);
-        component = fixture.componentInstance;
+
+        // There are three dives in these tests
+        // Test component handles the second one (not selected in the beginning)
+        fixture.componentRef.setInput('index', 1);
         fixture.detectChanges();
-        diff = TestBed.inject(ProfileComparatorService);
     });
 
-    it('creates', () => {
-        expect(component).toBeTruthy();
+    it('detects when dive is primary', () => {
+        diff.selectProfile(1);
+        diff.selectProfile(0);
+        fixture.detectChanges();
+
+        expect(page.profileALabel).toBeTruthy();
+    });
+
+    it('detects when dive is secondary', () => {
+        diff.selectProfile(1);
+        fixture.detectChanges();
+
+        expect(page.profileBLabel).toBeTruthy();
+    });
+
+    it('detects when dive is not selected', () => {
+        fixture.detectChanges();
+
+        expect(page.profileALabel || page.profileBLabel).not.toBeTruthy();
     });
 
     it('selects dive', () => {
-        fixture.componentRef.setInput('index', 1);
-        fixture.detectChanges();
-
         page.selectButton.click();
         fixture.detectChanges();
 

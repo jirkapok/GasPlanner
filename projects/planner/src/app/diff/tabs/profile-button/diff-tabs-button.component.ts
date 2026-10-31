@@ -1,63 +1,42 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import {
-    animate, keyframes, state, style, transition, trigger
-} from '@angular/animations';
-import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
-import { NgClass } from '@angular/common';
+import { Component, Input, ChangeDetectorRef } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { takeUntil } from 'rxjs';
+import { Streamed } from '../../../shared/streamed';
+import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
+
+type ProfileState = 'primary' | 'secondary' | 'disabled';
 
 @Component({
     selector: 'app-diff-tabs-button',
     templateUrl: './diff-tabs-button.component.html',
     styleUrls: ['./diff-tabs-button.component.scss'],
-    animations: [
-        trigger('labelState', [
-            state('primary', style({
-                transform: 'rotateX(180deg)',
-                borderBottomLeftRadius: 0,
-                borderBottomRightRadius: 0
-            })),
-            state('secondary', style({ transform: 'none' })),
-            state('disabled', style({
-                visibility: 'hidden',
-                transform: 'translateY(21px)',
-            })),
-            transition('disabled => secondary', [animate('400ms')]),
-            transition('secondary => primary', [animate('500ms')]),
-            transition('primary => disabled', [animate('400ms', keyframes([
-                style({ transform: 'rotateX(180deg)', offset: 0 }),
-                style({ transform: 'rotateX(180deg) translateY(-21px)', offset: 1 })
-            ]))]),
-        ]),
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [NgClass, TranslatePipe]
+    imports: [TranslatePipe]
 })
-export class DiffTabsButtonComponent {
+export class DiffTabsButtonComponent extends Streamed {
     @Input({ required: true }) index = 0;
     @Input({ required: true }) title = '';
-    private readonly disabled = 'disabled';
 
-    public constructor(private profilesDiff: ProfileComparatorService) {
+    constructor(
+        private profilesDiff: ProfileComparatorService,
+        private cd: ChangeDetectorRef
+    ) {
+        super();
+
+        profilesDiff.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.cd.markForCheck());
     }
 
-    public get state(): string {
-        if(this.index === this.profilesDiff.profileAIndex) {
-            return 'primary';
-        }
-
-        if(this.index === this.profilesDiff.profileBIndex) {
-            return 'secondary';
-        }
-
-        return this.disabled;
+    protected get state(): ProfileState {
+        if (this.index === this.profilesDiff.profileAIndex) return 'primary';
+        if (this.index === this.profilesDiff.profileBIndex) return 'secondary';
+        return 'disabled';
     }
 
-    public get selected(): boolean {
-        return this.state !== this.disabled;
+    protected get selected(): boolean {
+        return this.state !== 'disabled';
     }
 
-    public selectProfile() {
+    protected selectProfile(): void {
         this.profilesDiff.selectProfile(this.index);
     }
 }

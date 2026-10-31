@@ -1,4 +1,5 @@
-<form>
+<!-- Used row-gap to correct wrapping on mobile -->
+<form style="row-gap: 1.5rem">
   @for (dive of schedules.dives; track dive; let i = $index) {
     <app-diff-tabs-button [index]="i" [title]="dive.title"/>
   }

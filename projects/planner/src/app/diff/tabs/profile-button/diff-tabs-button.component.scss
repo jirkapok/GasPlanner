@@ -1,5 +1,15 @@
+// Smaller is stronger 3D depth, larger is flatter
+$flip-perspective: 400px;
+
+// Hinge on the bottom edge, so the label flips up out of the button
+.flip-in,
+.flip-out {
+  transform-origin: bottom;
+}
+
+// Delayed until the leaving label is gone, both labels share the same absolute position
 .flip-in {
-  animation: flip-up 550ms both;
+  animation: flip-up 600ms 200ms both;
 }
 
 .flip-out {
@@ -7,10 +17,18 @@
 }
 
 @keyframes flip-up {
-  from { transform: rotateX(90deg); }
-  to { transform: rotateX(0); }
+  from { transform: perspective($flip-perspective) rotateX(90deg); }
+  to { transform: perspective($flip-perspective) rotateX(0); }
 }
 
 @keyframes flip-down {
-  to { transform: rotateX(90deg); }
+  from { transform: perspective($flip-perspective) rotateX(0); }
+  to { transform: perspective($flip-perspective) rotateX(90deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flip-in,
+  .flip-out {
+    animation: none;
+  }
 }

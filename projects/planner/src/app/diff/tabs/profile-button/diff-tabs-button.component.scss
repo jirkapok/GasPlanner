@@ -1,54 +1,34 @@
-@use "mdb-angular-ui-kit/assets/scss/free/_variables.scss";
+// Smaller is stronger 3D depth, larger is flatter
+$flip-perspective: 400px;
 
-// Background of btn cannot be transparent, but must be solid so that header can hide behind it and "fade out"
-// The normal, sane way of sliding the header in/out would have been to animate opacity, but that doesn't work with the
-// 3D transform, as for some reason backface-visibility completely breaks.
-// So we have to use a solid background color of the label and hide the header behind it.
-button {
-    margin-left: .5rem;
-    position: relative;
-    z-index: 100;
+// Hinge on the bottom edge, so the label flips up out of the button
+.flip-in,
+.flip-out {
+  transform-origin: bottom;
 }
 
-.btn-success {
-    transition: color 600ms;
+// Delayed until the leaving label is gone, both labels share the same absolute position
+.flip-in {
+  animation: flip-up 600ms 200ms both;
 }
 
-.btn-secondary {
-    transition: color 600ms;
+.flip-out {
+  animation: flip-down 200ms both;
 }
 
-.profile-header {
-    position: absolute;
-    height: 100%;
-    width: 100%;
-    text-align: center;
-    font-size: smaller;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
+@keyframes flip-up {
+  from { transform: perspective($flip-perspective) rotateX(90deg); }
+  to { transform: perspective($flip-perspective) rotateX(0); }
 }
 
-.primary-header {
-    background-color: variables.$primary;
-    color: variables.$white;
-    transform: rotateX(180deg);
-    backface-visibility: hidden;
+@keyframes flip-down {
+  from { transform: perspective($flip-perspective) rotateX(0); }
+  to { transform: perspective($flip-perspective) rotateX(90deg); }
 }
 
-.secondary-header {
-    background-color: variables.$success;
-    color: variables.$white;
-    backface-visibility: hidden;
-}
-
-.label-header {
-    position: relative;
-    height: 21px;
-    margin-left: 8px;
-    transform-style: preserve-3d;
-    z-index: 1;
-}
-
-.no-wrap {
-    white-space: nowrap;
+@media (prefers-reduced-motion: reduce) {
+  .flip-in,
+  .flip-out {
+    animation: none;
+  }
 }

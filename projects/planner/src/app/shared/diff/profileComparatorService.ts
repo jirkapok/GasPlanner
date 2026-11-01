@@ -220,8 +220,7 @@ export class ProfileComparatorService extends Streamed {
         }
 
         const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
-        builder.createDiveComparison();
-        this._wayPoints = builder.diveComparison;
+        this._wayPoints = builder.createDiveComparison();
     }
 
     private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
@@ -290,7 +289,7 @@ export class WaypointsDiffBuilder {
         return this.shorterA ? this.wayPointB : this.wayPointA;
     }
 
-    public createDiveComparison(): void {
+    public createDiveComparison(): ComparedWaypoint[] {
         while (this.wayPointA && this.wayPointB) {
             if (this.shorterA) {
                 const next = this.pushAWith(this.otherWayPoint);
@@ -308,6 +307,7 @@ export class WaypointsDiffBuilder {
         }
 
         this.finishWithRemaining();
+        return this.diveComparison;
     }
 
     private next() {

@@ -15,7 +15,6 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
-import { WayPoint } from '../../shared/wayPoint';
 
 @Component({
     selector: 'app-diff-profilechart',

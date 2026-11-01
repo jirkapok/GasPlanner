@@ -1,3 +1,10 @@
+# [0.18.0](https://github.com/jirkapok/GasPlanner/compare/v0.17.2...v0.18.0) (2026-11-01)
+
+
+### Features
+
+* [#125](https://github.com/jirkapok/GasPlanner/issues/125) visualize both selected segments in compare chart ([#131](https://github.com/jirkapok/GasPlanner/issues/131)) ([9a3c3ac](https://github.com/jirkapok/GasPlanner/commit/9a3c3ace07c48654119ab37c3a2adfb3ac7e2cdb))
+
 ## [0.17.2](https://github.com/jirkapok/GasPlanner/compare/v0.17.1...v0.17.2) (2026-10-26)
 
 

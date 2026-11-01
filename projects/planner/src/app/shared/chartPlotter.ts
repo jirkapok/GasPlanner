@@ -15,6 +15,9 @@ type ChartLayout = Partial<Plotly.Layout> & Required<Pick<Plotly.Layout, 'xaxis'
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
     public static readonly depthLineColorB = 'rgb(18, 145, 59)';
+    public static readonly ceilingLineColorB = 'rgb(252, 175, 103)';
+    public static readonly eventFillColorB = 'rgb(0, 150, 60)';
+    public static readonly averageDepthColorB = 'rgb(105, 181, 120)';
     private namePrefixKey: string | null = null;
     private averageDepthLineColor = 'rgb(62, 157, 223)';
     private ceilingLineColor = 'rgb(255, 160, 73)';

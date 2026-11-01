@@ -43,7 +43,7 @@ export class ChartPlotterFactory {
         };
     }
 
-    public createCursor(): Partial<Plotly.Shape> {
+    public createCursorA(): Partial<Plotly.Shape> {
         return {
             type: 'line',
             // x-reference is assigned to the x-values
@@ -57,6 +57,25 @@ export class ChartPlotterFactory {
             fillcolor: '#d3d3d3',
             line: {
                 color: ChartPlotterFactory.depthLineColorA,
+                width: 5
+            }
+        };
+    }
+
+    public createCursorB(): Partial<Plotly.Shape> {
+        return {
+            type: 'line',
+            // x-reference is assigned to the x-values
+            xref: 'x',
+            // y-reference is assigned to the plot paper [0,1]
+            yref: 'y',
+            x0: new Date('2001-06-12 12:30'), // dummy values
+            y0: 0,
+            x1: new Date('2001-06-12 12:30'),
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            line: {
+                color: ChartPlotterFactory.depthLineColorB,
                 width: 5
             }
         };
@@ -313,7 +332,8 @@ export class DiveTracesBuilder {
 export class ChartPlotter {
     private builders: DiveTracesBuilder[];
     private options: Partial<Plotly.Config>;
-    private cursor: Partial<Plotly.Shape>;
+    private cursorA: Partial<Plotly.Shape>;
+    private cursorB: Partial<Plotly.Shape>;
     private layout: ChartLayout;
 
     /** Provide traces in reverse order to keep the last on top */
@@ -322,7 +342,8 @@ export class ChartPlotter {
                 private chartPlotterFactory: ChartPlotterFactory,
                 ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
-        this.cursor = chartPlotterFactory.createCursor();
+        this.cursorA = chartPlotterFactory.createCursorA();
+        this.cursorB = chartPlotterFactory.createCursorB();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();
     }
@@ -335,12 +356,17 @@ export class ChartPlotter {
         this.plotCharts(b => b.profileTraces());
     }
 
-    public plotCursors(wayPoints: WayPoint[]): void {
+    public plotCursors(wayPointA?: WayPoint, wayPointB?: WayPoint): void {
         const shapes: Partial<Plotly.Shape>[] = [];
 
-        for (const wayPoint of wayPoints) {
-            const cursor = structuredClone(this.cursor);
-            this.updateCursor(wayPoint, cursor);
+        if (wayPointA) {
+            const cursor = structuredClone(this.cursorA);
+            this.updateCursor(wayPointA, cursor);
+            shapes.push(cursor);
+        }
+        if (wayPointB) {
+            const cursor = structuredClone(this.cursorB);
+            this.updateCursor(wayPointB, cursor);
             shapes.push(cursor);
         }
 

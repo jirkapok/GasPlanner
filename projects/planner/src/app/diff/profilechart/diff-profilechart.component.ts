@@ -107,16 +107,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
-        const wayPoints: WayPoint[] = [];
-
-        if (selected?.wayPointA) {
-            wayPoints.push(selected.wayPointA);
-        }
-        if (selected?.wayPointB) {
-            wayPoints.push(selected.wayPointB);
-        }
-
-        this.plotter.plotCursors(wayPoints);
+        this.plotter.plotCursors(selected?.wayPointA, selected?.wayPointB);
     }
 
     /** Applies pending template changes first, because Plotly can't size hidden plot elements */

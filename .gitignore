@@ -56,3 +56,6 @@ Thumbs.db
 # Vitest browser mode failure screenshots and attachments
 .vitest-attachments/
 __screenshots__/
+
+# Vitest test results
+test-results

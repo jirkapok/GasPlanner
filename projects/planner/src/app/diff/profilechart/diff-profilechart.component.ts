@@ -47,11 +47,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileComparatorService.profileAResults);
         const profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
-            .wthAverageDepthColor('rgb(188,191,192)')
+            .wthAverageDepthColor(ChartPlotterFactory.averageDepthColorB)
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
-            .wthCeilingColor(ChartPlotterFactory.depthLineColorB)
+            .wthCeilingColor(ChartPlotterFactory.ceilingLineColorB)
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
-            .wthEventLineColor('rgb(118,119,120)')
+            .wthEventLineColor(ChartPlotterFactory.eventFillColorB)
             .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
             .create(() => this.profileComparatorService.profileBResults);
 
@@ -106,16 +106,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
-        if (!selected) {
-            this.plotter.plotCursor(undefined);
-            return;
-        }
-
-        const wayPoint = selected.durationA
-            ? selected.wayPointA
-            : selected.wayPointB;
-
-        this.plotter.plotCursor(wayPoint);
+        this.plotter.plotCursors(selected?.wayPointA, selected?.wayPointB);
     }
 
     /** Applies pending template changes first, because Plotly can't size hidden plot elements */
@@ -160,7 +151,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             });
 
         this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
-            .subscribe((selected: ComparedWaypoint) => {
+            .subscribe((selected) => {
                 this.selectWayPoint(selected);
             });
 

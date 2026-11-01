@@ -5,7 +5,7 @@ import { ProfileComparatorService } from './profileComparatorService';
 
 @Injectable()
 export class SelectedDiffWaypoint {
-    @Output() public selectedChanged = new EventEmitter<ComparedWaypoint>();
+    @Output() public selectedChanged = new EventEmitter<ComparedWaypoint | undefined>();
     private lastSelected: ComparedWaypoint | undefined;
 
     constructor(private profilesDiff: ProfileComparatorService) {

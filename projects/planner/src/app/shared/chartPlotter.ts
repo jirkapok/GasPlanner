@@ -14,7 +14,10 @@ type ChartLayout = Partial<Plotly.Layout> & Required<Pick<Plotly.Layout, 'xaxis'
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
-    public static readonly depthLineColorB = 'rgb(141, 143, 144)';
+    public static readonly depthLineColorB = 'rgb(18, 145, 59)';
+    public static readonly ceilingLineColorB = 'rgb(252, 175, 103)';
+    public static readonly eventFillColorB = 'rgb(0, 150, 60)';
+    public static readonly averageDepthColorB = 'rgb(105, 181, 120)';
     private namePrefixKey: string | null = null;
     private averageDepthLineColor = 'rgb(62, 157, 223)';
     private ceilingLineColor = 'rgb(255, 160, 73)';
@@ -43,7 +46,7 @@ export class ChartPlotterFactory {
         };
     }
 
-    public createCursor(): Partial<Plotly.Shape> {
+    public createCursorA(): Partial<Plotly.Shape> {
         return {
             type: 'line',
             // x-reference is assigned to the x-values
@@ -57,6 +60,25 @@ export class ChartPlotterFactory {
             fillcolor: '#d3d3d3',
             line: {
                 color: ChartPlotterFactory.depthLineColorA,
+                width: 5
+            }
+        };
+    }
+
+    public createCursorB(): Partial<Plotly.Shape> {
+        return {
+            type: 'line',
+            // x-reference is assigned to the x-values
+            xref: 'x',
+            // y-reference is assigned to the plot paper [0,1]
+            yref: 'y',
+            x0: new Date('2001-06-12 12:30'), // dummy values
+            y0: 0,
+            x1: new Date('2001-06-12 12:30'),
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            line: {
+                color: ChartPlotterFactory.depthLineColorB,
                 width: 5
             }
         };
@@ -278,7 +300,7 @@ export class DiveTracesBuilder {
             y: resampled.yValues,
             labels: resampled.labels,
             text: resampled.labels,
-            type: <Plotly.PlotType>'scatter',
+            type: <Plotly.TraceType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
             name: this.namePrefix + this.translate('profileChart.eventTraceName'),
@@ -313,7 +335,8 @@ export class DiveTracesBuilder {
 export class ChartPlotter {
     private builders: DiveTracesBuilder[];
     private options: Partial<Plotly.Config>;
-    private cursor1: Partial<Plotly.Shape>;
+    private cursorA: Partial<Plotly.Shape>;
+    private cursorB: Partial<Plotly.Shape>;
     private layout: ChartLayout;
 
     /** Provide traces in reverse order to keep the last on top */
@@ -322,7 +345,8 @@ export class ChartPlotter {
                 private chartPlotterFactory: ChartPlotterFactory,
                 ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
-        this.cursor1 = chartPlotterFactory.createCursor();
+        this.cursorA = chartPlotterFactory.createCursorA();
+        this.cursorB = chartPlotterFactory.createCursorB();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();
     }
@@ -335,12 +359,18 @@ export class ChartPlotter {
         this.plotCharts(b => b.profileTraces());
     }
 
-    public plotCursor(wayPoint: WayPoint | undefined): void {
+    public plotCursors(wayPointA?: WayPoint, wayPointB?: WayPoint): void {
         const shapes: Partial<Plotly.Shape>[] = [];
 
-        if(wayPoint) {
-            this.updateCursor(wayPoint, this.cursor1);
-            shapes.push(this.cursor1);
+        if (wayPointA) {
+            const cursor = structuredClone(this.cursorA);
+            this.updateCursor(wayPointA, cursor);
+            shapes.push(cursor);
+        }
+        if (wayPointB) {
+            const cursor = structuredClone(this.cursorB);
+            this.updateCursor(wayPointB, cursor);
+            shapes.push(cursor);
         }
 
         const update: Partial<Plotly.Layout> = { shapes };

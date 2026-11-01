@@ -125,7 +125,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {
-        this.plotter.plotCursor(wayPoint);
+        this.plotter.plotCursors(wayPoint);
     }
 
     private plotProfile(): void {

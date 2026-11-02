@@ -280,7 +280,7 @@ export class DiveTracesBuilder {
         const dataCeilings = {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
-            type: <Plotly.PlotType>'scatter',
+            type: <Plotly.TraceType>'scatter',
             fill: 'tozeroy',
             name: this.namePrefix + this.translate('profileChart.ceilingTraceName'),
             marker: {

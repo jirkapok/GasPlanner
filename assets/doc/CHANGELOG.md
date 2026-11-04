@@ -1,3 +1,10 @@
+## [0.18.1](https://github.com/jirkapok/GasPlanner/compare/v0.18.0...v0.18.1) (2026-11-04)
+
+
+### Bug Fixes
+
+* [#133](https://github.com/jirkapok/GasPlanner/issues/133) diff chart upon direct visit ([#135](https://github.com/jirkapok/GasPlanner/issues/135)) ([cf0718d](https://github.com/jirkapok/GasPlanner/commit/cf0718dcdd3d0d1603df091fbfe9dc221293f8dc))
+
 # [0.18.0](https://github.com/jirkapok/GasPlanner/compare/v0.17.2...v0.18.0) (2026-11-01)
 
 

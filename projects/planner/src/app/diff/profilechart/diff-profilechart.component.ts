@@ -76,10 +76,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     public ngOnInit(): void {
-        if (this.profilesCalculated) {
-            this.plotCharts();
-            this.hookChartEvents();
-        }
+        this.plotCharts();
+        this.hookChartEvents();
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {
@@ -153,6 +151,14 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.selectedWaypoints.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((selected) => {
                 this.selectWayPoint(selected);
+            });
+
+        this.reloadDispatcher.infoCalculated$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => {
+                if (this.profilesCalculated) {
+                    this.redrawCharts();
+                    this.plotlyHoverLeave();
+                }
             });
 
         this.reloadDispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))

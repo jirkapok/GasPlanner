@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
-import { HighestDensity, ProfileTissues } from 'scuba-physics';
+import { HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { DiveResults } from './diveresults';
+import { UnitConversion } from './UnitConversion';
+import { WayPoint } from './wayPoint';
 import { renderOnPush } from '../../testing/onPush.testing';
 
 @Component({
@@ -23,6 +25,30 @@ describe('DiveResults', () => {
 
     beforeEach(() => {
         sut = new DiveResults();
+    });
+
+    describe('Emergency ascent', () => {
+        beforeEach(() => {
+            const segment = new Segment(0, 10, StandardGases.air, 60);
+            const emergencyAscent = [WayPoint.fromSegment(new UnitConversion(), segment)];
+            sut.updateConsumption(0, 0, 0, 0, 0, false, false, emergencyAscent);
+        });
+
+        afterEach(() => {
+            vi.useRealTimers();
+        });
+
+        it('Is removed after failed calculation', () => {
+            sut.endFailed();
+            expect(sut.emergencyAscent).toEqual([]);
+        });
+
+        it('Is removed when consumption is still running', () => {
+            vi.useFakeTimers();
+            sut.start();
+            vi.advanceTimersByTime(500);
+            expect(sut.emergencyAscent).toEqual([]);
+        });
     });
 
     describe('Rendering', () => {

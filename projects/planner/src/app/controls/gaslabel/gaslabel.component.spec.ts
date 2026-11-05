@@ -42,7 +42,6 @@ describe('Gas label component', () => {
 
 describe('Gas label component OnPush', () => {
     it('renders gas changed outside Angular events', async () => {
-        // not injected, because renderOnPush can't override the component after TestBed injected anything
         const units = new UnitConversion();
         TestBed.configureTestingModule({
             providers: [{ provide: UnitConversion, useValue: units }, provideTestTranslate(), LanguageService]

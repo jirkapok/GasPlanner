@@ -48,7 +48,6 @@ describe('DiveIssuesComponent', () => {
 
 describe('DiveIssuesComponent OnPush', () => {
     let fixture: ComponentFixture<DiveIssuesComponent>;
-    // not injected, because renderOnPush can't override the component after TestBed injected anything
     const units = new UnitConversion();
 
     beforeEach(async () => {

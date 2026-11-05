@@ -17,7 +17,6 @@ describe('TankChartComponent', () => {
         (fixture.nativeElement as HTMLElement).querySelector('small.text-start')?.textContent;
 
     beforeEach(() => {
-        // not injected, because renderOnPush can't override the component after TestBed injected anything
         units = new UnitConversion();
         TestBed.configureTestingModule({
             imports: [TankChartComponent],

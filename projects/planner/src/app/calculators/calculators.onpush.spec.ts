@@ -14,8 +14,6 @@ import { GasBlenderService } from '../shared/gas-blender.service';
 import { BlendPricingService } from '../shared/blend-pricing.service';
 import { NitroxCalculatorService } from '../shared/nitrox-calculator.service';
 import { SacCalculatorService } from '../shared/sac-calculator.service';
-import { OxygenComponent } from '../controls/oxygen/oxygen.component';
-import { GaslabelComponent } from '../controls/gaslabel/gaslabel.component';
 import { planTestProviders } from '../../testing/plan.testing';
 import { renderOnPush } from '../../testing/onPush.testing';
 
@@ -78,7 +76,7 @@ describe('Calculators OnPush', () => {
 
     it('renders gas label of maximum ppO2 changed in ndl limits', async () => {
         configure();
-        const fixture = await renderOnPush(NdlLimitsComponent, {}, [OxygenComponent, GaslabelComponent]);
+        const fixture = await renderOnPush(NdlLimitsComponent);
         const element = fixture.nativeElement as HTMLElement;
         const label = (): string | null | undefined => element.querySelector('app-gaslabel')?.textContent;
         const before = label();

@@ -86,3 +86,18 @@ describe('PlanTabsComponent OnPush', () => {
         expect(text()).not.toContain(title);
     });
 });
+
+describe('PlanTabsComponent OnPush title', () => {
+    it('renders title of depth changed outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(PlanTabsComponent);
+
+        TestBed.inject(DiveSchedules).selectedDepths.plannedDepth = 40;
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. 40 m');
+    });
+});

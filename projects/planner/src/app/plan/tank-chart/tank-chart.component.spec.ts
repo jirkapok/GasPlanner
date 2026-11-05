@@ -56,4 +56,14 @@ describe('TankChartComponent', () => {
 
         expect(remainingText()).toContain('100/200');
     });
+
+    it('renders start pressure changed outside Angular events', async () => {
+        tank = new TankBound(Tank.createDefault(), units);
+        fixture = await renderOnPush(TankChartComponent, { tank });
+
+        tank.startPressure = 150;
+        await fixture.whenStable();
+
+        expect(remainingText()).toContain('/150');
+    });
 });

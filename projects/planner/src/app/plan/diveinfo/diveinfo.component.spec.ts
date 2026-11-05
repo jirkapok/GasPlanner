@@ -151,3 +151,20 @@ describe('DiveInfoComponent', () => {
         });
     });
 });
+
+describe('DiveInfoComponent view switch', () => {
+    it('renders consumption in liters switched outside the component', async () => {
+        configureTestBed();
+        const fixture = await renderOnPush(DiveInfoComponent);
+        const checkbox = (): HTMLInputElement | null =>
+            (fixture.nativeElement as HTMLElement).querySelector('#consumptionInLiters');
+        fixture.componentInstance.tabs?.setActiveTab(1);
+        await fixture.whenStable();
+        expect(checkbox()?.checked).toBe(false);
+
+        TestBed.inject(ViewSwitchService).consumptionInLiters = true;
+        await fixture.whenStable();
+
+        expect(checkbox()?.checked).toBe(true);
+    });
+});

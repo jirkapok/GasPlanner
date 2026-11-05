@@ -71,11 +71,11 @@ export class ReloadDispatcher {
     }
 
     /**
-     * Increased by each options change or reload, views showing values derived from the options read it to track the change.
-     * Options are mutated in place by setters of the OptionsService.
+     * Registers the caller's reactive context (template or computed signal) to be notified by each options change or reload.
+     * Options are mutated in place by OptionsService and DiverOptions, so the change itself isn't tracked.
      */
-    public get optionsVersion(): number {
-        return this._optionsVersion();
+    public trackOptions(): void {
+        this._optionsVersion();
     }
 
     public sendTanksReloaded(source: TanksService): void {

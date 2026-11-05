@@ -13,6 +13,7 @@ import { StopsFilter } from '../../shared/stopsFilter.service';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 describe('WayPointsComponent', () => {
     let fixture: ComponentFixture<WayPointsComponent>;
@@ -52,5 +53,22 @@ describe('WayPointsComponent', () => {
         await fixture.whenStable();
 
         expect(rows()[1].classList).toContain('table-active');
+    });
+});
+
+describe('WayPointsComponent view switch', () => {
+    it('renders complex view switched outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [WayPointsComponent],
+            providers: [...planTestProviders, SelectedWaypoint, StopsFilter]
+        });
+        const fixture = await renderOnPush(WayPointsComponent);
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).not.toContain('waypointsTable.gas');
+
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        await fixture.whenStable();
+
+        expect(text()).toContain('waypointsTable.gas');
     });
 });

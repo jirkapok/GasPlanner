@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 import {
     DefaultOptions, Diver, OptionDefaults,
     Options, SafetyStop, Salinity, GasToxicity,
@@ -20,8 +20,11 @@ export class OptionsService {
     private standardGradients = new StandardGradientsService();
     private options = new Options();
     private _diver: Diver = new Diver();
-    private _toxicity = new GasToxicity(this.options);
-    private toxicityVersion = 0;
+    // new instance after options changed, so views showing gas properties derived from it are refreshed
+    private readonly _toxicity = computed(() => {
+        this.dispatcher.trackOptions();
+        return new GasToxicity(this.options);
+    });
 
     constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         this.options.salinity = Salinity.fresh;
@@ -31,15 +34,8 @@ export class OptionsService {
         // is created with imperial units by default
     }
 
-    /** New instance after options changed, so views showing gas properties derived from it are refreshed */
     public get toxicity(): GasToxicity {
-        const optionsVersion = this.dispatcher.optionsVersion;
-        if (optionsVersion !== this.toxicityVersion) {
-            this._toxicity = new GasToxicity(this.options);
-            this.toxicityVersion = optionsVersion;
-        }
-
-        return this._toxicity;
+        return this._toxicity();
     }
 
     public get diverOptions(): DiverOptions {

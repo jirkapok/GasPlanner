@@ -12,7 +12,8 @@ import _ from 'lodash';
 import { DateFormats } from './formaters';
 
 export class DiveSchedule {
-    private _id = 0;
+    // changes without selecting other dive, when a previous dive is removed
+    private readonly _id = signal(0);
     private _surfaceInterval = Number.POSITIVE_INFINITY;
     private readonly _diveResult = new DiveResults();
     private readonly _optionsService: OptionsService;
@@ -31,7 +32,7 @@ export class DiveSchedule {
     }
 
     public get id(): number {
-        return this._id;
+        return this._id();
     }
 
     /**
@@ -100,11 +101,11 @@ export class DiveSchedule {
 
     public assignIndex(index: number): void {
         this._index = index;
-        this._id = index + 1;
+        this._id.set(index + 1);
     }
 
     public applyNitrox(fO2: number, pO2: number): void {
-        this.tanksService.firstTank.tank.o2 = fO2;
+        this.tanksService.firstTank.o2 = fO2;
         this.optionsService.diverOptions.maxPpO2 = pO2;
     }
 

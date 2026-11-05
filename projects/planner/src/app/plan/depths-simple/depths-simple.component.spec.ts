@@ -220,3 +220,24 @@ describe('Depths Simple Component OnPush best mix', () => {
         expect(text()).not.toEqual(before);
     });
 });
+
+describe('Depths Simple Component OnPush removed dive', () => {
+    it('hides surface interval after the previous dive was removed', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DepthsSimpleComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(DepthsSimpleComponent);
+        const surfaceInterval = (): Element | null => (fixture.nativeElement as HTMLElement).querySelector('app-surface-interval');
+        const schedules = TestBed.inject(DiveSchedules);
+        const first = schedules.selected;
+        schedules.selected = schedules.add();
+        await fixture.whenStable();
+        expect(surfaceInterval()).not.toBeNull();
+
+        schedules.remove(first);
+        await fixture.whenStable();
+
+        expect(surfaceInterval()).toBeNull();
+    });
+});

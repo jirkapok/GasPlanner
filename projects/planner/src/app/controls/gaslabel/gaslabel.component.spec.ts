@@ -6,6 +6,9 @@ import { GaslabelComponent } from './gaslabel.component';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { LanguageService } from '../../shared/language.service';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { TanksService } from '../../shared/tanks.service';
+import { DiveSchedule } from '../../shared/dive.schedules';
 
 describe('Gas label component', () => {
     let component: GaslabelComponent;
@@ -55,5 +58,40 @@ describe('Gas label component OnPush', () => {
         await fixture.whenStable();
 
         expect(text()).toContain('EAN50');
+    });
+});
+
+describe('Gas label component shared tank', () => {
+    const units = new UnitConversion();
+    const dispatcher = new ReloadDispatcher();
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [{ provide: UnitConversion, useValue: units }, provideTestTranslate(), LanguageService]
+        });
+    });
+
+    it('renders gas of first tank reset to simple view', async () => {
+        const tanks = new TanksService(units, dispatcher);
+        tanks.firstTank.o2 = 18;
+        tanks.firstTank.he = 45;
+        const fixture = await renderOnPush(GaslabelComponent, { tank: tanks.firstTank });
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).toContain('gaslabel.mnd');
+
+        tanks.resetToSimple();
+        await fixture.whenStable();
+
+        expect(text()).not.toContain('gaslabel.mnd');
+    });
+
+    it('renders gas of first tank applied from nitrox calculator', async () => {
+        const dive = new DiveSchedule(0, units, dispatcher);
+        const fixture = await renderOnPush(GaslabelComponent, { tank: dive.tanksService.firstTank });
+
+        dive.applyNitrox(50, 1.4);
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('EAN50');
     });
 });

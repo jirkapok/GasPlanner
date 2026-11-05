@@ -1,9 +1,10 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { faPlus, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
-import { takeUntil } from 'rxjs';
+import { merge, takeUntil } from 'rxjs';
 import { DiveSchedule } from '../../shared/dive.schedules';
 import { ManagedDiveSchedules } from '../../shared/managedDiveSchedules';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { Streamed } from '../../shared/streamed';
 import { MdbTabsModule } from 'mdb-angular-ui-kit/tabs';
 
@@ -22,8 +23,13 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
     public reloadIcon = faRotate;
     private activeTabIndex = 0;
 
-    constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef) {
+    constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef, dispatcher: ReloadDispatcher) {
         super();
+
+        // tab titles show depths edited in place by the depths components
+        merge(dispatcher.depthChanged$, dispatcher.depthsReloaded$, dispatcher.setToSimple$)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.cd.markForCheck());
     }
 
     public ngAfterViewInit(): void {

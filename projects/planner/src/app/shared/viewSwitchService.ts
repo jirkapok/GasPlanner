@@ -1,23 +1,31 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { DiveSchedules } from './dive.schedules';
 
+/** Switches are kept in signals, because components not hosting the switch show different content based on them */
 @Injectable()
 export class ViewSwitchService {
-    /** Consumed gas is shown grouped by gas in liters instead of per tank in bars */
-    public consumptionInLiters = false;
-
-    private _isComplex = false;
+    private readonly _consumptionInLiters = signal(false);
+    private readonly _isComplex = signal(false);
 
     constructor(private schedules: DiveSchedules) {
     }
 
+    /** Consumed gas is shown grouped by gas in liters instead of per tank in bars */
+    public get consumptionInLiters(): boolean {
+        return this._consumptionInLiters();
+    }
+
     public get isComplex(): boolean {
-        return this._isComplex;
+        return this._isComplex();
+    }
+
+    public set consumptionInLiters(newValue: boolean) {
+        this._consumptionInLiters.set(newValue);
     }
 
     public set isComplex(newValue: boolean) {
         // not preventing repetitive updates, because it would block settings reload
-        this._isComplex = newValue;
+        this._isComplex.set(newValue);
         if (!newValue) {
             this.schedules.setSimple();
         }

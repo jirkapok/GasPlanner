@@ -146,10 +146,9 @@ export interface ITankSize {
 
 export class TankBound implements IGasContent, ITankSize {
     private _workingPressureBars: number;
-    // consumption is calculated by web worker outside Angular events, getters read it to track the change
-    private readonly _consumption = signal({ consumed: 0, reserve: 0 });
-    // gas is edited by other components than the ones showing it (e.g. gas label), getters read it to track the change
-    private readonly _gasContent = signal({ o2: 0, he: 0 });
+    // The tank is edited in place by other components than the ones showing it and consumption comes from web worker.
+    // Each setter increases it and each getter reads it to track the change.
+    private readonly _version = signal(0);
 
     constructor(public tank: Tank, private units: UnitConversion) {
         const defaultTanks = this.units.defaults.tanks;
@@ -157,94 +156,85 @@ export class TankBound implements IGasContent, ITankSize {
         this._workingPressureBars = this.units.toBar(newWorkPressure);
     }
 
+    /** The tank with tracked changes, use it to calculate values shown in the view. Change the tank only by setters of this class. */
+    public get trackedTank(): Tank {
+        this._version();
+        return this.tank;
+    }
+
     public get id(): number {
-        return this.tank.id;
+        return this.trackedTank.id;
     }
 
     public get size(): number {
-        return this.units.fromTankLiters(this.tank.size, this._workingPressureBars);
+        return this.units.fromTankLiters(this.trackedTank.size, this._workingPressureBars);
     }
 
     public get startPressure(): number {
-        return this.units.fromBar(this.tank.startPressure);
+        return this.units.fromBar(this.trackedTank.startPressure);
     }
 
     public get workingPressure(): number {
-        return this.units.fromBar(this._workingPressureBars);
+        return this.units.fromBar(this.workingPressureBars);
     }
 
     public get workingPressureBars(): number {
+        this._version();
         return this._workingPressureBars;
     }
 
     public get o2(): number {
-        this._gasContent();
-        return this.tank.o2;
+        return this.trackedTank.o2;
     }
 
     public get he(): number {
-        this._gasContent();
-        return this.tank.he;
+        return this.trackedTank.he;
     }
 
     public get n2(): number {
-        this._gasContent();
-        return this.tank.n2;
+        return this.trackedTank.n2;
     }
 
     public get name(): string {
-        this._gasContent();
-        return this.tank.name;
-    }
-
-    /** The tank with tracked gas content, use it to calculate gas properties shown in the view */
-    public get gasTank(): Tank {
-        this._gasContent();
-        return this.tank;
+        return this.trackedTank.name;
     }
 
     /** In respective pressure units */
     public get consumed(): number {
-        this._consumption();
-        return this.units.fromBar(this.tank.consumed);
+        return this.units.fromBar(this.trackedTank.consumed);
     }
 
     /** In respective pressure units */
     public get reserve(): number {
-        this._consumption();
-        return this.units.fromBar(this.tank.reserve);
+        return this.units.fromBar(this.trackedTank.reserve);
     }
 
     /** In respective pressure units */
     public get endPressure(): number {
-        this._consumption();
-        return this.units.fromBar(this.tank.endPressure);
+        return this.units.fromBar(this.trackedTank.endPressure);
     }
 
     public get percentsReserve(): number {
-        this._consumption();
-        return this.tank.percentsReserve;
+        return this.trackedTank.percentsReserve;
     }
 
     public get percentsRemaining(): number {
-        this._consumption();
-        return this.tank.percentsRemaining;
+        return this.trackedTank.percentsRemaining;
     }
 
     public get hasReserve(): boolean {
-        this._consumption();
-        return this.tank.hasReserve;
+        return this.trackedTank.hasReserve;
     }
 
     public get label(): string {
         const volume = Precision.round(this.size, 1);
-        let startPressure = this.units.fromBar(this.tank.startPressure);
-        startPressure = Precision.round(startPressure, 1);
-        return `${this.tank.id}. ${this.tank.name}/${volume}/${startPressure}`;
+        const startPressure = Precision.round(this.startPressure, 1);
+        return `${this.id}. ${this.name}/${volume}/${startPressure}`;
     }
 
     public set id(newValue: number) {
         this.tank.id = newValue;
+        this.changed();
     }
 
     /** Rounded to one decimal place in respective volume units */
@@ -254,6 +244,7 @@ export class TankBound implements IGasContent, ITankSize {
 
     public set startPressure(newValue: number) {
         this.tank.startPressure = this.units.toBar(newValue);
+        this.changed();
     }
 
     public set workingPressure(newValue: number) {
@@ -276,16 +267,17 @@ export class TankBound implements IGasContent, ITankSize {
         }
 
         this._workingPressureBars = newValue;
+        this.changed();
     }
 
     public set o2(newValue: number) {
         this.tank.o2 = newValue;
-        this.gasChanged();
+        this.changed();
     }
 
     public set he(newValue: number) {
         this.tank.he = newValue;
-        this.gasChanged();
+        this.changed();
     }
 
     public assignTemplate(template: TankTemplate): void {
@@ -295,22 +287,23 @@ export class TankBound implements IGasContent, ITankSize {
 
     public assignStandardGas(gasName: string): void {
         this.tank.assignStandardGas(gasName);
-        this.gasChanged();
+        this.changed();
     }
 
     /** Values in bars, as calculated by the consumption worker */
     public assignConsumption(consumed: number, reserve: number): void {
         this.tank.consumed = consumed;
         this.tank.reserve = reserve;
-        this._consumption.set({ consumed, reserve });
+        this.changed();
     }
 
     private assignSize(newValue: number): void {
         this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+        this.changed();
     }
 
-    private gasChanged(): void {
-        this._gasContent.set({ o2: this.tank.o2, he: this.tank.he });
+    private changed(): void {
+        this._version.update(v => v + 1);
     }
 }
 

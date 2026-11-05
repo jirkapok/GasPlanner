@@ -114,11 +114,10 @@ export class TanksService {
     }
 
     public copyTanksConsumption(tanks: ConsumedDto[]) {
-        for (let index = 0; index < this.tanks.length; index++) {
+        this._tanks().forEach((target, index) => {
             const source = tanks[index];
-            const target = this.tanks[index];
             target.assignConsumption(source.consumed, source.reserve);
-        }
+        });
     }
 
     /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
@@ -131,7 +130,7 @@ export class TanksService {
         this._tanks.set(this._tanks().slice(0, 1));
 
         if (this.firstTank.he > 0) {
-            this.firstTank.tank.assignStandardGas(GasNames.airName);
+            this.firstTank.assignStandardGas(GasNames.airName);
         }
     }
 

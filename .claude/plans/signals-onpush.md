@@ -345,3 +345,16 @@ No tests for `app.component`, `footer`, `about`, `appinfo`, `language-dropdown`,
   - Every calculator updates on input.
 - [ ] **Step 5:** In `.claude/CLAUDE.md` Conventions, add: "All components use `ChangeDetectionStrategy.OnPush` (enforced by `@angular-eslint/prefer-on-push-component-change-detection`). Displayed state changed outside the component's own template events must be a signal, or the component calls `markForCheck()` on the matching `ReloadDispatcher` event; forms reset in code use `refreshOnFormEvents`. Test it with `renderOnPush` (`projects/planner/src/testing/onPush.testing.ts`)."
 - [ ] **Step 6: Commit** `perf: switch components to OnPush change detection`.
+
+## Code review fixes
+
+Whole-branch `/code-review` after Task 10 found views left stale by the switch, which the per-component tests didn't cover. Each fix has a test that failed first. Planner 877 tests in 100 files pass, e2e 8 passed, lint planner 98 / library 12.
+
+- **Tab title:** `plan.tabs` calls `markForCheck()` on `depthChanged$`, `depthsReloaded$` and `setToSimple$`.
+- **View switch:** `ViewSwitchService` keeps `isComplex` and `consumptionInLiters` in signals.
+- **Tank edits:** `TankBound` has one `_version` signal, increased by every setter and read by every getter (`trackedTank`), replacing the separate consumption and gas signals. `TanksService.resetToSimple` and `DiveSchedule.applyNitrox` use the `TankBound` API. `weight` and `sac` still write `tank.tank` directly when loading their state, before the first render.
+- **Removed previous dive:** `DiveSchedule._id` is a signal, because the selected dive stays the same object while its id changes.
+- **Toxicity:** `OptionsService.toxicity` is a `computed` tracking `ReloadDispatcher.trackOptions()`, instead of a getter with a cache. The dispatcher stays the trigger, because `DiverOptions` writes bypass the `OptionsService` setters. The version stays global, every dive gets a new instance after an options change, which is cheap.
+- **Emergency ascent:** emptying consumption now removes it too, a failed calculation kept the old ascent (`fix:`, also on `master`).
+- **`renderOnPush`:** no override and no JIT workaround, OnPush is the default. `onPush.testing.spec.ts` and `onPushChildren` are gone.
+- **`copyTanksConsumption`:** reads the tanks signal once.

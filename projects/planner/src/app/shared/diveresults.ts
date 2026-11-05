@@ -375,7 +375,7 @@ export class DiveResults {
         this.diveInfoCalculation.finished();
         this._profileState.set(emptyProfile());
         this._diveInfoState.set(emptyDiveInfo());
-        this.emptyConsumption();
+        this._consumptionState.set(emptyConsumption());
         this._calculationFailed.set(true);
     }
 
@@ -460,17 +460,11 @@ export class DiveResults {
         }
 
         if(this.consumptionCalculation.running) {
-            this.emptyConsumption();
+            this._consumptionState.set(emptyConsumption());
         }
 
         this.profileCalculation.stillRunning();
         this.consumptionCalculation.stillRunning();
         this.diveInfoCalculation.stillRunning();
-    }
-
-    /** Keeps the emergency ascent of the previous calculation, as before the results were kept in signals */
-    private emptyConsumption(): void {
-        const emergencyAscent = this._consumptionState().emergencyAscent;
-        this._consumptionState.set({ ...emptyConsumption(), emergencyAscent });
     }
 }

@@ -3,7 +3,7 @@ import {
     AbstractControl, FormControl, FormGroup,
     NonNullableFormBuilder, ReactiveFormsModule
 } from '@angular/forms';
-import { maskitoTimeOptionsGenerator } from '@maskito/kit';
+import { maskitoTime } from '@maskito/kit';
 import { MaskitoDirective } from '@maskito/angular';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
@@ -34,7 +34,7 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
     @Input() public form!: FormGroup;
     @Input() public controlName = 'surfaceInterval';
 
-    public readonly maskitoTimeOptions = maskitoTimeOptionsGenerator({
+    public readonly maskitoTimeOptions = maskitoTime({
         mode: 'HH:MM',
         timeSegmentMaxValues: { hours: 48 }
     });

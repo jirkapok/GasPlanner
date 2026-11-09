@@ -1,1 +1,32 @@
-<p>This component sure exists</p>
+<div [formGroup]="form">
+    <label for="rest-interval" class="form-label" mdbLabel>
+        {{ 'restInterval.label' | translate }} [min]:
+    </label>
+    <div class="input-group dropdown" mdbDropdown>
+        <input id="rest-interval" [formControlName]="controlName" class="form-control" type="text"
+            [class.is-invalid]="restIntervalInvalid" (input)="restIntervalChanged()"
+            [maskito]="maskitoTimeOptions" placeholder="HH:MM" />
+        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false"
+            type="button" data-mdb-toggle="dropdown" mdbDropdownToggle>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+            <li (click)="apply0Minutes()">
+                <a class="dropdown-item">{{ 'restInterval.zeroMinutes' | translate }}</a>
+            </li>
+            <li (click)="apply30Minutes()">
+                <a class="dropdown-item">{{ 'restInterval.thirtyMinutes' | translate }}</a>
+            </li>
+            <li (click)="applyOneHour()">
+                <a class="dropdown-item">{{ 'restInterval.oneHour' | translate }}</a>
+            </li>
+            <li (click)="apply2Hours()">
+                <a class="dropdown-item">{{ 'restInterval.twoHours' | translate }}</a>
+            </li>
+        </ul>
+    </div>
+    @if (restIntervalInvalid) {
+        <div class="text-danger form-text position-absolute">
+            {{ 'restInterval.invalidFormat' | translate }}
+        </div>
+    }
+</div>

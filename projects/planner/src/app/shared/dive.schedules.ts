@@ -17,6 +17,7 @@ export class DiveSchedule {
     // changes without selecting other dive, when a previous dive is removed
     private readonly _id = signal(0);
     private _surfaceInterval = Number.POSITIVE_INFINITY;
+    private _restInterval = 0;
     private readonly _diveResult = new DiveResults();
     private readonly _optionsService: OptionsService;
     private readonly _tanks: TanksService;
@@ -50,12 +51,24 @@ export class DiveSchedule {
         return this._surfaceInterval;
     }
 
+    /**
+     * The time interval in seconds which the diver
+     * will spend on the surface after this dive
+     */
+    public get restInterval(): number {
+        return this._restInterval;
+    }
+
     public get surfaceIntervalText(): string | null {
         if(!this.isRepetitive) {
             return null;
         }
 
         return DateFormats.formatShortTime(this.surfaceInterval);
+    }
+
+    public get restIntervalText(): string {
+        return DateFormats.formatShortTime(this.restInterval);
     }
 
     /**
@@ -143,6 +156,10 @@ export class DiveSchedule {
         this.dispatcher.sendDepthChanged();
     }
 
+    public set restInterval(newValue: number) {
+        this._restInterval = newValue;
+    }
+
     public assignIndex(index: number): void {
         this._index = index;
         this._id.set(index + 1);
@@ -173,6 +190,22 @@ export class DiveSchedule {
 
     public apply2HourSurfaceInterval(): void {
         this.surfaceInterval = Time.oneHour * 2;
+    }
+
+    public apply0MinutesRestInterval(): void {
+        this.restInterval = 0;
+    }
+
+    public applyOneHourRestInterval(): void {
+        this.restInterval = Time.oneHour;
+    }
+
+    public apply30MinutesRestInterval(): void {
+        this.restInterval = Time.oneMinute * 30;
+    }
+
+    public apply2HoursRestInterval(): void {
+        this.restInterval = Time.oneHour * 2;
     }
 }
 

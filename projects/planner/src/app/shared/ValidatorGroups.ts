@@ -158,6 +158,19 @@ export class ValidatorGroups {
         };
     }
 
+    /** Has to be >= 0 */
+    public restInterval(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value: unknown = control.value;
+
+            if (typeof value !== 'number' || !(value >= 0)) {
+                return { restInterval: true };
+            }
+
+            return null;
+        };
+    }
+
     // only these methods needs direct access to the range without component reload
     private validateMinRmv(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => Validators.min(this.ranges.diverRmv[0])(control);

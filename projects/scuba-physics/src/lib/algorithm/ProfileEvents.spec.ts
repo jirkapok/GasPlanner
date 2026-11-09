@@ -461,6 +461,35 @@ describe('Profile Events', () => {
             ]);
         });
 
+        it('from 18/45 to Ean50 is 4 % of nitrogen over the limit', () => {
+            const segments = new Segments();
+            segments.add(21, StandardGases.trimix1845, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.trimix1845, Time.oneMinute);
+            segments.add(0, StandardGases.ean50, Time.oneMinute * 6);
+
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+            const icd = events.items.find(e => e.type === EventType.isobaricCounterDiffusion);
+
+            // N2: 37 % -> 50 % = +13 %, allowed 45 % He / 5 = 9 %
+            expect(icd?.value).toBeCloseTo(0.04, 6);
+        });
+
+        it('from 21/35 to air is 28 % of nitrogen over the limit', () => {
+            const segments = new Segments();
+            segments.add(21, StandardGases.trimix2135, Time.oneMinute * 4);
+            segments.addFlat(StandardGases.trimix2135, Time.oneMinute);
+            segments.add(0, StandardGases.air, Time.oneMinute * 6);
+
+            const eventOptions = createEventOption(2, segments.items, emptyCeilings, options);
+            const events = ProfileEvents.fromProfile(eventOptions);
+            const icd = events.items.find(e => e.type === EventType.isobaricCounterDiffusion);
+
+            const expected = StandardGases.air.fN2 - StandardGases.trimix2135.fN2 - StandardGases.trimix2135.fHe / 5;
+            expect(icd?.value).toBeCloseTo(expected, 6);
+            expect(icd?.value).toBeCloseTo(0.28, 2);
+        });
+
         it('21/35 to 35/25 doesn\'t add the event', () => {
             const segments = new Segments();
             segments.add(15, StandardGases.trimix2135, Time.oneMinute * 4);

@@ -131,6 +131,7 @@
     "highDescentSpeed": "Vitesse de descente élevée ! Descendez plus longtemps ou descendez à une profondeur plus faible.",
     "highAscentSpeed": "Vitesse de remontée élevée ! Remontez uniquement à une profondeur plus faible ou remontez plus lentement.",
     "highN2Switch": "Le changement vers un gaz avec une teneur en azote plus élevée n'est pas recommandé ! Il existe un risque de contre-diffusion isobare (IDC). Changez pour un autre gaz avec une teneur en hélium plus élevée ou une teneur en azote plus faible.",
+    "highN2SwitchOverLimit": "L'augmentation d'azote dépasse la limite de la règle du 1/5 de {{points}} points de pourcentage.",
     "mndExceeded": "Profondeur narcotique maximale dépassée pour le gaz sélectionné ! Réduisez la profondeur ou utilisez un gaz avec une teneur en hélium plus élevée.",
     "highDensity": "Densité de gaz maximale recommandée dépassée ! Réduisez la profondeur ou utilisez un gaz avec une teneur en hélium plus élevée (donc une densité plus faible).",
     "minDepth": "Les plongées planifiées à faible profondeur pendant une longue durée peuvent mener à une plongée en saturation ! Réduisez la durée de plongée à moins de 5 heures.",

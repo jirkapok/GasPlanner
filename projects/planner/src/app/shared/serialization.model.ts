@@ -132,6 +132,7 @@ export interface EventDto {
     type: EventType;
     message?: string;
     gas?: GasDto;
+    value?: number;
 }
 
 export interface CalculatedProfileDto {

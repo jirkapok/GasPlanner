@@ -403,7 +403,11 @@ export class ProfileEvents {
             const deltaHe = current.gas.fHe - previous.gas.fHe;
 
             if (previous.gas.fHe > 0 && deltaN2 * 5 > -deltaHe) {
-                const event = EventsFactory.createIsobaricCounterDiffusion(context.elapsed, current.startDepth, current.gas);
+                // 1/5 rule: increase of nitrogen is limited to one fifth of the helium decrease
+                const allowedDeltaN2 = -deltaHe / 5;
+                const n2OverLimit = deltaN2 - allowedDeltaN2;
+                const event = EventsFactory.createIsobaricCounterDiffusion(
+                    context.elapsed, current.startDepth, current.gas, n2OverLimit);
                 context.events.add(event);
             }
         }

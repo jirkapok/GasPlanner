@@ -313,6 +313,15 @@ export class BoundEvent {
         return this.units.fromMeters(this.event.depth);
     }
 
+    /**
+     * Percentage points of nitrogen, by which the gas switch exceeds
+     * the isobaric counter diffusion limit (1/5 rule). 0 for other events.
+     */
+    public get n2OverLimit(): number {
+        const fraction = this.event.value ?? 0;
+        return Precision.round(fraction * 100, 1);
+    }
+
     /** Name of the gas associated with the event, empty if the event has no gas */
     public get gasName(): string {
         const gas = this.event.gas;

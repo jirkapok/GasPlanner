@@ -62,6 +62,17 @@ describe('BoundEvent', () => {
         expect(sut.gasName).toEqual('EAN50');
     });
 
+    it('Nitrogen over ICD limit is in percentage points', () => {
+        const event = EventsFactory.createIsobaricCounterDiffusion(10, 21, StandardGases.ean50, 0.0412);
+        const sut = new BoundEvent(new UnitConversion(), event);
+        expect(sut.n2OverLimit).toEqual(4.1);
+    });
+
+    it('Nitrogen over ICD limit is 0 for other events', () => {
+        const sut = new BoundEvent(new UnitConversion(), EventsFactory.createHighPpO2(10, 20));
+        expect(sut.n2OverLimit).toEqual(0);
+    });
+
     it('Empty gas name for event without gas', () => {
         const sut = new BoundEvent(new UnitConversion(), EventsFactory.createHighPpO2(10, 20));
         expect(sut.gasName).toEqual('');

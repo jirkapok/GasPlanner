@@ -39,14 +39,13 @@ export class RestIntervalComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         private fb: NonNullableFormBuilder,
         private dispatcher: ReloadDispatcher,
-        private inputs: InputControls,
         private validators: ValidatorGroups) {
         super();
     }
 
     public get restIntervalInvalid(): boolean {
         const restControl = this.form.get(this.controlName) as AbstractControl;
-        return this.inputs.controlInValid(restControl);
+        return InputControls.isControlInvalid(restControl);
     }
 
     private get restInterval(): string {

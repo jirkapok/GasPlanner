@@ -1,6 +1,7 @@
 import { BailoutBreathing, BreathingModel, OpenCircuitBreathing } from './BreathingModel';
 import { PscrBreathing } from './PscrBreathing';
 import { MccrBreathing } from './MccrBreathing';
+import { EccrBreathing } from './EccrBreathing';
 import { Tank } from '../consumption/Tanks';
 import { EventType } from '../algorithm/CalculatedProfile';
 import { CircuitType, RebreatherOptions } from './RebreatherOptions';
@@ -85,6 +86,17 @@ describe('Breathing model', () => {
             const segment = new Segment(30, 30, StandardGases.air, Time.oneMinute);
             expect(sut.oxygenTank).toBeUndefined();
             expect(sut.oxygenLiters(segment)).toBeCloseTo(0, 6);
+        });
+
+        it('breathes the loop with deco setpoint after the deepest point until the calculated ascent', () => {
+            const tanks = [new Tank(12, 200, 21), new Tank(3, 200, 100)];
+            const eccr = new EccrBreathing(new RebreatherOptions(CircuitType.eccr), tanks, depthConverter);
+            const eccrBailout = new BailoutBreathing(eccr, depthConverter);
+            expect(eccrBailout.ppO2(StandardGases.air, 30, true, false)).toBeCloseTo(1.3, 6);
+        });
+
+        it('breathes the tank gas during the calculated ascent', () => {
+            expect(sut.inspiredGas(StandardGases.ean32, 30, true, true)).toBe(StandardGases.ean32);
         });
 
         it('validates the loop model', () => {

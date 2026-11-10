@@ -12,12 +12,15 @@ import { Salinity } from '../physics/pressure-converter';
 import { Gas } from '../gases/Gases';
 import { Time } from '../physics/Time';
 
-/** Loop breathed as open circuit, which remembers depths of all its breaths */
+/** Loop breathed as open circuit, which remembers depths and ascent flags of all its breaths */
 class RecordingLoop extends OpenCircuitBreathing {
     public readonly depths: number[] = [];
+    public readonly ascentDepths: number[] = [];
+    public readonly bottomDepths: number[] = [];
 
-    public override inspiredGas(sourceGas: Gas, depth = 0): Gas {
+    public override inspiredGas(sourceGas: Gas, depth = 0, isAscent = false): Gas {
         this.depths.push(depth);
+        (isAscent ? this.ascentDepths : this.bottomDepths).push(depth);
         return super.inspiredGas(sourceGas);
     }
 }
@@ -65,5 +68,18 @@ describe('Plan factory - Bailout emergency ascent', () => {
         PlanFactory.emergencyAscent(segments.items, options, [tank], recordingLoop);
 
         expect(recordingLoop.depths).toContain(15);
+    });
+
+    it('user defined ascent after the deepest point is breathed from the loop as ascent (e.g. eCCR deco setpoint)', () => {
+        const recordingLoop = new RecordingLoop(depthConverter);
+        const segments = PlanFactory.createPlan(30, 20, tank, options);
+        segments.add(15, tank, Time.oneMinute);
+        segments.addFlat(tank, Time.oneMinute * 3);
+
+        PlanFactory.emergencyAscent(segments.items, options, [tank], recordingLoop);
+
+        expect(recordingLoop.ascentDepths).toContain(15);
+        expect(recordingLoop.bottomDepths).toContain(30);
+        expect(recordingLoop.bottomDepths).not.toContain(15);
     });
 });

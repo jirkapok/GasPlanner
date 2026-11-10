@@ -49,7 +49,7 @@ The loop can't hold a ppO2 lower than the diluent ppO2 at the current depth (dil
 * Tank 2 is the **oxygen**. Its gas is always 100 % oxygen, you can change only its size and pressure.
 * Both tanks can't be removed. All other tanks are bailout tanks.
 
-When you switch to mCCR, the planner prepares the tanks without overwriting any of them: an existing oxygen tank is moved to position 2, otherwise a new 3 l/200 bar oxygen tank is added as tank 2. Switching back to open circuit keeps the order of the tanks.
+When you switch to mCCR or eCCR, the planner prepares the tanks without overwriting any of them: an existing oxygen tank is moved to position 2, otherwise a new oxygen tank (3 l/200 bar, in imperial units AL19/3000 psi) is added as tank 2. Switching back to open circuit keeps the order of the tanks.
 If tank 2 doesn't contain oxygen (e.g. in a shared link), the dive can't be calculated and the planner shows an error.
 
 ### Consumption

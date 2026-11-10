@@ -3,10 +3,10 @@
     <label for="descentSetpoint" class="form-label">{{ 'eccrOptions.descentSetpoint' | translate }} [bar]:</label>
     <input id="descentSetpoint" class="form-control" type="number" formControlName="descentSetpoint"
       required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
-      (input)="applyOptions()" [class.is-invalid]="descentSetpointInvalid" />
+      (input)="descentSetpointChanged()" [class.is-invalid]="descentSetpointInvalid" />
     @if (descentSetpointInvalid) {
       <div id="descentSetpointError" class="text-danger form-text position-absolute">
-        @if (descentAboveBottom) {
+        @if (descentAboveBottomAtDescent) {
           {{ 'eccrOptions.descentAboveBottom' | translate }}
         } @else {
           {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}
@@ -18,10 +18,15 @@
     <label for="bottomSetpoint" class="form-label">{{ 'eccrOptions.bottomSetpoint' | translate }} [bar]:</label>
     <input id="bottomSetpoint" class="form-control" type="number" formControlName="bottomSetpoint"
       required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
-      (input)="applyOptions()" [class.is-invalid]="bottomSetpointInvalid" />
+      (input)="bottomSetpointChanged()" [class.is-invalid]="bottomSetpointInvalid" />
     @if (bottomSetpointInvalid) {
-      <div class="text-danger form-text position-absolute">
-        {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}</div>
+      <div id="bottomSetpointError" class="text-danger form-text position-absolute">
+        @if (descentAboveBottomAtBottom) {
+          {{ 'eccrOptions.descentAboveBottom' | translate }}
+        } @else {
+          {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}
+        }
+      </div>
     }
   </div>
   <div class="mb-4 col col-12 col-sm-6 col-md-4">

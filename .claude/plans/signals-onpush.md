@@ -326,14 +326,14 @@ No tests for `app.component`, `footer`, `about`, `appinfo`, `language-dropdown`,
 
 **Flaky runs:** the first full run also failed to load `ndl-limits.component.spec.ts` ("Failed to fetch dynamically imported module"). It passed alone and in the full re-run.
 
-**Manual checklist (Step 4):** waiting for the user's review.)
+**Manual checklist (Step 4):** passed in the user's review, including the code review and rebase additions.)
 
 **Files:** all 56 `*.component.ts` under `projects/planner/src/app`, the `ChangeDetectionStrategy.Eager` test hosts in specs, `eslint.config.mjs`, `.claude/CLAUDE.md`.
 
 - [ ] **Step 1: Add the lint rule** `'@angular-eslint/prefer-on-push-component-change-detection': 'error'` to the `rules` of the `**/*.ts` block in `eslint.config.mjs`. Run `npm run lint`. Expected: one new error per component (56, plus spec test hosts), proving the rule is active.
 - [ ] **Step 2: Switch:** replace `ChangeDetectionStrategy.Eager` by `ChangeDetectionStrategy.OnPush` in every component, including spec test hosts. Keep it explicit (the rule requires the property even though OnPush is the Angular 22 default). Check with `grep -rn "ChangeDetectionStrategy.Eager" projects`, which should find nothing.
 - [ ] **Step 3: Run** `npm run test-ci`, `npm run test-lib-ci`, `npm run lint` (back at the baseline) and e2e on port 4300. Expected: all pass. A failing test points to a component missed in Tasks 3–9. Fix it there with the same patterns (signal, `markForCheck` on a dispatcher event, `refreshOnFormEvents`) and add a `renderOnPush` test for it.
-- [ ] **Step 4: Manual checklist** with `npm run start-pwa` (port 9090), confirmed by the user:
+- [x] **Step 4: Manual checklist** with `npm run start-pwa` (port 9090), confirmed by the user:
   - The calculation result, tank bars and the still-running spinner update.
   - Dive tabs: add, select and remove.
   - Edit a tank's O2, and check the depth gas dropdown follows.
@@ -358,3 +358,7 @@ Whole-branch `/code-review` after Task 10 found views left stale by the switch, 
 - **Emergency ascent:** emptying consumption now removes it too, a failed calculation kept the old ascent (`fix:`, also on `master`).
 - **`renderOnPush`:** no override and no JIT workaround, OnPush is the default. `onPush.testing.spec.ts` and `onPushChildren` are gone.
 - **`copyTanksConsumption`:** reads the tanks signal once.
+
+**Rebased on master 0.19.0:** the diff waypoints builder keeps its result in the `_wayPoints` signal, the master ICD test sets events through `updateDiveInfo`. Planner 883 tests, library 971 tests pass, lint planner 100 (2 `curly` errors from master in `diff-tabs-button`) / library 12. Manual checklist passed.
+
+**Deferred:** `ReloadDispatcher` options version stays global (finding 5); `TankBound.tank` stays public with `weight`/`sac` init-time writes (finding 6); `DepthsService` levels and `QuizService` state without signals; master's `markForCheck` on selection change in `diff-tabs-button` is probably redundant.

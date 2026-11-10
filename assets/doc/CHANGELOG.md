@@ -1,3 +1,10 @@
+## [0.18.2](https://github.com/jirkapok/GasPlanner/compare/v0.18.1...v0.18.2) (2026-11-10)
+
+
+### Bug Fixes
+
+* typos in isobaric counter diffusion warning ([#137](https://github.com/jirkapok/GasPlanner/issues/137)) ([2ae7b16](https://github.com/jirkapok/GasPlanner/commit/2ae7b168c5be0e471e89aa34aafe1c626f1257c2))
+
 ## [0.18.1](https://github.com/jirkapok/GasPlanner/compare/v0.18.0...v0.18.1) (2026-11-04)
 
 

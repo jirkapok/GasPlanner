@@ -200,6 +200,7 @@ export class DtoSerialization {
         dto.forEach(d => {
             const e = Event.create(d.type, d.timeStamp, d.depth);
             e.message = d.message;
+            e.value = d.value;
 
             if (d.gas) {
                 e.gas = DtoSerialization.toGas(d.gas);
@@ -218,6 +219,7 @@ export class DtoSerialization {
                 depth: e.depth,
                 type: e.type,
                 message: e.message,
+                value: e.value,
             };
 
             if (e.gas) {

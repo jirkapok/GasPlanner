@@ -73,6 +73,8 @@
         <strong>{{ event.timeStamp | duration:event.timeStamp
         }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
         <span>{{ 'diveIssues.highN2Switch' | translate }}</span>
+        <strong id="icdOverLimit" class="ms-1">{{ 'diveIssues.highN2SwitchOverLimit'
+          | translate:{ points: event.n2OverLimit | number:'1.0-1' } }}</strong>
       </div>
     }
     @if (event.isMndExceeded) {

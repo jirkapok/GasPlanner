@@ -8,7 +8,7 @@ import { DiveSchedules } from '../../shared/dive.schedules';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { BoundEvent } from '../../shared/models';
-import { EventsFactory, Time } from 'scuba-physics';
+import { EventsFactory, StandardGases, Time } from 'scuba-physics';
 
 describe('DiveIssuesComponent', () => {
     let component: DiveIssuesComponent;
@@ -42,5 +42,17 @@ describe('DiveIssuesComponent', () => {
         expect(element.querySelectorAll('.alert-danger').length).toBe(1);
         expect(element.querySelectorAll('.alert-warning').length).toBe(0);
         expect(highPpO2.isError).toBe(true);
+    });
+
+    it('shows nitrogen over the limit for isobaric counter diffusion', () => {
+        const units = TestBed.inject(UnitConversion);
+        const icd = new BoundEvent(units, EventsFactory.createIsobaricCounterDiffusion(Time.oneMinute, 21, StandardGases.ean50, 0.04));
+        vi.spyOn(component.dive, 'events', 'get').mockReturnValue([icd]);
+        fixture.componentRef.changeDetectorRef.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        const overLimit = element.querySelector('.alert-warning #icdOverLimit');
+        expect(overLimit?.textContent).toContain('diveIssues.highN2SwitchOverLimit');
+        expect(icd.n2OverLimit).toBe(4);
     });
 });

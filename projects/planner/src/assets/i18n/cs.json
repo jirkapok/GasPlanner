@@ -169,6 +169,12 @@
   "pscrOptions": { "injectionRatio": "Poměr výměny", "metabolicO2": "Spotřeba O2" },
   "mccrOptions": { "setpoint": "Cílový ppO2", "o2Flow": "Průtok O2", "loopVolume": "Objem smyčky", "metabolicO2": "Spotřeba O2" },
   "eccrOptions": { "descentSetpoint": "Setpoint pro sestup", "bottomSetpoint": "Setpoint na dně", "decoSetpoint": "Dekompresní setpoint", "setpointSwitchDepth": "Hloubka přepnutí setpointu", "descentAboveBottom": "Setpoint pro sestup nemůže být vyšší než setpoint na dně", "loopVolume": "Objem smyčky", "metabolicO2": "Spotřeba O2" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Lahev s dnovou směsí", "size": "Objem", "sac": "SAC:", "workingPressure": "Pracovní tlak", "startPressure": "Počáteční tlak" },
   "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
   "learn": {

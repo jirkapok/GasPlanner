@@ -21,6 +21,9 @@ import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { planTestProviders } from '../../../testing/plan.testing';
+import { TranslateService } from '@ngx-translate/core';
+import { CircuitType } from 'scuba-physics';
+import { useEnglishCircuitNames } from '../../shared/circuit-names.testing';
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -93,12 +96,29 @@ describe('PlanTabsComponent OnPush title', () => {
             imports: [MdbTabsModule, PlanTabsComponent],
             providers: planTestProviders
         });
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
         const fixture = await renderOnPush(PlanTabsComponent);
 
         TestBed.inject(DiveSchedules).selectedDepths.plannedDepth = 40;
         await fixture.whenStable();
 
-        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. 40 m');
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. OC 40 m');
+    });
+
+    it('renders title of circuit changed outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
+        const fixture = await renderOnPush(PlanTabsComponent);
+
+        // as the tanks card switches the circuit
+        TestBed.inject(DiveSchedules).selectedOptions.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. mCCR');
     });
 });
 

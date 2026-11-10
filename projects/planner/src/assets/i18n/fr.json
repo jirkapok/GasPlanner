@@ -169,6 +169,12 @@
   "pscrOptions": { "injectionRatio": "Rapport d'injection", "metabolicO2": "O2 métabolique" },
   "mccrOptions": { "setpoint": "ppO2 cible", "o2Flow": "Débit d'O2", "loopVolume": "Volume de la boucle", "metabolicO2": "O2 métabolique" },
   "eccrOptions": { "descentSetpoint": "Setpoint de descente", "bottomSetpoint": "Setpoint au fond", "decoSetpoint": "Setpoint de déco", "setpointSwitchDepth": "Profondeur de changement de setpoint", "descentAboveBottom": "Le setpoint de descente ne peut pas dépasser le setpoint au fond", "loopVolume": "Volume de la boucle", "metabolicO2": "O2 métabolique" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
   "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
   "learn": {

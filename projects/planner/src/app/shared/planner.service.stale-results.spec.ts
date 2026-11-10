@@ -11,6 +11,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { ConsumptionRequestDto, ConsumptionResultDto } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 /** Holds back the consumption results, so they can arrive after the dive was changed, like from a busy web worker */
 class DelayedConsumptionFactory extends WorkersFactoryCommon {
@@ -42,6 +43,7 @@ describe('PlannerService - stale consumption results', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
+                provideTestTranslate(),
                 { provide: WorkersFactoryCommon, useClass: DelayedConsumptionFactory },
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,

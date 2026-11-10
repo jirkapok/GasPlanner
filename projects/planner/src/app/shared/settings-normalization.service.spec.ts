@@ -11,6 +11,7 @@ import { DiveSchedules } from './dive.schedules';
 import { ViewStates } from './viewStates';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('SettingsNormalizationService', () => {
     let service: SettingsNormalizationService;
@@ -29,6 +30,7 @@ describe('SettingsNormalizationService', () => {
         TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 RouterTestingModule, UnitConversion,
                 SettingsNormalizationService, ReloadDispatcher,
                 ViewStates, DiveSchedules,

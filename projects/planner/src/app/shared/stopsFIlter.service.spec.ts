@@ -7,6 +7,7 @@ import { TestBedExtensions } from './TestbedExtensions.testing';
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
 import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('Stops filter', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
@@ -16,6 +17,7 @@ describe('Stops filter', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideTestTranslate(),
                 StopsFilter, UnitConversion,
                 DiveSchedules, ReloadDispatcher,
                 WayPointsService

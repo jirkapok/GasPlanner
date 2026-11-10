@@ -530,6 +530,12 @@
     "loopVolume": "Loop volume",
     "metabolicO2": "Metabolic O2"
   },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": {
     "cardTitle": "Bottom gas tank",
     "size": "Size",

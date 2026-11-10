@@ -14,6 +14,7 @@ import { PlannerService } from '../planner.service';
 import { ViewSwitchService } from '../viewSwitchService';
 import { ApplicationSettingsService } from '../ApplicationSettings';
 import { WorkersFactoryCommon } from '../serial.workers.factory';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ProfileComparatorService', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
@@ -25,6 +26,7 @@ describe('ProfileComparatorService', () => {
             declarations: [],
             imports: [],
             providers: [
+                provideTestTranslate(),
                 ProfileComparatorService, UnitConversion,
                 ReloadDispatcher, DiveSchedules,
                 PlannerService, ViewSwitchService,

@@ -169,6 +169,12 @@
   "pscrOptions": { "injectionRatio": "Dosierverhältnis", "metabolicO2": "Stoffwechsel-O2" },
   "mccrOptions": { "setpoint": "Ziel-ppO2", "o2Flow": "O2-Fluss", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
   "eccrOptions": { "descentSetpoint": "Abstiegs-Setpoint", "bottomSetpoint": "Grund-Setpoint", "decoSetpoint": "Deko-Setpoint", "setpointSwitchDepth": "Setpoint-Wechseltiefe", "descentAboveBottom": "Abstiegs-Setpoint darf nicht höher als der Grund-Setpoint sein", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Grundgasflasche", "size": "Größe", "sac": "SAC:", "workingPressure": "Betriebsdruck", "startPressure": "Startdruck" },
   "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
   "learn": {

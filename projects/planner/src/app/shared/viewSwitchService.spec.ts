@@ -6,6 +6,7 @@ import { UnitConversion } from './UnitConversion';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('View Switch service', () => {
     const o2Expected = 50;
@@ -17,6 +18,7 @@ describe('View Switch service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 ViewSwitchService, UnitConversion,
                 DiveSchedules, ReloadDispatcher
             ],

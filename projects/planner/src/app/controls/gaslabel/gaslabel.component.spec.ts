@@ -9,6 +9,7 @@ import { LanguageService } from '../../shared/language.service';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { TanksService } from '../../shared/tanks.service';
 import { DiveSchedule } from '../../shared/dive.schedules';
+import { englishCircuitNames } from '../../shared/circuit-names.testing';
 
 describe('Gas label component', () => {
     let component: GaslabelComponent;
@@ -86,7 +87,7 @@ describe('Gas label component shared tank', () => {
     });
 
     it('renders gas of first tank applied from nitrox calculator', async () => {
-        const dive = new DiveSchedule(0, units, dispatcher);
+        const dive = new DiveSchedule(0, units, dispatcher, englishCircuitNames());
         const fixture = await renderOnPush(GaslabelComponent, { tank: dive.tanksService.firstTank });
 
         dive.applyNitrox(50, 1.4);

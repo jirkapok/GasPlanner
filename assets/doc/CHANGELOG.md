@@ -1,3 +1,19 @@
+# [0.20.0](https://github.com/jirkapok/GasPlanner/compare/v0.19.1...v0.20.0) (2026-11-10)
+
+
+### Features
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR options state ([624ce99](https://github.com/jirkapok/GasPlanner/commit/624ce9948dca09763075219b1ef3114b40131dee))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR tanks card and options component ([aca0884](https://github.com/jirkapok/GasPlanner/commit/aca0884c15318c7dcc2ebcbb80022dad37ae24ba))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR url, validation and normalization ([80f9fd0](https://github.com/jirkapok/GasPlanner/commit/80f9fd096b2b58aa0160fb4519acd9232a8eaf28))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR breathing model ([2a89c6d](https://github.com/jirkapok/GasPlanner/commit/2a89c6d6b415e1a45701b5c9ffc3ae86312aa80b))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR deco setpoint and consumption ([bda8beb](https://github.com/jirkapok/GasPlanner/commit/bda8bebad9c2af07534ce175769cf07d76fd3c7e))
+
+
+### Performance Improvements
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) eCCR options use default OnPush change detection ([35aca73](https://github.com/jirkapok/GasPlanner/commit/35aca7346079443c97a712c6534cf9a9c6aa3a69))
+
 ## [0.19.1](https://github.com/jirkapok/GasPlanner/compare/v0.19.0...v0.19.1) (2026-11-10)
 
 

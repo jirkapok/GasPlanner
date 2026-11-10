@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -24,7 +24,6 @@ interface EccrForm {
 @Component({
     selector: 'app-eccr-options',
     templateUrl: './eccr-options.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, TranslatePipe]
 })
 export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy {

@@ -5,7 +5,7 @@ import { TanksService } from './tanks.service';
 import { UnitConversion } from './UnitConversion';
 import { ReloadDispatcher } from './reloadDispatcher';
 
-describe('TanksService - mCCR', () => {
+describe('TanksService - closed circuit', () => {
     let service: TanksService;
     let dispatcher: ReloadDispatcher;
 
@@ -25,16 +25,16 @@ describe('TanksService - mCCR', () => {
         dispatcher = TestBed.inject(ReloadDispatcher);
     });
 
-    describe('Prepare for mCCR', () => {
+    describe('Prepare for closed circuit', () => {
         it('keeps tanks when the second one is oxygen', () => {
             const original = load(21, 100, 50);
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             expect(service.tanks).toEqual(original);
         });
 
         it('moves oxygen to the second position', () => {
             const [air, ean50, oxygen] = load(21, 50, 100);
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             expect(service.tanks).toEqual([air, oxygen, ean50]);
             expect(service.tanks.map(t => t.id)).toEqual([1, 2, 3]);
         });
@@ -42,20 +42,20 @@ describe('TanksService - mCCR', () => {
         it('keeps the same tank instance referenced by depth levels', () => {
             const oxygen = load(21, 50, 100)[2];
             const levelTank = oxygen.tank;
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             expect(service.oxygenTank?.tank).toBe(levelTank);
         });
 
         it('first oxygen tank becomes the oxygen, the second one diluent', () => {
             const [oxygen, air] = load(100, 21);
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             expect(service.tanks).toEqual([air, oxygen]);
             expect(service.diluentTank).toBe(air);
         });
 
         it('inserts new oxygen tank without overwriting existing tanks', () => {
             const [air, ean50] = load(21, 50);
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             const tanks = service.tanks;
             expect(tanks.length).toBe(3);
             expect(tanks[0]).toBe(air);
@@ -68,7 +68,7 @@ describe('TanksService - mCCR', () => {
 
         it('adds air diluent when the only tank is oxygen', () => {
             const [oxygen] = load(100);
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             const tanks = service.tanks;
             expect(tanks.length).toBe(2);
             expect(tanks[0].tank.gas.compositionEquals(StandardGases.air)).toBe(true);
@@ -78,7 +78,7 @@ describe('TanksService - mCCR', () => {
         it('notifies tanks reloaded once', () => {
             load(21);
             const reloaded = vi.spyOn(dispatcher, 'sendTanksReloaded');
-            service.prepareForMccr();
+            service.prepareForClosedCircuit();
             expect(reloaded).toHaveBeenCalledExactlyOnceWith(service);
         });
     });
@@ -89,6 +89,13 @@ describe('TanksService - mCCR', () => {
             expect(service.canRemove(tanks[0], CircuitType.mccr)).toBe(false);
             expect(service.canRemove(tanks[1], CircuitType.mccr)).toBe(false);
             expect(service.canRemove(tanks[2], CircuitType.mccr)).toBe(true);
+        });
+
+        it('protects diluent and oxygen in eCCR', () => {
+            const tanks = load(21, 100, 50);
+            expect(service.canRemove(tanks[0], CircuitType.eccr)).toBe(false);
+            expect(service.canRemove(tanks[1], CircuitType.eccr)).toBe(false);
+            expect(service.canRemove(tanks[2], CircuitType.eccr)).toBe(true);
         });
 
         it('allows removing second tank in other circuits', () => {

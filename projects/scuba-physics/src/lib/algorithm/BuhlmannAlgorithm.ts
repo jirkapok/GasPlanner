@@ -38,11 +38,11 @@ export class BuhlmannAlgorithm {
      * usually at small depths (bellow 10 meters).
      */
     public noDecoLimit(algorithmParams: AlgorithmParams): number {
-        const { segments, gases, options, surfaceInterval, breathing } = algorithmParams;
+        const { segments, gases, options, surfaceInterval, breathing, startAscentIndex } = algorithmParams;
         const depthConverter = new DepthConverterFactory(options).create();
         const rested = this.applySurfaceInterval(surfaceInterval);
         const context = AlgorithmContext.createForCeilings(gases, segments, options, depthConverter, breathing, rested.finalTissues);
-        return this.swimNoDecoLimit(segments, gases, breathing, context);
+        return this.swimNoDecoLimit(segments, gases, breathing, context, startAscentIndex);
     }
 
     /**
@@ -91,7 +91,9 @@ export class BuhlmannAlgorithm {
             options, depthConverter, breathing, rested.finalTissues);
         let previous: number | undefined;
 
-        for (const segment of profile) {
+        for (let index = 0; index < profile.length; index++) {
+            const segment = profile[index];
+            context.isAscent = index >= dive.startAscentIndex;
             let depth = segment.startDepth;
 
             for (let elapsed = 0; elapsed < segment.duration; elapsed += Time.oneSecond) {
@@ -169,7 +171,7 @@ export class BuhlmannAlgorithm {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = AlgorithmContext.createForFullStatistics(gases, newSegments, options, depthConverter, breathing,
             rested.finalTissues);
-        this.swimPlan(context);
+        this.swimPlan(context, algorithmParams.startAscentIndex);
         return this.toFullProfile(context, algorithmParams);
     }
 
@@ -192,7 +194,7 @@ export class BuhlmannAlgorithm {
         const depthConverter = new DepthConverterFactory(options).create();
         const context = AlgorithmContext.createWithoutStatistics(gases, newSegments, options, depthConverter, breathing,
             rested.finalTissues);
-        this.swimPlan(context);
+        this.swimPlan(context, algorithmParams.startAscentIndex);
         context.markAverageDepth();
         context.isAscent = true;
         let nextStop = context.nextStop(context.currentDepth);
@@ -380,12 +382,17 @@ export class BuhlmannAlgorithm {
         return breathing.validate();
     }
 
-    private swimPlan(context: AlgorithmContext): void {
+    /**
+     * Swims all segments of the context.
+     * @param startAscentIndex segments from this index are breathed as ascent (e.g. eCCR deco setpoint)
+     */
+    private swimPlan(context: AlgorithmContext, startAscentIndex: number): void {
         const segments = context.segments.items;
         // initial ceiling doesn't have to be 0m, because of previous tissues loading.
         context.addStatistics(segments[0].startDepth);
 
-        segments.forEach(segment => {
+        segments.forEach((segment, index) => {
+            context.isAscent = index >= startAscentIndex;
             this.swim(context, segment);
         });
     }
@@ -412,14 +419,15 @@ export class BuhlmannAlgorithm {
     /**
      * Simply continue from currently planned segments, expecting diver stays in the same depth breathing the same gas.
      */
-    private swimNoDecoLimit(segments: Segments, gases: Gases, breathing: BreathingModel, context: AlgorithmContext): number {
+    private swimNoDecoLimit(segments: Segments, gases: Gases, breathing: BreathingModel, context: AlgorithmContext,
+        startAscentIndex: number): number {
         const errorMessages = this.validate(segments, gases, breathing);
         if (errorMessages.length > 0) {
             return 0;
         }
 
         // possible performance optimization: don't swim the whole profile, only till we reach NDL
-        this.swimPlan(context);
+        this.swimPlan(context, startAscentIndex);
         // We may already passed the Ndl during descent or user defined profile
 
         const currentNdl = this.currentNdl(context.ceilings);

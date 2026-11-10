@@ -1,0 +1,70 @@
+<div class="row" [formGroup]="eccrForm">
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="descentSetpoint" class="form-label">{{ 'eccrOptions.descentSetpoint' | translate }} [bar]:</label>
+    <input id="descentSetpoint" class="form-control" type="number" formControlName="descentSetpoint"
+      required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
+      (input)="applyOptions()" [class.is-invalid]="descentSetpointInvalid" />
+    @if (descentSetpointInvalid) {
+      <div id="descentSetpointError" class="text-danger form-text position-absolute">
+        @if (descentAboveBottom) {
+          {{ 'eccrOptions.descentAboveBottom' | translate }}
+        } @else {
+          {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}
+        }
+      </div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="bottomSetpoint" class="form-label">{{ 'eccrOptions.bottomSetpoint' | translate }} [bar]:</label>
+    <input id="bottomSetpoint" class="form-control" type="number" formControlName="bottomSetpoint"
+      required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
+      (input)="applyOptions()" [class.is-invalid]="bottomSetpointInvalid" />
+    @if (bottomSetpointInvalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="decoSetpoint" class="form-label">{{ 'eccrOptions.decoSetpoint' | translate }} [bar]:</label>
+    <input id="decoSetpoint" class="form-control" type="number" formControlName="decoSetpoint"
+      required [min]="ranges.setpoint[0]" [max]="ranges.setpoint[1]" step="0.05"
+      (input)="applyOptions()" [class.is-invalid]="decoSetpointInvalid" />
+    @if (decoSetpointInvalid) {
+      <div id="decoSetpointError" class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.setpointLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="setpointSwitchDepth" class="form-label">{{ 'eccrOptions.setpointSwitchDepth' | translate }}
+      [{{ units.length }}]:</label>
+    <input id="setpointSwitchDepth" class="form-control" type="number" formControlName="setpointSwitchDepth"
+      required [min]="ranges.setpointSwitchDepth[0]" [max]="ranges.setpointSwitchDepth[1]" step="1"
+      (input)="applyOptions()" [class.is-invalid]="setpointSwitchDepthInvalid" />
+    @if (setpointSwitchDepthInvalid) {
+      <div id="setpointSwitchDepthError" class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.setpointSwitchDepthLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="eccrLoopVolume" class="form-label">{{ 'eccrOptions.loopVolume' | translate }}
+      [{{ units.volume }}]:</label>
+    <input id="eccrLoopVolume" class="form-control" type="number" formControlName="loopVolume"
+      required [min]="ranges.loopVolume[0]" [max]="ranges.loopVolume[1]" [step]="volumeStep"
+      (input)="applyOptions()" [class.is-invalid]="loopVolumeInvalid" />
+    @if (loopVolumeInvalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.loopVolumeLabel }}</div>
+    }
+  </div>
+  <div class="mb-4 col col-12 col-sm-6 col-md-4">
+    <label for="eccrMetabolicO2" class="form-label">{{ 'eccrOptions.metabolicO2' | translate }}
+      [{{ units.volume }}/min]:</label>
+    <input id="eccrMetabolicO2" class="form-control" type="number" formControlName="metabolicO2"
+      required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" [step]="volumeStep"
+      (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
+    @if (metabolicO2Invalid) {
+      <div class="text-danger form-text position-absolute">
+        {{ 'validation.needsNumber' | translate }} {{ ranges.metabolicO2Label }}</div>
+    }
+  </div>
+</div>

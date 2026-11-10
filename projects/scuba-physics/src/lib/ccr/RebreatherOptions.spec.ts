@@ -33,6 +33,42 @@ describe('Rebreather options', () => {
         expect(sut.o2Flow).toBeCloseTo(0.8, 6);
     });
 
+    it('defaults eCCR setpoints, switch depth and oxygen loss', () => {
+        const sut = new RebreatherOptions();
+        expect(sut.descentSetpoint).toBeCloseTo(0.7, 6);
+        expect(sut.bottomSetpoint).toBeCloseTo(1.1, 6);
+        expect(sut.decoSetpoint).toBeCloseTo(1.3, 6);
+        expect(sut.setpointSwitchDepth).toBeCloseTo(20, 6);
+        expect(sut.o2Loss).toBeCloseTo(0.1, 6);
+    });
+
+    it('loads eCCR values', () => {
+        const sut = new RebreatherOptions();
+        const source = new RebreatherOptions(CircuitType.eccr);
+        source.descentSetpoint = 0.5;
+        source.bottomSetpoint = 1.2;
+        source.decoSetpoint = 1.4;
+        source.setpointSwitchDepth = 10;
+        source.o2Loss = 0.2;
+        sut.loadFrom(source);
+        expect(sut.descentSetpoint).toBeCloseTo(0.5, 6);
+        expect(sut.bottomSetpoint).toBeCloseTo(1.2, 6);
+        expect(sut.decoSetpoint).toBeCloseTo(1.4, 6);
+        expect(sut.setpointSwitchDepth).toBeCloseTo(10, 6);
+        expect(sut.o2Loss).toBeCloseTo(0.2, 6);
+    });
+
+    it('keeps eCCR defaults when loading legacy values', () => {
+        const sut = new RebreatherOptions();
+        const legacy = { circuit: CircuitType.mccr, metabolicO2: 1, loopVolume: 6, injectionRatio: 8, setpoint: 1.3 } as RebreatherOptions;
+        sut.loadFrom(legacy);
+        expect(sut.descentSetpoint).toBeCloseTo(0.7, 6);
+        expect(sut.bottomSetpoint).toBeCloseTo(1.1, 6);
+        expect(sut.decoSetpoint).toBeCloseTo(1.3, 6);
+        expect(sut.setpointSwitchDepth).toBeCloseTo(20, 6);
+        expect(sut.o2Loss).toBeCloseTo(0.1, 6);
+    });
+
     it('loads all values', () => {
         const sut = new RebreatherOptions();
         const source = new RebreatherOptions(CircuitType.eccr, 1.5, 4);

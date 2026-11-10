@@ -86,6 +86,11 @@ export class SettingsNormalizationService {
             rebreather.o2Flow, this.ranges.o2Flow, this.units.ranges.rmvRounding);
         rebreather.loopVolume = this.fitUnit(v => this.units.fromLiter(v), v => this.units.toLiter(v),
             rebreather.loopVolume, this.ranges.loopVolume, this.units.ranges.rmvRounding);
+        rebreather.descentSetpoint = this.fitUnit(u => u, v => v, rebreather.descentSetpoint, this.ranges.setpoint, 2);
+        rebreather.bottomSetpoint = this.fitUnit(u => u, v => v, rebreather.bottomSetpoint, this.ranges.setpoint, 2);
+        rebreather.decoSetpoint = this.fitUnit(u => u, v => v, rebreather.decoSetpoint, this.ranges.setpoint, 2);
+        rebreather.setpointSwitchDepth = this.fitUnit(v => this.units.fromMeters(v), v => this.units.toMeters(v),
+            rebreather.setpointSwitchDepth, this.ranges.setpointSwitchDepth);
     }
 
     private normalizeTanks(tanksService: TanksService): void {

@@ -178,7 +178,7 @@ describe('Managed Schedules', () => {
 
         it('Copies mCCR options and tanks', () => {
             const source = schedules.selected;
-            source.tanksService.prepareForMccr();
+            source.tanksService.prepareForClosedCircuit();
             const options = source.optionsService;
             options.circuit = CircuitType.mccr;
             options.setpoint = 1.1;

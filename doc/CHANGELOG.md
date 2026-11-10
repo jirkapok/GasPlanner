@@ -1,3 +1,10 @@
+# [0.19.0](https://github.com/jirkapok/GasPlanner/compare/v0.18.2...v0.19.0) (2026-11-10)
+
+
+### Features
+
+* show nitrogen points over the limit in ICD warning ([#136](https://github.com/jirkapok/GasPlanner/issues/136)) ([4fcb6d9](https://github.com/jirkapok/GasPlanner/commit/4fcb6d91ff835aaa01788338f47b413ad577148d))
+
 ## [0.18.2](https://github.com/jirkapok/GasPlanner/compare/v0.18.1...v0.18.2) (2026-11-10)
 
 

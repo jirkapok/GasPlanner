@@ -161,9 +161,10 @@ export class ValidatorGroups {
     /** Has to be >= 0 */
     public restInterval(): ValidatorFn {
         return (control: AbstractControl): ValidationErrors | null => {
-            const value: unknown = control.value;
+            const value = control.value;
+            const parsed = DateFormats.parseToShortTime(value);
 
-            if (typeof value !== 'number' || !(value >= 0)) {
+            if (typeof parsed !== 'number' || !(parsed >= 0)) {
                 return { restInterval: true };
             }
 

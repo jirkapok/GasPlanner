@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MaskitoDirective } from '@maskito/angular';
@@ -17,6 +17,7 @@ import { DateFormats } from '../../shared/formaters';
     selector: 'app-rest-interval',
     templateUrl: './rest-interval.component.html',
     styleUrls: ['./rest-interval.component.scss'],
+    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MaskitoDirective,
         ReactiveFormsModule,
@@ -44,8 +45,8 @@ export class RestIntervalComponent extends Streamed implements OnInit {
     }
 
     public get restIntervalInvalid(): boolean {
-        const surfaceControl = this.form.get(this.controlName) as AbstractControl;
-        return this.inputs.controlInValid(surfaceControl);
+        const restControl = this.form.get(this.controlName) as AbstractControl;
+        return this.inputs.controlInValid(restControl);
     }
 
     private get restInterval(): string {

@@ -2102,13 +2102,13 @@ Decisions made while detailing (confirmed with the user 2026-10-21, or derived f
 - [x] Status
 
 ##### Stage 4 finish (issue #26 stays open)
-- [ ] Status
+- [x] Status
 
 Runs with `superpowers:finishing-a-development-branch`, after the final review is clean.
 
 - [x] Check the branch for closing keywords: `git log master..HEAD --format='%s%n%b' | grep -inE '(close[sd]?|fix(e[sd])?|resolve[sd]?):? *#26'`. Expected: no output; reword any match with my approval.
-- [ ] The PR body (if a PR is used) says `Part of #26`; a local merge commit message gets the same check.
-- [ ] After the merge into `master` is pushed: `gh issue view 26 --json state,body` → `OPEN` (otherwise `gh issue reopen 26` and tell me which commit closed it). Tick exactly the one task-list row mentioning eCCR (save body to the scratchpad, change `- [ ]` → `- [x]`, show me the diff, `gh issue edit 26 --body-file <file>` after my confirmation). Zero or several matching rows → ask me.
+- [x] The PR body (if a PR is used) says `Part of #26`; a local merge commit message gets the same check.
+- [x] After the merge into `master` is pushed: `gh issue view 26 --json state,body` → `OPEN` (otherwise `gh issue reopen 26` and tell me which commit closed it). Tick exactly the one task-list row mentioning eCCR (save body to the scratchpad, change `- [ ]` → `- [x]`, show me the diff, `gh issue edit 26 --body-file <file>` after my confirmation). Zero or several matching rows → ask me.
 - [x] Mark `### Stage 4: eCCR` `- [x] Status` in this plan.
 
 ### Stage 5: CCR results UI

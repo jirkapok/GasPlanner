@@ -27,7 +27,7 @@ The gas you breathe from the loop is leaner than the supply gas, because your bo
 * `Injection ratio`: Ratio of breathed volume to dumped volume. E.g. 8 means 1/8 of each breath is replaced with fresh supply gas. Range 4 - 20, default 8.
 * `Metabolic O2 [l/min]`: Oxygen consumed by your body. Range 0.5 - 4 l/min, default 1 l/min.
 
-The loop gas gets leaner when you ascend, because less fresh gas is added at lower ambient pressure. At shallow depths the loop may become hypoxic, even with a nitrox supply gas. In such case the planner shows `Low ppO2` warning.
+The loop gas gets leaner when you ascend, because less fresh gas is added at lower ambient pressure. At shallow depths the loop may become hypoxic, even with a nitrox supply gas. In such case the planner shows `Loop ppO2 out of range` error.
 The decompression, oxygen toxicity (CNS, OTU), gas density and narcotic depth are calculated from the loop gas.
 
 Gas consumption of the supply tank is `RMV × ambient pressure / injection ratio`, which is much lower than for open circuit.
@@ -85,4 +85,4 @@ The emergency ascent is used to calculate the rock bottom reserve. The user defi
 
 * The eCCR oxygen losses are fixed at 10 % of the metabolic O2.
 * The pSCR loop gas is calculated as a steady state. Changes of the loop after depth or gas change are not modeled.
-* A hypoxic loop (ppO2 below 0.18 bar) is shown as `Low ppO2` warning. A loop with too high ppO2 isn't reported yet, the high ppO2 warning is evaluated for the supply gas (pSCR) or diluent (mCCR, eCCR).
+* For rebreathers the planner checks the loop ppO2 instead of the tank gas. A loop ppO2 below 0.18 bar or above the maximum ppO2 (maximum deco ppO2 after the deepest point of the dive) is shown as `Loop ppO2 out of range` error, together with the loop ppO2 and the allowed range. It is shown once, when the loop gets out of range, again only after it was within the range.

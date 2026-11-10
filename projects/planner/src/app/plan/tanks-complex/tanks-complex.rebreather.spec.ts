@@ -198,6 +198,13 @@ describe('Tanks Complex component - Rebreather', () => {
         expect(rebreatherPage.mccrOptions).toBeDefined();
     });
 
+    it('options of all rebreathers rendered together have unique ids', () => {
+        const ids = fixture.debugElement.queryAll(By.css('app-pscr-options [id], app-mccr-options [id], app-eccr-options [id]'))
+            .map(e => (e.nativeElement as HTMLElement).id);
+        const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+        expect(duplicates).toEqual([]);
+    });
+
     it('selecting pSCR switches circuit and fires options change', () => {
         rebreatherPage.selectPscr();
 

@@ -10,9 +10,9 @@
     }
   </div>
   <div class="mb-4 col col-12 col-sm-6 col-md-4">
-    <label for="metabolicO2" class="form-label">{{ 'pscrOptions.metabolicO2' | translate }}
+    <label for="pscrMetabolicO2" class="form-label">{{ 'pscrOptions.metabolicO2' | translate }}
       [{{ units.volume }}/min]:</label>
-    <input id="metabolicO2" class="form-control" type="number" formControlName="metabolicO2"
+    <input id="pscrMetabolicO2" class="form-control" type="number" formControlName="metabolicO2"
       required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" [step]="metabolicO2Step"
       (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
     @if (metabolicO2Invalid) {

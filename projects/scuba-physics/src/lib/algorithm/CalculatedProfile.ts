@@ -38,6 +38,8 @@ export enum EventType {
     maxDepth = 14,
     /* Unable ot switch to bottom gas, in case of generating air breaks */
     missingAirBreak = 15,
+    /* Rebreather loop ppO2 is lower than minimum or higher than maximum ppO2, value contains the loop ppO2 */
+    ppO2OutOfRange = 16,
 }
 
 export class Event {
@@ -92,6 +94,13 @@ export class EventsFactory {
 
     public static createHighPpO2(timeStamp: number, depth: number): Event {
         return Event.create(EventType.highPpO2, timeStamp, depth);
+    }
+
+    /** @param ppO2 loop oxygen partial pressure in bars */
+    public static createPpO2OutOfRange(timeStamp: number, depth: number, ppO2: number): Event {
+        const event = Event.create(EventType.ppO2OutOfRange, timeStamp, depth);
+        event.value = ppO2;
+        return event;
     }
 
     public static createHighAscentSpeed(timeStamp: number, depth: number): Event {

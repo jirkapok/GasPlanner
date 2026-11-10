@@ -61,8 +61,8 @@ class EventsContext {
     public elapsed = 0;
     public index = 0;
     public fixedMnd = true;
-    /** Rebreather loop was hypoxic at end of previous segment */
-    public loopHypoxic = false;
+    /** Rebreather loop ppO2 was out of range in previous segment */
+    public loopOutOfRange = false;
     public maxDensity: number;
     private levels: DepthLevels;
     private breathing: BreathingModel;
@@ -221,8 +221,7 @@ export class ProfileEvents {
         for (context.index = 0; context.index < eventOptions.profile.length; context.index++) {
             // nice to have calculate exact time and depth of the events, it is enough it happened
             const pressureSegment = this.toPressureSegment(context.current, context.simpleDepths);
-            this.addHighPpO2(context, pressureSegment);
-            this.addLowPpO2(context, pressureSegment);
+            this.addPpO2Events(context, pressureSegment);
             this.addGasSwitch(context);
             this.addUserTankSwitch(context);
             this.addHighDescentSpeed(context);
@@ -291,6 +290,17 @@ export class ProfileEvents {
         return new PressureSegment(startPressure, endPressure, segment.duration);
     }
 
+    /** Rebreathers report the loop ppO2, open circuit the tank gas */
+    private static addPpO2Events(context: EventsContext, segment: PressureSegment): void {
+        if (context.breathesLoop) {
+            this.addLoopPpO2OutOfRange(context);
+            return;
+        }
+
+        this.addHighPpO2(context, segment);
+        this.addLowPpO2(context, segment);
+    }
+
     private static addHighPpO2(context: EventsContext, segment: PressureSegment): void {
         // non user defined gas switches are never to high ppO2 - see gases.bestGas
         // otherwise we don't know which ppO2 level to use
@@ -313,29 +323,31 @@ export class ProfileEvents {
         }
     }
 
-    /** Reported once at segment where the loop becomes hypoxic, again only after it recovered */
-    private static addLowLoopPpO2(context: EventsContext): void {
+    /**
+     * Reported once at segment where the loop ppO2 gets out of range, again only after it recovered.
+     * The loop ppO2 changes linearly with depth, so its extremes are at the segment start or end.
+     */
+    private static addLoopPpO2OutOfRange(context: EventsContext): void {
         const current = context.current;
-        const minDepth = Math.min(current.startDepth, current.endDepth);
-        const hypoxic = context.ppO2At(minDepth) < GasMixtures.minPpO2;
+        const maxPpO2 = context.maxPpo;
+        const isOutOfRange = (ppO2: number): boolean => ppO2 < GasMixtures.minPpO2 || ppO2 > maxPpO2;
+        const startPpO2 = context.ppO2At(current.startDepth);
+        const endPpO2 = context.ppO2At(current.endDepth);
+        const outOfRangeAtStart = isOutOfRange(startPpO2);
+        const outOfRange = outOfRangeAtStart || isOutOfRange(endPpO2);
 
-        if (hypoxic && !context.loopHypoxic) {
-            const hypoxicAtStart = context.ppO2At(current.startDepth) < GasMixtures.minPpO2;
-            const timeStamp = hypoxicAtStart ? context.elapsed : context.currentEndTime;
-            const depth = hypoxicAtStart ? current.startDepth : current.endDepth;
-            const event = EventsFactory.createLowPpO2(timeStamp, depth);
+        if (outOfRange && !context.loopOutOfRange) {
+            const timeStamp = outOfRangeAtStart ? context.elapsed : context.currentEndTime;
+            const depth = outOfRangeAtStart ? current.startDepth : current.endDepth;
+            const ppO2 = outOfRangeAtStart ? startPpO2 : endPpO2;
+            const event = EventsFactory.createPpO2OutOfRange(timeStamp, depth, ppO2);
             context.events.add(event);
         }
 
-        context.loopHypoxic = hypoxic;
+        context.loopOutOfRange = outOfRange;
     }
 
     private static addLowPpO2(context: EventsContext, segment: PressureSegment): void {
-        if (context.breathesLoop) {
-            this.addLowLoopPpO2(context);
-            return;
-        }
-
         const current = context.current;
         const gasCeiling = current.gas.ceiling(context.simpleDepths.surfacePressure);
         const shouldAdd = (segment.minDepth < gasCeiling && context.switchingGas) ||

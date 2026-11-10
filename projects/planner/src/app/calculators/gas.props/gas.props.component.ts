@@ -45,7 +45,6 @@ export class GasPropertiesCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         settings: ApplicationSettingsService,
@@ -66,17 +65,17 @@ export class GasPropertiesCalcComponent implements OnInit {
 
     public get gasHeInvalid(): boolean {
         const heControl = this.gasForm.controls.he;
-        return this.inputs.controlInValid(heControl);
+        return InputControls.isControlInvalid(heControl);
     }
 
     public get depthInvalid(): boolean {
         const depthControl = this.gasForm.controls.depth;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get narcoticDepthInvalid(): boolean {
         const mndLimitControl = this.gasForm.controls.mndLimit;
-        return this.inputs.controlInValid(mndLimitControl);
+        return InputControls.isControlInvalid(mndLimitControl);
     }
 
     public get nitrogen(): number {

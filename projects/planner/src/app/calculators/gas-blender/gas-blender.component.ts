@@ -52,7 +52,6 @@ export class GasBlenderComponent implements OnInit {
         public calc: GasBlenderService,
         public pricing: BlendPricingService,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder) {
     }
@@ -63,29 +62,29 @@ export class GasBlenderComponent implements OnInit {
 
     public get sourceHeInvalid(): boolean {
         const control = this.blenderForm.controls.sourceHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get topMixHeInvalid(): boolean {
         const control = this.blenderForm.controls.topMixHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get targetHeInvalid(): boolean {
         const control = this.blenderForm.controls.targetHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     // we don't need working pressure for source and target,
     // since don't count with volume only percentage
     public get sourcePressureInvalid(): boolean {
         const control = this.blenderForm.controls.sourcePressure;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get targetPressureInvalid(): boolean {
         const control = this.blenderForm.controls.targetPressure;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get finalPressureBelowSource(): boolean {
@@ -102,17 +101,17 @@ export class GasBlenderComponent implements OnInit {
 
     public get o2UnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.o2UnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get heUnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.heUnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get topMixUnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.topMixUnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public ngOnInit(): void {

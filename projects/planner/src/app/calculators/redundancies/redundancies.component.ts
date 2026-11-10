@@ -36,12 +36,13 @@ export class RedundanciesComponent implements OnInit {
     public redForm!: FormGroup<RedundanciesForm>;
     public calc: RedundanciesService;
 
-    constructor(public location: Location,
+    constructor(
+        public location: Location,
         public units: UnitConversion,
         private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls) {
+    ) {
         this.calc = new RedundanciesService(this.units);
     }
 
@@ -59,32 +60,32 @@ export class RedundanciesComponent implements OnInit {
 
     public get firstTankSizeInvalid(): boolean {
         const firstTankSize = this.redForm.controls.firstTankSize;
-        return this.inputs.controlInValid(firstTankSize);
+        return InputControls.isControlInvalid(firstTankSize);
     }
 
     public get firstTankWorkPressureInvalid(): boolean {
         const firstTankWorkPressure = this.redForm.controls.firstTankWorkPressure;
-        return this.inputs.controlInValid(firstTankWorkPressure);
+        return InputControls.isControlInvalid(firstTankWorkPressure);
     }
 
     public get firstTankPressureInvalid(): boolean {
         const firstTankPressure = this.redForm.controls.firstTankPressure;
-        return this.inputs.controlInValid(firstTankPressure);
+        return InputControls.isControlInvalid(firstTankPressure);
     }
 
     public get secondTankSizeInvalid(): boolean {
         const secondTankSize = this.redForm.controls.secondTankSize;
-        return this.inputs.controlInValid(secondTankSize);
+        return InputControls.isControlInvalid(secondTankSize);
     }
 
     public get secondTankWorkPressureInvalid(): boolean {
         const secondTankWorkPressure = this.redForm.controls.secondTankWorkPressure;
-        return this.inputs.controlInValid(secondTankWorkPressure);
+        return InputControls.isControlInvalid(secondTankWorkPressure);
     }
 
     public get secondTankPressureInvalid(): boolean {
         const secondTankPressure = this.redForm.controls.secondTankPressure;
-        return this.inputs.controlInValid(secondTankPressure);
+        return InputControls.isControlInvalid(secondTankPressure);
     }
 
     public ngOnInit(): void {

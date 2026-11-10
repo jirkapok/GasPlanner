@@ -83,7 +83,6 @@ import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlService } from './shared/ndl.service';
 import { OptionsService } from './shared/options.service';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
-import { InputControls } from './shared/inputcontrols';
 import { ValidatorGroups } from './shared/ValidatorGroups';
 import { DepthsService } from './shared/depths.service';
 import { TanksService } from './shared/tanks.service';
@@ -220,7 +219,6 @@ const SERVICES = [
     DiveResults,
     DiveSchedules,
     GasBlenderService,
-    InputControls,
     ManagedDiveSchedules,
     NdlService,
     NitroxCalculatorService,

@@ -35,7 +35,6 @@ export class AltitudeCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage) {
@@ -49,12 +48,12 @@ export class AltitudeCalcComponent implements OnInit {
 
     public get pressureInvalid(): boolean {
         const pressureControl = this.altitudeForm.controls.pressure;
-        return this.inputs.controlInValid(pressureControl);
+        return InputControls.isControlInvalid(pressureControl);
     }
 
     public get actualDepthInvalid(): boolean {
         const depthControl = this.altitudeForm.controls.actualDepth;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get calcAltitude(): number {

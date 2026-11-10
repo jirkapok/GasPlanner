@@ -32,7 +32,6 @@ export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
@@ -45,11 +44,11 @@ export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get injectionRatioInvalid(): boolean {
-        return this.inputs.controlInValid(this.rebreatherForm.controls.injectionRatio);
+        return InputControls.isControlInvalid(this.rebreatherForm.controls.injectionRatio);
     }
 
     public get metabolicO2Invalid(): boolean {
-        return this.inputs.controlInValid(this.rebreatherForm.controls.metabolicO2);
+        return InputControls.isControlInvalid(this.rebreatherForm.controls.metabolicO2);
     }
 
     /** Volume per minute the same as diver rmv */

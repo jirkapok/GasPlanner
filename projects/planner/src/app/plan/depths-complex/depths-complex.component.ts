@@ -46,7 +46,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     constructor(
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
@@ -88,13 +87,13 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public depthItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index);
         const endDepth = level.controls.endDepth;
-        return this.inputs.controlInValid(endDepth);
+        return InputControls.isControlInvalid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index);
         const duration = level.controls.duration;
-        return this.inputs.controlInValid(duration);
+        return InputControls.isControlInvalid(duration);
     }
 
     public startDepth(index: number): number {

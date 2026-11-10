@@ -128,6 +128,7 @@
     "brokenCeiling": "Byla překročena minimální bezpečná (stropní) hloubka! Upravte plán na menší hloubku v tomto bodě.",
     "lowPpo2": "Byl dosažen nízký parciální tlak kyslíku (překročena minimální hloubka)! Hrozí riziko hypoxie. Použijte plyn s vyšším obsahem kyslíku.",
     "highPpo2": "Byl dosažen vysoký parciální tlak kyslíku (překročena maximální hloubka)! Hrozí riziko kyslíkové toxicity. Snižte hloubku nebo použijte plyn s nižším obsahem kyslíku.",
+    "loopPpO2OutOfRange": "Parciální tlak kyslíku ve smyčce rebreatheru {{ppO2}} bar je mimo bezpečný rozsah {{min}} - {{max}} bar (dekomprese {{maxDeco}} bar)! Změňte setpoint nebo použijte diluent s jiným obsahem kyslíku.",
     "highDescentSpeed": "Vysoká rychlost sestupu! Sestupujte déle nebo do menší hloubky.",
     "highAscentSpeed": "Vysoká rychlost výstupu! Vystupujte pouze do menší hloubky nebo vystupujte déle.",
     "highN2Switch": "Přepnutí na plyn s vyšším obsahem dusíku se nedoporučuje! Hrozí riziko izobarické kontradifúze (ICD). Přepněte na jiný plyn s vyšším obsahem helia nebo nižším obsahem dusíku.",

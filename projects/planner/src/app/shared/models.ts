@@ -402,6 +402,10 @@ export class BoundEvent {
         return this.event.type === EventType.missingAirBreak;
     }
 
+    public get isPpO2OutOfRange(): boolean {
+        return this.event.type === EventType.ppO2OutOfRange;
+    }
+
     public get timeStamp(): number {
         return this.event.timeStamp;
     }
@@ -416,6 +420,11 @@ export class BoundEvent {
     public get n2OverLimit(): number {
         const fraction = this.event.value ?? 0;
         return Precision.round(fraction * 100, 1);
+    }
+
+    /** Rebreather loop ppO2 in bars rounded to two decimals, 0 for other events */
+    public get ppO2(): number {
+        return Precision.round(this.event.value ?? 0, 2);
     }
 
     /** Name of the gas associated with the event, empty if the event has no gas */
@@ -440,6 +449,7 @@ export class BoundEvent {
             case EventType.brokenCeiling:
             case EventType.lowPpO2:
             case EventType.highPpO2:
+            case EventType.ppO2OutOfRange:
                 return EventSeverity.error;
 
             case EventType.highAscentSpeed:

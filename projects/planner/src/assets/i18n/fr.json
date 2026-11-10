@@ -128,6 +128,7 @@
     "brokenCeiling": "Profondeur de sécurité minimale (plafond) dépassée ! Modifiez votre plan pour une profondeur plus faible à ce moment.",
     "lowPpo2": "Faible pression partielle d'oxygène atteinte (profondeur minimale dépassée) ! Il existe un risque d'hypoxie. Utilisez un gaz avec une teneur en oxygène plus élevée.",
     "highPpo2": "Pression partielle d'oxygène élevée atteinte (profondeur maximale dépassée) ! Il existe un risque de toxicité à l'oxygène. Réduisez la profondeur ou utilisez un gaz avec une teneur en oxygène plus faible.",
+    "loopPpO2OutOfRange": "La ppO2 de la boucle du recycleur {{ppO2}} bar est hors de la plage sûre {{min}} - {{max}} bar (décompression {{maxDeco}} bar) ! Modifiez le setpoint ou utilisez un diluant avec une autre teneur en oxygène.",
     "highDescentSpeed": "Vitesse de descente élevée ! Descendez plus longtemps ou descendez à une profondeur plus faible.",
     "highAscentSpeed": "Vitesse de remontée élevée ! Remontez uniquement à une profondeur plus faible ou remontez plus lentement.",
     "highN2Switch": "Le changement vers un gaz avec une teneur en azote plus élevée n'est pas recommandé ! Il existe un risque de contre-diffusion isobare (ICD). Changez pour un autre gaz avec une teneur en hélium plus élevée ou une teneur en azote plus faible.",

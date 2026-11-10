@@ -45,6 +45,25 @@ describe('DiveIssuesComponent', () => {
         expect(highPpO2.isError).toBe(true);
     });
 
+    it('shows loop ppO2 out of range as error', () => {
+        const units = TestBed.inject(UnitConversion);
+        const outOfRange = new BoundEvent(units, EventsFactory.createPpO2OutOfRange(Time.oneMinute, 70, 1.6895));
+        component.dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [outOfRange], 0, [], []);
+        fixture.detectChanges();
+
+        const element = fixture.nativeElement as HTMLElement;
+        const alert = element.querySelector('.alert-danger #loopPpO2OutOfRange');
+        expect(alert?.textContent).toContain('diveIssues.loopPpO2OutOfRange');
+        expect(outOfRange.isError).toBe(true);
+        expect(outOfRange.ppO2).toBe(1.69);
+    });
+
+    it('allowed loop ppO2 range comes from the selected dive options', () => {
+        expect(component.minPpO2).toBe(0.18);
+        expect(component.maxPpO2).toBe(1.4);
+        expect(component.maxDecoPpO2).toBe(1.6);
+    });
+
     it('shows nitrogen over the limit for isobaric counter diffusion', () => {
         const units = TestBed.inject(UnitConversion);
         const icd = new BoundEvent(units, EventsFactory.createIsobaricCounterDiffusion(Time.oneMinute, 21, StandardGases.ean50, 0.04));

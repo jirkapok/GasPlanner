@@ -128,6 +128,7 @@
     "brokenCeiling": "¡Se ha superado la profundidad mínima segura (techo)! Cambia tu plan a una mayor profundidad en este punto.",
     "lowPpo2": "¡Se alcanzó una presión parcial de oxígeno baja (se superó la profundidad mínima)! Existe riesgo de hipoxia. Usa un gas con mayor contenido de oxígeno.",
     "highPpo2": "¡Se alcanzó una presión parcial de oxígeno alta (se superó la profundidad máxima)! Existe riesgo de toxicidad por oxígeno. Reduce la profundidad o usa un gas con menor contenido de oxígeno.",
+    "loopPpO2OutOfRange": "¡La ppO2 del circuito del recirculador {{ppO2}} bar está fuera del rango seguro {{min}} - {{max}} bar (descompresión {{maxDeco}} bar)! Cambie el setpoint o use un diluyente con otro contenido de oxígeno.",
     "highDescentSpeed": "¡Velocidad de descenso alta! Desciende durante más tiempo o desciende a una menor profundidad.",
     "highAscentSpeed": "¡Velocidad de ascenso alta! Asciende solo hasta una menor profundidad o asciende durante más tiempo.",
     "highN2Switch": "¡No se recomienda cambiar a un gas con mayor contenido de nitrógeno! Existe riesgo de contradifusión isobárica (ICD). Cambia a otro gas con mayor contenido de helio o menor contenido de nitrógeno.",

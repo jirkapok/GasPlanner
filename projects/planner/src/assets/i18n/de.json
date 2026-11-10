@@ -130,7 +130,7 @@
     "highPpo2": "Hoher Sauerstoffpartialdruck erreicht (maximale Tiefe überschritten)! Es besteht die Gefahr einer Sauerstofftoxizität. Verringere die Tiefe oder verwende ein Gas mit niedrigerem Sauerstoffanteil.",
     "highDescentSpeed": "Hohe Abstiegsgeschwindigkeit! Steige über einen längeren Zeitraum oder zu einer geringeren Tiefe ab.",
     "highAscentSpeed": "Hohe Aufstiegsgeschwindigkeit! Steige nur zu einer geringeren Tiefe auf oder verlängere die Aufstiegszeit.",
-    "highN2Switch": "Ein Gaswechsel zu einem Gas mit höherem Stickstoffanteil wird nicht empfohlen! Es besteht die Gefahr einer isobaren Gegendiffusion (IDC). Wechsle zu einem anderen Gas mit höherem Heliumanteil oder niedrigerem Stickstoffanteil.",
+    "highN2Switch": "Ein Gaswechsel zu einem Gas mit höherem Stickstoffanteil wird nicht empfohlen! Es besteht die Gefahr einer isobaren Gegendiffusion (ICD). Wechsle zu einem anderen Gas mit höherem Heliumanteil oder niedrigerem Stickstoffanteil.",
     "highN2SwitchOverLimit": "Der Stickstoffanstieg überschreitet den Grenzwert der 1/5-Regel um {{points}} Prozentpunkte.",
     "mndExceeded": "Die maximale narkotische Tiefe für das gewählte Gas wurde überschritten! Verringere die Tiefe oder verwende ein Gas mit höherem Heliumanteil.",
     "highDensity": "Die empfohlene maximale Gasdichte wurde überschritten! Verringere die Tiefe oder verwende ein Gas mit höherem Heliumanteil (d. h. geringerer Dichte).",

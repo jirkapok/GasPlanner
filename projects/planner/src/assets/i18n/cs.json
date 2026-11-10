@@ -130,7 +130,7 @@
     "highPpo2": "Byl dosažen vysoký parciální tlak kyslíku (překročena maximální hloubka)! Hrozí riziko kyslíkové toxicity. Snižte hloubku nebo použijte plyn s nižším obsahem kyslíku.",
     "highDescentSpeed": "Vysoká rychlost sestupu! Sestupujte déle nebo do menší hloubky.",
     "highAscentSpeed": "Vysoká rychlost výstupu! Vystupujte pouze do menší hloubky nebo vystupujte déle.",
-    "highN2Switch": "Přepnutí na plyn s vyšším obsahem dusíku se nedoporučuje! Hrozí riziko izobarické kontradifúze (IDC). Přepněte na jiný plyn s vyšším obsahem helia nebo nižším obsahem dusíku.",
+    "highN2Switch": "Přepnutí na plyn s vyšším obsahem dusíku se nedoporučuje! Hrozí riziko izobarické kontradifúze (ICD). Přepněte na jiný plyn s vyšším obsahem helia nebo nižším obsahem dusíku.",
     "highN2SwitchOverLimit": "Nárůst obsahu dusíku překračuje limit pravidla 1/5 o {{points}} procentního bodu.",
     "mndExceeded": "Byla překročena maximální narkotická hloubka pro zvolený plyn! Snižte hloubku nebo použijte plyn s vyšším obsahem helia.",
     "highDensity": "Byla překročena maximální doporučená hustota plynu! Snižte hloubku nebo použijte plyn s vyšším obsahem helia (tj. nižší hustotou).",

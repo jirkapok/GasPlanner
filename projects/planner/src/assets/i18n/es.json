@@ -130,7 +130,7 @@
     "highPpo2": "¡Se alcanzó una presión parcial de oxígeno alta (se superó la profundidad máxima)! Existe riesgo de toxicidad por oxígeno. Reduce la profundidad o usa un gas con menor contenido de oxígeno.",
     "highDescentSpeed": "¡Velocidad de descenso alta! Desciende durante más tiempo o desciende a una menor profundidad.",
     "highAscentSpeed": "¡Velocidad de ascenso alta! Asciende solo hasta una menor profundidad o asciende durante más tiempo.",
-    "highN2Switch": "¡No se recomienda cambiar a un gas con mayor contenido de nitrógeno! Existe riesgo de contradifusión isobárica (IDC). Cambia a otro gas con mayor contenido de helio o menor contenido de nitrógeno.",
+    "highN2Switch": "¡No se recomienda cambiar a un gas con mayor contenido de nitrógeno! Existe riesgo de contradifusión isobárica (ICD). Cambia a otro gas con mayor contenido de helio o menor contenido de nitrógeno.",
     "highN2SwitchOverLimit": "El aumento de nitrógeno supera el límite de la regla de 1/5 en {{points}} puntos porcentuales.",
     "mndExceeded": "¡Se ha superado la profundidad narcótica máxima para el gas seleccionado! Reduce la profundidad o usa un gas con mayor contenido de helio.",
     "highDensity": "¡Se ha superado la densidad de gas máxima recomendada! Reduce la profundidad o usa un gas con mayor contenido de helio (es decir, menor densidad).",

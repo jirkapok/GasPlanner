@@ -1,3 +1,15 @@
+## [0.19.1](https://github.com/jirkapok/GasPlanner/compare/v0.19.0...v0.19.1) (2026-11-10)
+
+
+### Bug Fixes
+
+* failed calculation keeps old emergency ascent ([2b5039c](https://github.com/jirkapok/GasPlanner/commit/2b5039c126961d8acdf6081f098ec6aede83885c))
+
+
+### Performance Improvements
+
+* switch components to OnPush change detection ([3462180](https://github.com/jirkapok/GasPlanner/commit/346218030f2f44212a9d9ea5ac6397f1c24cb5e4))
+
 # [0.19.0](https://github.com/jirkapok/GasPlanner/compare/v0.18.2...v0.19.0) (2026-11-10)
 
 

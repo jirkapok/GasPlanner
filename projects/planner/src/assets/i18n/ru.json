@@ -149,7 +149,7 @@
     "use": "Использовать", "maxBottomTime": "Максимальное время на глубине", "maxBottomTimeTitle": "Установить максимальное время погружения по расходу газа",
     "surfaceGradient": "Градиент на поверхности", "offgasingStart": "Начало выведения газа", "highestCeiling": "Наибольший потолок",
     "highestGasDensity": "Наибольшая плотность газа", "turnTime": "Время разворота", "turnPressure": "Давление разворота",
-    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "issuesTab": "Проблемы", "inLiters": "В литрах"
+    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "rebreatherTanks": "Ребризер", "bailoutTanks": "Бейлаут", "supply": "Подача", "issuesTab": "Проблемы", "inLiters": "В литрах"
   },
   "diveOptions": {
     "allUsable": "Полностью используемый", "halfUsable": "Наполовину используемый", "thirdUsable": "На треть используемый", "cardTitle": "Параметры",

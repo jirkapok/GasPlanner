@@ -149,7 +149,7 @@
     "use": "Verwenden", "maxBottomTime": "Maximale Grundzeit", "maxBottomTimeTitle": "Tauchzeit anhand des Gasverbrauchs maximieren",
     "surfaceGradient": "Oberflächengradient", "offgasingStart": "Beginn der Entsättigung", "highestCeiling": "Höchstes Ceiling",
     "highestGasDensity": "Höchste Gasdichte", "turnTime": "Umkehrzeit", "turnPressure": "Umkehrdruck",
-    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität", "consumedTab": "Verbraucht", "issuesTab": "Probleme", "inLiters": "In Litern"
+    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität", "consumedTab": "Verbraucht", "rebreatherTanks": "Kreislaufgerät", "bailoutTanks": "Bailout", "supply": "Versorgung", "issuesTab": "Probleme", "inLiters": "In Litern"
   },
   "diveOptions": {
     "allUsable": "Vollständig nutzbar", "halfUsable": "Zur Hälfte nutzbar", "thirdUsable": "Zu einem Drittel nutzbar", "cardTitle": "Optionen",

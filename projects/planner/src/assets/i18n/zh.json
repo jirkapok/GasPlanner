@@ -149,7 +149,7 @@
     "use": "使用", "maxBottomTime": "最大水底时间", "maxBottomTimeTitle": "根据消耗的气体将潜水时间设置为最大值",
     "surfaceGradient": "水面梯度", "offgasingStart": "排氮开始", "highestCeiling": "最高天花板深度",
     "highestGasDensity": "最高气体密度", "turnTime": "折返时间", "turnPressure": "折返压力",
-    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题", "inLiters": "以升为单位"
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "rebreatherTanks": "循环呼吸器", "bailoutTanks": "应急脱困", "supply": "供气", "issuesTab": "问题", "inLiters": "以升为单位"
   },
   "diveOptions": {
     "allUsable": "全部可用", "halfUsable": "一半可用", "thirdUsable": "三分之一可用", "cardTitle": "选项",

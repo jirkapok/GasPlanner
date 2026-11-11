@@ -149,7 +149,7 @@
     "use": "Usar", "maxBottomTime": "Tiempo máximo de fondo", "maxBottomTimeTitle": "Establecer el tiempo de inmersión al máximo según el gas consumido",
     "surfaceGradient": "Gradiente en superficie", "offgasingStart": "Inicio de desaturación", "highestCeiling": "Techo máximo",
     "highestGasDensity": "Densidad de gas más alta", "turnTime": "Tiempo de retorno", "turnPressure": "Presión de retorno",
-    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS", "consumedTab": "Consumido", "issuesTab": "Problemas", "inLiters": "En litros"
+    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS", "consumedTab": "Consumido", "rebreatherTanks": "Recirculador", "bailoutTanks": "Bailout", "supply": "Suministro", "issuesTab": "Problemas", "inLiters": "En litros"
   },
   "diveOptions": {
     "allUsable": "Totalmente utilizable", "halfUsable": "Mitad utilizable", "thirdUsable": "Un tercio utilizable", "cardTitle": "Opciones",

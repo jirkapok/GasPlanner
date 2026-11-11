@@ -15,6 +15,7 @@ import { Preferences } from '../../shared/preferences';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { CircuitType, Tank } from 'scuba-physics';
 import { ShareDiveService } from '../../shared/ShareDiveService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
@@ -70,6 +71,33 @@ describe('DiveInfoComponent OnPush', () => {
         await fixture.whenStable();
 
         expect(element.querySelectorAll('app-tankchart').length).toEqual(1);
+    });
+
+    it('open circuit consumed tanks are not grouped', async () => {
+        await showConsumedTab();
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelector('#rebreatherTanksTitle')).toBeNull();
+        expect(element.querySelector('#bailoutTanksTitle')).toBeNull();
+    });
+
+    it('closed circuit consumed tanks are grouped to rebreather and bailout', async () => {
+        const dive = TestBed.inject(DiveSchedules).selected;
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+        dive.optionsService.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await showConsumedTab();
+        TestBed.inject(PlannerService).calculate(dive.id);
+        await fixture.whenStable();
+
+        expect(element.querySelector('#rebreatherTanksTitle')?.textContent).toContain('diveInfo.rebreatherTanks');
+        expect(element.querySelector('#bailoutTanksTitle')?.textContent).toContain('diveInfo.bailoutTanks');
+        expect(element.querySelector('#tankChartRole-1')?.textContent).toContain('tanksComplex.diluent');
+        expect(element.querySelector('#tankChartRole-2')?.textContent).toContain('tanksComplex.oxygen');
+        expect(element.querySelector('#tankChartRole-3')).toBeNull();
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(3);
     });
 
     it('renders gas chart after consumption finished outside Angular events', async () => {

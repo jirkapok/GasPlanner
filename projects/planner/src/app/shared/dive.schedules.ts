@@ -6,8 +6,9 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
-    CircuitType, GasToxicity, LoadedTissues, Precision, ProfileTissues, Time
+    CircuitType, GasToxicity, LoadedTissues, Precision, ProfileTissues, RebreatherTanks, Time
 } from 'scuba-physics';
+import { TankBound } from './models';
 import { CircuitNames } from './circuit-names.service';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
@@ -90,6 +91,36 @@ export class DiveSchedule {
     /** Localized short name of the breathing circuit, e.g. "mCCR" */
     public get circuitName(): string {
         return this.circuitNames.name(this.circuit);
+    }
+
+    /**
+     * Tanks breathed from the rebreather loop: diluent and oxygen for closed circuit,
+     * supply tanks assigned to depth levels for pSCR. Empty for open circuit.
+     */
+    public get rebreatherTanks(): TankBound[] {
+        const tanks = this.tanksService.tanks;
+
+        switch (this.circuit) {
+            case CircuitType.mccr:
+            case CircuitType.eccr:
+                return tanks.slice(0, RebreatherTanks.oxygenIndex + 1);
+            case CircuitType.pscr: {
+                const supply = this.depths.levels.map(l => l.tank.tank);
+                return tanks.filter(t => supply.includes(t.tank));
+            }
+            default:
+                return [];
+        }
+    }
+
+    /** Rebreather tanks not used by the loop, used only during the bailout ascent. Empty for open circuit. */
+    public get bailoutTanks(): TankBound[] {
+        if (this.circuit === CircuitType.oc) {
+            return [];
+        }
+
+        const loop = this.rebreatherTanks;
+        return this.tanksService.tanks.filter(t => !loop.includes(t));
     }
 
     /** Translated on every read, so it follows the language and circuit switch */

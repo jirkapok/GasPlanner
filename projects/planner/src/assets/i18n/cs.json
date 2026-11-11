@@ -149,7 +149,7 @@
     "use": "Použít", "maxBottomTime": "Maximální doba na dně", "maxBottomTimeTitle": "Nastavit dobu ponoru na maximum podle spotřebovaného plynu",
     "surfaceGradient": "Gradient na hladině", "offgasingStart": "Začátek odsycování", "highestCeiling": "Nejvyšší strop",
     "highestGasDensity": "Nejvyšší hustota plynu", "turnTime": "Čas obratu", "turnPressure": "Tlak obratu",
-    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS", "consumedTab": "Spotřeba", "issuesTab": "Problémy", "inLiters": "V litrech"
+    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS", "consumedTab": "Spotřeba", "rebreatherTanks": "Rebreather", "bailoutTanks": "Bailout", "supply": "Zásobní", "issuesTab": "Problémy", "inLiters": "V litrech"
   },
   "diveOptions": {
     "allUsable": "Celý objem využitelný", "halfUsable": "Polovina objemu využitelná", "thirdUsable": "Třetina objemu využitelná", "cardTitle": "Možnosti",

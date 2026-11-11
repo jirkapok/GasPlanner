@@ -428,6 +428,9 @@
     "otuToxicity": "OTU toxicity",
     "cnsToxicity": "CNS toxicity",
     "consumedTab": "Consumed",
+    "rebreatherTanks": "Rebreather",
+    "bailoutTanks": "Bailout",
+    "supply": "Supply",
     "issuesTab": "Issues",
     "inLiters": "In liters"
   },

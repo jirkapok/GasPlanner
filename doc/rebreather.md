@@ -81,6 +81,8 @@ Consumption:
 
 The emergency ascent is used to calculate the rock bottom reserve. The user defined part of the dive, including the deepest point, is breathed from the loop. The diver bails out at the start of the generated ascent, and only this ascent is breathed as **open circuit** from the bailout tanks. For mCCR and eCCR all tanks are bailout gases, including the diluent and the oxygen tank. Because the leaner loop gas loads the tissues more, the bailout ascent may need longer decompression than the same dive on open circuit. The ascent is consumed using the stress RMV and the same rules as for open circuit dives (see [Tanks](./tanks.md)).
 
+The `Consumed` tab of the dive results shows the tanks in two groups: `Rebreather` tanks breathed from the loop (mCCR and eCCR: `Diluent` and `Oxygen`; pSCR: the `Supply` tanks assigned to depth levels) and `Bailout` tanks, which only keep the reserve for the emergency ascent. The view by gas (`In liters`) isn't grouped.
+
 ## Limits
 
 * The eCCR oxygen losses are fixed at 10 % of the metabolic O2.

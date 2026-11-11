@@ -7,7 +7,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { CircuitNames } from './circuit-names.service';
 import { useEnglishCircuitNames } from './circuit-names.testing';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
-import { CircuitType, HighestDensity, ProfileTissues, Time } from 'scuba-physics';
+import { CircuitType, HighestDensity, ProfileTissues, Tank, Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -114,6 +114,36 @@ describe('Scheduled dives', () => {
         it('Rounds duration to one decimal', () => {
             sut.dives[1].depths.planDuration = 12.3456;
             expect(sut.dives[1].title).toEqual('2. OC 30 m, 12.3 min');
+        });
+    });
+
+    describe('Rebreather and bailout tanks', () => {
+        let dive: DiveSchedule;
+
+        beforeEach(() => {
+            dive = sut.dives[0];
+            dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+        });
+
+        it('open circuit has no groups', () => {
+            expect(dive.rebreatherTanks).toEqual([]);
+            expect(dive.bailoutTanks).toEqual([]);
+        });
+
+        it('closed circuit uses diluent and oxygen, the rest is bailout', () => {
+            dive.optionsService.circuit = CircuitType.eccr;
+            const tanks = dive.tanksService.tanks;
+            expect(dive.rebreatherTanks).toEqual([tanks[0], tanks[1]]);
+            expect(dive.bailoutTanks).toEqual([tanks[2]]);
+        });
+
+        it('pSCR uses supply tanks assigned to depth levels, the rest is bailout', () => {
+            dive.optionsService.circuit = CircuitType.pscr;
+            const tanks = dive.tanksService.tanks;
+            dive.depths.assignTank(dive.depths.levels[0], tanks[0]);
+            dive.depths.assignTank(dive.depths.levels[1], tanks[2]);
+            expect(dive.rebreatherTanks).toEqual([tanks[0], tanks[2]]);
+            expect(dive.bailoutTanks).toEqual([tanks[1]]);
         });
     });
 

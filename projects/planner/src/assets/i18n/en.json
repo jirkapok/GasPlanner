@@ -546,6 +546,9 @@
   "waypointsTable": {
     "cardTitle": "Dive way points",
     "filterTitle": "Filter to show stops only",
+    "diveProfile": "Rebreather profile",
+    "bailoutProfile": "Bailout profile",
+    "setpoint": "SP",
     "depth": "Depth",
     "duration": "Duration",
     "run": "Run",

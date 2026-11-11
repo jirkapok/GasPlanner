@@ -6,6 +6,7 @@ import { DiveSchedules } from './dive.schedules';
 export class ViewSwitchService {
     private readonly _consumptionInLiters = signal(false);
     private readonly _isComplex = signal(false);
+    private readonly _showBailoutProfile = signal(false);
 
     constructor(private schedules: DiveSchedules) {
     }
@@ -17,6 +18,15 @@ export class ViewSwitchService {
 
     public get isComplex(): boolean {
         return this._isComplex();
+    }
+
+    /** Rebreather dives show the bailout profile (emergency ascent) instead of the dive profile */
+    public get showBailoutProfile(): boolean {
+        return this._showBailoutProfile();
+    }
+
+    public set showBailoutProfile(newValue: boolean) {
+        this._showBailoutProfile.set(newValue);
     }
 
     public set consumptionInLiters(newValue: boolean) {

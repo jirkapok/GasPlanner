@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "Баллон с донным газом", "size": "Объём", "sac": "SAC:", "workingPressure": "Рабочее давление", "startPressure": "Начальное давление" },
-  "waypointsTable": { "cardTitle": "Точки погружения", "filterTitle": "Показать только остановки", "depth": "Глубина", "duration": "Длительность", "run": "Время", "gas": "Газ" },
+  "waypointsTable": { "cardTitle": "Точки погружения", "filterTitle": "Показать только остановки", "diveProfile": "Профиль ребризера", "bailoutProfile": "Профиль бейлаута", "setpoint": "SP", "depth": "Глубина", "duration": "Длительность", "run": "Время", "gas": "Газ" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Давление на глубине",

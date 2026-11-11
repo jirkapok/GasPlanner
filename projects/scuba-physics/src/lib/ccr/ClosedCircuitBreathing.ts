@@ -71,7 +71,7 @@ export abstract class ClosedCircuitBreathing implements BreathingModel {
      * @param depth in meters
      * @param isAscent true, if the depth is after the deepest point of the dive
      */
-    protected abstract setpoint(depth: number, isAscent: boolean): number;
+    public abstract setpoint(depth: number, isAscent: boolean): number;
 
     /** Oxygen consumed from the oxygen tank in liters/minute surface equivalent */
     protected abstract oxygenRate(): number;

@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "Lahev s dnovou směsí", "size": "Objem", "sac": "SAC:", "workingPressure": "Pracovní tlak", "startPressure": "Počáteční tlak" },
-  "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
+  "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "diveProfile": "Profil rebreatheru", "bailoutProfile": "Profil bailoutu", "setpoint": "SP", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Tlak v hloubce",

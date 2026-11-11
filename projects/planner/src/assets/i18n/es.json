@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "Botella de gas de fondo", "size": "Tamaño", "sac": "SAC:", "workingPressure": "Presión de trabajo", "startPressure": "Presión inicial" },
-  "waypointsTable": { "cardTitle": "Puntos de la inmersión", "filterTitle": "Filtrar para mostrar solo las paradas", "depth": "Profundidad", "duration": "Duración", "run": "Acumulado", "gas": "Gas" },
+  "waypointsTable": { "cardTitle": "Puntos de la inmersión", "filterTitle": "Filtrar para mostrar solo las paradas", "diveProfile": "Perfil del recirculador", "bailoutProfile": "Perfil de bailout", "setpoint": "SP", "depth": "Profundidad", "duration": "Duración", "run": "Acumulado", "gas": "Gas" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Presión a profundidad",

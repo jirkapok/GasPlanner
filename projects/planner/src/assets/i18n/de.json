@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "Grundgasflasche", "size": "Größe", "sac": "SAC:", "workingPressure": "Betriebsdruck", "startPressure": "Startdruck" },
-  "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
+  "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "diveProfile": "Kreislaufgerät-Profil", "bailoutProfile": "Bailout-Profil", "setpoint": "SP", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Druck in der Tiefe",

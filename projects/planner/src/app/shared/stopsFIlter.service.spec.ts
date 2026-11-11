@@ -6,7 +6,8 @@ import { DiveSchedules } from './dive.schedules';
 import { TestBedExtensions } from './TestbedExtensions.testing';
 import { DiveResults } from './diveresults';
 import { WayPointsService } from './waypoints.service';
-import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import { CircuitType, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import { ViewSwitchService } from './viewSwitchService';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('Stops filter', () => {
@@ -20,7 +21,7 @@ describe('Stops filter', () => {
                 provideTestTranslate(),
                 StopsFilter, UnitConversion,
                 DiveSchedules, ReloadDispatcher,
-                WayPointsService
+                WayPointsService, ViewSwitchService
             ]
         });
 
@@ -84,5 +85,98 @@ describe('Stops filter', () => {
 
         const current = mapWayPoints();
         expect(current).toEqual(expected);
+    });
+
+    describe('Bailout profile', () => {
+        // default plan descent and bottom take 720 seconds, then the emergency ascent starts
+        const ascentStart = 720;
+
+        beforeEach(() => {
+            const schedules = TestBed.inject(DiveSchedules);
+            schedules.selected.optionsService.circuit = CircuitType.pscr;
+            const emergencySegments = [
+                new Segment(30, 30, StandardGases.air, 60), // problem solving
+                new Segment(30, 6, StandardGases.air, 160),
+                new Segment(6, 6, StandardGases.air, 120), // deco stop
+                new Segment(6, 0, StandardGases.air, 60)
+            ];
+            const emergencyAscent = TestBed.inject(WayPointsService).calculateWayPoints(emergencySegments, ascentStart);
+            dive.updateConsumption(0, 0, ascentStart, 0, 0, false, false, emergencyAscent);
+            TestBed.inject(ViewSwitchService).showBailoutProfile = true;
+        });
+
+        it('continues the plan by the emergency ascent', () => {
+            const expected = [
+                { startDepth: 0, endDepth: 30, duration: 102 },
+                { startDepth: 30, endDepth: 30, duration: 618 },
+                { startDepth: 30, endDepth: 30, duration: 60 },
+                { startDepth: 30, endDepth: 6, duration: 160 },
+                { startDepth: 6, endDepth: 6, duration: 120 },
+                { startDepth: 6, endDepth: 0, duration: 60 }
+            ];
+
+            expect(mapWayPoints()).toEqual(expected);
+            expect(service.wayPoints[2].startTime).toBe(ascentStart);
+            expect(service.totalDuration).toBe(ascentStart + 400);
+        });
+
+        it('applies stops filter', () => {
+            service.switchFilter();
+
+            const expected = [
+                { startDepth: 0, endDepth: 30, duration: 102 },
+                { startDepth: 30, endDepth: 30, duration: 618 },
+                { startDepth: 30, endDepth: 30, duration: 60 },
+                { startDepth: 6, endDepth: 6, duration: 120 },
+                { startDepth: 6, endDepth: 0, duration: 60 }
+            ];
+
+            expect(mapWayPoints()).toEqual(expected);
+        });
+
+        it('open circuit shows the dive profile', () => {
+            TestBed.inject(DiveSchedules).selected.optionsService.circuit = CircuitType.oc;
+            expect(service.showBailout).toBe(false);
+            expect(service.wayPoints.length).toBe(7);
+        });
+
+        it('rebreather dive profile tab shows the dive profile', () => {
+            TestBed.inject(ViewSwitchService).showBailoutProfile = false;
+            expect(service.wayPoints.length).toBe(7);
+        });
+
+        it('closed circuit loop part shows setpoint, bailout ascent not', () => {
+            TestBed.inject(DiveSchedules).selected.optionsService.circuit = CircuitType.eccr;
+            const points = service.wayPoints;
+            expect(service.setpoint(points[1])).toBe(1.1);
+            expect(service.setpoint(points[2])).toBeUndefined();
+        });
+    });
+
+    describe('Setpoint in dive profile', () => {
+        const options = () => TestBed.inject(DiveSchedules).selected.optionsService;
+
+        it('open circuit has no setpoint', () => {
+            expect(service.setpoint(service.wayPoints[1])).toBeUndefined();
+        });
+
+        it('pSCR has no setpoint', () => {
+            options().circuit = CircuitType.pscr;
+            expect(service.setpoint(service.wayPoints[1])).toBeUndefined();
+        });
+
+        it('mCCR holds the same setpoint during the whole dive', () => {
+            options().circuit = CircuitType.mccr;
+            options().setpoint = 1.2;
+            expect(service.wayPoints.map(p => service.setpoint(p))).toEqual([1.2, 1.2, 1.2, 1.2, 1.2, 1.2, 1.2]);
+        });
+
+        it('eCCR uses bottom setpoint before and deco setpoint after the deepest point', () => {
+            options().circuit = CircuitType.eccr;
+            const points = service.wayPoints;
+            expect(service.setpoint(points[0])).toBe(1.1);
+            expect(service.setpoint(points[1])).toBe(1.1);
+            expect(service.setpoint(points[2])).toBe(1.3);
+        });
     });
 });

@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "水底气瓶", "size": "容量", "sac": "SAC：", "workingPressure": "工作压力", "startPressure": "起始压力" },
-  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
+  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "diveProfile": "循环呼吸器剖面", "bailoutProfile": "应急脱困剖面", "setpoint": "SP", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
   "learn": {
     "topics": {
       "pressureAtDepth": "深度处的压力",

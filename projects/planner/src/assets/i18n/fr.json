@@ -176,7 +176,7 @@
     "eccr": "eCCR"
   },
   "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
-  "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
+  "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "diveProfile": "Profil du recycleur", "bailoutProfile": "Profil de bailout", "setpoint": "SP", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Pression à la profondeur",

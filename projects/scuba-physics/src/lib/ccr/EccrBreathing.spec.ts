@@ -15,6 +15,20 @@ describe('eCCR breathing', () => {
     const options = new RebreatherOptions(CircuitType.eccr, 1.0, 6);
     const sut = new EccrBreathing(options, [diluent, oxygen], depthConverter);
 
+    describe('Setpoint', () => {
+        it('is descent setpoint shallower than switch depth before the ascent', () => {
+            expect(sut.setpoint(10, false)).toBe(0.7);
+        });
+
+        it('is bottom setpoint at switch depth before the ascent', () => {
+            expect(sut.setpoint(20, false)).toBe(1.1);
+        });
+
+        it('is deco setpoint during the ascent', () => {
+            expect(sut.setpoint(10, true)).toBe(1.3);
+        });
+    });
+
     describe('Setpoints', () => {
         it('holds descent setpoint shallower than switch depth', () => {
             expect(sut.ppO2(StandardGases.air, 10, false)).toBeCloseTo(0.7, 6);

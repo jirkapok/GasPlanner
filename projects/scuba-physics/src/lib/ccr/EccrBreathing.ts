@@ -9,7 +9,7 @@ import { Rebreathers } from './Rebreathers';
 export class EccrBreathing extends ClosedCircuitBreathing {
     protected readonly circuitName = 'eCCR';
 
-    protected setpoint(depth: number, isAscent: boolean): number {
+    public setpoint(depth: number, isAscent: boolean): number {
         if (isAscent) {
             return this.options.decoSetpoint;
         }

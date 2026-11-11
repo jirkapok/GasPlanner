@@ -42,7 +42,7 @@
             </td>
           </tr>
         }
-        @for (point of stops.wayPoints; track point) {
+        @for (point of stops.wayPoints; track $index) {
           <tr [ngClass]="{'table-active': isSelected(point) }"
             (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
             <td class="px-1 text-center">

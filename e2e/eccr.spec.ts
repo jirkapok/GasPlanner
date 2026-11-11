@@ -1,4 +1,5 @@
-import { test, expect, Page, BrowserContext, Locator } from '@playwright/test';
+import { test, expect } from './fixtures';
+import { Page, Locator } from '@playwright/test';
 
 class EccrPlannerPage {
     constructor(private page: Page) {}
@@ -56,12 +57,10 @@ class EccrPlannerPage {
 }
 
 test.describe('eCCR rebreather', () => {
-    let context: BrowserContext;
     let page: Page;
 
-    test.beforeEach(async ({ browser }) => {
-        context = await browser.newContext();
-        page = await context.newPage();
+    test.beforeEach(async ({ page: testPage }) => {
+        page = testPage;
 
         await page.goto('/');
         await page.evaluate(() => {

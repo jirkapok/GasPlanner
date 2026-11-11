@@ -184,7 +184,7 @@
         <app-calculating [show]="!dive.calculated"></app-calculating>
         @if (dive.showResults) {
           @if (inLiters) {
-            @for (consumed of dive.consumedGases; track consumed) {
+            @for (consumed of dive.consumedGases; track $index) {
               <app-gaschart [consumed]="consumed"></app-gaschart>
             }
           } @else if (isRebreather) {

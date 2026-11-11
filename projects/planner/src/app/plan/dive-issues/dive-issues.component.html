@@ -26,7 +26,7 @@
       }
     </div>
   }
-  @for (event of events; track event) {
+  @for (event of events; track $index) {
     @if (event.isBrokenCeiling) {
       <div class="alert alert-danger">
         <fa-icon [icon]="exclamation" class="me-2"></fa-icon>

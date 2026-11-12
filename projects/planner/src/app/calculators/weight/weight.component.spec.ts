@@ -75,4 +75,20 @@ describe('WeightCalcComponent', () => {
         expect(component.tank.startPressure).toBeCloseTo(230, 3);
         expect(component.weight).toBeCloseTo(3.5, 3);
     });
+
+    it('keeps start pressure in bars in imperial units', () => {
+        component.units.imperialUnits = true;
+        component.tank.workingPressure = 3000;
+        component.tank.size = 80;
+        component.ngOnInit();
+        const consumedPsi = 2900;
+        component.weightForm.patchValue({ consumed: consumedPsi });
+        component.inputChanged();
+
+        const consumedBars = component.units.toBar(consumedPsi);
+        const reserve = TestBed.inject(ApplicationSettingsService).appSettings.primaryTankReserve;
+        expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0);
+        expect(component.tank.tank.startPressure).toBeCloseTo(reserve + consumedBars, 0);
+        expect(component.weight).toBeGreaterThan(0);
+    });
 });

@@ -111,8 +111,9 @@ export class WeightCalcComponent implements OnInit {
         const consumed = Number(values.consumed);
         const t = this.tank;
         const reserve = this.setttings.appSettings.primaryTankReserve;
-        t.startPressureBars = reserve + consumed;
-        t.consumedBars = this.units.toBar(consumed);
+        const consumedBars = this.units.toBar(consumed);
+        t.startPressureBars = reserve + consumedBars;
+        t.consumedBars = consumedBars;
         this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
     }

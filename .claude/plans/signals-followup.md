@@ -172,3 +172,20 @@ Runs once, right after Task 6, without waiting for the user. Step 5 is the only 
 - [x] **Step 4: Whole-branch review** by a reviewer subagent with superpowers:requesting-code-review over `master..HEAD`, checking the Review Focus list. Fix Critical/Important findings with a test first, re-run the affected specs, note the others in Status.
 - [ ] **Step 5: STOP for the manual check by the user** with `npm run start-pwa` (port 9090): dive tab titles, depth levels with tank labels, dive options reload from a shared URL, MOD after a ppO2 change, units switch, weight/SAC/gas blender restore, adding a tank while the consumption is calculated, compare page profile selection, learn quiz.
 - [ ] **Step 6: Record** the final numbers (tests, lint, e2e) in Status and commit the fixes and the plan as `chore: signals follow-up verified` (a `fix:` commit for a user visible bug found here).
+
+### Task 8: Weight calculator start pressure in bars
+
+Added by the user after the final review (pre-existing bug, found in Task 3 review).
+
+**Bug:** `WeightCalcComponent.inputChanged` computed `t.startPressureBars = reserve + consumed`, where `reserve` is in bars (raw `AppSettings`) but `consumed` is the form value in the user's pressure units (psi in imperial): start pressure became e.g. 50 + 2900 instead of 50 + 200 bar. `consumedBars` was already converted.
+
+**Files:**
+- Modify: `projects/planner/src/app/calculators/weight/weight.component.ts` (`inputChanged`)
+- Test: `projects/planner/src/app/calculators/weight/weight.component.spec.ts`
+
+- [x] Status (948 tests in 102 files, lint planner 100 / scuba-physics 12; RED: new imperial test failed before the change, tank consumed was 0 instead of about 200 bar because the bogus start pressure was rejected; displayed weight CHANGED in imperial: 0 before, correct value after; metric unchanged; review step left for the controller)
+- [x] **Step 1: Write the failing test** `'keeps start pressure in bars in imperial units'` in `weight.component.spec.ts`.
+- [x] **Step 2: Run** `npx ng test planner --no-watch --include='**/weight.component.spec.ts'`. Expected: FAILS.
+- [x] **Step 3: Implement**: convert consumed once (`const consumedBars = this.units.toBar(consumed)`), use it for `startPressureBars = reserve + consumedBars` and `consumedBars`.
+- [x] **Step 4: Run** the spec, `npm run test-ci`, `npm run lint`. Expected: PASS, no new lint errors.
+- [x] **Step 5: Commit** `fix: weight calculator start pressure in bars in imperial units`.

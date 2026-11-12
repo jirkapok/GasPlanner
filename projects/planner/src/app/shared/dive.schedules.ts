@@ -82,9 +82,8 @@ export class DiveSchedule {
         return this._optionsService;
     }
 
-    /** Templates reading it (e.g. title) are refreshed, when options are changed or reloaded */
+    /** Templates reading it (e.g. title) are refreshed, because options track their own changes */
     public get circuit(): CircuitType {
-        this.dispatcher.trackOptions();
         return this.optionsService.circuit;
     }
 

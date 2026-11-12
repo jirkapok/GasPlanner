@@ -90,7 +90,7 @@ describe('WeightCalcComponent', () => {
             setConsumed('2900');
             const consumedBars = component.units.toBar(2900);
             const reserve = TestBed.inject(ApplicationSettingsService).appSettings.primaryTankReserve;
-            expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0) // the tank rounds consumed up to whole bars;
+            expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0); // the tank rounds consumed up to whole bars
             expect(component.tank.tank.startPressure).toBeCloseTo(reserve + consumedBars, 1);
             expect(component.weight).toBeCloseTo(7.8, 1);
         });

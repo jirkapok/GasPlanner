@@ -129,12 +129,12 @@
 **Interfaces:**
 - Produces (only if Step 2 fails): `QuizService` keeps `_selectedTopic`, `_selectedCategory`, `_session` and `_question` in signals behind the existing getters.
 
-- [ ] Status
-- [ ] **Step 1: Write** in `learn.component.spec.ts` `'renders question selected outside Angular events'`: `renderOnPush(LearnComponent)`, call `quizService.selectByName(<second topic>, <its first category>)`, `await fixture.whenStable()`, expect the second topic's question text, and `'renders question retranslated outside Angular events'`: switch the language through `TranslateService.use`, expect the translated question.
-- [ ] **Step 2: Run** the `learn.component.spec.ts`. If both PASS, keep them as pins, skip Step 3 and note it in Status (no production change).
-- [ ] **Step 3: Implement** the signals only for the failing case. Run the spec. Expected: PASS.
+- [x] Status (both specs PASS before any change: pins, no production change; Step 3 skipped; planner 943+1 tests in 102 files; lint planner 100, scuba-physics 12; retranslate spec existed already, moved under shared OnPush describe)
+- [x] **Step 1: Write** in `learn.component.spec.ts` `'renders question selected outside Angular events'`: `renderOnPush(LearnComponent)`, call `quizService.selectByName(<second topic>, <its first category>)`, `await fixture.whenStable()`, expect the second topic's question text, and `'renders question retranslated outside Angular events'`: switch the language through `TranslateService.use`, expect the translated question.
+- [x] **Step 2: Run** the `learn.component.spec.ts`. If both PASS, keep them as pins, skip Step 3 and note it in Status (no production change).
+- [x] **Step 3: Implement** the signals only for the failing case. Run the spec. Expected: PASS.
 - [ ] **Step 4: Run** `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 5: Commit** `test: pin quiz state under OnPush` (or `refactor: quiz state as signals` when Step 3 changed code).
+- [x] **Step 5: Commit** `test: pin quiz state under OnPush` (or `refactor: quiz state as signals` when Step 3 changed code).
 
 ### Task 6: Tank consumption copied by tank id
 

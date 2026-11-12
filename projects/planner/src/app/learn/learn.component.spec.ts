@@ -124,7 +124,7 @@ describe('LearnComponent', () => {
 });
 
 describe('LearnComponent OnPush', () => {
-    it('renders question retranslated after language change', async () => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [LearnComponent],
             providers: [
@@ -134,6 +134,22 @@ describe('LearnComponent OnPush', () => {
                 ApplicationSettingsService, LanguageService, provideTestTranslate()
             ]
         });
+    });
+
+    it('renders question selected outside Angular events', async () => {
+        const fixture = await renderOnPush(LearnComponent);
+        const quizService = TestBed.inject(QuizService);
+        const topic = quizService.topics[1];
+
+        quizService.selectByName(topic.name, topic.categories[0].name);
+        await fixture.whenStable();
+
+        const text = (fixture.nativeElement as HTMLElement).textContent;
+        expect(text).toContain(`${topic.name} / ${topic.categories[0].name}`);
+        expect(text).toContain(quizService.question.renderedQuestion);
+    });
+
+    it('renders question retranslated outside Angular events', async () => {
         const fixture = await renderOnPush(LearnComponent);
         const templateKey = TestBed.inject(QuizService).question.templateKey;
         const translate = TestBed.inject(TranslateService);

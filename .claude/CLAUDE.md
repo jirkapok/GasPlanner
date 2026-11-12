@@ -44,7 +44,7 @@ Two Angular projects under `projects/`:
 
 ### App composition (`app.config.ts` / `app.routes.ts`)
 
-- `app.config.ts` is the single composition root: standalone components are listed in the `STANDALONE` array, injectable services in `SERVICES`, third-party Angular modules (MDB UI Kit, `NgxMdModule`, `ServiceWorkerModule`, etc.) alongside them. When adding a new standalone component or service, register it in the matching array here rather than importing it ad hoc elsewhere.
+- `app.config.ts` is the single composition root: standalone components are listed in the `STANDALONE` array, injectable services in `SERVICES`, third-party Angular modules and providers (MDB UI Kit, `provideDocsMarkdown()` (ngx-markdown), `ServiceWorkerModule`, etc.) alongside them. When adding a new standalone component or service, register it in the matching array here rather than importing it ad hoc elsewhere.
 - `app.routes.ts` defines flat routes per feature/calculator (`KnownViews` enum) plus a catch-all `DashboardComponent` route guarded by `canActivateDashboard`, which redirects an empty-query root navigation back to the last-viewed dashboard view (state tracked in `ViewStates`).
 
 ### State & services (`projects/planner/src/app/shared/*`)
@@ -57,7 +57,7 @@ Heavy dive-profile/consumption/decompression math runs off the main thread. `pro
 
 ### Docs / Help
 
-Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob of the `build` target in `angular.json` (the `test` target reuses it through `buildTarget`). They're rendered at runtime by `HelpComponent` using `ngx-md`, routed as `/help/:document/:anchor`.
+Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob of the `build` target in `angular.json` (the `test` target reuses it through `buildTarget`). They're rendered at runtime by `HelpComponent` using `ngx-markdown` (setup and marked renderer overrides in `shared/markdownDocs.ts`; heading anchors from `HeadingSlugger`, compatible with the old marked 4 ids), routed as `/help/:document/:anchor`. ngx-markdown optionally imports `marked-katex-extension`, which is not installed: it is declared in `externalDependencies` of the `build` target and aliased to a stub in `projects/planner/vitest-base.config.mts`.
 
 ### CI/CD pipeline (`.github/workflows/main.yml`, `build/*.ps1`)
 

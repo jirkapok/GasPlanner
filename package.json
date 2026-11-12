@@ -47,7 +47,6 @@
     "mdb-angular-ui-kit": "^11.0.0",
     "ngx-clipboard": "^16.0.0",
     "ngx-markdown": "^22.1.1",
-    "ngx-md": "^19.0.0",
     "plotly.js-dist": "^4.1.2",
     "rxjs": "^7.8.2",
     "scuba-physics": "file:dist/scuba-physics",

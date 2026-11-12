@@ -178,7 +178,7 @@ git commit -m "refactor(planner): #134 render help and learn pages with ngx-mark
 
 ### Task 3: Remove ngx-md
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `package.json`, `package-lock.json`

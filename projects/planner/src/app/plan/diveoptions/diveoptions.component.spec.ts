@@ -21,6 +21,7 @@ import { OptionsService } from '../../shared/options.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { planTestProviders } from '../../../testing/plan.testing';
+import { Diver, Options } from 'scuba-physics';
 import { LanguageService } from '../../shared/language.service';
 
 describe('Dive options component', () => {
@@ -141,5 +142,26 @@ describe('DiveOptionsComponent OnPush', () => {
         await fixture.whenStable();
 
         expect(conservatism()).not.toEqual(before);
+    });
+
+    it('renders air breaks reloaded outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DiveOptionsComponent],
+            providers: planTestProviders
+        });
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        const fixture = await renderOnPush(DiveOptionsComponent);
+        const element = fixture.nativeElement as HTMLElement;
+        const enabled = (): boolean | undefined => element.querySelector<HTMLInputElement>('#enableAirBreaks')?.checked;
+        const oxygen = (): string | undefined => element.querySelector<HTMLInputElement>('#maxOxygenDuration')?.value;
+        const loaded = new Options();
+        loaded.airBreaks.enabled = true;
+        loaded.airBreaks.oxygenDuration = 7;
+
+        TestBed.inject(DiveSchedules).selectedOptions.loadFrom(loaded, new Diver());
+        await fixture.whenStable();
+
+        expect(enabled()).toBe(true);
+        expect(oxygen()).toBe('7');
     });
 });

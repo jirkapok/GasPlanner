@@ -80,7 +80,10 @@ export class AppSettings {
 }
 
 export class DiverOptions {
-    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) { }
+    constructor(
+        private options: Options = new Options(),
+        private diver: Diver = new Diver(),
+        private onChanged: () => void = () => {}) { }
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;
@@ -100,18 +103,22 @@ export class DiverOptions {
 
     public set maxPpO2(newValue: number) {
         this.options.maxPpO2 = newValue;
+        this.onChanged();
     }
 
     public set maxDecoPpO2(newValue: number) {
         this.options.maxDecoPpO2 = newValue;
+        this.onChanged();
     }
 
     public set rmv(newValue: number) {
         this.diver.rmv = newValue;
+        this.onChanged();
     }
 
     public set stressRmv(newValue: number) {
         this.diver.stressRmv = newValue;
+        this.onChanged();
     }
 
     public loadFrom(other: DiverOptions): void {

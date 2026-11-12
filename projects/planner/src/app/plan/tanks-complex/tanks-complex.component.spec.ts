@@ -277,4 +277,14 @@ describe('Tanks Complex component OnPush', () => {
 
         expect(label()).not.toEqual(before);
     });
+
+    it('renders MOD after diver options changed outside Angular events', async () => {
+        const label = (): string | null | undefined => element().querySelector('app-gaslabel')?.textContent;
+        const before = label();
+
+        TestBed.inject(DiveSchedules).selectedOptions.diverOptions.maxPpO2 = 1.2;
+        await fixture.whenStable();
+
+        expect(label()).not.toEqual(before);
+    });
 });

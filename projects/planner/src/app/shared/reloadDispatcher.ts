@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 import { Tank } from 'scuba-physics';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';
 import { DepthsService } from './depths.service';
@@ -54,7 +54,6 @@ export class ReloadDispatcher {
     private onInfoCalculated = new Subject<number | undefined>();
     private onWayPointsCalculated = new Subject<number | undefined>();
     private onSetToSimple = new Subject<void>();
-    private readonly _optionsVersion = signal(0);
 
     constructor() {
         this.tanksReloaded$ = this.onTanksReloaded.asObservable();
@@ -68,14 +67,6 @@ export class ReloadDispatcher {
         this.infoCalculated$ = this.onInfoCalculated.asObservable();
         this.wayPointsCalculated$ = this.onWayPointsCalculated.asObservable();
         this.setToSimple$ = this.onSetToSimple.asObservable();
-    }
-
-    /**
-     * Registers the caller's reactive context (template or computed signal) to be notified by each options change or reload.
-     * Options are mutated in place by OptionsService and DiverOptions, so the change itself isn't tracked.
-     */
-    public trackOptions(): void {
-        this._optionsVersion();
     }
 
     public sendTanksReloaded(source: TanksService): void {
@@ -100,13 +91,11 @@ export class ReloadDispatcher {
 
     public sendOptionsReloaded(source: OptionsService): void {
         Logger.debug('Options reloaded');
-        this._optionsVersion.update(v => v + 1);
         this.onOptionsReloaded.next(source);
     }
 
     public sendOptionsChanged(): void {
         Logger.debug('Options changed');
-        this._optionsVersion.update(v => v + 1);
         this.onOptionsChanged.next();
     }
 

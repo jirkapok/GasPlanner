@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { Options } from 'scuba-physics';
+import { Options, Salinity, Tank } from 'scuba-physics';
 import { OptionsService } from './options.service';
 import { UnitConversion } from './UnitConversion';
 import { DiverOptions } from './models';
@@ -174,6 +174,27 @@ describe('Options Service', () => {
             service.applyDiver(diver);
             expect(service.maxPpO2).toBe(1.22);
             expect(service.maxDecoPpO2).toBe(1.45);
+        });
+    });
+
+    describe('Toxicity', () => {
+        it('renews toxicity after max ppO2 changed by diver options', () => {
+            const tank = new Tank(12, 200, 50);
+            const first = service.toxicity;
+            const modBefore = first.modForGas(tank);
+            service.diverOptions.maxPpO2 = 1.2;
+            expect(service.toxicity).not.toBe(first);
+            expect(service.toxicity.modForGas(tank)).toBeLessThan(modBefore);
+        });
+
+        it('keeps toxicity without change', () => {
+            expect(service.toxicity).toBe(service.toxicity);
+        });
+
+        it('renews toxicity after salinity changed', () => {
+            const first = service.toxicity;
+            service.salinity = Salinity.brackish;
+            expect(service.toxicity).not.toBe(first);
         });
     });
 });

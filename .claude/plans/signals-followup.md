@@ -60,19 +60,19 @@
   - `DiverOptions` constructor gains a third optional parameter `onChanged: () => void = () => {}`, called by each setter. `OptionsService.diverOptions` passes `() => this.changed()`, and its getters read `tracked` before returning.
   - `ReloadDispatcher.trackOptions()` and `_optionsVersion` are removed.
 
-- [ ] Status
-- [ ] **Step 1: Write the failing tests** in `options.service.spec.ts`:
+- [x] Status (options.service 3 new tests, red: maxPpO2 and salinity renew; tanks-complex MOD test red before impl; air breaks diveoptions test is a pin, passes with and without markForCheck; markForCheck removed, diveoptions specs pass; test-ci 102 files 935 tests; lint planner 100, scuba-physics 12)
+- [x] **Step 1: Write the failing tests** in `options.service.spec.ts`:
   - `'renews toxicity after max ppO2 changed by diver options'`: read `service.toxicity`, set `service.diverOptions.maxPpO2 = 1.2`, expect `service.toxicity` not to be the first instance and `service.toxicity.modForGas(...)` to use 1.2.
   - `'keeps toxicity without change'`: two reads return the same instance.
   - `'renews toxicity after salinity changed'`: setter path, new instance.
-- [ ] **Step 2: Run** `ng test planner --no-watch --include='**/options.service.spec.ts'`. Expected: the diver options test FAILS (the dispatcher isn't called).
-- [ ] **Step 3: Implement** the interfaces above. Remove `trackOptions()`, `_optionsVersion` and its updates from `ReloadDispatcher`, keep the events.
-- [ ] **Step 4: Write** the OnPush tests:
+- [x] **Step 2: Run** `ng test planner --no-watch --include='**/options.service.spec.ts'`. Expected: the diver options test FAILS (the dispatcher isn't called).
+- [x] **Step 3: Implement** the interfaces above. Remove `trackOptions()`, `_optionsVersion` and its updates from `ReloadDispatcher`, keep the events.
+- [x] **Step 4: Write** the OnPush tests:
   - in `tanks-complex.component.spec.ts` `'renders MOD after diver options changed outside Angular events'`: `renderOnPush(TanksComplexComponent)` with `planTestProviders`, set `DiveSchedules.selectedOptions.diverOptions.maxPpO2 = 1.2`, `await fixture.whenStable()`, expect the MOD of the gas label to change (the component passes `toxicity` from the service, so a new instance reaches `app-gaslabel`).
   - in `diveoptions.component.spec.ts` `'renders air breaks reloaded outside the component'`: `loadFrom` options with air breaks enabled, expect the air break fields shown (Review Focus 1).
-- [ ] **Step 5: Remove** the `markForCheck()` from the `diveoptions` reload handler. Run the `diveoptions` spec. Expected: `'renders gradients reloaded outside the component'` and the new test PASS. If not, restore it and note in Status which getter isn't tracked.
-- [ ] **Step 6: Run** the `options.service`, `tanks-complex` and `diveoptions` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 7: Commit** `refactor: options track their own changes`.
+- [x] **Step 5: Remove** the `markForCheck()` from the `diveoptions` reload handler. Run the `diveoptions` spec. Expected: `'renders gradients reloaded outside the component'` and the new test PASS. If not, restore it and note in Status which getter isn't tracked.
+- [x] **Step 6: Run** the `options.service`, `tanks-complex` and `diveoptions` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 7: Commit** `refactor: options track their own changes`.
 
 ### Task 3: Tank of `TankBound` is read-only
 

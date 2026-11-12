@@ -1,3 +1,18 @@
+# [0.21.0](https://github.com/jirkapok/GasPlanner/compare/v0.20.0...v0.21.0) (2026-11-12)
+
+
+### Bug Fixes
+
+* **planner:** [#134](https://github.com/jirkapok/GasPlanner/issues/134) escape help image alternative text ([136d630](https://github.com/jirkapok/GasPlanner/commit/136d630facf9c31fb2b83af362843d41fc995c8b))
+* signals followup ([c1b60f2](https://github.com/jirkapok/GasPlanner/commit/c1b60f2996af691d4ecbb48b04094609d2a75a0e))
+* tank consumption copied by tank id ([3df7d73](https://github.com/jirkapok/GasPlanner/commit/3df7d73e6818be7d90d804567c104ef96ddd8d22))
+* weight calculator start pressure in bars in imperial units ([8ccda21](https://github.com/jirkapok/GasPlanner/commit/8ccda21f701e776a88be8405e58e090a5bcfe7a5))
+
+
+### Features
+
+* **planner:** [#134](https://github.com/jirkapok/GasPlanner/issues/134) docs markdown extension for marked 18 ([b0edad0](https://github.com/jirkapok/GasPlanner/commit/b0edad099aa68c290e85ee439cba0bc93f864717))
+
 # [0.20.0](https://github.com/jirkapok/GasPlanner/compare/v0.19.1...v0.20.0) (2026-11-10)
 
 

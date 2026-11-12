@@ -24,7 +24,7 @@
 ## Review Focus
 
 1. **Options edited past the service.** `options.airBreaks` and `getOptions()` return mutable objects (`diveoptions` writes `airBreaks.oxygenDuration`, `dtoSerialization` writes air breaks while loading). An edit there doesn't increase the options version. Expected: nothing shown depends on it without a following `sendOptionsChanged()`/`loadFrom()`. Task 2 adds a test that the dive options air break fields still render after reload.
-2. **The units switch.** `SettingsNormalizationService` rewrites options, diver and tanks through setters after a units change. Expected: tank sizes, MOD and RMV shown in the new units without a reload. Task 3 adds a units switch test for the tank size.
+2. **The units switch.** `SettingsNormalizationService` rewrites options, diver and tanks through setters after a units change. Expected: the views rendered after the units switch show tank sizes, MOD and RMV in the new units (the switch happens on the separate app-settings route). Task 3 adds a units switch test for the tank size.
 3. **Selecting another dive.** Each dive has its own `OptionsService`, `TanksService` and `DepthsService`. A view reading the selected dive's service must switch to the other instance. Covered by the existing `'renders levels of the dive selected outside the component'`, which must stay green in Task 4.
 4. **Simple view reset.** `setToSimple` resets depths of all dives at once without sending `depthChanged$`. Expected: tab titles of all dives follow. Task 4 adds a test.
 5. **Calculators restoring their state.** Weight, SAC and gas blender load the last state before the first render. Expected: the restored values are shown. The existing calculator specs pin it, Task 3 must keep them green.
@@ -95,8 +95,8 @@
 - [x] **Step 2: Run** the `models.spec.ts`. Expected: FAIL, the setters don't exist.
 - [x] **Step 3: Implement** the interfaces. Run `npx tsc -p projects/planner/tsconfig.app.json --noEmit` and fix every assignment to `bound.tank.*` it reports by the new setters: weight `loadState` and `inputChanged`, sac `loadState`, gas blender `loadTankState` (takes the `TankBound` instead of the `Tank` and uses `o2`, `he`, `startPressureBars`). Replace `trackedTank` by `tank`.
 - [x] **Step 4: Check** with `git grep -nE "\.tank\.(size|consumed|reserve|startPressure|o2|he|id)\s*=[^=]" projects/planner/src/app -- ':!*.spec.ts'` that no write through `.tank` of a `TankBound` remains (`GasProperties.tank` in `quiz.questions.ts` and segment/level `tank` assignments are not `TankBound` and stay). Specs writing `component.tank.tank.size` switch to `sizeLiters`.
-- [x] **Step 5: Write** `'renders tank size after units switched'` in `tank.size.component.spec.ts` (Review Focus 2): render with `renderOnPush`, switch `units.imperialUnits = true` and normalize through `SettingsNormalizationService`, expect the size in cubic feet.
-- [ ] **Step 6: Run** the `models`, `weight`, `sac`, `gas-blender` and `tank.size` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, the calculators restore their state (Review Focus 5), lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 5: Write** `'renders tank size in new units after normalization'` in `projects/planner/src/app/plan/tanks-simple/tanks-simple.component.spec.ts` (Review Focus 2): switch `units.imperialUnits = true`, run `SettingsNormalizationService.apply()` and then render the view (the units switch happens on the separate app-settings route, so the views are rendered after the normalization), expect the size in cubic feet.
+- [x] **Step 6: Run** the `models`, `weight`, `sac`, `gas-blender` and `tank.size` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, the calculators restore their state (Review Focus 5), lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
 - [x] **Step 7: Commit** `refactor: tank of TankBound is changed only by its setters`.
 
 ### Task 4: Depths track their own changes
@@ -117,8 +117,8 @@
 - [x] **Step 3: Implement** the interfaces.
 - [x] **Step 4: Remove** the `merge(depthChanged$, depthsReloaded$, setToSimple$)` subscription and `ChangeDetectorRef` use other than `ngAfterViewInit` from `plan.tabs`, and the `tankChanged$` and reload `markForCheck()` from `depths-complex`. Run both specs. Expected: `'renders title of depth changed outside the component'`, `'renders gas of a tank changed in tanks'`, `'renders levels reloaded outside the component'` and `'renders levels of the dive selected outside the component'` PASS. Restore any removal whose test fails and note it.
 - [x] **Step 5: Update** the OnPush bullet in `.claude/CLAUDE.md` Conventions: replace "A component showing state edited in place by a sibling calls `markForCheck()` on the matching `ReloadDispatcher` event (see `depths-complex`)" by "State edited in place is tracked by a `_version` signal of the owning service or wrapper, increased by each write and read by each getter (see `TankBound`, `DepthsService`, `OptionsService`)", keeping any `markForCheck()` left by Step 4 as the example.
-- [ ] **Step 6: Run** the `depths.service`, `plan.tabs` and `depths-complex` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 7: Commit** `refactor: depths track their own changes`.
+- [x] **Step 6: Run** the `depths.service`, `plan.tabs` and `depths-complex` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 7: Commit** `refactor: depths track their own changes`.
 
 ### Task 5: Quiz state pinned under OnPush
 
@@ -133,7 +133,7 @@
 - [x] **Step 1: Write** in `learn.component.spec.ts` `'renders question selected outside Angular events'`: `renderOnPush(LearnComponent)`, call `quizService.selectByName(<second topic>, <its first category>)`, `await fixture.whenStable()`, expect the second topic's question text, and `'renders question retranslated outside Angular events'`: switch the language through `TranslateService.use`, expect the translated question.
 - [x] **Step 2: Run** the `learn.component.spec.ts`. If both PASS, keep them as pins, skip Step 3 and note it in Status (no production change).
 - [x] **Step 3: Implement** the signals only for the failing case. Run the spec. Expected: PASS.
-- [ ] **Step 4: Run** `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 4: Run** `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
 - [x] **Step 5: Commit** `test: pin quiz state under OnPush` (or `refactor: quiz state as signals` when Step 3 changed code).
 
 ### Task 6: Tank consumption copied by tank id
@@ -155,7 +155,7 @@
   - `'ignores consumption of tank removed during calculation'`: remove the second tank, result with ids 1 and 2, expect no exception and the first tank consumed by its id 1 item.
 - [x] **Step 2: Run** `npx ng test planner --no-watch --include='**/tanks.service.spec.ts'`. Expected: `'copies consumption by tank id'` FAILS (values swapped) and `'keeps consumption of tank added during calculation'` FAILS with the `TypeError` reading `consumed`. Note in Status if the removal test already passes (it is kept as a pin).
 - [x] **Step 3: Implement** the id pairing in `copyTanksConsumption`.
-- [ ] **Step 4: Run** the spec, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 4: Run** the spec, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
 - [x] **Step 5: Commit** `fix: tank consumption copied by tank id`.
 
 ### Task 7: Final verification of the whole plan
@@ -165,10 +165,10 @@ Runs once, right after Task 6, without waiting for the user. Step 5 is the only 
 **Files:**
 - Modify: only files a failing check or a review finding points to, each fix with a test first.
 
-- [ ] Status
-- [ ] **Step 1: Run** `npm run test-lib-ci` and `npm run test-ci`. Expected: all pass. A failure goes through superpowers:systematic-debugging, the fix belongs to the task that caused it.
-- [ ] **Step 2: Run** `npm run lint`. Expected: no new errors against the Task 1 baseline.
-- [ ] **Step 3: Run** e2e on port 4300 (`npx ng serve --port 4300`, then `PLAYWRIGHT_TEST_BASE_URL=http://localhost:4300 npx playwright test`, stop the server; the user's own server on 4200 stays running). Expected: all pass and the e2e log has no `reading 'consumed'` error (Task 6).
-- [ ] **Step 4: Whole-branch review** by a reviewer subagent with superpowers:requesting-code-review over `master..HEAD`, checking the Review Focus list. Fix Critical/Important findings with a test first, re-run the affected specs, note the others in Status.
+- [x] Status (library 1010 tests in 68 files, planner 947 tests in 102 files pass; lint planner 100 / scuba-physics 12 (baseline); e2e 9/9 on port 4300, no "reading 'consumed'" error; whole-branch review: ready to merge with plan bookkeeping fixes, done; TankBound write grep clean; manual check pending)
+- [x] **Step 1: Run** `npm run test-lib-ci` and `npm run test-ci`. Expected: all pass. A failure goes through superpowers:systematic-debugging, the fix belongs to the task that caused it.
+- [x] **Step 2: Run** `npm run lint`. Expected: no new errors against the Task 1 baseline.
+- [x] **Step 3: Run** e2e on port 4300 (`npx ng serve --port 4300`, then `PLAYWRIGHT_TEST_BASE_URL=http://localhost:4300 npx playwright test`, stop the server; the user's own server on 4200 stays running). Expected: all pass and the e2e log has no `reading 'consumed'` error (Task 6).
+- [x] **Step 4: Whole-branch review** by a reviewer subagent with superpowers:requesting-code-review over `master..HEAD`, checking the Review Focus list. Fix Critical/Important findings with a test first, re-run the affected specs, note the others in Status.
 - [ ] **Step 5: STOP for the manual check by the user** with `npm run start-pwa` (port 9090): dive tab titles, depth levels with tank labels, dive options reload from a shared URL, MOD after a ppO2 change, units switch, weight/SAC/gas blender restore, adding a tank while the consumption is calculated, compare page profile selection, learn quiz.
 - [ ] **Step 6: Record** the final numbers (tests, lint, e2e) in Status and commit the fixes and the plan as `chore: signals follow-up verified` (a `fix:` commit for a user visible bug found here).

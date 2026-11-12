@@ -43,7 +43,7 @@
 
 ### Task 1: Docs markdown extension for marked 18
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/planner/src/app/shared/headingSlugger.ts`, `headingSlugger.spec.ts`, `markdownDocs.ts`, `markdownDocs.spec.ts` (all in `shared/`)
@@ -79,7 +79,7 @@ Check: `npm ls marked` shows `marked@18.x` at root and `marked@4.3.0` under `ngx
 ```ts
 const base = text.toLowerCase().trim()
     .replace(/<[!/a-z].*?>/ig, '')
-    .replace(/[ -⁯⸀-⹿\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
+    .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
     .replace(/\s/g, '-');
 // duplicates: keep a Map<string, number> of seen slugs; for a seen slug append `-${n}`
 // with n counting up from 1 until the result is unused, and mark both base and result as seen.

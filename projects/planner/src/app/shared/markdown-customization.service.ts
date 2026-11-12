@@ -1,14 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Urls } from './navigation.service';
 import { NgxMdService } from 'ngx-md';
-import { Slugger } from 'marked';
+
+// ngx-md runs its own nested marked 4, but its typings resolve the root marked 18 types.
+// Describes the marked 4 renderer API used at runtime, removed together with ngx-md.
+interface Slugger {
+    slug(value: string): string;
+}
+
+interface LegacyRenderer {
+    image: (href: string, title: string, text: string) => string;
+    link: (href: string, title: string, text: string) => string;
+    heading: (text: string, level: 1 | 2 | 3 | 4 | 5 | 6, raw: string, slugger: Slugger) => string;
+    blockquote: (quote: string) => string;
+    table: (header: string, body: string) => string;
+    code: (code: string, language: string) => string;
+}
 
 @Injectable()
 export class MarkdownCustomization {
     constructor(private urls: Urls, private markdown: NgxMdService) {}
 
     public configure(): void {
-        const renderer = this.markdown.renderer;
+        const renderer = this.markdown.renderer as unknown as LegacyRenderer;
 
         renderer.image = (href: string, _: string, text: string) => {
             const resolvedUrl = this.urls.imageUrl(href);

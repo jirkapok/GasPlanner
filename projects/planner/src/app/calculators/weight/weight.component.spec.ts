@@ -44,6 +44,8 @@ describe('WeightCalcComponent', () => {
         }).compileComponents();
     });
 
+    afterEach(() => localStorage.clear()); // the view state saves preferences including the units
+
     const createComponent = (): void => {
         fixture = TestBed.createComponent(WeightCalcComponent);
         component = fixture.componentInstance;

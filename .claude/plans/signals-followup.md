@@ -87,17 +87,17 @@
   - new setters in metric units, each calling `changed()`: `sizeLiters: number`, `startPressureBars: number`, `consumedBars: number`.
 - Consumes: Task 2 doesn't touch `TankBound`.
 
-- [ ] Status
-- [ ] **Step 1: Write the failing tests** in `models.spec.ts` (`TankBound`):
+- [x] Status (planner 940 tests in 102 files, lint planner 100 / scuba-physics 12 = baseline; RED: models.spec failed to compile, setters missing; no pins; added `algorithmTank` getter returning the tracked `Tank` for scuba-physics APIs taking `Tank`, since Readonly<Tank> is not assignable to it (private members); step 5 test renders a shared TankBound, switches units, sets working pressure as normalization does and patches the control like the parent, because the component renders size only from its form control)
+- [x] **Step 1: Write the failing tests** in `models.spec.ts` (`TankBound`):
   - `'sizeLiters keeps liters'`: set `sizeLiters = 15`, expect `tank.size` 15 and `bound.size` 15 in metric.
   - `'startPressureBars keeps bars'` and `'consumedBars keeps bars'`, same pattern.
   - `'tank reads are tracked'`: `const c = computed(() => bound.tank.o2)`, read it, set `bound.o2 = 32`, expect `c()` 32.
-- [ ] **Step 2: Run** the `models.spec.ts`. Expected: FAIL, the setters don't exist.
-- [ ] **Step 3: Implement** the interfaces. Run `npx tsc -p projects/planner/tsconfig.app.json --noEmit` and fix every assignment to `bound.tank.*` it reports by the new setters: weight `loadState` and `inputChanged`, sac `loadState`, gas blender `loadTankState` (takes the `TankBound` instead of the `Tank` and uses `o2`, `he`, `startPressureBars`). Replace `trackedTank` by `tank`.
-- [ ] **Step 4: Check** with `git grep -nE "\.tank\.(size|consumed|reserve|startPressure|o2|he|id)\s*=[^=]" projects/planner/src/app -- ':!*.spec.ts'` that no write through `.tank` of a `TankBound` remains (`GasProperties.tank` in `quiz.questions.ts` and segment/level `tank` assignments are not `TankBound` and stay). Specs writing `component.tank.tank.size` switch to `sizeLiters`.
-- [ ] **Step 5: Write** `'renders tank size after units switched'` in `tank.size.component.spec.ts` (Review Focus 2): render with `renderOnPush`, switch `units.imperialUnits = true` and normalize through `SettingsNormalizationService`, expect the size in cubic feet.
+- [x] **Step 2: Run** the `models.spec.ts`. Expected: FAIL, the setters don't exist.
+- [x] **Step 3: Implement** the interfaces. Run `npx tsc -p projects/planner/tsconfig.app.json --noEmit` and fix every assignment to `bound.tank.*` it reports by the new setters: weight `loadState` and `inputChanged`, sac `loadState`, gas blender `loadTankState` (takes the `TankBound` instead of the `Tank` and uses `o2`, `he`, `startPressureBars`). Replace `trackedTank` by `tank`.
+- [x] **Step 4: Check** with `git grep -nE "\.tank\.(size|consumed|reserve|startPressure|o2|he|id)\s*=[^=]" projects/planner/src/app -- ':!*.spec.ts'` that no write through `.tank` of a `TankBound` remains (`GasProperties.tank` in `quiz.questions.ts` and segment/level `tank` assignments are not `TankBound` and stay). Specs writing `component.tank.tank.size` switch to `sizeLiters`.
+- [x] **Step 5: Write** `'renders tank size after units switched'` in `tank.size.component.spec.ts` (Review Focus 2): render with `renderOnPush`, switch `units.imperialUnits = true` and normalize through `SettingsNormalizationService`, expect the size in cubic feet.
 - [ ] **Step 6: Run** the `models`, `weight`, `sac`, `gas-blender` and `tank.size` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, the calculators restore their state (Review Focus 5), lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 7: Commit** `refactor: tank of TankBound is changed only by its setters`.
+- [x] **Step 7: Commit** `refactor: tank of TankBound is changed only by its setters`.
 
 ### Task 4: Depths track their own changes
 

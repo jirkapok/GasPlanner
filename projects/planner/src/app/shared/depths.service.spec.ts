@@ -111,7 +111,7 @@ describe('Depths service', () => {
             const secondTank = tanksService.tanks[1];
             depthService.addSegment();
             const lastSegment = depthService.segments[1];
-            lastSegment.tank = secondTank.tank;
+            lastSegment.tank = secondTank.algorithmTank;
             tanksService.removeTank(secondTank);
 
             expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);

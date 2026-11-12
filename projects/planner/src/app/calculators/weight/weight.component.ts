@@ -68,7 +68,7 @@ export class WeightCalcComponent implements OnInit {
     }
 
     public get weight(): number {
-        let result = AirWeight.tankVolumeWeight(this.tank.tank);
+        let result = AirWeight.tankVolumeWeight(this.tank.algorithmTank);
         result = this.units.fromKilogram(result);
         return Precision.round(result, 1);
     }
@@ -109,10 +109,10 @@ export class WeightCalcComponent implements OnInit {
 
         const values = this.weightForm.value;
         const consumed = Number(values.consumed);
-        const t = this.tank.tank;
+        const t = this.tank;
         const reserve = this.setttings.appSettings.primaryTankReserve;
-        t.startPressure = reserve + consumed;
-        t.consumed = this.units.toBar(consumed);
+        t.startPressureBars = reserve + consumed;
+        t.consumedBars = this.units.toBar(consumed);
         this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
     }
@@ -124,10 +124,10 @@ export class WeightCalcComponent implements OnInit {
             state = this.createState();
         }
 
-        this.tank.tank.size = state.tankSize;
+        this.tank.sizeLiters = state.tankSize;
         const workPressure = this.units.fromBar(state.workPressure);
         this.setWorkingPressure(workPressure);
-        this.tank.tank.consumed = state.consumed;
+        this.tank.consumedBars = state.consumed;
     }
 
     private saveState(): void {

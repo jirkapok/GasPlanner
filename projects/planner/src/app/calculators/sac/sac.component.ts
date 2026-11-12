@@ -255,7 +255,7 @@ export class SacComponent implements OnInit {
         this.calc.depth = state.avgDepth;
         this.tank.workingPressureBars = state.workPressure;
         this.calc.tankSize = state.tankSize;
-        this.tank.tank.size = this.calc.tankSize;
+        this.tank.sizeLiters = this.calc.tankSize;
         this.calc.used = state.used;
         this.calc.duration = state.duration;
     }

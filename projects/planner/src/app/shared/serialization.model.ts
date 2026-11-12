@@ -57,7 +57,7 @@ export interface ITankBound {
     id: number;
     /** in bars to avoid conversions */
     workingPressureBars: number;
-    tank: Tank;
+    tank: Readonly<Tank>;
 }
 
 export interface PlanRequestDto {

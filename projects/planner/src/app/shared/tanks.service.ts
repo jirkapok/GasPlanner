@@ -50,7 +50,7 @@ export class TanksService {
     }
 
     public get tankData(): Tank[] {
-        return _(this._tanks()).map(bt => bt.tank)
+        return _(this._tanks()).map(bt => bt.algorithmTank)
             .value();
     }
 
@@ -63,7 +63,7 @@ export class TanksService {
     public removeTank(tank: TankBound): void {
         this._tanks.set(this._tanks().filter(g => g !== tank));
         this.renumberIds();
-        this.dispatcher.sendTanksRemoved(tank.tank);
+        this.dispatcher.sendTanksRemoved(tank.algorithmTank);
     }
 
     /** Closed circuit rebreathers need the diluent and oxygen tanks, they can't be removed */

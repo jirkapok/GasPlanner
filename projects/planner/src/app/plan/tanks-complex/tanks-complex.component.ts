@@ -214,7 +214,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.schedules.selectedOptions.diverOptions.gasSac(bound.tank);
+        const sac = this.schedules.selectedOptions.diverOptions.gasSac(bound.algorithmTank);
         return this.units.fromBar(sac);
     }
 

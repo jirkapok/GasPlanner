@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { EventsFactory, StandardGases, Tank } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { BoundEvent, TankBound } from './models';
@@ -24,6 +25,37 @@ describe('Bound tank', () => {
     it('Rounds size to one decimal', () => {
         tank.size = 12.354;
         expect(tank.size).toBe(12.4);
+    });
+
+    it('sizeLiters keeps liters', () => {
+        units.imperialUnits = true;
+        tank.sizeLiters = 15;
+        expect(tank.tank.size).toBe(15);
+        units.imperialUnits = false;
+        expect(tank.size).toBe(15);
+    });
+
+    it('startPressureBars keeps bars', () => {
+        units.imperialUnits = true;
+        tank.startPressureBars = 180;
+        expect(tank.tank.startPressure).toBe(180);
+        units.imperialUnits = false;
+        expect(tank.startPressure).toBe(180);
+    });
+
+    it('consumedBars keeps bars', () => {
+        units.imperialUnits = true;
+        tank.consumedBars = 50;
+        expect(tank.tank.consumed).toBe(50);
+        units.imperialUnits = false;
+        expect(tank.consumed).toBe(50);
+    });
+
+    it('tank reads are tracked', () => {
+        const c = computed(() => tank.tank.o2);
+        expect(c()).toBe(21);
+        tank.o2 = 32;
+        expect(c()).toBe(32);
     });
 
     describe('Imperial units', () => {

@@ -116,8 +116,8 @@ export class SettingsNormalizationService {
             }
 
             // the rest (consumed and reserve) will be calculated
-            tank.startPressure = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
-            tank.size = this.fitTankSizeToRange(tank.size, t.workingPressureBars, this.ranges.tankSize);
+            t.startPressureBars = this.fitPressureToRange(tank.startPressure, this.ranges.tankPressure);
+            t.sizeLiters = this.fitTankSizeToRange(tank.size, t.workingPressureBars, this.ranges.tankSize);
         });
     }
 

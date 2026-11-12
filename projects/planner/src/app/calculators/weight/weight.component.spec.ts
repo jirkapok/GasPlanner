@@ -47,7 +47,7 @@ describe('WeightCalcComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(WeightCalcComponent);
         component = fixture.componentInstance;
-        component.tank.tank.size = 15;
+        component.tank.sizeLiters = 15;
         fixture.detectChanges();
     });
 

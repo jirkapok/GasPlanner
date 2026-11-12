@@ -88,7 +88,7 @@ export class DepthsService extends Streamed {
     }
 
     private get firstTank(): Tank {
-        return this.tanksService.firstTank.tank;
+        return this.tanksService.firstTank.algorithmTank;
     }
 
     /** Read from the options each time to track their changes */

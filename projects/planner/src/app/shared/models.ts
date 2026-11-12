@@ -61,7 +61,7 @@ export class Level {
     }
 
     public set tank(newValue: TankBound) {
-        this.segment.tank = newValue.tank;
+        this.segment.tank = newValue.algorithmTank;
         this.tankBound = newValue;
     }
 }
@@ -157,28 +157,40 @@ export class TankBound implements IGasContent, ITankSize {
     // Each setter increases it and each getter reads it to track the change.
     private readonly _version = signal(0);
 
-    constructor(public tank: Tank, private units: UnitConversion) {
+    private readonly _tank: Tank;
+
+    constructor(tank: Tank, private units: UnitConversion) {
+        this._tank = tank;
         const defaultTanks = this.units.defaults.tanks;
         const newWorkPressure = defaultTanks.primary.workingPressure;
         this._workingPressureBars = this.units.toBar(newWorkPressure);
     }
 
     /** The tank with tracked changes, use it to calculate values shown in the view. Change the tank only by setters of this class. */
-    public get trackedTank(): Tank {
+    public get tank(): Readonly<Tank> {
         this._version();
-        return this.tank;
+        return this._tank;
+    }
+
+    /**
+     * The tracked tank for scuba-physics APIs requiring the Tank type (its private members make Readonly<Tank> unassignable).
+     * Pass it only for reading, change the tank only by setters of this class.
+     */
+    public get algorithmTank(): Tank {
+        this._version();
+        return this._tank;
     }
 
     public get id(): number {
-        return this.trackedTank.id;
+        return this.tank.id;
     }
 
     public get size(): number {
-        return this.units.fromTankLiters(this.trackedTank.size, this._workingPressureBars);
+        return this.units.fromTankLiters(this.tank.size, this._workingPressureBars);
     }
 
     public get startPressure(): number {
-        return this.units.fromBar(this.trackedTank.startPressure);
+        return this.units.fromBar(this.tank.startPressure);
     }
 
     public get workingPressure(): number {
@@ -191,46 +203,46 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get o2(): number {
-        return this.trackedTank.o2;
+        return this.tank.o2;
     }
 
     public get he(): number {
-        return this.trackedTank.he;
+        return this.tank.he;
     }
 
     public get n2(): number {
-        return this.trackedTank.n2;
+        return this.tank.n2;
     }
 
     public get name(): string {
-        return this.trackedTank.name;
+        return this.tank.name;
     }
 
     /** In respective pressure units */
     public get consumed(): number {
-        return this.units.fromBar(this.trackedTank.consumed);
+        return this.units.fromBar(this.tank.consumed);
     }
 
     /** In respective pressure units */
     public get reserve(): number {
-        return this.units.fromBar(this.trackedTank.reserve);
+        return this.units.fromBar(this.tank.reserve);
     }
 
     /** In respective pressure units */
     public get endPressure(): number {
-        return this.units.fromBar(this.trackedTank.endPressure);
+        return this.units.fromBar(this.tank.endPressure);
     }
 
     public get percentsReserve(): number {
-        return this.trackedTank.percentsReserve;
+        return this.tank.percentsReserve;
     }
 
     public get percentsRemaining(): number {
-        return this.trackedTank.percentsRemaining;
+        return this.tank.percentsRemaining;
     }
 
     public get hasReserve(): boolean {
-        return this.trackedTank.hasReserve;
+        return this.tank.hasReserve;
     }
 
     public get label(): string {
@@ -240,7 +252,7 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set id(newValue: number) {
-        this.tank.id = newValue;
+        this._tank.id = newValue;
         this.changed();
     }
 
@@ -250,7 +262,25 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set startPressure(newValue: number) {
-        this.tank.startPressure = this.units.toBar(newValue);
+        this._tank.startPressure = this.units.toBar(newValue);
+        this.changed();
+    }
+
+    /** Size in liters regardless of the units, for restoring metric state */
+    public set sizeLiters(newValue: number) {
+        this._tank.size = newValue;
+        this.changed();
+    }
+
+    /** Start pressure in bars regardless of the units */
+    public set startPressureBars(newValue: number) {
+        this._tank.startPressure = newValue;
+        this.changed();
+    }
+
+    /** Consumed in bars regardless of the units */
+    public set consumedBars(newValue: number) {
+        this._tank.consumed = newValue;
         this.changed();
     }
 
@@ -278,12 +308,12 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set o2(newValue: number) {
-        this.tank.o2 = newValue;
+        this._tank.o2 = newValue;
         this.changed();
     }
 
     public set he(newValue: number) {
-        this.tank.he = newValue;
+        this._tank.he = newValue;
         this.changed();
     }
 
@@ -293,19 +323,19 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public assignStandardGas(gasName: string): void {
-        this.tank.assignStandardGas(gasName);
+        this._tank.assignStandardGas(gasName);
         this.changed();
     }
 
     /** Values in bars, as calculated by the consumption worker */
     public assignConsumption(consumed: number, reserve: number): void {
-        this.tank.consumed = consumed;
-        this.tank.reserve = reserve;
+        this._tank.consumed = consumed;
+        this._tank.reserve = reserve;
         this.changed();
     }
 
     private assignSize(newValue: number): void {
-        this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+        this._tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
         this.changed();
     }
 

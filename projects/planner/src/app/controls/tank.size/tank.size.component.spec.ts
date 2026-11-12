@@ -4,7 +4,9 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { CommonModule, DecimalPipe, NgFor } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Precision, Tank } from 'scuba-physics';
+import { TankBound } from '../../shared/models';
 import { MdbFormsModule } from 'mdb-angular-ui-kit/forms';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { InputControls } from '../../shared/inputcontrols';
@@ -100,5 +102,31 @@ describe('TankSizeComponent OnPush', () => {
         await fixture.whenStable();
 
         expect((fixture.nativeElement as HTMLElement).querySelector('.is-invalid')).not.toBeNull();
+    });
+});
+
+describe('TankSizeComponent units switch', () => {
+    // The component has no normalization of its own, the parent writes the size of the shared tank into the control
+    it('renders tank size after units switched', async () => {
+        const units = new UnitConversion();
+        TestBed.configureTestingModule({
+            providers: [{ provide: UnitConversion, useValue: units }, InputControls, DecimalPipe, ValidatorGroups, provideNoopAnimations()],
+            imports: [CommonModule, ReactiveFormsModule, MdbFormsModule, MdbDropdownModule, NgFor]
+        });
+        const tank = new TankBound(Tank.createDefault(), units);
+        tank.sizeLiters = 15;
+        const sizeForm = new FormGroup({});
+        const fixture = await renderOnPush(TankSizeComponent, { tank, sizeForm });
+        const input = (fixture.nativeElement as HTMLElement).querySelector('input') as HTMLInputElement;
+        expect(Number(input.value)).toBe(15);
+
+        units.imperialUnits = true;
+        tank.workingPressureBars = units.toBar(units.defaults.tanks.primary.workingPressure); // as the normalization does
+        sizeForm.patchValue({ tankSize: Precision.round(tank.size, 1) });
+        await fixture.whenStable();
+
+        const expected = Precision.round(units.fromTankLiters(15, tank.workingPressureBars), 1);
+        expect(expected).toBeGreaterThan(15);
+        expect(Number(input.value)).toBe(expected);
     });
 });

@@ -31,13 +31,13 @@ export class GaslabelComponent {
     constructor(public units: UnitConversion) { }
 
     public get gasMod(): number {
-        const mod = this.toxicity.modForGas(this.tank.trackedTank);
+        const mod = this.toxicity.modForGas(this.tank.algorithmTank);
         const result = this.units.fromMeters(mod);
         return Precision.floor(result);
     }
 
     public get gasMnd(): number {
-        const mnd = this.toxicity.mndForGas(this.tank.trackedTank.gas);
+        const mnd = this.toxicity.mndForGas(this.tank.tank.gas);
         const result = this.units.fromMeters(mnd);
         return Precision.floor(result);
     }
@@ -47,7 +47,7 @@ export class GaslabelComponent {
     }
 
     public get gasDecoMod(): number {
-        const mod = this.toxicity.switchDepth(this.tank.trackedTank);
+        const mod = this.toxicity.switchDepth(this.tank.algorithmTank);
         const result = this.units.fromMeters(mod);
         return Precision.floor(result);
     }

@@ -183,7 +183,7 @@ Added by the user after the final review (pre-existing bug, found in Task 3 revi
 - Modify: `projects/planner/src/app/calculators/weight/weight.component.ts` (`inputChanged`)
 - Test: `projects/planner/src/app/calculators/weight/weight.component.spec.ts`
 
-- [x] Status (948 tests in 102 files, lint planner 100 / scuba-physics 12; RED: new imperial test failed before the change, tank consumed was 0 instead of about 200 bar because the bogus start pressure was rejected; displayed weight CHANGED in imperial: 0 before, correct value after; metric unchanged; review step left for the controller)
+- [x] Status (948 tests in 102 files, lint planner 100 / scuba-physics 12; RED with the fix reverted: tank consumed 0 instead of 200 bar (bogus start pressure 30+2900 rejected), so the displayed weight was 0; with the fix the displayed weight is 7.8 lb for 2900 psi consumed of a 15 L tank; metric unchanged; test builds the imperial component like the app (units set before createComponent, no tank pokes); review step left for the controller)
 - [x] **Step 1: Write the failing test** `'keeps start pressure in bars in imperial units'` in `weight.component.spec.ts`.
 - [x] **Step 2: Run** `npx ng test planner --no-watch --include='**/weight.component.spec.ts'`. Expected: FAILS.
 - [x] **Step 3: Implement**: convert consumed once (`const consumedBars = this.units.toBar(consumed)`), use it for `startPressureBars = reserve + consumedBars` and `consumedBars`.

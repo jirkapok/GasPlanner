@@ -44,12 +44,12 @@ describe('WeightCalcComponent', () => {
         }).compileComponents();
     });
 
-    beforeEach(() => {
+    const createComponent = (): void => {
         fixture = TestBed.createComponent(WeightCalcComponent);
         component = fixture.componentInstance;
         component.tank.sizeLiters = 15;
         fixture.detectChanges();
-    });
+    };
 
     const setConsumed = (newConsumed: string): void => {
         const consumedInput = fixture.debugElement.query(By.css('#consumed'))?.nativeElement as HTMLInputElement;
@@ -57,38 +57,42 @@ describe('WeightCalcComponent', () => {
         consumedInput.dispatchEvent(new Event('input'));
     };
 
-    it('Calculates weight for 150 bars consumed', () => {
-        setConsumed('150');
-        expect(component.tank.startPressure).toBeCloseTo(180, 3);
-        expect(component.weight).toBeCloseTo(2.7, 3);
+    describe('Metric units', () => {
+        beforeEach(() => createComponent());
+
+        it('Calculates weight for 150 bars consumed', () => {
+            setConsumed('150');
+            expect(component.tank.startPressure).toBeCloseTo(180, 3);
+            expect(component.weight).toBeCloseTo(2.7, 3);
+        });
+
+        it('Calculates weight for 0 bars consumed', () => {
+            setConsumed('0');
+            expect(component.tank.startPressure).toBeCloseTo(30, 3);
+            expect(component.weight).toBeCloseTo(0, 3);
+        });
+
+        it('Uses correct consumed when updated multiple times', () => {
+            setConsumed('100');
+            setConsumed('200');
+            expect(component.tank.startPressure).toBeCloseTo(230, 3);
+            expect(component.weight).toBeCloseTo(3.5, 3);
+        });
     });
 
-    it('Calculates weight for 0 bars consumed', () => {
-        setConsumed('0');
-        expect(component.tank.startPressure).toBeCloseTo(30, 3);
-        expect(component.weight).toBeCloseTo(0, 3);
-    });
+    describe('Imperial units', () => {
+        beforeEach(() => {
+            TestBed.inject(UnitConversion).imperialUnits = true;
+            createComponent();
+        });
 
-    it('Uses correct consumed when updated multiple times', () => {
-        setConsumed('100');
-        setConsumed('200');
-        expect(component.tank.startPressure).toBeCloseTo(230, 3);
-        expect(component.weight).toBeCloseTo(3.5, 3);
-    });
-
-    it('keeps start pressure in bars in imperial units', () => {
-        component.units.imperialUnits = true;
-        component.tank.workingPressure = 3000;
-        component.tank.size = 80;
-        component.ngOnInit();
-        const consumedPsi = 2900;
-        component.weightForm.patchValue({ consumed: consumedPsi });
-        component.inputChanged();
-
-        const consumedBars = component.units.toBar(consumedPsi);
-        const reserve = TestBed.inject(ApplicationSettingsService).appSettings.primaryTankReserve;
-        expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0);
-        expect(component.tank.tank.startPressure).toBeCloseTo(reserve + consumedBars, 0);
-        expect(component.weight).toBeGreaterThan(0);
+        it('keeps start pressure in bars in imperial units', () => {
+            setConsumed('2900');
+            const consumedBars = component.units.toBar(2900);
+            const reserve = TestBed.inject(ApplicationSettingsService).appSettings.primaryTankReserve;
+            expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0) // the tank rounds consumed up to whole bars;
+            expect(component.tank.tank.startPressure).toBeCloseTo(reserve + consumedBars, 1);
+            expect(component.weight).toBeCloseTo(7.8, 1);
+        });
     });
 });

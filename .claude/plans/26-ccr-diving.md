@@ -2130,7 +2130,7 @@ Decisions made while implementing (user: 5g oxygen template 3 L/200 bar + AL19/3
   - The pSCR events spec counts the low out-of-range events.
 - **5d**:
   - `CircuitNames` is `providedIn: 'root'` (like `QuizService`), so the 57 specs providing `DiveSchedules` don't need a new provider; 12 TestBed specs got `provideTestTranslate()`.
-  - `DiveSchedule.circuit` tracks the options version, so OnPush titles follow a circuit switch.
+  - `DiveSchedule.circuit` reads `OptionsService.circuit`, which tracks its own changes since the master signals follow-up (the former `ReloadDispatcher.trackOptions()` was removed), so OnPush titles follow a circuit switch.
 - **5h**:
   - Plotly resize errors were no longer reproduced.
   - `NG0956` came from the waypoints rows, dive issues and consumed gases tracked by identity (now `$index`).

@@ -55,13 +55,13 @@
 - Produces: `function markdownDocsExtension(urls: Urls): MarkedExtension` (`MarkedExtension` from `marked`)
 - `provideDocsMarkdown()` is added in Task 2, not here.
 
-- [ ] **Step 1: Install dependencies and keep ngx-md compiling**
+- [x] **Step 1: Install dependencies and keep ngx-md compiling**
 
 Run: `npm install ngx-markdown@22.1.1 marked@^18.2.0 --legacy-peer-deps`
 Root `marked` becomes v18, so `import { Slugger } from 'marked'` in `markdown-customization.service.ts` no longer compiles. Replace it with a local type `type Slugger = { slug(value: string): string };` (ngx-md keeps its own nested marked 4 at runtime; this file is deleted in Task 2).
 Check: `npm ls marked` shows `marked@18.x` at root and `marked@4.3.0` under `ngx-md`.
 
-- [ ] **Step 2: Write failing slugger tests** in `headingSlugger.spec.ts` (`describe('HeadingSlugger')`), each on a fresh `new HeadingSlugger()`:
+- [x] **Step 2: Write failing slugger tests** in `headingSlugger.spec.ts` (`describe('HeadingSlugger')`), each on a fresh `new HeadingSlugger()`:
   - `slug('Repetitive dives and Surface interval')` → `'repetitive-dives-and-surface-interval'`
   - `slug('Tissues heat map')` → `'tissues-heat-map'`, `slug('mCCR')` → `'mccr'`
   - `slug('Depth(s)')` → `'depths'`
@@ -72,9 +72,9 @@ Check: `npm ls marked` shows `marked@18.x` at root and `marked@4.3.0` under `ngx
   - duplicates: `slug('Gases')`, `slug('Gases')`, `slug('Gases')` → `'gases'`, `'gases-1'`, `'gases-2'`
   - `reset()`: `slug('Gases')`, `reset()`, `slug('Gases')` → second is `'gases'`
 
-- [ ] **Step 3: Run** `npx ng test planner --no-watch --include='**/headingSlugger.spec.ts'` → FAIL (module not found).
+- [x] **Step 3: Run** `npx ng test planner --no-watch --include='**/headingSlugger.spec.ts'` → FAIL (module not found).
 
-- [ ] **Step 4: Implement `HeadingSlugger`** in `headingSlugger.ts`, port of marked 4.3 `Slugger`:
+- [x] **Step 4: Implement `HeadingSlugger`** in `headingSlugger.ts`, port of marked 4.3 `Slugger`:
 
 ```ts
 const base = text.toLowerCase().trim()
@@ -85,9 +85,9 @@ const base = text.toLowerCase().trim()
 // with n counting up from 1 until the result is unused, and mark both base and result as seen.
 ```
 
-- [ ] **Step 5: Run** the same command → PASS.
+- [x] **Step 5: Run** the same command → PASS.
 
-- [ ] **Step 6: Write failing extension tests** in `markdownDocs.spec.ts`. Helper inside the spec: `const render = (md: string) => new Marked(markdownDocsExtension(new Urls())).parse(md) as string;`. Assertions (use `toContain` on the exact fragment):
+- [x] **Step 6: Write failing extension tests** in `markdownDocs.spec.ts`. Helper inside the spec: `const render = (md: string) => new Marked(markdownDocsExtension(new Urls())).parse(md) as string;`. Assertions (use `toContain` on the exact fragment):
   - **image:** `![Target depth](./target_depth_properties.png)` → contains `<img src="assets/doc/target_depth_properties.png" alt="Target depth" class="img-fluid p-3" title="Target depth">`
   - **doc link with anchor:** `[toxicity](./diveinfo.md#oxygen-toxicity)` → `<a href="/help/diveinfo/oxygen-toxicity">toxicity</a>`
   - **doc link without anchor:** `[tanks](./tanks.md)` → `<a href="/help/tanks/">tanks</a>`
@@ -103,9 +103,9 @@ const base = text.toLowerCase().trim()
   - **code without language:** "```\nabc\n```" → contains `class="language-plaintext"`
   - **escapes code block text:** "```\na < b & c\n```" → contains `a &lt; b &amp; c`
 
-- [ ] **Step 7: Run** `npx ng test planner --no-watch --include='**/markdownDocs.spec.ts'` → FAIL (module not found).
+- [x] **Step 7: Run** `npx ng test planner --no-watch --include='**/markdownDocs.spec.ts'` → FAIL (module not found).
 
-- [ ] **Step 8: Implement `markdownDocsExtension(urls: Urls): MarkedExtension`** in `markdownDocs.ts`:
+- [x] **Step 8: Implement `markdownDocsExtension(urls: Urls): MarkedExtension`** in `markdownDocs.ts`:
   - One `HeadingSlugger` per extension; `hooks: { preprocess(md) { slugger.reset(); return md; } }`.
   - `renderer` uses regular `function`s (not arrows) so `this.parser` works. Same output as `markdown-customization.service.ts`, mapped to tokens:
     - `image({ href, text })`: same as today, `urls.imageUrl(href)`.
@@ -115,9 +115,9 @@ const base = text.toLowerCase().trim()
     - `table(token)`: header row = `token.header` cells via `this.tablecell(cell)` wrapped with `this.tablerow({ text })`; body rows the same from `token.rows`; output `<table class="table table-bordered table-sm"><thead class="table-light">…</thead><tbody>…</tbody></table>`.
     - `code({ text, lang, escaped })`: `escaped ? text : escapeHtml(text)` inside the classed `pre`/`code`; `lang || 'plaintext'`. `escapeHtml` encodes `& < > " '`.
 
-- [ ] **Step 9: Run** both specs → PASS; then `npm run test-ci` → all green (ngx-md still renders the app), and `npm run lint` → no errors.
+- [x] **Step 9: Run** both specs → PASS; then `npm run test-ci` → all green (ngx-md still renders the app), and `npm run lint` → no errors.
 
-- [ ] **Step 10: Commit**
+- [x] **Step 10: Commit**
 
 ```bash
 git add package.json package-lock.json projects/planner/src/app/shared/headingSlugger*.ts projects/planner/src/app/shared/markdownDocs*.ts projects/planner/src/app/shared/markdown-customization.service.ts
@@ -143,31 +143,31 @@ git commit -m "feat(planner): #134 docs markdown extension for marked 18"
 - Consumes: `markdownDocsExtension(urls: Urls): MarkedExtension` (Task 1)
 - Produces: `function provideDocsMarkdown(): ReturnType<typeof provideMarkdown>` in `markdownDocs.ts` = `provideMarkdown({ loader: HttpClient, markedExtensions: [{ provide: MARKED_EXTENSIONS, useFactory: markdownDocsExtension, deps: [Urls], multi: true }] })`.
 
-- [ ] **Step 1: Switch the existing specs to the new setup (they become failing tests)**
+- [x] **Step 1: Switch the existing specs to the new setup (they become failing tests)**
   - `help.component.spec.ts` (both describes), `learn.component.spec.ts`: remove `NgxMdModule` from `imports`, add `provideDocsMarkdown()` to `providers`.
   - `startUp.spec.ts`: replace `importProvidersFrom(NgxMdModule.forRoot())` with `provideDocsMarkdown()`.
 
-- [ ] **Step 2: Add failing component tests** in `help.component.spec.ts`, `describe('Help component OnPush')`, same setup as the existing "renders document loaded asynchronously":
+- [x] **Step 2: Add failing component tests** in `help.component.spec.ts`, `describe('Help component OnPush')`, same setup as the existing "renders document loaded asynchronously":
   - **renders docs html:** flush `application.md` with `'## Repetitive dives and Surface interval\n\n[toxicity](./diveinfo.md#oxygen-toxicity)'`; after `whenStable()` the element contains `h2#repetitive-dives-and-surface-interval` and `a[href="/help/diveinfo/oxygen-toxicity"]`.
   - **scrolls to anchor after document rendered:** `vi.spyOn(Element.prototype, 'scrollIntoView')`; after the initial render call `component.updatePath({ path: 'depths', anchor: 'repetitive-dives-and-surface-interval' })` (its own immediate scroll finds no element yet); `await fixture.whenStable()`; flush `depths.md` with `'## Repetitive dives and Surface interval'`; after `whenStable()` expect the spy to have been called with `this` equal to the `h2#repetitive-dives-and-surface-interval` element (`spy.mock.contexts`).
   - **does not double-render when sidebar and help both render:** render `HelpSidebarComponent` and `HelpComponent` in the same TestBed, flush both documents with the table from Task 1; expect exactly one `table` element per host (`querySelectorAll('table').length === 1` for each) and `class="table table-bordered table-sm"` unchanged.
 
-- [ ] **Step 3: Run** `npx ng test planner --no-watch --include='**/help.component.spec.ts'` → FAIL (`provideDocsMarkdown` not exported / no `<markdown>` rendering).
+- [x] **Step 3: Run** `npx ng test planner --no-watch --include='**/help.component.spec.ts'` → FAIL (`provideDocsMarkdown` not exported / no `<markdown>` rendering).
 
-- [ ] **Step 4: Implement**
+- [x] **Step 4: Implement**
   - `markdownDocs.ts`: add `provideDocsMarkdown()` as in Interfaces.
   - `app.config.ts`: remove `NgxMdModule` import and `NgxMdModule.forRoot()`; add `provideDocsMarkdown()` to the providers list.
   - Templates: `<ngx-md [path]="X" [sanitizeHtml]="false" …></ngx-md>` → `<markdown [src]="X" [disableSanitizer]="true" …></markdown>`; Help page `(loaded)="scrollToAnchor()"` → `(ready)="scrollToAnchor()"`.
   - Components (`help`, `help-sidebar`, `learn`): replace `NgxMdModule` with `MarkdownComponent` from `ngx-markdown` in `imports`; remove `providers: [MarkdownCustomization]`, the constructor parameter and the `configure()` call.
   - Delete `markdown-customization.service.ts`.
 
-- [ ] **Step 5: Run** `npx ng test planner --no-watch --include='**/{help,learn,help-sidebar}.component.spec.ts'` and `--include='**/startUp.spec.ts'` → PASS.
+- [x] **Step 5: Run** `npx ng test planner --no-watch --include='**/{help,learn,help-sidebar}.component.spec.ts'` and `--include='**/startUp.spec.ts'` → PASS.
 
-- [ ] **Step 6: Run** `npm run test-ci` → all green; `npm run lint` → no errors.
+- [x] **Step 6: Run** `npm run test-ci` → all green; `npm run lint` → no errors.
 
-- [ ] **Step 7: Manual check** with `npm start` (http://localhost:4200): open `/help/depths/repetitive-dives-and-surface-interval` (scrolls to the section), a page with a table (`/help/gas_properties/`), an image (`/help/tanks/`), click a `./x.md#anchor` link and an external link (new tab), open the help sidebar from a dashboard info icon and the Learn page help panel. Compare against https://dugong.online/ for layout.
+- [x] **Step 7: Manual check** with `npm start` (http://localhost:4200): open `/help/depths/repetitive-dives-and-surface-interval` (scrolls to the section), a page with a table (`/help/gas_properties/`), an image (`/help/tanks/`), click a `./x.md#anchor` link and an external link (new tab), open the help sidebar from a dashboard info icon and the Learn page help panel. Compare against https://dugong.online/ for layout.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add -A projects/planner/src/app
@@ -187,19 +187,19 @@ git commit -m "refactor(planner): #134 render help and learn pages with ngx-mark
 **Interfaces:**
 - Consumes: Task 2 leaves no import of `ngx-md`.
 
-- [ ] **Step 1: Verify no references remain**
+- [x] **Step 1: Verify no references remain**
 Run: Grep `ngx-md|NgxMd|prismjs` over the repo excluding `node_modules`, `dist`, `.angular`, `coverage`, `package-lock.json`, `doc/CHANGELOG.md`, `.claude/plans/` → matches only in `package.json` and `.claude/CLAUDE.md`.
 
-- [ ] **Step 2: Uninstall** `npm uninstall ngx-md --legacy-peer-deps`.
+- [x] **Step 2: Uninstall** `npm uninstall ngx-md --legacy-peer-deps`.
 Check: `npm ls ngx-md prismjs` → empty; `npm ls marked` → only `marked@18.x` for the app (semantic-release may keep its own copies).
 
-- [ ] **Step 3: Update `.claude/CLAUDE.md`**: in "App composition", replace `NgxMdModule` in the example list of third-party modules with `provideDocsMarkdown()` (ngx-markdown); in "Docs / Help", replace "using `ngx-md`" with "using `ngx-markdown` (setup and marked renderer overrides in `shared/markdownDocs.ts`; heading anchors from `HeadingSlugger`, compatible with the old marked 4 ids)".
+- [x] **Step 3: Update `.claude/CLAUDE.md`**: in "App composition", replace `NgxMdModule` in the example list of third-party modules with `provideDocsMarkdown()` (ngx-markdown); in "Docs / Help", replace "using `ngx-md`" with "using `ngx-markdown` (setup and marked renderer overrides in `shared/markdownDocs.ts`; heading anchors from `HeadingSlugger`, compatible with the old marked 4 ids)".
 
-- [ ] **Step 4: Verify the whole build**
+- [x] **Step 4: Verify the whole build**
 Run: `npm run build-lib`, then `npm run build` → succeeds with no new warnings (no CommonJS warning for marked). Then `npm run test-ci` and `npm run lint` → green.
 Run: `npm run start-pwa` and open http://localhost:9090/help/depths/repetitive-dives-and-surface-interval → renders and scrolls; reload with DevTools offline → help still renders from the service worker cache.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add package.json package-lock.json .claude/CLAUDE.md

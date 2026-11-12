@@ -74,10 +74,10 @@ Use the Superpowers plugin skills for feature and bug-fix work:
 
 1. `superpowers:brainstorming` — clarify the feature and get the design/spec approved before planning.
 2. `superpowers:writing-plans` — write the implementation plan into `.claude/plans/` (not the skill's default `docs/superpowers/plans/`); all plans live there. Give every task a `- [ ] Status` checkbox.
-3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement the plan, but override their continuous execution:
-   implement ONE task per request, run its verification (tests + `npm run lint`), tick its `- [ ] Status` checkbox, then STOP for my review.
-   Don't continue to the next task or run `superpowers:finishing-a-development-branch` without my explicit go-ahead.
-4. Use `superpowers:systematic-debugging` for bugs and test failures, and `superpowers:verification-before-completion` before claiming anything works.
+3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement all tasks of the plan continuously: for each task run its verification (tests + `npm run lint`), tick each of its step checkboxes as the step is done and its `- [ ] Status` checkbox when the task is done, commit it, then continue with the next task without stopping.
+4. After the last task, run the final whole-branch review with `superpowers:requesting-code-review`: dispatch a fresh code-reviewer subagent on the most capable model (this explicitly authorizes the subagent) over the range from the branch's merge-base with `master` to `HEAD`, passing the plan, its Review Focus section and the ledger's rulings. Fix its Critical and Important findings test-first, then STOP for my review.
+   Don't run `superpowers:finishing-a-development-branch` (push, PR, merge) without my explicit go-ahead.
+5. Use `superpowers:systematic-debugging` for bugs and test failures, and `superpowers:verification-before-completion` before claiming anything works.
 
 The project rules in this file take precedence over the Superpowers skills where they conflict.
 

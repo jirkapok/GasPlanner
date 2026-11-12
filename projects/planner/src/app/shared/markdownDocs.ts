@@ -1,4 +1,6 @@
+import { HttpClient } from '@angular/common/http';
 import { MarkedExtension, Tokens } from 'marked';
+import { MARKED_EXTENSIONS, provideMarkdown } from 'ngx-markdown';
 import { Urls } from './navigation.service';
 import { HeadingSlugger } from './headingSlugger';
 
@@ -77,4 +79,14 @@ export function markdownDocsExtension(urls: Urls): MarkedExtension {
             }
         }
     };
+}
+
+/** Markdown rendering of the help documents, loaded over http. */
+export function provideDocsMarkdown(): ReturnType<typeof provideMarkdown> {
+    return provideMarkdown({
+        loader: HttpClient,
+        markedExtensions: [
+            { provide: MARKED_EXTENSIONS, useFactory: markdownDocsExtension, deps: [Urls], multi: true }
+        ]
+    });
 }

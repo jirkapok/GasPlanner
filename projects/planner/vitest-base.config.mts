@@ -1,10 +1,15 @@
+import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 // Merged by the Angular unit-test builder with its own configuration, see "runnerConfig" in angular.json
 export default defineConfig({
     resolve: {
         // the same as application build, e.g. qrcode (used by angularx-qrcode) maps its node entry to browser version
-        mainFields: ['browser', 'es2020', 'module', 'main']
+        mainFields: ['browser', 'es2020', 'module', 'main'],
+        alias: {
+            // optional ngx-markdown dependency, see the stub
+            'marked-katex-extension': fileURLToPath(new URL('./src/testing/markedKatexExtension.testing.ts', import.meta.url))
+        }
     },
     test: {
         // junit results are published by the CI build, see .github/workflows/main.yml

@@ -128,7 +128,7 @@ git commit -m "feat(planner): #134 docs markdown extension for marked 18"
 
 ### Task 2: Render help and learn with ngx-markdown
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/planner/src/app/shared/markdownDocs.ts` (add provider function)

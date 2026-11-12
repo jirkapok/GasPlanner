@@ -1,9 +1,9 @@
-import { ApplicationRef, importProvidersFrom } from '@angular/core';
+import { ApplicationRef } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideLocationMocks } from '@angular/common/testing';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
-import { NgxMdModule } from 'ngx-md';
+import { provideDocsMarkdown } from './markdownDocs';
 import { DashboardStartUp } from './startUp';
 import { PreferencesStore } from './preferencesStore';
 import { PlanUrlSerialization } from './PlanUrlSerialization';
@@ -36,7 +36,7 @@ describe('DashboardStartUp', () => {
                 { provide: ViewStates, useValue: { started: true } },
                 provideHttpClient(),
                 provideHttpClientTesting(),
-                importProvidersFrom(NgxMdModule.forRoot()),
+                provideDocsMarkdown(),
                 provideTestTranslate()
             ]
         });

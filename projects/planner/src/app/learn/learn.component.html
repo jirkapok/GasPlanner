@@ -176,7 +176,7 @@
             {{ 'learn.questionHelp' | translate }}
           </div>
           <div class="card-body">
-            <ngx-md [path]="helpTopic" [sanitizeHtml]="false"></ngx-md>
+            <markdown [src]="helpTopic" [disableSanitizer]="true"></markdown>
           </div>
         </div>
       }

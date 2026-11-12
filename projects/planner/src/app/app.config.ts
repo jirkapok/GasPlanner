@@ -18,7 +18,6 @@ import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { NgxMdModule } from 'ngx-md';
 
 import { SacComponent } from './calculators/sac/sac.component';
 import { NitroxComponent } from './calculators/nitrox/nitrox.component';
@@ -98,6 +97,7 @@ import { WayPointsService } from './shared/waypoints.service';
 import { StopsFilter } from './shared/stopsFilter.service';
 import { ViewStates } from './shared/viewStates';
 import { Urls } from './shared/navigation.service';
+import { provideDocsMarkdown } from './shared/markdownDocs';
 import { SubViewStorage } from './shared/subViewStorage';
 import { DashboardStartUp } from './shared/startUp';
 import { DiveResults } from './shared/diveresults';
@@ -198,6 +198,7 @@ const STANDALONE = [
 const SERVICES = [
     MdbModalService,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideDocsMarkdown(),
     provideTranslateService({
         loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
         fallbackLang: 'en',
@@ -259,7 +260,6 @@ export const CONFIG = {
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
         STANDALONE,
-        NgxMdModule.forRoot(),
         ClipboardModule,
     ],
     exports: [],

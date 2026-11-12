@@ -20,6 +20,9 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "externalDependencies": [
+              "marked-katex-extension"
+            ],
             "outputPath": {
               "base": "dist/planner",
               "browser": ""

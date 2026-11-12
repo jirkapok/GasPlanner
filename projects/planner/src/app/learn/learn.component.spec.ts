@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LearnComponent } from './learn.component';
-import { NgxMdModule } from 'ngx-md';
+import { provideDocsMarkdown } from '../shared/markdownDocs';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
@@ -35,7 +35,6 @@ describe('LearnComponent', () => {
                 CommonModule,
                 FormsModule,
                 ReactiveFormsModule,
-                NgxMdModule,
                 FontAwesomeModule,
                 LearnComponent,
                 MdbModalModule,
@@ -43,6 +42,7 @@ describe('LearnComponent', () => {
             providers: [
                 provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
+                provideDocsMarkdown(),
                 Urls,
                 QuizService,
                 SubViewStorage, ViewStates, Preferences, PreferencesStore,

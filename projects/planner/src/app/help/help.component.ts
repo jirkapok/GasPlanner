@@ -1,11 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import _ from 'lodash';
-import { NgxMdModule  } from 'ngx-md';
+import { MarkdownComponent } from 'ngx-markdown';
 import { NgClass, Location } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { MarkdownCustomization } from '../shared/markdown-customization.service';
 import { HelpViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -27,8 +26,7 @@ interface HelpSection {
 
 @Component({
     selector: 'app-help',
-    imports: [NgxMdModule, FontAwesomeModule, NgClass, TranslatePipe],
-    providers: [MarkdownCustomization],
+    imports: [MarkdownComponent, FontAwesomeModule, NgClass, TranslatePipe],
     templateUrl: './help.component.html',
     styleUrls: ['./help.component.scss']
 })
@@ -107,9 +105,7 @@ export class HelpComponent implements OnInit {
     constructor(
         public urls: Urls,
         private location: Location,
-        private viewStates: SubViewStorage,
-        markdown: MarkdownCustomization) {
-        markdown.configure();
+        private viewStates: SubViewStorage) {
     }
 
     public get document(): string {

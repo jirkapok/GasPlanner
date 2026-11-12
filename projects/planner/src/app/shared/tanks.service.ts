@@ -114,9 +114,12 @@ export class TanksService {
     }
 
     public copyTanksConsumption(tanks: ConsumedDto[]) {
-        this._tanks().forEach((target, index) => {
-            const source = tanks[index];
-            target.assignConsumption(source.consumed, source.reserve);
+        this._tanks().forEach(target => {
+            const source = tanks.find(t => t.id === target.id);
+
+            if (source) {
+                target.assignConsumption(source.consumed, source.reserve);
+            }
         });
     }
 

@@ -53,6 +53,43 @@ describe('TanksService', () => {
         });
     });
 
+    describe('Copy consumption', () => {
+        beforeEach(() => {
+            service.addTank();
+        });
+
+        it('copies consumption by tank id', () => {
+            service.copyTanksConsumption([
+                { id: 2, consumed: 50, reserve: 60 },
+                { id: 1, consumed: 30, reserve: 40 }
+            ]);
+
+            expect(service.tanks[0].tank.consumed).toBe(30);
+            expect(service.tanks[0].tank.reserve).toBe(40);
+            expect(service.tanks[1].tank.consumed).toBe(50);
+            expect(service.tanks[1].tank.reserve).toBe(60);
+        });
+
+        it('keeps consumption of tank added during calculation', () => {
+            service.copyTanksConsumption([{ id: 1, consumed: 30, reserve: 40 }]);
+
+            expect(service.tanks[0].tank.consumed).toBe(30);
+            expect(service.tanks[1].tank.consumed).toBe(0);
+        });
+
+        it('ignores consumption of tank removed during calculation', () => {
+            service.removeTank(service.tanks[1]);
+
+            service.copyTanksConsumption([
+                { id: 1, consumed: 30, reserve: 40 },
+                { id: 2, consumed: 50, reserve: 60 }
+            ]);
+
+            expect(service.tanks.length).toBe(1);
+            expect(service.tanks[0].tank.consumed).toBe(30);
+        });
+    });
+
     describe('Load from', () => {
         it('Doesn\'t update by empty array', () => {
             service.loadFrom([]);

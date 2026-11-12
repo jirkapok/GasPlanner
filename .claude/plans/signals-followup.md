@@ -148,15 +148,15 @@
 - Consumes: `ConsumedDto { id: number; consumed: number; reserve: number }` (`serialization.model.ts`), `TankBound.id`, `TankBound.assignConsumption(consumed, reserve)`.
 - Produces: `copyTanksConsumption(tanks: ConsumedDto[]): void` pairs each tank with the result item of the same `id`. A tank without a result item keeps its consumption, a result item without a tank is ignored. Signature unchanged, `PlannerService.finishConsumption` unchanged.
 
-- [ ] Status
-- [ ] **Step 1: Write the failing tests** in `tanks.service.spec.ts`, `describe('Copy consumption')`, with two tanks (`service.addTank()`):
+- [x] Status (947 tests in 102 files, lint planner 100 / scuba-physics 12; RED: by-id and added-tank tests failed, removal test passed before the change and is kept as a pin; review step left for the controller; e2e deferred to Task 7)
+- [x] **Step 1: Write the failing tests** in `tanks.service.spec.ts`, `describe('Copy consumption')`, with two tanks (`service.addTank()`):
   - `'copies consumption by tank id'`: result `[{ id: 2, consumed: 50, reserve: 60 }, { id: 1, consumed: 30, reserve: 40 }]`, expect `service.tanks[0].tank.consumed` 30 / `reserve` 40 and `service.tanks[1].tank.consumed` 50 / `reserve` 60.
   - `'keeps consumption of tank added during calculation'`: result `[{ id: 1, consumed: 30, reserve: 40 }]`, expect no exception, first tank consumed 30, second tank consumed 0.
   - `'ignores consumption of tank removed during calculation'`: remove the second tank, result with ids 1 and 2, expect no exception and the first tank consumed by its id 1 item.
-- [ ] **Step 2: Run** `npx ng test planner --no-watch --include='**/tanks.service.spec.ts'`. Expected: `'copies consumption by tank id'` FAILS (values swapped) and `'keeps consumption of tank added during calculation'` FAILS with the `TypeError` reading `consumed`. Note in Status if the removal test already passes (it is kept as a pin).
-- [ ] **Step 3: Implement** the id pairing in `copyTanksConsumption`.
+- [x] **Step 2: Run** `npx ng test planner --no-watch --include='**/tanks.service.spec.ts'`. Expected: `'copies consumption by tank id'` FAILS (values swapped) and `'keeps consumption of tank added during calculation'` FAILS with the `TypeError` reading `consumed`. Note in Status if the removal test already passes (it is kept as a pin).
+- [x] **Step 3: Implement** the id pairing in `copyTanksConsumption`.
 - [ ] **Step 4: Run** the spec, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 5: Commit** `fix: tank consumption copied by tank id`.
+- [x] **Step 5: Commit** `fix: tank consumption copied by tank id`.
 
 ### Task 7: Final verification of the whole plan
 

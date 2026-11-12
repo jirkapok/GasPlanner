@@ -191,6 +191,11 @@ export class PlannerService extends Streamed {
         }
 
         const tanks = dive.tanksService;
+        // result of a plan with other tanks arrived after the tanks were changed, the following result will be applied
+        if (result.tanks.length !== tanks.tanks.length) {
+            return;
+        }
+
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;
         const turnPressure = tanks.calculateTurnPressure();

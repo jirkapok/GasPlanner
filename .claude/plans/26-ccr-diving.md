@@ -2116,8 +2116,29 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
 
 Applies only when the circuit is not OC; OC views stay unchanged. Follows the shared rules.
 
+#### Stage 5 implementation notes (branch `feat/26-ccr-results`, 2026-11-11)
+
+Decisions made while implementing (user: 5g oxygen template 3 L/200 bar + AL19/3000 psi, everything else derived from the code):
+- **5a**:
+  - The selected waypoints tab is kept in `ViewSwitchService.showBailoutProfile` and saved in `AppOptionsDto.showBailoutProfile`, the same way as `consumptionInLiters` (not in the dashboard view state).
+  - The first tab is labelled "Rebreather profile", because pSCR isn't a CCR.
+  - Closed circuit gas column shows the setpoint (`Air SP 1.3`) from the public `ClosedCircuitBreathing.setpoint(depth, isAscent)`.
+  - Fixed on the way: `WayPoint.fromSegment` added the start offset to the duration of the first emergency ascent waypoint.
+- **5b**: The grouping lives in `DiveSchedule.rebreatherTanks`/`bailoutTanks` (not `TanksService`), because pSCR supply tanks come from the depth levels.
+- **5c**:
+  - `ppO2OutOfRange` replaces the loop `lowPpO2` event of Stage 2, and the tank gas high ppO2 check is skipped for loops, so a dive never gets two warnings for the same loop.
+  - The pSCR events spec counts the low out-of-range events.
+- **5d**:
+  - `CircuitNames` is `providedIn: 'root'` (like `QuizService`), so the 57 specs providing `DiveSchedules` don't need a new provider; 12 TestBed specs got `provideTestTranslate()`.
+  - `DiveSchedule.circuit` reads `OptionsService.circuit`, which tracks its own changes since the master signals follow-up (the former `ReloadDispatcher.trackOptions()` was removed), so OnPush titles follow a circuit switch.
+- **5h**:
+  - Plotly resize errors were no longer reproduced.
+  - `NG0956` came from the waypoints rows, dive issues and consumed gases tracked by identity (now `$index`).
+- **5i.1**: Stale consumption results are ignored when their tank count differs; stale profile and dive info results were already safe.
+- **5i.2**: An optional `isCalculatedAscent` parameter of `inspiredGas`/`ppO2` (set by `AlgorithmContext` only for the generated ascent) lets `BailoutBreathing` switch to open circuit only there, while the loop gets the real `isAscent`.
+
 #### 5a. Waypoints table: CCR / bailout profile tabs
-- [ ] Status
+- [x] Status
 
 - `plan/waypoints/waypoints.component.html`: when circuit ≠ OC, wrap the table in `mdb-tabs` "CCR profile" / "Bailout profile".
   - **CCR profile**: `stops.wayPoints`; the gas column shows the loop (diluent + setpoint; pSCR: supply gas).
@@ -2126,13 +2147,13 @@ Applies only when the circuit is not OC; OC views stay unchanged. Follows the sh
 - The selected tab is persisted. Specs in `waypoints.component.spec.ts`.
 
 #### 5b. Results: consumed tanks grouped like the tanks card
-- [ ] Status
+- [x] Status
 
 - `plan/diveinfo/diveinfo.component.html` Consumed tab (`app-tankchart`): a **Rebreather** group (mCCR/eCCR: tank 1 **Diluent**, tank 2 **Oxygen**; pSCR: tanks assigned to levels, labelled **Supply**) and a **Bailout** group (the remaining tanks, reserve only).
 - `tank-chart` gets an optional `@Input() roleLabel` (text stays in the template). The grouping lives in a service (`TanksService` `rebreatherTanks`/`bailoutTanks`). The by-gas view (`app-gaschart`) stays ungrouped. Specs in `diveinfo.component.spec.ts`.
 
 #### 5c. New warning: loop ppO2 out of safe range
-- [ ] Status
+- [x] Status
 
 - **Lib**: `EventType.ppO2OutOfRange` (16) + `EventsFactory.createPpO2OutOfRange(timeStamp, depth, ppO2)`.
   - In `ProfileEvents.fromProfile` for non-OC models, evaluate `breathing.ppO2(...)`. Out of range means below `GasMixtures.minPpO2` (0.18), or above `maxPpO2` before `startAscentIndex` / `maxDecoPpO2` after it.
@@ -2141,7 +2162,7 @@ Applies only when the circuit is not OC; OC views stay unchanged. Follows the sh
 - **Planner**: a `dive-issues` alert `@if (event.isPpO2OutOfRange)` showing time, depth, calculated ppO2 and the allowed range; event mapping in `diveresults.ts` / `IgnoredIssues`; i18n in 7 files; spec in `dive-issues.component.spec.ts`.
 
 #### 5d. Breathing type in dive titles
-- [ ] Status
+- [x] Status
 
 Unlike the rest of Stage 5, this applies to **every** circuit, open circuit included (`OC`). Then dives are easy to tell apart on all pages, including the profile A/B titles of a comparison between an OC and a rebreather dive.
 
@@ -2197,6 +2218,27 @@ The user does this step. The agent prepares the inputs and records the results, 
   - A larger difference is analysed (model difference vs. bug), and the user decides whether it is a bug or a documented model difference.
 - **Results** are also summarized in a "Validation" section of `doc/rebreather.md` (software, version, scenario, runtime difference).
 
+##### 5e validation table (prepared 2026-11-11, branch `feat/26-ccr-results`)
+
+Dugong values calculated by the planner (complex view, RMV 20 / stress RMV 30 l/min, default speeds and other options). Stops are `depth/minutes` of the calculated ascent, consumption is liters consumed from the plan (reserve for the bailout ascent in brackets). The links work after this branch is released; until then open them on a local `npm start` (`http://localhost:4200/?...`).
+
+| # | Scenario | Dugong runtime | Dugong stops | CNS | OTU | Consumed liters per tank | Reference software + version | Reference runtime | Reference stops | Reference CNS / OTU | Result |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | pSCR 30 m / 40 min, salt, GF 30/85, supply EAN32 15 l, injection ratio 8, metabolic O2 1 l/min | 85:55 | 12/1.4, 9/3.9, 6/8.2, 3/26.5 | 12.3 % | 39 | 1: 591 (2911) | | | | | |
+| 2 | mCCR 40 m / 25 min, salt, GF 30/85, diluent air 15 l, O2 3 l, target ppO2 1.3, O2 flow 0.8, metabolic O2 1 | 40:10 | 6/1.1, 3/5.7 | 22.7 % | 59 | 1: 30 (1857), 2: 42 (432) | | | | | |
+| 3 | eCCR 40 m / 25 min, salt, GF 30/85, diluent air 15 l, O2 3 l, setpoints 0.7 / 1.3 / 1.3, switch 20 m | 40:19 | 6/1.1, 3/5.7 | 22.8 % | 58 | 1: 30 (1872), 2: 45 (439) | | | | | |
+| 4 | eCCR deep (Stage 4 E2E dive): 60 m / 12 min, fresh, GF 40/85, diluent 18/45 15 l, O2 3 l, bailout 18/45, EAN50, O2 (11.1 l each), setpoints 1.1 / 1.1 / 1.3, switch 20 m | 31:57 | 6/1.3, 3/6.7 | 16.9 % | 45 | 1: 45 (1845), 2: 36 (439), 3: 0 (222), 4: 0 (542), 5: 0 (225) | | | | | |
+
+Share links:
+1. `?t=1-15-0-200-0.32-0&de=0-30-102-1,30-30-2298-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.3,3,1.6,30,1.4,10,1,1,0,2,3,0,20,5&r=2,8,1,0.8,6,1.3,0.7,1.1,1.3,20&ao=1,0`
+2. `?t=1-15-0-200-0.209-0,2-3-0-200-1-0&de=0-40-138-1,40-40-1362-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.3,3,1.6,30,1.4,10,1,1,0,2,3,0,20,5&r=3,8,1,0.8,6,1.3,0.7,1.1,1.3,20&ao=1,0`
+3. `?t=1-15-0-200-0.209-0,2-3-0-200-1-0&de=0-40-138-1,40-40-1362-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.3,3,1.6,30,1.4,10,1,1,0,2,3,0,20,5&r=4,8,1,0.8,6,1.3,0.7,1.3,1.3,20&ao=1,0`
+4. `?t=1-15-0-200-0.18-0.45,2-3-0-200-1-0,3-11.1-0-200-0.18-0.45,4-11.1-0-200-0.5-0,5-11.1-0-200-1-0&de=0-60-204-1,60-60-516-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5&r=4,8,1,0.8,6,1.3,1.1,1.1,1.3,20&ao=1,0`
+
+Notes for the comparison:
+- Scenario 1: the pSCR bailout reserve (2911 l) exceeds the 3000 l supply together with the consumed gas, Dugong reports "not enough gas". It doesn't affect the runtime comparison.
+- Consumed liters are rounded to whole bars of the tank (e.g. diluent 30 l = 2 bar of 15 l).
+
 #### 5f. Absolute runtimes instead of relative OC comparisons
 - [ ] Status
 
@@ -2214,7 +2256,7 @@ Depends on 5e: only values the user confirmed in 5e (or Dugong values the user a
 - An expected value is never changed to make a failing test pass. A difference found later goes back to 5e analysis.
 
 #### 5g. Default rebreather oxygen tank template (metric and imperial)
-- [ ] Status
+- [x] Status
 
 Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForClosedCircuit` (Stage 3 ruling and deferred minor: imperial shows about 25 cuft).
 
@@ -2228,7 +2270,7 @@ Replaces the hardcoded `new Tank(3, 200, 100)` in `TanksService.prepareForClosed
   - Specs in `tanks.service.ccr.spec.ts`: metric 3 L/200 bar and imperial 19 cuft/3000 psi oxygen tank inserted; existing tanks unchanged.
 
 #### 5h. Clean E2E console
-- [ ] Status
+- [x] Status
 
 The `npm run e2e` log contains:
 - 2× `ERROR Error: Resize must be passed a displayed plot div element.` (plotly `Plots.resize` on a chart that isn't displayed);
@@ -2248,7 +2290,7 @@ None of them fail a test today.
 - Verification: `npm run e2e` passes with an empty console log for errors and NG0 warnings.
 
 #### 5i. Known issues from Stage 4
-- [ ] Status
+- [x] Status
 
 Found during Stage 4 (eCCR), deferred to this stage. Each fix follows TDD (failing test first).
 
@@ -2270,7 +2312,7 @@ Found during Stage 4 (eCCR), deferred to this stage. Each fix follows TDD (faili
 5. **Reference-planner check of the eCCR E2E values** is covered by 5e scenario 4; if the user's values differ beyond the 5e tolerances, the analysis happens there before 5f hardcodes anything new.
 
 #### Stage 5 E2E
-- [ ] Status
+- [x] Status
 
 - Extend the eCCR scenario:
   - both waypoints tabs are visible;

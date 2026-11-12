@@ -14,6 +14,7 @@ import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { planTestProviders } from '../../../testing/plan.testing';
+import { CircuitType } from 'scuba-physics';
 
 describe('WayPointsComponent', () => {
     let fixture: ComponentFixture<WayPointsComponent>;
@@ -70,5 +71,53 @@ describe('WayPointsComponent view switch', () => {
         await fixture.whenStable();
 
         expect(text()).toContain('waypointsTable.gas');
+    });
+});
+
+describe('WayPointsComponent rebreather', () => {
+    let fixture: ComponentFixture<WayPointsComponent>;
+
+    const element = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const rows = (): NodeListOf<HTMLTableRowElement> => element().querySelectorAll('tbody tr');
+
+    const useMccr = async (): Promise<void> => {
+        const dive = TestBed.inject(DiveSchedules).selected;
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        dive.tanksService.prepareForClosedCircuit();
+        dive.optionsService.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        TestBed.inject(PlannerService).calculate(dive.id);
+        await fixture.whenStable();
+    };
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [WayPointsComponent],
+            providers: [...planTestProviders, SelectedWaypoint, StopsFilter]
+        });
+        fixture = await renderOnPush(WayPointsComponent);
+    });
+
+    it('open circuit has no profile tabs', async () => {
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+        expect(element().querySelector('#waypointsDiveTab')).toBeNull();
+    });
+
+    it('rebreather switches to bailout profile', async () => {
+        await useMccr();
+        const diveRows = rows().length;
+
+        (element().querySelector('#waypointsBailoutTab') as HTMLButtonElement).click();
+        await fixture.whenStable();
+
+        expect(TestBed.inject(ViewSwitchService).showBailoutProfile).toBe(true);
+        expect(rows().length).toBe(TestBed.inject(StopsFilter).wayPoints.length);
+        expect(rows().length).not.toBe(diveRows);
+    });
+
+    it('closed circuit loop rows show the setpoint', async () => {
+        await useMccr();
+        expect(element().querySelector('tbody')?.textContent).toContain('waypointsTable.setpoint 1.3');
     });
 });

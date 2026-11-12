@@ -27,6 +27,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -40,6 +41,7 @@ describe('PlannerService', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,

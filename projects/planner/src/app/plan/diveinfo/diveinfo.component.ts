@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 
-import { GasToxicity, Ceiling } from 'scuba-physics';
+import { GasToxicity, Ceiling, CircuitType } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { TankBound } from '../../shared/models';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -87,6 +87,25 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
 
     public get tanks(): TankBound[] {
         return this.schedules.selectedTanks.tanks;
+    }
+
+    /** Rebreather dives show the consumed tanks grouped to rebreather and bailout tanks */
+    public get isRebreather(): boolean {
+        return this.schedules.selected.circuit !== CircuitType.oc;
+    }
+
+    /** Closed circuit rebreather tanks are diluent and oxygen, pSCR tanks are supply */
+    public get isClosedCircuit(): boolean {
+        const circuit = this.schedules.selected.circuit;
+        return circuit === CircuitType.mccr || circuit === CircuitType.eccr;
+    }
+
+    public get rebreatherTanks(): TankBound[] {
+        return this.schedules.selected.rebreatherTanks;
+    }
+
+    public get bailoutTanks(): TankBound[] {
+        return this.schedules.selected.bailoutTanks;
     }
 
     public get noDeco(): number {

@@ -6,6 +6,7 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { ConsumedGasDifference, GasesComparisonService } from './gases-comparison.service';
 import { StandardGases } from 'scuba-physics';
 import { TanksService } from '../tanks.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('GasesComparisonService', () => {
     let sut: GasesComparisonService;
@@ -23,6 +24,7 @@ describe('GasesComparisonService', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 GasesComparisonService,
                 ProfileComparatorService,
                 DiveSchedules,

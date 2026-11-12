@@ -9,7 +9,7 @@ export class MccrBreathing extends ClosedCircuitBreathing {
     protected readonly circuitName = 'mCCR';
 
     /** The diver holds one setpoint during the whole dive */
-    protected setpoint(): number {
+    public setpoint(): number {
         return this.options.setpoint;
     }
 

@@ -53,6 +53,17 @@ describe('TanksService - closed circuit', () => {
             expect(service.diluentTank).toBe(air);
         });
 
+        it('inserts imperial AL19 oxygen tank', () => {
+            TestBed.inject(UnitConversion).imperialUnits = true;
+            load(21, 50);
+            service.prepareForClosedCircuit();
+            const oxygen = service.tanks[1];
+            expect(isOxygen(oxygen)).toBe(true);
+            expect(oxygen.size).toBeCloseTo(19, 1);
+            expect(oxygen.workingPressure).toBeCloseTo(3000, 0);
+            expect(oxygen.startPressure).toBeCloseTo(3000, 0);
+        });
+
         it('inserts new oxygen tank without overwriting existing tanks', () => {
             const [air, ean50] = load(21, 50);
             service.prepareForClosedCircuit();

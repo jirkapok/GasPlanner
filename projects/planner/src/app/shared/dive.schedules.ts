@@ -6,8 +6,10 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
-    GasToxicity, LoadedTissues, Precision, ProfileTissues, Time
+    CircuitType, GasToxicity, LoadedTissues, Precision, ProfileTissues, RebreatherTanks, Time
 } from 'scuba-physics';
+import { TankBound } from './models';
+import { CircuitNames } from './circuit-names.service';
 import _ from 'lodash';
 import { DateFormats } from './formaters';
 
@@ -20,7 +22,8 @@ export class DiveSchedule {
     private readonly _tanks: TanksService;
     private readonly _depths: DepthsService;
 
-    constructor(private _index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher) {
+    constructor(private _index: number, private units: UnitConversion, private dispatcher: ReloadDispatcher,
+        private circuitNames: CircuitNames) {
         this.assignIndex(_index);
         this._tanks = new TanksService(units, dispatcher);
         this._optionsService = new OptionsService(this.units, this.dispatcher);
@@ -79,11 +82,52 @@ export class DiveSchedule {
         return this._optionsService;
     }
 
+    /** Templates reading it (e.g. title) are refreshed, because options track their own changes */
+    public get circuit(): CircuitType {
+        return this.optionsService.circuit;
+    }
+
+    /** Localized short name of the breathing circuit, e.g. "mCCR" */
+    public get circuitName(): string {
+        return this.circuitNames.name(this.circuit);
+    }
+
+    /**
+     * Tanks breathed from the rebreather loop: diluent and oxygen for closed circuit,
+     * supply tanks assigned to depth levels for pSCR. Empty for open circuit.
+     */
+    public get rebreatherTanks(): TankBound[] {
+        const tanks = this.tanksService.tanks;
+
+        switch (this.circuit) {
+            case CircuitType.mccr:
+            case CircuitType.eccr:
+                return tanks.slice(0, RebreatherTanks.oxygenIndex + 1);
+            case CircuitType.pscr: {
+                const supply = this.depths.levels.map(l => l.tank.tank);
+                return tanks.filter(t => supply.includes(t.tank));
+            }
+            default:
+                return [];
+        }
+    }
+
+    /** Rebreather tanks not used by the loop, used only during the bailout ascent. Empty for open circuit. */
+    public get bailoutTanks(): TankBound[] {
+        if (this.circuit === CircuitType.oc) {
+            return [];
+        }
+
+        const loop = this.rebreatherTanks;
+        return this.tanksService.tanks.filter(t => !loop.includes(t));
+    }
+
+    /** Translated on every read, so it follows the language and circuit switch */
     public get title(): string {
         const depth = Precision.round(this.depths.plannedDepth, 1);
         const depthUnits = this.units.length;
         const duration = Precision.round(this.depths.planDuration, 1);
-        return `${this.id}. ${depth} ${depthUnits}, ${duration} min`;
+        return `${this.id}. ${this.circuitName} ${depth} ${depthUnits}, ${duration} min`;
     }
 
     /**
@@ -138,8 +182,8 @@ export class DiveSchedules {
     private readonly _dives: WritableSignal<DiveSchedule[]>;
     private readonly _selected: WritableSignal<DiveSchedule>;
 
-    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
-        const first = new DiveSchedule(0, this.units, this.dispatcher);
+    constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher, private circuitNames: CircuitNames) {
+        const first = new DiveSchedule(0, this.units, this.dispatcher, this.circuitNames);
         this._dives = signal([first]);
         this._selected = signal(first);
     }
@@ -293,7 +337,7 @@ export class DiveSchedules {
     }
 
     private createDiveSchedule(): DiveSchedule {
-        return new DiveSchedule(this.length, this.units, this.dispatcher);
+        return new DiveSchedule(this.length, this.units, this.dispatcher, this.circuitNames);
     }
 
     private renumber(): void {

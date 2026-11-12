@@ -10,6 +10,18 @@
     </button>
   </app-card-header>
   <div class="card-body card-minheight table-responsive">
+    @if (stops.isRebreather) {
+      <ul class="nav nav-tabs mb-2">
+        <li class="nav-item">
+          <button id="waypointsDiveTab" type="button" class="nav-link" [class.active]="!stops.showBailout"
+            (click)="showDiveProfile()">{{ 'waypointsTable.diveProfile' | translate }}</button>
+        </li>
+        <li class="nav-item">
+          <button id="waypointsBailoutTab" type="button" class="nav-link" [class.active]="stops.showBailout"
+            (click)="showBailoutProfile()">{{ 'waypointsTable.bailoutProfile' | translate }}</button>
+        </li>
+      </ul>
+    }
     <table id="dive-waypoints-table" class="table table-sm p-0">
       <thead class="table-light">
         <tr>
@@ -30,7 +42,7 @@
             </td>
           </tr>
         }
-        @for (point of stops.wayPoints; track point) {
+        @for (point of stops.wayPoints; track $index) {
           <tr [ngClass]="{'table-active': isSelected(point) }"
             (mouseover)="highlightRow(point)" (mouseleave)="highlightRow(undefined)">
             <td class="px-1 text-center">
@@ -41,7 +53,11 @@
             <td class="px-1">{{ point.duration | duration:stops.totalDuration }}</td>
             <td class="px-1">{{ point.endTime | duration:stops.totalDuration }}</td>
             @if (isComplex) {
-              <td class="px-1">{{ point.gasName }}</td>
+              <td class="px-1">{{ point.gasName }}
+                @if (stops.setpoint(point); as setpoint) {
+                  {{ 'waypointsTable.setpoint' | translate }} {{ setpoint | number:'1.1-2' }}
+                }
+              </td>
             }
           </tr>
         }

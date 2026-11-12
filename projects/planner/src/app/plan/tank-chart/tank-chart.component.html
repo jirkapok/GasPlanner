@@ -2,7 +2,10 @@
   <div class="d-flex flex-row justify-content-between">
     <strong class="text-start">@if (showId) {
       <span> {{ tank.id }}.</span>
-    } {{ tank.name }}</strong>
+    } {{ tank.name }}
+    @if (roleLabel) {
+      <span id="tankChartRole-{{ tank.id }}" class="ms-2">{{ roleLabel }}</span>
+    }</strong>
     <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
   </div>
   <div class="d-flex flex-row justify-content-between">

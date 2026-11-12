@@ -128,6 +128,7 @@
     "brokenCeiling": "Die minimale sichere Tiefe (Ceiling) wurde überschritten! Ändere deinen Plan an dieser Stelle auf eine geringere Tiefe.",
     "lowPpo2": "Niedriger Sauerstoffpartialdruck erreicht (Mindesttiefe unterschritten)! Es besteht die Gefahr einer Hypoxie. Verwende ein Gas mit höherem Sauerstoffanteil.",
     "highPpo2": "Hoher Sauerstoffpartialdruck erreicht (maximale Tiefe überschritten)! Es besteht die Gefahr einer Sauerstofftoxizität. Verringere die Tiefe oder verwende ein Gas mit niedrigerem Sauerstoffanteil.",
+    "loopPpO2OutOfRange": "Sauerstoffpartialdruck im Kreislauf {{ppO2}} bar liegt außerhalb des sicheren Bereichs {{min}} - {{max}} bar (Dekompression {{maxDeco}} bar)! Ändern Sie den Setpoint oder verwenden Sie ein Diluent mit anderem Sauerstoffanteil.",
     "highDescentSpeed": "Hohe Abstiegsgeschwindigkeit! Steige über einen längeren Zeitraum oder zu einer geringeren Tiefe ab.",
     "highAscentSpeed": "Hohe Aufstiegsgeschwindigkeit! Steige nur zu einer geringeren Tiefe auf oder verlängere die Aufstiegszeit.",
     "highN2Switch": "Ein Gaswechsel zu einem Gas mit höherem Stickstoffanteil wird nicht empfohlen! Es besteht die Gefahr einer isobaren Gegendiffusion (ICD). Wechsle zu einem anderen Gas mit höherem Heliumanteil oder niedrigerem Stickstoffanteil.",
@@ -148,7 +149,7 @@
     "use": "Verwenden", "maxBottomTime": "Maximale Grundzeit", "maxBottomTimeTitle": "Tauchzeit anhand des Gasverbrauchs maximieren",
     "surfaceGradient": "Oberflächengradient", "offgasingStart": "Beginn der Entsättigung", "highestCeiling": "Höchstes Ceiling",
     "highestGasDensity": "Höchste Gasdichte", "turnTime": "Umkehrzeit", "turnPressure": "Umkehrdruck",
-    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität", "consumedTab": "Verbraucht", "issuesTab": "Probleme", "inLiters": "In Litern"
+    "otuToxicity": "OTU-Toxizität", "cnsToxicity": "CNS-Toxizität", "consumedTab": "Verbraucht", "rebreatherTanks": "Kreislaufgerät", "bailoutTanks": "Bailout", "supply": "Versorgung", "issuesTab": "Probleme", "inLiters": "In Litern"
   },
   "diveOptions": {
     "allUsable": "Vollständig nutzbar", "halfUsable": "Zur Hälfte nutzbar", "thirdUsable": "Zu einem Drittel nutzbar", "cardTitle": "Optionen",
@@ -168,8 +169,14 @@
   "pscrOptions": { "injectionRatio": "Dosierverhältnis", "metabolicO2": "Stoffwechsel-O2" },
   "mccrOptions": { "setpoint": "Ziel-ppO2", "o2Flow": "O2-Fluss", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
   "eccrOptions": { "descentSetpoint": "Abstiegs-Setpoint", "bottomSetpoint": "Grund-Setpoint", "decoSetpoint": "Deko-Setpoint", "setpointSwitchDepth": "Setpoint-Wechseltiefe", "descentAboveBottom": "Abstiegs-Setpoint darf nicht höher als der Grund-Setpoint sein", "loopVolume": "Kreislaufvolumen", "metabolicO2": "Metabolischer O2" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Grundgasflasche", "size": "Größe", "sac": "SAC:", "workingPressure": "Betriebsdruck", "startPressure": "Startdruck" },
-  "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
+  "waypointsTable": { "cardTitle": "Tauchgang-Wegpunkte", "filterTitle": "Filter: nur Stopps anzeigen", "diveProfile": "Kreislaufgerät-Profil", "bailoutProfile": "Bailout-Profil", "setpoint": "SP", "depth": "Tiefe", "duration": "Dauer", "run": "Laufzeit", "gas": "Gas" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Druck in der Tiefe",

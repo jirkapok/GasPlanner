@@ -32,6 +32,7 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     @Input() public rootForm!: FormGroup;
     public eccrForm!: FormGroup<EccrForm>;
     private _volumeStep = 0.1;
+    private bottomChangedLast = false;
 
     constructor(
         public units: UnitConversion,
@@ -49,7 +50,7 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get descentSetpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.descentSetpoint) || this.descentAboveBottom;
+        return this.inputs.controlInValid(this.eccrForm.controls.descentSetpoint) || this.descentAboveBottomAtDescent;
     }
 
     /** Descent setpoint is in range, but higher than the bottom setpoint */
@@ -57,8 +58,17 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
         return this.eccrForm.hasError('descentAboveBottom');
     }
 
+    /** The cross field error is shown at the setpoint changed last */
+    public get descentAboveBottomAtDescent(): boolean {
+        return this.descentAboveBottom && !this.bottomChangedLast;
+    }
+
+    public get descentAboveBottomAtBottom(): boolean {
+        return this.descentAboveBottom && this.bottomChangedLast;
+    }
+
     public get bottomSetpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.bottomSetpoint);
+        return this.inputs.controlInValid(this.eccrForm.controls.bottomSetpoint) || this.descentAboveBottomAtBottom;
     }
 
     public get decoSetpointInvalid(): boolean {
@@ -119,6 +129,16 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     public override ngOnDestroy(): void {
         super.ngOnDestroy();
         this.rootForm.removeControl(EccrOptionsComponent.formName);
+    }
+
+    public descentSetpointChanged(): void {
+        this.bottomChangedLast = false;
+        this.applyOptions();
+    }
+
+    public bottomSetpointChanged(): void {
+        this.bottomChangedLast = true;
+        this.applyOptions();
     }
 
     public applyOptions(): void {

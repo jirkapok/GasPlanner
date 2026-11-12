@@ -25,11 +25,11 @@ class MccrOptionsPage {
     }
 
     public get loopVolumeInput(): HTMLInputElement {
-        return this.input('#loopVolume');
+        return this.input('#mccrLoopVolume');
     }
 
     public get metabolicO2Input(): HTMLInputElement {
-        return this.input('#metabolicO2');
+        return this.input('#mccrMetabolicO2');
     }
 
     /** Undefined, when not rendered */

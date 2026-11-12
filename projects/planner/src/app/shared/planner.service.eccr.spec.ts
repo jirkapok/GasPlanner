@@ -9,6 +9,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 /** The same inputs as the eCCR E2E test, so its expected values are calculated here */
 describe('PlannerService - eCCR reference dive', () => {
@@ -18,6 +19,7 @@ describe('PlannerService - eCCR reference dive', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
             providers: [
+                provideTestTranslate(),
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,

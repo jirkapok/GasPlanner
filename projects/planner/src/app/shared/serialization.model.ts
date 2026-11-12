@@ -39,6 +39,8 @@ export interface AppOptionsDto {
     imperialUnits: boolean;
     isComplex: boolean;
     consumptionInLiters: boolean;
+    /** Rebreather waypoints show the bailout profile, optional because of upgrade */
+    showBailoutProfile?: boolean;
     language: string;
     maxDensity: number;
     primaryTankReserve: number;

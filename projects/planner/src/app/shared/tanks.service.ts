@@ -146,9 +146,19 @@ export class TanksService {
     }
 
     /** Small rebreather oxygen cylinder 3 L/200 bar */
+    /** Rebreather oxygen cylinder from the template in current units, filled to its working pressure if defined */
     private createOxygen(): TankBound {
-        const oxygen = new Tank(3, 200, 100);
-        return new TankBound(oxygen, this.units);
+        const template = this.units.defaults.tanks.rebreatherOxygen;
+        const bound = new TankBound(Tank.createDefault(), this.units);
+        bound.workingPressure = template.workingPressure;
+        bound.size = template.size;
+        bound.o2 = 100;
+
+        if (template.workingPressure > 0) {
+            bound.startPressure = template.workingPressure;
+        }
+
+        return bound;
     }
 
     private createDiluent(): TankBound {

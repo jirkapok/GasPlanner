@@ -136,6 +136,24 @@ describe('EccrOptionsComponent', () => {
         expect(changedSpy).not.toHaveBeenCalled();
     });
 
+    it('bottom setpoint lower than descent setpoint marks the bottom setpoint', () => {
+        page.type(page.bottomSetpointInput, '0.6');
+
+        expect(page.bottomSetpointInput.classList).toContain('is-invalid');
+        expect(page.optional('#bottomSetpointError')?.textContent).toContain('eccrOptions.descentAboveBottom');
+        expect(page.descentSetpointInput.classList).not.toContain('is-invalid');
+        expect(page.optional('#descentSetpointError')).toBeUndefined();
+        expect(changedSpy).not.toHaveBeenCalled();
+    });
+
+    it('fixed setpoints remove the error from both setpoints', () => {
+        page.type(page.bottomSetpointInput, '0.6');
+        page.type(page.bottomSetpointInput, '1.2');
+
+        expect(page.bottomSetpointInput.classList).not.toContain('is-invalid');
+        expect(page.descentSetpointInput.classList).not.toContain('is-invalid');
+    });
+
     it('stores imperial switch depth in meters', () => {
         // validators are created with ranges of current units, as when the units are changed in settings
         const units = TestBed.inject(UnitConversion);

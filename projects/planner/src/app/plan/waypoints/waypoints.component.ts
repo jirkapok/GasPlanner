@@ -40,6 +40,14 @@ export class WayPointsComponent {
         return this.viewSwitch.isComplex;
     }
 
+    public showDiveProfile(): void {
+        this.viewSwitch.showBailoutProfile = false;
+    }
+
+    public showBailoutProfile(): void {
+        this.viewSwitch.showBailoutProfile = true;
+    }
+
     public swimActionIcon(point: WayPoint): IconDefinition {
         switch (point.swimAction) {
             case SwimAction.ascent: return this.up;

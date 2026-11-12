@@ -20,6 +20,9 @@ export class TankChartComponent {
     public toxicity = new GasToxicity();
     @Input()
     public showId = false;
+    /** Translated role of the tank in rebreather, e.g. Diluent, empty if not shown */
+    @Input()
+    public roleLabel = '';
 
     constructor(public units: UnitConversion) { }
 

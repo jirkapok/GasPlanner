@@ -26,7 +26,7 @@
       }
     </div>
   }
-  @for (event of events; track event) {
+  @for (event of events; track $index) {
     @if (event.isBrokenCeiling) {
       <div class="alert alert-danger">
         <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
@@ -49,6 +49,16 @@
         <strong>{{ event.timeStamp | duration:event.timeStamp
         }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
         <span>{{ 'diveIssues.highPpo2' | translate }}</span>
+      </div>
+    }
+    @if (event.isPpO2OutOfRange) {
+      <div class="alert alert-danger">
+        <fa-icon [icon]="exclamation" class="me-2"></fa-icon>
+        <strong>{{ event.timeStamp | duration:event.timeStamp
+        }} min, {{ event.depth | number:'1.0-0' }} {{units.length}}: </strong>
+        <span id="loopPpO2OutOfRange">{{ 'diveIssues.loopPpO2OutOfRange' | translate:{
+          ppO2: event.ppO2 | number:'1.2-2', min: minPpO2 | number:'1.2-2',
+          max: maxPpO2 | number:'1.1-2', maxDeco: maxDecoPpO2 | number:'1.1-2' } }}</span>
       </div>
     }
     @if (event.isHighDescentSpeed) {

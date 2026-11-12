@@ -128,6 +128,7 @@
     "brokenCeiling": "¡Se ha superado la profundidad mínima segura (techo)! Cambia tu plan a una mayor profundidad en este punto.",
     "lowPpo2": "¡Se alcanzó una presión parcial de oxígeno baja (se superó la profundidad mínima)! Existe riesgo de hipoxia. Usa un gas con mayor contenido de oxígeno.",
     "highPpo2": "¡Se alcanzó una presión parcial de oxígeno alta (se superó la profundidad máxima)! Existe riesgo de toxicidad por oxígeno. Reduce la profundidad o usa un gas con menor contenido de oxígeno.",
+    "loopPpO2OutOfRange": "¡La ppO2 del circuito del recirculador {{ppO2}} bar está fuera del rango seguro {{min}} - {{max}} bar (descompresión {{maxDeco}} bar)! Cambie el setpoint o use un diluyente con otro contenido de oxígeno.",
     "highDescentSpeed": "¡Velocidad de descenso alta! Desciende durante más tiempo o desciende a una menor profundidad.",
     "highAscentSpeed": "¡Velocidad de ascenso alta! Asciende solo hasta una menor profundidad o asciende durante más tiempo.",
     "highN2Switch": "¡No se recomienda cambiar a un gas con mayor contenido de nitrógeno! Existe riesgo de contradifusión isobárica (ICD). Cambia a otro gas con mayor contenido de helio o menor contenido de nitrógeno.",
@@ -148,7 +149,7 @@
     "use": "Usar", "maxBottomTime": "Tiempo máximo de fondo", "maxBottomTimeTitle": "Establecer el tiempo de inmersión al máximo según el gas consumido",
     "surfaceGradient": "Gradiente en superficie", "offgasingStart": "Inicio de desaturación", "highestCeiling": "Techo máximo",
     "highestGasDensity": "Densidad de gas más alta", "turnTime": "Tiempo de retorno", "turnPressure": "Presión de retorno",
-    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS", "consumedTab": "Consumido", "issuesTab": "Problemas", "inLiters": "En litros"
+    "otuToxicity": "Toxicidad OTU", "cnsToxicity": "Toxicidad CNS", "consumedTab": "Consumido", "rebreatherTanks": "Recirculador", "bailoutTanks": "Bailout", "supply": "Suministro", "issuesTab": "Problemas", "inLiters": "En litros"
   },
   "diveOptions": {
     "allUsable": "Totalmente utilizable", "halfUsable": "Mitad utilizable", "thirdUsable": "Un tercio utilizable", "cardTitle": "Opciones",
@@ -168,8 +169,14 @@
   "pscrOptions": { "injectionRatio": "Relación de inyección", "metabolicO2": "O2 metabólico" },
   "mccrOptions": { "setpoint": "ppO2 objetivo", "o2Flow": "Flujo de O2", "loopVolume": "Volumen del circuito", "metabolicO2": "O2 metabólico" },
   "eccrOptions": { "descentSetpoint": "Setpoint de descenso", "bottomSetpoint": "Setpoint de fondo", "decoSetpoint": "Setpoint de descompresión", "setpointSwitchDepth": "Profundidad de cambio de setpoint", "descentAboveBottom": "El setpoint de descenso no puede ser mayor que el setpoint de fondo", "loopVolume": "Volumen del circuito", "metabolicO2": "O2 metabólico" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Botella de gas de fondo", "size": "Tamaño", "sac": "SAC:", "workingPressure": "Presión de trabajo", "startPressure": "Presión inicial" },
-  "waypointsTable": { "cardTitle": "Puntos de la inmersión", "filterTitle": "Filtrar para mostrar solo las paradas", "depth": "Profundidad", "duration": "Duración", "run": "Acumulado", "gas": "Gas" },
+  "waypointsTable": { "cardTitle": "Puntos de la inmersión", "filterTitle": "Filtrar para mostrar solo las paradas", "diveProfile": "Perfil del recirculador", "bailoutProfile": "Perfil de bailout", "setpoint": "SP", "depth": "Profundidad", "duration": "Duración", "run": "Acumulado", "gas": "Gas" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Presión a profundidad",

@@ -433,5 +433,29 @@ describe('PreferencesStore', () => {
                 const loadedOptions = TestBed.inject(DiveSchedules).dives[0].optionsService;
                 expect(loadedOptions.isRebreather).toBe(false);
             }));
+
+        it('Selected bailout profile is loaded after save', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
+                viewSwitch.showBailoutProfile = true;
+                sut.save();
+                viewSwitch.showBailoutProfile = false;
+
+                sut.load();
+
+                expect(viewSwitch.showBailoutProfile).toBe(true);
+            }));
+
+        it('Legacy preferences without bailout profile show the dive profile', inject([ViewSwitchService],
+            (viewSwitch: ViewSwitchService) => {
+                viewSwitch.showBailoutProfile = true;
+                sut.save();
+                const stored = JSON.parse(localStorage.getItem('preferences') ?? '{}') as AppPreferences;
+                delete stored.options.showBailoutProfile;
+                localStorage.setItem('preferences', JSON.stringify(stored));
+
+                sut.load();
+
+                expect(viewSwitch.showBailoutProfile).toBe(false);
+            }));
     });
 });

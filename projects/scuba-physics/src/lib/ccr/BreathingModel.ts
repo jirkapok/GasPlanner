@@ -20,16 +20,18 @@ export interface BreathingModel {
      * Gas really breathed by the diver.
      * @param sourceGas gas assigned to the segment (tank gas, diluent or supply gas)
      * @param depth in meters
-     * @param isAscent true, if the segment is part of the calculated ascent
+     * @param isAscent true, if the segment is after the deepest point of the dive
+     * @param isCalculatedAscent true, if the segment is part of the ascent calculated by the algorithm, isAscent by default
      */
-    inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean): Gas;
+    inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean, isCalculatedAscent?: boolean): Gas;
     /**
      * Oxygen partial pressure in bars breathed by the diver.
      * @param sourceGas gas assigned to the segment
      * @param depth in meters
-     * @param isAscent true, if the segment is part of the calculated ascent
+     * @param isAscent true, if the segment is after the deepest point of the dive
+     * @param isCalculatedAscent true, if the segment is part of the ascent calculated by the algorithm, isAscent by default
      */
-    ppO2(sourceGas: Gas, depth: number, isAscent: boolean): number;
+    ppO2(sourceGas: Gas, depth: number, isAscent: boolean, isCalculatedAscent?: boolean): number;
     /**
      * Liters consumed from the segment source tank.
      * @param rmvPerSecond liters/second
@@ -74,8 +76,8 @@ export class OpenCircuitBreathing implements BreathingModel {
 }
 
 /**
- * Emergency ascent: the user defined part of the dive (including the deepest point) is breathed using the primary model,
- * the calculated ascent is breathed from the bailout model (open circuit).
+ * Emergency ascent: the user defined part of the dive (including user defined ascent after the deepest point)
+ * is breathed using the primary model, the calculated ascent is breathed from the bailout model (open circuit).
  */
 export class BailoutBreathing implements BreathingModel {
     private bailout: BreathingModel;
@@ -100,12 +102,12 @@ export class BailoutBreathing implements BreathingModel {
         return this.bailout.oxygenTank;
     }
 
-    public inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean): Gas {
-        return this.modelFor(isAscent).inspiredGas(sourceGas, depth, isAscent);
+    public inspiredGas(sourceGas: Gas, depth: number, isAscent: boolean, isCalculatedAscent = isAscent): Gas {
+        return this.modelFor(isCalculatedAscent).inspiredGas(sourceGas, depth, isAscent);
     }
 
-    public ppO2(sourceGas: Gas, depth: number, isAscent: boolean): number {
-        return this.modelFor(isAscent).ppO2(sourceGas, depth, isAscent);
+    public ppO2(sourceGas: Gas, depth: number, isAscent: boolean, isCalculatedAscent = isAscent): number {
+        return this.modelFor(isCalculatedAscent).ppO2(sourceGas, depth, isAscent);
     }
 
     /** Only the emergency ascent is consumed, which is always the bailout */
@@ -122,7 +124,7 @@ export class BailoutBreathing implements BreathingModel {
         return this.primary.validate();
     }
 
-    private modelFor(isAscent: boolean): BreathingModel {
-        return isAscent ? this.bailout : this.primary;
+    private modelFor(isCalculatedAscent: boolean): BreathingModel {
+        return isCalculatedAscent ? this.bailout : this.primary;
     }
 }

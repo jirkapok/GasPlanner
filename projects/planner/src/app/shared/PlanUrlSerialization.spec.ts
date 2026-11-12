@@ -10,6 +10,7 @@ import { ViewSwitchService } from './viewSwitchService';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
+import { englishCircuitNames } from './circuit-names.testing';
 import { SettingsNormalizationService } from './settings-normalization.service';
 import {
     AirBreakOptions, CircuitType, Diver,
@@ -51,7 +52,7 @@ describe('Url Serialization', () => {
         const units = new UnitConversion();
         const dispatcher = new ReloadDispatcher();
         units.imperialUnits = imperial;
-        const schedules = new DiveSchedules(units, dispatcher);
+        const schedules = new DiveSchedules(units, dispatcher, englishCircuitNames());
         const viewSwitch = new ViewSwitchService(schedules);
         const appSettings = new ApplicationSettingsService(units);
         const planner = new PlannerService(schedules, dispatcher, viewSwitch, appSettings, irrelevantFactory, units);

@@ -197,6 +197,7 @@ export class BuhlmannAlgorithm {
         this.swimPlan(context, algorithmParams.startAscentIndex);
         context.markAverageDepth();
         context.isAscent = true;
+        context.isCalculatedAscent = true;
         let nextStop = context.nextStop(context.currentDepth);
 
         // for performance reasons we don't want to iterate each second, instead we iterate by 3m steps where the changes happen.

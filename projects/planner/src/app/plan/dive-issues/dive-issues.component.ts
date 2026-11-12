@@ -3,7 +3,7 @@ import {
     faExclamationCircle, faExclamationTriangle, faInfoCircle
 } from '@fortawesome/free-solid-svg-icons';
 import _ from 'lodash';
-import { OtuCalculator } from 'scuba-physics';
+import { GasMixtures, OtuCalculator } from 'scuba-physics';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { DiveResults } from '../../shared/diveresults';
@@ -36,6 +36,19 @@ export class DiveIssuesComponent {
         return _(this.dive.events)
             .sortBy(e => this.severityDescending(e), e => e.timeStamp)
             .value();
+    }
+
+    /** Allowed rebreather loop ppO2 range in bars */
+    public get minPpO2(): number {
+        return GasMixtures.minPpO2;
+    }
+
+    public get maxPpO2(): number {
+        return this.schedules.selectedOptions.maxPpO2;
+    }
+
+    public get maxDecoPpO2(): number {
+        return this.schedules.selectedOptions.maxDecoPpO2;
     }
 
     public get minimumDuration(): number {

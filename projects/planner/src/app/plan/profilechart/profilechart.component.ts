@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, effect, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -15,6 +15,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
+import { StopsFilter } from '../../shared/stopsFilter.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -37,6 +38,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private plotter: ChartPlotter;
     private heatmapPlotter: HeatMapPlotter;
     private profileTraces: DiveTracesBuilder;
+    private initialized = false;
 
     constructor(
         units: UnitConversion,
@@ -45,7 +47,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
         private translate: TranslateService,
-        private cd: ChangeDetectorRef) {
+        private cd: ChangeDetectorRef,
+        stops: StopsFilter) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
@@ -76,6 +79,12 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
         this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.plotAllCharts());
+
+        // the waypoints bailout tab shows the emergency ascent also in the chart
+        effect(() => {
+            const showBailout = stops.showBailout;
+            untracked(() => this.showBailoutAscent(showBailout));
+        });
     }
 
     public get profileCalculated(): boolean {
@@ -96,6 +105,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.initialized = true;
         this.plotAllCharts();
         this.hookChartEvents();
     }
@@ -121,6 +131,20 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private plotlyHoverLeave() {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
+    }
+
+    private showBailoutAscent(show: boolean): void {
+        if (this.profileTraces.showEmergencyAscent === show) {
+            return;
+        }
+
+        this.profileTraces.showEmergencyAscent = show;
+        this.cd.markForCheck();
+
+        // the chart element exists only after the component was initialized
+        if (this.initialized) {
+            this.plotAllCharts();
+        }
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {

@@ -65,9 +65,7 @@ export class PlanFactory {
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const bailout = PlanFactory.bailoutBreathing(options, breathing);
-        // user defined part (including user defined ascent) is breathed from the loop, only the calculated ascent is bailout
-        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, bailout, surfaceInterval,
-            emergencyPlan.length);
+        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, bailout, surfaceInterval);
         const calculatedProfile = algorithm.decompression(parameters);
         const emergencyProfile = calculatedProfile.segments;
         const ascent = emergencyProfile.slice(issueSegmentIndex, emergencyProfile.length);

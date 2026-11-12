@@ -46,6 +46,19 @@ describe('TankChartComponent', () => {
         });
     });
 
+    it('shows role label of rebreather tank', async () => {
+        tank = new TankBound(Tank.createDefault(), units);
+        fixture = await renderOnPush(TankChartComponent, { tank, roleLabel: 'Oxygen' });
+        const role = (fixture.nativeElement as HTMLElement).querySelector(`#tankChartRole-${tank.id}`);
+        expect(role?.textContent).toContain('Oxygen');
+    });
+
+    it('has no role label by default', async () => {
+        tank = new TankBound(Tank.createDefault(), units);
+        fixture = await renderOnPush(TankChartComponent, { tank });
+        expect((fixture.nativeElement as HTMLElement).querySelector(`#tankChartRole-${tank.id}`)).toBeNull();
+    });
+
     it('renders consumption changed outside Angular events', async () => {
         tank = new TankBound(Tank.createDefault(), units);
         fixture = await renderOnPush(TankChartComponent, { tank });

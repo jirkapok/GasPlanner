@@ -1,4 +1,5 @@
-import { test, expect, Page, BrowserContext, Locator } from '@playwright/test';
+import { test, expect } from './fixtures';
+import { Page, Locator } from '@playwright/test';
 
 class EccrPlannerPage {
     constructor(private page: Page) {}
@@ -53,15 +54,35 @@ class EccrPlannerPage {
     public tankRemaining(tankId: number): Locator {
         return this.page.locator(`#tankRemaining-${tankId}`);
     }
+
+    /** Rebreather role (Diluent, Oxygen) of the tank in consumed tab, id from 1 */
+    public tankRole(tankId: number): Locator {
+        return this.page.locator(`#tankChartRole-${tankId}`);
+    }
+
+    public diveProfileTab(): Locator {
+        return this.page.locator('#waypointsDiveTab');
+    }
+
+    public bailoutProfileTab(): Locator {
+        return this.page.locator('#waypointsBailoutTab');
+    }
+
+    /** Depth column of the last waypoints table row */
+    public lastWaypointDepth(): Locator {
+        return this.page.locator('#dive-waypoints-table tbody tr').last().locator('td').nth(1);
+    }
+
+    public diveTitle(): Locator {
+        return this.page.getByText(/^1\. eCCR 60 m, \d+ min$/);
+    }
 }
 
 test.describe('eCCR rebreather', () => {
-    let context: BrowserContext;
     let page: Page;
 
-    test.beforeEach(async ({ browser }) => {
-        context = await browser.newContext();
-        page = await context.newPage();
+    test.beforeEach(async ({ page: testPage }) => {
+        page = testPage;
 
         await page.goto('/');
         await page.evaluate(() => {
@@ -98,5 +119,12 @@ test.describe('eCCR rebreather', () => {
         }).toPass({ timeout: 10000 });
         await planner.openConsumedTab();
         await expect(planner.tankRemaining(2)).toHaveText('188/200');
+        await expect(planner.tankRole(1)).toHaveText('Diluent');
+        await expect(planner.tankRole(2)).toHaveText('Oxygen');
+
+        await expect(planner.diveTitle()).toBeVisible();
+        await expect(planner.diveProfileTab()).toBeVisible();
+        await planner.bailoutProfileTab().click();
+        await expect(planner.lastWaypointDepth()).toHaveText('0');
     });
 });

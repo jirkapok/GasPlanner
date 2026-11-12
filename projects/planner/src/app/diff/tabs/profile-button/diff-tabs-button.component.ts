@@ -1,7 +1,5 @@
-import { Component, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { takeUntil } from 'rxjs';
-import { Streamed } from '../../../shared/streamed';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
 
 type ProfileState = 'primary' | 'secondary' | 'disabled';
@@ -12,19 +10,11 @@ type ProfileState = 'primary' | 'secondary' | 'disabled';
     styleUrls: ['./diff-tabs-button.component.scss'],
     imports: [TranslatePipe]
 })
-export class DiffTabsButtonComponent extends Streamed {
+export class DiffTabsButtonComponent {
     @Input({ required: true }) index = 0;
     @Input({ required: true }) title = '';
 
-    constructor(
-        private profilesDiff: ProfileComparatorService,
-        private cd: ChangeDetectorRef
-    ) {
-        super();
-
-        profilesDiff.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.cd.markForCheck());
-    }
+    constructor(private profilesDiff: ProfileComparatorService) {}
 
     protected get state(): ProfileState {
         if (this.index === this.profilesDiff.profileAIndex) return 'primary';

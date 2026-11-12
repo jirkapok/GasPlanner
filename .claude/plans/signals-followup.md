@@ -40,12 +40,12 @@
 **Interfaces:**
 - Produces: nothing new. `DiffTabsButtonComponent` no longer extends `Streamed` and has no `ChangeDetectorRef`.
 
-- [ ] Status
-- [ ] **Step 1: Record the baseline.** Run `npm run lint`, `npm run test-ci`, `npm run test-lib-ci` and write the numbers into this task's Status.
-- [ ] **Step 2: Remove** the `selectionChanged$` subscription, the `ChangeDetectorRef` and `Streamed` from `DiffTabsButtonComponent`. `state` reads `profileAIndex`/`profileBIndex`, which are signals.
-- [ ] **Step 3: Run** `ng test planner --no-watch --include='**/diff-tabs-button.component.spec.ts'`. Expected: PASS, including the OnPush test. If it fails, restore the subscription and note why in Status.
-- [ ] **Step 4: Run** `npm run test-ci`, `npm run lint`. Expected: pass, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
-- [ ] **Step 5: Commit** `refactor: diff tab button reads selection signals only`.
+- [x] Status (baseline: lint planner 100 errors, scuba-physics 12; planner tests 102 files / 930 tests; library 68 files / 1010 tests. Existing OnPush test was already green before the change, kept as a pin; after: 930 tests pass, lint unchanged)
+- [x] **Step 1: Record the baseline.** Run `npm run lint`, `npm run test-ci`, `npm run test-lib-ci` and write the numbers into this task's Status.
+- [x] **Step 2: Remove** the `selectionChanged$` subscription, the `ChangeDetectorRef` and `Streamed` from `DiffTabsButtonComponent`. `state` reads `profileAIndex`/`profileBIndex`, which are signals.
+- [x] **Step 3: Run** `ng test planner --no-watch --include='**/diff-tabs-button.component.spec.ts'`. Expected: PASS, including the OnPush test. If it fails, restore the subscription and note why in Status.
+- [x] **Step 4: Run** `npm run test-ci`, `npm run lint`. Expected: pass, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
+- [x] **Step 5: Commit** `refactor: diff tab button reads selection signals only`.
 
 ### Task 2: Options track their own changes
 

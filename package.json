@@ -69,7 +69,6 @@
     "@semantic-release/git": "^11.0.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/lodash": "^4.17.27",
-    "@types/marked": "^5.0.2",
     "@types/node": "^26.6.5",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
     "@typescript-eslint/parser": "^8.72.0",

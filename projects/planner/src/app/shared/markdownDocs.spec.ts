@@ -12,6 +12,11 @@ describe('Markdown docs extension', () => {
             .toContain('<img src="assets/doc/target_depth_properties.png" alt="Target depth" class="img-fluid p-3" title="Target depth">');
     });
 
+    it('escapes image alternative text', () => {
+        expect(render('![Tank "12 l" & valve](./tank.png)'))
+            .toContain('alt="Tank &quot;12 l&quot; &amp; valve" class="img-fluid p-3" title="Tank &quot;12 l&quot; &amp; valve"');
+    });
+
     describe('Links', () => {
         it('rewrites doc link with anchor to help url', () => {
             expect(render('[toxicity](./diveinfo.md#oxygen-toxicity)'))

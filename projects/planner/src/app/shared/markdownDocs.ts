@@ -32,7 +32,8 @@ export function markdownDocsExtension(urls: Urls): MarkedExtension {
         renderer: {
             image({ href, text }: Tokens.Image): string {
                 const resolvedUrl = urls.imageUrl(href);
-                return `<img src="${resolvedUrl}" alt="${text}" class="img-fluid p-3" title="${text}">`;
+                const alt = escapeHtml(text);
+                return `<img src="${resolvedUrl}" alt="${alt}" class="img-fluid p-3" title="${alt}">`;
             },
 
             link({ href, tokens }: Tokens.Link): string {

@@ -165,13 +165,13 @@ Runs once, right after Task 6, without waiting for the user. Step 5 is the only 
 **Files:**
 - Modify: only files a failing check or a review finding points to, each fix with a test first.
 
-- [x] Status (library 1010 tests in 68 files, planner 947 tests in 102 files pass; lint planner 100 / scuba-physics 12 (baseline); e2e 9/9 on port 4300, no "reading 'consumed'" error; whole-branch review: ready to merge with plan bookkeeping fixes, done; TankBound write grep clean; manual check pending)
+- [x] Status (library 1010 tests in 68 files, planner 947 tests in 102 files pass; lint planner 100 / scuba-physics 12 (baseline); e2e 9/9 on port 4300, no "reading 'consumed'" error; whole-branch review: ready to merge with plan bookkeeping fixes, done; TankBound write grep clean; after Task 8: planner 948 tests in 102 files, lint planner 100 / scuba-physics 12; manual check done by the user, plan finished)
 - [x] **Step 1: Run** `npm run test-lib-ci` and `npm run test-ci`. Expected: all pass. A failure goes through superpowers:systematic-debugging, the fix belongs to the task that caused it.
 - [x] **Step 2: Run** `npm run lint`. Expected: no new errors against the Task 1 baseline.
 - [x] **Step 3: Run** e2e on port 4300 (`npx ng serve --port 4300`, then `PLAYWRIGHT_TEST_BASE_URL=http://localhost:4300 npx playwright test`, stop the server; the user's own server on 4200 stays running). Expected: all pass and the e2e log has no `reading 'consumed'` error (Task 6).
 - [x] **Step 4: Whole-branch review** by a reviewer subagent with superpowers:requesting-code-review over `master..HEAD`, checking the Review Focus list. Fix Critical/Important findings with a test first, re-run the affected specs, note the others in Status.
-- [ ] **Step 5: STOP for the manual check by the user** with `npm run start-pwa` (port 9090): dive tab titles, depth levels with tank labels, dive options reload from a shared URL, MOD after a ppO2 change, units switch, weight/SAC/gas blender restore, adding a tank while the consumption is calculated, compare page profile selection, learn quiz.
-- [ ] **Step 6: Record** the final numbers (tests, lint, e2e) in Status and commit the fixes and the plan as `chore: signals follow-up verified` (a `fix:` commit for a user visible bug found here).
+- [x] **Step 5: STOP for the manual check by the user** with `npm run start-pwa` (port 9090): dive tab titles, depth levels with tank labels, dive options reload from a shared URL, MOD after a ppO2 change, units switch, weight/SAC/gas blender restore, adding a tank while the consumption is calculated, compare page profile selection, learn quiz.
+- [x] **Step 6: Record** the final numbers (tests, lint, e2e) in Status and commit the fixes and the plan as `chore: signals follow-up verified` (a `fix:` commit for a user visible bug found here).
 
 ### Task 8: Weight calculator start pressure in bars
 
@@ -183,7 +183,7 @@ Added by the user after the final review (pre-existing bug, found in Task 3 revi
 - Modify: `projects/planner/src/app/calculators/weight/weight.component.ts` (`inputChanged`)
 - Test: `projects/planner/src/app/calculators/weight/weight.component.spec.ts`
 
-- [x] Status (948 tests in 102 files, lint planner 100 / scuba-physics 12; RED with the fix reverted: tank consumed 0 instead of 200 bar (bogus start pressure 30+2900 rejected), so the displayed weight was 0; with the fix the displayed weight is 7.8 lb for 2900 psi consumed of a 15 L tank; metric unchanged; test builds the imperial component like the app (units set before createComponent, no tank pokes); review step left for the controller)
+- [x] Status (948 tests in 102 files, lint planner 100 / scuba-physics 12; RED with the fix reverted: tank consumed 0 instead of 200 bar (bogus start pressure 30+2900 rejected), so the displayed weight was 0; with the fix the displayed weight is 7.8 lb for 2900 psi consumed of a 15 L tank; metric unchanged; test builds the imperial component like the app (units set before createComponent, no tank pokes); review: 3 fix rounds (app-like imperial setup and weight asserted, lint semicolon, `afterEach(() => localStorage.clear())` because the saved imperial preferences leaked into plan.tabs), re-review clean)
 - [x] **Step 1: Write the failing test** `'keeps start pressure in bars in imperial units'` in `weight.component.spec.ts`.
 - [x] **Step 2: Run** `npx ng test planner --no-watch --include='**/weight.component.spec.ts'`. Expected: FAILS.
 - [x] **Step 3: Implement**: convert consumed once (`const consumedBars = this.units.toBar(consumed)`), use it for `startPressureBars = reserve + consumedBars` and `consumedBars`.

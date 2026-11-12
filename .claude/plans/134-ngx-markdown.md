@@ -1,5 +1,7 @@
 # Replace ngx-md by ngx-markdown (#134) Implementation Plan
 
+**Status:** Finished 2026-11-12. All tasks were implemented and the final whole-branch review found no Critical or Important issues.
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
 **Goal:** Render the Help page, the help sidebar and the Learn help panel with `ngx-markdown` instead of the unmaintained `ngx-md`, with no visible change in content, layout, links or anchors.

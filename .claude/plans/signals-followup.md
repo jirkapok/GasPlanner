@@ -87,7 +87,7 @@
   - new setters in metric units, each calling `changed()`: `sizeLiters: number`, `startPressureBars: number`, `consumedBars: number`.
 - Consumes: Task 2 doesn't touch `TankBound`.
 
-- [x] Status (planner 940 tests in 102 files, lint planner 100 / scuba-physics 12 = baseline; RED: models.spec failed to compile, setters missing; no pins; added `algorithmTank` getter returning the tracked `Tank` for scuba-physics APIs taking `Tank`, since Readonly<Tank> is not assignable to it (private members); step 5 test renders a shared TankBound, switches units, sets working pressure as normalization does and patches the control like the parent, because the component renders size only from its form control)
+- [x] Status (planner 940 tests in 102 files, lint planner 100 / scuba-physics 12 = baseline; RED: models.spec failed to compile, setters missing; pin: `tank reads are tracked` (red only by compile); added `algorithmTank` getter returning the tracked `Tank` for scuba-physics APIs taking `Tank`, since Readonly<Tank> is not assignable to it (private members); step 5 test lives in tanks-simple spec: switches units, runs SettingsNormalizationService.apply() and renders the view afterwards, because no view refreshes the size in place after a units switch (tanks-simple creates its work pressure control only in imperial, tank.size shows only its form control))
 - [x] **Step 1: Write the failing tests** in `models.spec.ts` (`TankBound`):
   - `'sizeLiters keeps liters'`: set `sizeLiters = 15`, expect `tank.size` 15 and `bound.size` 15 in metric.
   - `'startPressureBars keeps bars'` and `'consumedBars keeps bars'`, same pattern.

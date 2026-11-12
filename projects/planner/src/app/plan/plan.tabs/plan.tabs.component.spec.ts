@@ -101,3 +101,32 @@ describe('PlanTabsComponent OnPush title', () => {
         expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. 40 m');
     });
 });
+
+describe('PlanTabsComponent OnPush titles reset', () => {
+    it('renders titles of all dives reset to simple', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(PlanTabsComponent);
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.depths.plannedDepth = 20;
+        second.depths.addSegment();
+        second.depths.levels[0].duration = 0.1;
+        second.depths.levels[1].duration = 0.1;
+        second.depths.levels[2].duration = 0.1;
+        second.depths.levelChanged();
+        await fixture.whenStable();
+        const complexTitle = second.title;
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).toContain(complexTitle);
+
+        TestBed.inject(ViewSwitchService).isComplex = false;
+        await fixture.whenStable();
+
+        expect(second.title).not.toBe(complexTitle);
+        expect(text()).toContain(second.title);
+        expect(text()).not.toContain(complexTitle);
+    });
+});

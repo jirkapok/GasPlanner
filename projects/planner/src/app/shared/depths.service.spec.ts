@@ -1,4 +1,5 @@
 import { MockInstance } from 'vitest';
+import { computed } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { DepthsService } from './depths.service';
@@ -63,6 +64,28 @@ describe('Depths service', () => {
                 depthService.applyNdlDuration();
                 expect(depthService.planDuration).toBe(expectedNdl);
             });
+        });
+    });
+
+    describe('Tracking', () => {
+        it('tracks planned depth', () => {
+            const tracked = computed(() => depthService.plannedDepth);
+            expect(tracked()).toBe(30);
+
+            depthService.plannedDepth = 40;
+
+            expect(tracked()).toBe(40);
+        });
+
+        it('tracks level edited in place', () => {
+            depthService.addSegment();
+            const tracked = computed(() => depthService.levels[1].endDepth);
+            tracked();
+
+            depthService.levels[1].endDepth = 25;
+            depthService.levelChanged();
+
+            expect(tracked()).toBe(25);
         });
     });
 

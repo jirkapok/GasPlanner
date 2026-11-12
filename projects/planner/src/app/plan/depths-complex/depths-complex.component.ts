@@ -134,9 +134,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
                 }
             });
 
-        // tank labels of the levels show tanks edited in place by the tanks component
-        this.dispatcher.tankChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.cd.markForCheck());
 
         this.rootForm.addControl('depths', this.complexForm);
     }
@@ -194,7 +191,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));
-        // reload comes from outside of this component (e.g. url, other dive or applied duration), levels are edited in place
+        // reload comes from outside of this component (e.g. url, other dive or applied duration), the rebuilt form controls are not signals
         this.cd.markForCheck();
     }
 

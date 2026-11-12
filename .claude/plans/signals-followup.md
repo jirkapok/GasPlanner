@@ -108,15 +108,15 @@
 **Interfaces:**
 - Produces on `DepthsService`: `private readonly _version = signal(0)`, `private changed(): void`, `private get trackedPlan(): Plan`. `levels`, `segments`, `plannedDepth(Meters)`, `planDuration`, `notEnoughTime`, `startAscentTime`, `needsReturn`, `startAscentIndex`, `minimumSegments`, `bestNitroxMix` read through it. `changed()` is called by `updateLevels`, `apply`, `tankRemoved`, `fixDepths` (public) and `levelChanged`. `Level` stays without a signal.
 
-- [ ] Status
-- [ ] **Step 1: Write the failing tests:**
+- [x] Status (943 tests in 102 files, lint planner 100 / scuba-physics 12; both computed tests were red; tab-title reset test already passed before the change, kept as a pin; depths-complex reload markForCheck restored, tankChanged$ one and plan.tabs subscription removed)
+- [x] **Step 1: Write the failing tests:**
   - `depths.service.spec.ts` `'tracks planned depth'`: `const c = computed(() => service.plannedDepth)`, read, set `plannedDepth = 40`, expect `c()` 40.
   - `depths.service.spec.ts` `'tracks level edited in place'`: computed over `service.levels[1].endDepth`, set `levels[1].endDepth = 25` and call `levelChanged()`, expect 25.
   - `plan.tabs.component.spec.ts` `'renders titles of all dives reset to simple'` (Review Focus 4): two dives, the second one complex with another depth, `ViewSwitchService.isComplex = false`, expect both titles updated.
-- [ ] **Step 2: Run** these specs. Expected: the computed tests FAIL. Note in Status whether the tab test already passes.
-- [ ] **Step 3: Implement** the interfaces.
-- [ ] **Step 4: Remove** the `merge(depthChanged$, depthsReloaded$, setToSimple$)` subscription and `ChangeDetectorRef` use other than `ngAfterViewInit` from `plan.tabs`, and the `tankChanged$` and reload `markForCheck()` from `depths-complex`. Run both specs. Expected: `'renders title of depth changed outside the component'`, `'renders gas of a tank changed in tanks'`, `'renders levels reloaded outside the component'` and `'renders levels of the dive selected outside the component'` PASS. Restore any removal whose test fails and note it.
-- [ ] **Step 5: Update** the OnPush bullet in `.claude/CLAUDE.md` Conventions: replace "A component showing state edited in place by a sibling calls `markForCheck()` on the matching `ReloadDispatcher` event (see `depths-complex`)" by "State edited in place is tracked by a `_version` signal of the owning service or wrapper, increased by each write and read by each getter (see `TankBound`, `DepthsService`, `OptionsService`)", keeping any `markForCheck()` left by Step 4 as the example.
+- [x] **Step 2: Run** these specs. Expected: the computed tests FAIL. Note in Status whether the tab test already passes.
+- [x] **Step 3: Implement** the interfaces.
+- [x] **Step 4: Remove** the `merge(depthChanged$, depthsReloaded$, setToSimple$)` subscription and `ChangeDetectorRef` use other than `ngAfterViewInit` from `plan.tabs`, and the `tankChanged$` and reload `markForCheck()` from `depths-complex`. Run both specs. Expected: `'renders title of depth changed outside the component'`, `'renders gas of a tank changed in tanks'`, `'renders levels reloaded outside the component'` and `'renders levels of the dive selected outside the component'` PASS. Restore any removal whose test fails and note it.
+- [x] **Step 5: Update** the OnPush bullet in `.claude/CLAUDE.md` Conventions: replace "A component showing state edited in place by a sibling calls `markForCheck()` on the matching `ReloadDispatcher` event (see `depths-complex`)" by "State edited in place is tracked by a `_version` signal of the owning service or wrapper, increased by each write and read by each getter (see `TankBound`, `DepthsService`, `OptionsService`)", keeping any `markForCheck()` left by Step 4 as the example.
 - [ ] **Step 6: Run** the `depths.service`, `plan.tabs` and `depths-complex` specs, then `npm run test-ci`, `npm run lint`. Expected: PASS, lint at baseline. Then **review** by a reviewer subagent with superpowers:requesting-code-review, fix Critical/Important findings.
 - [ ] **Step 7: Commit** `refactor: depths track their own changes`.
 

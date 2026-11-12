@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { Level, TankBound } from './models';
 import { Plan } from './plan.service';
 import { UnitConversion } from './UnitConversion';
@@ -17,6 +17,7 @@ export class DepthsService extends Streamed {
     /** in seconds */
     private static readonly extendDuration = Time.toSeconds(5);
     private _levels: Level[] = [];
+    private readonly _version = signal(0);
     private plan = new Plan();
 
     constructor(
@@ -42,15 +43,16 @@ export class DepthsService extends Streamed {
     }
 
     public get levels(): Level[] {
+        this._version();
         return this._levels;
     }
 
     public get segments(): Segment[] {
-        return this.plan.segments;
+        return this.trackedPlan.segments;
     }
 
     public get bestNitroxMix(): string {
-        const o2 = this.toxicity.bestNitroxMix(this.plan.maxDepth) / 100;
+        const o2 = this.toxicity.bestNitroxMix(this.trackedPlan.maxDepth) / 100;
         return GasNames.nameFor(o2);
     }
 
@@ -59,32 +61,38 @@ export class DepthsService extends Streamed {
     }
 
     public get plannedDepthMeters(): number {
-        return this.plan.maxDepth;
+        return this.trackedPlan.maxDepth;
     }
 
     /** in minutes */
     public get planDuration(): number {
-        return this.plan.duration;
+        return this.trackedPlan.duration;
     }
 
     public get notEnoughTime(): boolean {
-        return this.plan.notEnoughTime;
+        return this.trackedPlan.notEnoughTime;
     }
 
     public get startAscentTime(): number {
-        return this.plan.startAscentTime;
+        return this.trackedPlan.startAscentTime;
     }
 
     public get needsReturn(): boolean {
-        return this.plan.needsReturn;
+        return this.trackedPlan.needsReturn;
     }
 
     public get startAscentIndex(): number {
-        return this.plan.startAscentIndex;
+        return this.trackedPlan.startAscentIndex;
     }
 
     public get minimumSegments(): boolean {
-        return this.plan.minimumSegments;
+        return this.trackedPlan.minimumSegments;
+    }
+
+    /** Read each time, plan is edited in place, the version tracks that */
+    private get trackedPlan(): Plan {
+        this._version();
+        return this.plan;
     }
 
     private get firstTank(): Tank {
@@ -180,6 +188,7 @@ export class DepthsService extends Streamed {
 
     public fixDepths(): void {
         this.plan.fixDepths();
+        this.changed();
     }
 
     private assignDepth(newDepth: number): void {
@@ -201,10 +210,12 @@ export class DepthsService extends Streamed {
     }
 
     private apply(): void {
+        this.changed();
         this.dispatcher.sendDepthChanged();
     }
 
     private tankRemoved(removed: Tank): void {
+        this.changed();
         this.plan.resetSegments(removed, this.firstTank);
         this.dispatcher.sendDepthChanged();
     }
@@ -220,6 +231,11 @@ export class DepthsService extends Streamed {
         });
 
         this._levels = converted;
+        this.changed();
+    }
+
+    private changed(): void {
+        this._version.update(v => v + 1);
     }
 
     private depthsReloaded(): void {

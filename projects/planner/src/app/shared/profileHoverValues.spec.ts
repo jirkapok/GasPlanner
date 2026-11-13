@@ -53,3 +53,28 @@ describe('ProfileHoverValues', () => {
         expect(sut.emergencyDepth).toBe(18);
     });
 });
+
+describe('ProfileHoverValues of compared profiles', () => {
+    const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
+        ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
+
+    const points = [
+        point('diffResultsTable.profileB.depth', 6),
+        point('diffResultsTable.profileA.depth', 3),
+        point('diffResultsTable.profileA.events', 3, 'Safety stop')
+    ];
+
+    it('reads only values of profile with given uid prefix', () => {
+        const sut = ProfileHoverValues.fromPoints(points, 'diffResultsTable.profileA.');
+
+        expect(sut.depth).toBe(3);
+        expect(sut.events).toEqual(['Safety stop']);
+    });
+
+    it('reads time from any profile', () => {
+        const sut = ProfileHoverValues.fromPoints(points.slice(0, 1), 'diffResultsTable.profileA.');
+
+        expect(sut.timeStamp).toBe(1740);
+        expect(sut.depth).toBeUndefined();
+    });
+});

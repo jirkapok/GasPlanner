@@ -1,0 +1,33 @@
+:host {
+    display: block;
+}
+
+// samples like in the chart legend, colored by the current text color
+.hover-marker {
+    vertical-align: middle;
+}
+
+.hover-circle {
+    width: 0.6em;
+    height: 0.6em;
+    background-color: currentColor;
+}
+
+.hover-line {
+    width: 1.6em;
+    border-top: 2px solid currentColor;
+}
+
+.hover-line-dotted {
+    border-top-style: dotted;
+}
+
+.hover-line-dashed {
+    border-top-style: dashed;
+}
+
+// ceiling is filled area in the chart
+.hover-ceiling-area {
+    height: 0.6em;
+    background-color: color-mix(in srgb, currentColor 50%, transparent);
+}

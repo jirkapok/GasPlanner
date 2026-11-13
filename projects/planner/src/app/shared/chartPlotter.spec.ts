@@ -58,6 +58,26 @@ describe('DiveTracesBuilder', () => {
         expect(traces.map(t => t.uid)).toEqual(['averageDepth', 'depth', 'ceiling', 'events']);
     });
 
+    it('has no uid prefix without name prefix', () => {
+        expect(factory.create(() => dive).uidPrefix).toBe('');
+    });
+
+    it('has uid prefix of name prefix', () => {
+        expect(factory.withNamePrefix('diffResultsTable.profileA').create(() => dive).uidPrefix).toBe('diffResultsTable.profileA.');
+    });
+
+    it('provides line colors for hover values', () => {
+        const builder = factory.wthDepthColor('rgb(1, 2, 3)').create(() => dive);
+
+        expect(builder.hoverColors).toEqual({
+            depth: 'rgb(1, 2, 3)',
+            averageDepth: 'rgb(62, 157, 223)',
+            ceiling: 'rgb(255, 160, 73)',
+            emergency: 'rgb(255, 77, 77)',
+            event: 'rgba(31, 119, 180, 0.7)'
+        });
+    });
+
     it('prefixes uid with name prefix', () => {
         const traces = factory.withNamePrefix('diffResultsTable.profileA')
             .create(() => dive).allTraces();

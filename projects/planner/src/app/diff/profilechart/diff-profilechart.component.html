@@ -21,6 +21,20 @@
 
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
+        <div data-testid="hover-time" class="small ps-5 fw-bold">
+            @if (hoverValuesA) {
+                {{ hoverValuesA.timeStamp | duration: hoverValuesA.timeStamp }}
+            } @else {
+                <!-- keeps the line height, so the chart doesn't move -->
+                &nbsp;
+            }
+        </div>
+        <app-hover-values data-testid="hover-values-a" class="small ps-5" [values]="hoverValuesA" [colors]="hoverColorsA"
+            [showTime]="false" labelKey="diffResultsTable.profileA">
+        </app-hover-values>
+        <app-hover-values data-testid="hover-values-b" class="small ps-5" [values]="hoverValuesB" [colors]="hoverColorsB"
+            [showTime]="false" labelKey="diffResultsTable.profileB">
+        </app-hover-values>
         <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{
             'plot-display': profilesCalculated,
             'plot-hidden': !profilesCalculated

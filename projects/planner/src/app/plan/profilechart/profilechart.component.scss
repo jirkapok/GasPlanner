@@ -4,56 +4,6 @@
     height: 400px;
 }
 
-// samples like in the chart legend
-.hover-marker {
-    vertical-align: middle;
-}
-
-.hover-circle {
-    width: 0.6em;
-    height: 0.6em;
-    background-color: currentColor;
-}
-
-.hover-line {
-    width: 1.6em;
-    border-top: 2px solid currentColor;
-}
-
-.hover-line-dotted {
-    border-top-style: dotted;
-}
-
-.hover-line-dashed {
-    border-top-style: dashed;
-}
-
-// ceiling is filled area in the chart
-.hover-ceiling-area {
-    height: 0.6em;
-    background-color: rgba(255, 160, 73, 0.5);
-}
-
-.hover-event {
-    color: rgba(31, 119, 180, 0.7);
-}
-
-.hover-depth {
-    color: rgb(31, 119, 180);
-}
-
-.hover-avg-depth {
-    color: rgb(62, 157, 223);
-}
-
-.hover-ceiling {
-    color: rgb(255, 160, 73);
-}
-
-.hover-emergency {
-    color: rgb(255, 77, 77);
-}
-
 .heatmap-plot {
     position: relative;
     width: 100%;

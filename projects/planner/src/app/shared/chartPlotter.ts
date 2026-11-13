@@ -20,6 +20,15 @@ export enum TraceKind {
     events = 'events'
 }
 
+/** Colors of the chart traces used by the hover values line */
+export interface HoverColors {
+    depth: string;
+    averageDepth: string;
+    ceiling: string;
+    emergency: string;
+    event: string;
+}
+
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
@@ -195,6 +204,7 @@ export class ChartPlotterFactory {
 }
 
 export class DiveTracesBuilder {
+    private static readonly emergencyLineColor = 'rgb(255, 77, 77)';
     public showEmergencyAscent = false;
     private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
@@ -224,6 +234,21 @@ export class DiveTracesBuilder {
         this.ceilingLineColor = ceilingLineColor;
         this.eventLineColor = eventLineColor;
         this.eventFillColor = eventFillColor;
+    }
+
+    /** Start of uid of all traces of this builder, distinguishes compared profiles in hover events */
+    public get uidPrefix(): string {
+        return this.namePrefixKey ? `${this.namePrefixKey}.` : '';
+    }
+
+    public get hoverColors(): HoverColors {
+        return {
+            depth: this.depthLineColor,
+            averageDepth: this.averageDepthLineColor,
+            ceiling: this.ceilingLineColor,
+            emergency: DiveTracesBuilder.emergencyLineColor,
+            event: this.eventLineColor
+        };
     }
 
     /** Re-resolved on every trace build so a language switch updates it without recreating the builder. */
@@ -298,7 +323,7 @@ export class DiveTracesBuilder {
                 dash: <Plotly.Dash>'dash'
             },
             marker: {
-                color: 'rgb(255, 77, 77)'
+                color: DiveTracesBuilder.emergencyLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         });
@@ -355,7 +380,7 @@ export class DiveTracesBuilder {
     }
 
     private identify(kind: TraceKind, trace: Partial<Plotly.ScatterData>): Partial<Plotly.ScatterData> {
-        trace.uid = this.namePrefixKey ? `${this.namePrefixKey}.${kind}` : kind;
+        trace.uid = this.uidPrefix + kind;
 
         if (this.hideHoverLabels) {
             trace.hoverinfo = 'none';

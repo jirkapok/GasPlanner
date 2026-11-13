@@ -29,6 +29,7 @@ import { RedundanciesComponent } from './calculators/redundancies/redundancies.c
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 
 import { CalculatingComponent } from './controls/calculating/calculating.component';
+import { HoverValuesComponent } from './controls/hover-values/hover-values.component';
 import { AltitudeComponent } from './controls/altitude/altitude.component';
 import { GaslabelComponent } from './controls/gaslabel/gaslabel.component';
 import { SalinityComponent } from './controls/salinity/salinity.component';
@@ -187,6 +188,7 @@ const STANDALONE = [
     DurationPipe,
     LocaleNumberPipe,
     CalculatingComponent,
+    HoverValuesComponent,
     AltitudeComponent,
     GaslabelComponent,
     SalinityComponent,

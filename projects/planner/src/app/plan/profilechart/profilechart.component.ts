@@ -9,7 +9,7 @@ import { Streamed } from '../../shared/streamed';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import {
-    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder
+    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder, HoverColors
 } from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
@@ -17,9 +17,9 @@ import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
-import { DecimalPipe, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { DurationPipe } from '../../pipes/duration.pipe';
+import { HoverValuesComponent } from '../../controls/hover-values/hover-values.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, DurationPipe, DecimalPipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, HoverValuesComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
@@ -36,6 +36,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
     public hoverValues: ProfileHoverValues | undefined;
+    public readonly hoverColors: HoverColors;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -44,7 +45,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private initialized = false;
 
     constructor(
-        private units: UnitConversion,
+        units: UnitConversion,
         resampling: ResamplingService,
         private selectedWaypoint: SelectedWaypoint,
         private dispatcher: ReloadDispatcher,
@@ -58,6 +59,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .withoutHoverLabels()
             .create(() => this.dive);
+        this.hoverColors = this.profileTraces.hoverColors;
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
@@ -109,14 +111,6 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
     public get showEmergencyAscent(): boolean {
         return this.profileTraces.showEmergencyAscent;
-    }
-
-    public get lengthUnit(): string {
-        return this.units.length;
-    }
-
-    public get hoverEvents(): string {
-        return this.hoverValues?.events.join(', ') ?? '';
     }
 
     private get dive(): DiveResults {

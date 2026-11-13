@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { DatePipe } from '@angular/common';
+import * as Plotly from 'plotly.js-dist';
 import { ProfileDifferenceChartComponent } from './diff-profilechart.component';
+import { ChartPlotterFactory } from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
@@ -39,6 +42,7 @@ describe('ProfileDifferenceChartComponent', () => {
                 DiveSchedules,
                 ReloadDispatcher,
                 SelectedDiffWaypoint,
+                DatePipe,
                 provideTestTranslate()
             ]
         });
@@ -100,5 +104,80 @@ describe('ProfileDifferenceChartComponent', () => {
         const heatMap = fixture.debugElement.query(By.css('#heatmapPlotB')).nativeElement as HTMLElement;
         expect(component.showHeatMap).toBe(true);
         expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
+    });
+
+    describe('Hover values', () => {
+        const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
+            ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
+
+        const hover = async (): Promise<void> => {
+            component.plotlyHover({
+                points: [
+                    point('diffResultsTable.profileB.depth', 6),
+                    point('diffResultsTable.profileA.depth', 3),
+                    point('diffResultsTable.profileA.events', 3, 'Safety stop')
+                ]
+            } as unknown as Plotly.PlotMouseEvent);
+            await fixture.whenStable();
+        };
+
+        const row = (testId: string): HTMLElement =>
+            fixture.debugElement.query(By.css(`[data-testid="${testId}"]`)).nativeElement as HTMLElement;
+        const rowText = (testId: string): string => row(testId).textContent?.trim() ?? '';
+
+        it('reserves empty rows when nothing is hovered', () => {
+            expect(rowText('hover-time')).toBe('');
+            expect(rowText('hover-values-a')).toBe('');
+            expect(rowText('hover-values-b')).toBe('');
+        });
+
+        it('shows hovered time once and values of each profile in own row', async () => {
+            await hover();
+
+            expect(rowText('hover-time')).toBe('29:00');
+            expect(rowText('hover-values-a')).toContain('diffResultsTable.profileA');
+            expect(rowText('hover-values-a')).toContain('3 m');
+            expect(rowText('hover-values-a')).toContain('Safety stop');
+            expect(rowText('hover-values-a')).not.toContain('6 m');
+            expect(rowText('hover-values-b')).toContain('diffResultsTable.profileB');
+            expect(rowText('hover-values-b')).toContain('6 m');
+            expect(rowText('hover-values-b')).not.toContain('29:00');
+        });
+
+        it('draws profile B samples in its line colors', async () => {
+            await hover();
+
+            const sample = row('hover-values-b').querySelector('.hover-marker') as HTMLElement;
+            expect(getComputedStyle(sample).borderTopColor).toBe(ChartPlotterFactory.depthLineColorB);
+        });
+
+        it('clears hovered values on unhover', async () => {
+            await hover();
+
+            component.plotlyHoverLeave();
+            await fixture.whenStable();
+
+            expect(rowText('hover-time')).toBe('');
+            expect(rowText('hover-values-a')).toBe('');
+            expect(rowText('hover-values-b')).toBe('');
+        });
+
+        // touch devices don't always send unhover, values of other time alignment would be stale
+        it('clears hovered values when profiles alignment changes', async () => {
+            await hover();
+
+            page.alignByEndButton.click();
+            await fixture.whenStable();
+
+            expect(rowText('hover-values-a')).toBe('');
+        });
+
+        it('hides plotly hover box', async () => {
+            // lets Plotly promises settle
+            await new Promise((resolve) => setTimeout(resolve));
+
+            const plot = document.getElementById('diveplotdiff') as unknown as { layout: Partial<Plotly.Layout> };
+            expect(plot.layout.hovermode).toBe('x');
+        });
     });
 });

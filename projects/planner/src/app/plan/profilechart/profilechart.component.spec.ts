@@ -122,7 +122,8 @@ describe('ProfileChartComponent', () => {
                 'solid rgb(255, 160, 73)',
                 'dashed rgb(255, 77, 77)'
             ]);
-            expect(markers[2].backgroundColor).toBe('rgba(255, 160, 73, 0.5)');
+            // ceiling line color rgb(255, 160, 73) at 50 %
+            expect(markers[2].backgroundColor).toBe('color(srgb 1 0.627451 0.286275 / 0.5)');
             expect(markers[4].backgroundColor).toBe('rgba(31, 119, 180, 0.7)');
             expect(markers[4].borderRadius).toBe('50%');
         });

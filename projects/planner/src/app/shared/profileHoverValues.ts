@@ -13,10 +13,15 @@ export class ProfileHoverValues {
     public emergencyDepth?: number;
     public events: string[] = [];
 
-    public static fromPoints(points: Plotly.PlotDatum[]): ProfileHoverValues {
+    /**
+     * @param uidPrefix reads only traces of one profile, e.g. 'diffResultsTable.profileA.' when comparing profiles
+     */
+    public static fromPoints(points: Plotly.PlotDatum[], uidPrefix = ''): ProfileHoverValues {
         const result = new ProfileHoverValues();
+        // the same time for all profiles, even if this profile has no value at this time
         result.timeStamp = DateFormats.secondsFromDate(String(points[0]?.x));
-        points.forEach(p => result.apply(p));
+        points.filter(p => p.data?.uid?.startsWith(uidPrefix))
+            .forEach(p => result.apply(p));
         return result;
     }
 

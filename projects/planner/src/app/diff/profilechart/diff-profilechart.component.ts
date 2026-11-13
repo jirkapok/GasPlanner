@@ -6,7 +6,8 @@ import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
-import { ChartPlotterFactory, ChartPlotter } from '../../shared/chartPlotter';
+import { ChartPlotterFactory, ChartPlotter, DiveTracesBuilder, HoverColors } from '../../shared/chartPlotter';
+import { ProfileHoverValues } from '../../shared/profileHoverValues';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
@@ -15,20 +16,28 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
+import { HoverValuesComponent } from '../../controls/hover-values/hover-values.component';
+import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-diff-profilechart',
     templateUrl: './diff-profilechart.component.html',
     styleUrls: ['./diff-profilechart.component.scss'],
-    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe]
+    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe, HoverValuesComponent, DurationPipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
     public showHeatMap = true;
+    public hoverValuesA: ProfileHoverValues | undefined;
+    public hoverValuesB: ProfileHoverValues | undefined;
+    public readonly hoverColorsA: HoverColors;
+    public readonly hoverColorsB: HoverColors;
     protected readonly heatmapIcon = faFire;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
     private heatMapPlotterB: HeatMapPlotter;
+    private profileATraces: DiveTracesBuilder;
+    private profileBTraces: DiveTracesBuilder;
 
     constructor(
         units: UnitConversion,
@@ -41,10 +50,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
-        const profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
+        this.profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
+            .withoutHoverLabels()
             .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
             .create(() => this.profileComparatorService.profileAResults);
-        const profileBTraces = chartPlotterFactory
+        this.profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
             .wthAverageDepthColor(ChartPlotterFactory.averageDepthColorB)
             .wthDepthColor(ChartPlotterFactory.depthLineColorB)
@@ -55,7 +65,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
-            chartPlotterFactory, profileBTraces, profileATraces);
+            chartPlotterFactory, this.profileBTraces, this.profileATraces);
+        this.hoverColorsA = this.profileATraces.hoverColors;
+        this.hoverColorsB = this.profileBTraces.hoverColors;
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
@@ -83,6 +95,16 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
+        this.hoverValuesA = ProfileHoverValues.fromPoints(data.points, this.profileATraces.uidPrefix);
+        this.hoverValuesB = ProfileHoverValues.fromPoints(data.points, this.profileBTraces.uidPrefix);
+        // Plotly events are outside Angular events, so they have to schedule the change detection
+        this.cd.markForCheck();
+    }
+
+    public plotlyHoverLeave(): void {
+        this.selectedWaypoints.selectedTimeStamp = '';
+        this.selectWayPoint(undefined);
+        this.clearHoverValues();
     }
 
     protected toggleHeatMap(): void {
@@ -97,9 +119,10 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.alignByEnd = !this.alignByEnd;
     }
 
-    private plotlyHoverLeave() {
-        this.selectedWaypoints.selectedTimeStamp = '';
-        this.selectWayPoint(undefined);
+    private clearHoverValues(): void {
+        this.hoverValuesA = undefined;
+        this.hoverValuesB = undefined;
+        this.cd.markForCheck();
     }
 
     private selectWayPoint(selected: ComparedWaypoint | undefined): void {
@@ -124,26 +147,21 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
     private hookChartEvents(): void {
         const chartElement = document.getElementById(this.plotter.elementName) as Plotly.PlotlyHTMLElement;
-        // Plotly events are outside Angular events, so they have to schedule the change detection
-        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => {
-            this.plotlyHover(e);
-            this.cd.markForCheck();
-        });
-        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => {
-            this.plotlyHover(e);
-            this.cd.markForCheck();
-        });
-        chartElement.on('plotly_unhover', () => {
-            this.plotlyHoverLeave();
-            this.cd.markForCheck();
-        });
+        chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_click', (e: Plotly.PlotMouseEvent) => this.plotlyHover(e));
+        chartElement.on('plotly_unhover', () => this.plotlyHoverLeave());
     }
 
     private subscribeToObservables(): void {
+        // touch devices don't always send unhover, so hovered values would be stale
         this.profileComparatorService.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => {
                 if (this.profilesCalculated) {
                     this.redrawCharts();
+                    this.plotlyHoverLeave();
+                } else {
+                    // chart isn't drawn yet, so there is no cursor to remove
+                    this.clearHoverValues();
                 }
             });
 

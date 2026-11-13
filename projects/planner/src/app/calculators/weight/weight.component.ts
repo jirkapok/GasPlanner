@@ -38,7 +38,6 @@ export class WeightCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage,
@@ -54,17 +53,17 @@ export class WeightCalcComponent implements OnInit {
 
     public get consumedInvalid(): boolean {
         const depthControl = this.weightForm.controls.consumed;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get workPressureInvalid(): boolean {
         const pressureControl = this.weightForm.controls.workPressure;
-        return this.inputs.controlInValid(pressureControl);
+        return InputControls.isControlInvalid(pressureControl);
     }
 
     public get tankSizeInvalid(): boolean {
         const tankSize = this.weightForm.get('tankSize') as AbstractControl;
-        return this.inputs.controlInValid(tankSize);
+        return InputControls.isControlInvalid(tankSize);
     }
 
     public get weight(): number {

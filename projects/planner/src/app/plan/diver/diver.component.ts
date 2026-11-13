@@ -24,10 +24,11 @@ export class DiverComponent extends Streamed implements OnInit {
 
     private _rmvStep = 0.1;
 
-    constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
+        public units: UnitConversion
+    ) {
         super();
     }
 
@@ -51,12 +52,12 @@ export class DiverComponent extends Streamed implements OnInit {
 
     public get rmvInvalid(): boolean {
         const rmv = this.diverForm.controls.rmv;
-        return this.inputs.controlInValid(rmv);
+        return InputControls.isControlInvalid(rmv);
     }
 
     public get stressRmvInvalid(): boolean {
         const rmv = this.diverForm.controls.srtessRmv;
-        return this.inputs.controlInValid(rmv);
+        return InputControls.isControlInvalid(rmv);
     }
 
     public get rmvStep(): number {

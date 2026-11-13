@@ -31,7 +31,6 @@ export class OxygenDropDownComponent implements OnInit {
     @Output() public standardGasApplied = new EventEmitter<string>();
 
     constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
     }
@@ -64,7 +63,7 @@ export class OxygenDropDownComponent implements OnInit {
 
     public get gasO2Invalid(): boolean {
         const o2Field = this.nitroxForm.get(this.controlName);
-        return !o2Field || this.inputs.controlInValid(o2Field);
+        return !o2Field || InputControls.isControlInvalid(o2Field);
     }
 
     public ngOnInit(): void {

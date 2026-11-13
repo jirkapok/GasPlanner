@@ -71,7 +71,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
@@ -220,27 +219,27 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasHeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankHe);
+        return InputControls.isControlInvalid(tank.controls.tankHe);
     }
 
     public gasO2Invalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankO2);
+        return InputControls.isControlInvalid(tank.controls.tankO2);
     }
 
     public workPressureInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankWorkPressure);
+        return InputControls.isControlInvalid(tank.controls.tankWorkPressure);
     }
 
     public startPressureInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankStartPressure);
+        return InputControls.isControlInvalid(tank.controls.tankStartPressure);
     }
 
     public tankSizeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankSize);
+        return InputControls.isControlInvalid(tank.controls.tankSize);
     }
 
     public addTank(): void {

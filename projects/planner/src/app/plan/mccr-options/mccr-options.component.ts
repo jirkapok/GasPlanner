@@ -34,7 +34,6 @@ export class MccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
@@ -47,19 +46,19 @@ export class MccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get setpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.mccrForm.controls.setpoint);
+        return InputControls.isControlInvalid(this.mccrForm.controls.setpoint);
     }
 
     public get o2FlowInvalid(): boolean {
-        return this.inputs.controlInValid(this.mccrForm.controls.o2Flow);
+        return InputControls.isControlInvalid(this.mccrForm.controls.o2Flow);
     }
 
     public get loopVolumeInvalid(): boolean {
-        return this.inputs.controlInValid(this.mccrForm.controls.loopVolume);
+        return InputControls.isControlInvalid(this.mccrForm.controls.loopVolume);
     }
 
     public get metabolicO2Invalid(): boolean {
-        return this.inputs.controlInValid(this.mccrForm.controls.metabolicO2);
+        return InputControls.isControlInvalid(this.mccrForm.controls.metabolicO2);
     }
 
     /** Volumes use the same precision as diver rmv */

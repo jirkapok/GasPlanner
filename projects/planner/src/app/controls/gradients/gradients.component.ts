@@ -27,7 +27,6 @@ export class GradientsComponent implements OnInit {
     public standards = new StandardGradientsService();
 
     constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups) { }
 
     public get conservatism(): string {
@@ -36,12 +35,12 @@ export class GradientsComponent implements OnInit {
 
     public get gfLowInvalid(): boolean {
         const gfLowField = this.gfForm.controls.gfLow;
-        return this.inputs.controlInValid(gfLowField);
+        return InputControls.isControlInvalid(gfLowField);
     }
 
     public get gfHighInvalid(): boolean {
         const gfHighField = this.gfForm.controls.gfHigh;
-        return this.inputs.controlInValid(gfHighField);
+        return InputControls.isControlInvalid(gfHighField);
     }
 
     public gfHighChanged(): void {

@@ -27,7 +27,6 @@ export class AltitudeComponent implements OnInit {
 
     constructor(
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) { }
 
@@ -45,7 +44,7 @@ export class AltitudeComponent implements OnInit {
 
     public get altitudeInvalid(): boolean {
         const altitudeField = this.altitudeForm.get(this.controlName) as AbstractControl;
-        return this.inputs.controlInValid(altitudeField);
+        return InputControls.isControlInvalid(altitudeField);
     }
 
     public ngOnInit(): void {

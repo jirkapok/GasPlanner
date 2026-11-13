@@ -39,7 +39,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     constructor(
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
@@ -58,7 +57,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
 
     public get durationInvalid(): boolean {
         const duration = this.simpleForm.controls.planDuration;
-        return this.inputs.controlInValid(duration);
+        return InputControls.isControlInvalid(duration);
     }
 
     public get depths(): DepthsService {

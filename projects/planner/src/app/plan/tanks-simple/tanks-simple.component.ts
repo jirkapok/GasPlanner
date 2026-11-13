@@ -39,7 +39,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private diveSchedules: DiveSchedules,
         private dispatcher: ReloadDispatcher) {
@@ -61,17 +60,17 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public get firstTankSizeInvalid(): boolean {
         const firstTankSize = this.tanksForm.controls.firstTankSize;
-        return this.inputs.controlInValid(firstTankSize);
+        return InputControls.isControlInvalid(firstTankSize);
     }
 
     public get workPressureInvalid(): boolean {
         const workPressure = this.tanksForm.controls.workPressure;
-        return this.inputs.controlInValid(workPressure);
+        return InputControls.isControlInvalid(workPressure);
     }
 
     public get firstTankStartPressureInvalid(): boolean {
         const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
-        return this.inputs.controlInValid(firstTankStartPressure);
+        return InputControls.isControlInvalid(firstTankStartPressure);
     }
 
     public ngOnInit(): void {

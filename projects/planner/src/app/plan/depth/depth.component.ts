@@ -22,15 +22,15 @@ export class DepthComponent implements OnInit {
     @Output() public depthChange = new EventEmitter<number>();
     @Output() public assignMaxDepth = new EventEmitter();
 
-    constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
-    }
+        public units: UnitConversion
+    ) {}
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.get(this.controlName);
-        return !depthField || this.inputs.controlInValid(depthField);
+        return !depthField || InputControls.isControlInvalid(depthField);
     }
 
     public depthChanged() {

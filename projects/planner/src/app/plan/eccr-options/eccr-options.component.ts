@@ -37,7 +37,6 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
@@ -50,7 +49,7 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get descentSetpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.descentSetpoint) || this.descentAboveBottomAtDescent;
+        return InputControls.isControlInvalid(this.eccrForm.controls.descentSetpoint) || this.descentAboveBottomAtDescent;
     }
 
     /** Descent setpoint is in range, but higher than the bottom setpoint */
@@ -68,23 +67,23 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get bottomSetpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.bottomSetpoint) || this.descentAboveBottomAtBottom;
+        return InputControls.isControlInvalid(this.eccrForm.controls.bottomSetpoint) || this.descentAboveBottomAtBottom;
     }
 
     public get decoSetpointInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.decoSetpoint);
+        return InputControls.isControlInvalid(this.eccrForm.controls.decoSetpoint);
     }
 
     public get setpointSwitchDepthInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.setpointSwitchDepth);
+        return InputControls.isControlInvalid(this.eccrForm.controls.setpointSwitchDepth);
     }
 
     public get loopVolumeInvalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.loopVolume);
+        return InputControls.isControlInvalid(this.eccrForm.controls.loopVolume);
     }
 
     public get metabolicO2Invalid(): boolean {
-        return this.inputs.controlInValid(this.eccrForm.controls.metabolicO2);
+        return InputControls.isControlInvalid(this.eccrForm.controls.metabolicO2);
     }
 
     /** Volumes use the same precision as diver rmv */

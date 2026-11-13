@@ -57,6 +57,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
+            .withRestInterval(() => this.schedules.selected.restInterval)
             .withoutHoverLabels()
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;
@@ -175,8 +176,9 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotAllCharts(): void {
+        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval();
         this.plotter.plotAllCharts();
-        this.plotHeatMap(this.dive.tissueOverPressures);
+        this.plotHeatMap(tissues);
     }
 
     private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {

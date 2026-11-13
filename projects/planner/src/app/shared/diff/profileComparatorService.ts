@@ -2,11 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import {
-    ConsumptionByMix, IConsumedMix,
-    SurfaceIntervalParameters, BuhlmannAlgorithm,
-    TissueOverPressures
-} from 'scuba-physics';
+import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -135,23 +131,8 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get overPressures(): SaturationComparison {
-        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const surfaceInterval = Math.abs(durationDiff);
-
-        // Add to the shorter one and don't store it in the result, since it is used only for the diff
-        if(durationDiff > 0) {
-            const profileBOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
-            return {
-                profileAOverPressures: this.profileAResults.tissueOverPressures,
-                profileBOverPressures: profileBOverPressures
-            };
-        }
-
-        const profileAOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
-        return {
-            profileAOverPressures: profileAOverPressures,
-            profileBOverPressures: this.profileBResults.tissueOverPressures
-        };
+        const builder = new HeatMapOverPressuresBuilder(this.profileA, this.profileB, this.alignByEnd);
+        return builder.createSaturationComparison();
     }
 
     public get alignByEnd(): boolean {
@@ -221,36 +202,6 @@ export class ProfileComparatorService extends Streamed {
 
         const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
         this._wayPoints.set(builder.createDiveComparison());
-    }
-
-    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
-        if (this.alignByEnd) {
-            const pressuresBeforeDive = this.applySurfaceIntervalBeforeDive(profile);
-            return [...pressuresBeforeDive, ...profile.diveResult.tissueOverPressures];
-        }
-
-        const surfacePressures = this.applySurfaceIntervalAfterDive(profile, surfaceInterval);
-        return [...profile.diveResult.tissueOverPressures, ...surfacePressures];
-    }
-
-    private applySurfaceIntervalBeforeDive(profile: DiveSchedule): HeatMapOverPressures {
-        const shorterLength = profile.diveResult.tissueOverPressures.length;
-        const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
-            ? this.profileBResults.tissueOverPressures.length
-            : this.profileAResults.tissueOverPressures.length;
-        return Array.from(
-            { length: longerLength - shorterLength },
-            () => new Array<null>(16).fill(null)
-        ) as HeatMapOverPressures;
-    }
-
-    private applySurfaceIntervalAfterDive(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
-        const altitude = profile.optionsService.altitude;
-        const tissues = profile.diveResult.finalTissues;
-        const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);
-        const algorithm = new BuhlmannAlgorithm();
-        const changes = algorithm.applySurfaceIntervalStatistics(parameters);
-        return changes.tissueOverPressures;
     }
 }
 
@@ -371,5 +322,157 @@ export class WaypointsDiffBuilder {
             this.pushBWith(undefined);
             this.updateB();
         }
+    }
+}
+
+export class HeatMapOverPressuresBuilder {
+    private pressuresA: HeatMapOverPressures = [];
+    private pressuresB: HeatMapOverPressures = [];
+
+    constructor(
+        private scheduleA: DiveSchedule,
+        private scheduleB: DiveSchedule,
+        private alignByEnd: boolean
+    ) {}
+
+    private get diveDurationA(): number {
+        return this.scheduleA.diveResult.totalDuration;
+    }
+
+    private get diveDurationB(): number {
+        return this.scheduleB.diveResult.totalDuration;
+    }
+
+    private get restDurationA(): number {
+        return this.scheduleA.restInterval;
+    }
+
+    private get restDurationB(): number {
+        return this.scheduleB.restInterval;
+    }
+
+    private get totalDurationA(): number {
+        return this.diveDurationA + this.restDurationA;
+    }
+
+    private get totalDurationB(): number {
+        return this.diveDurationB + this.restDurationB;
+    }
+
+    private get dives(): { longer: DiveResults, shorter: DiveResults } {
+        if (this.diveDurationA < this.diveDurationB) {
+            return {
+                longer: this.scheduleB.diveResult,
+                shorter: this.scheduleA.diveResult
+            };
+        }
+        return {
+            longer: this.scheduleA.diveResult,
+            shorter: this.scheduleB.diveResult
+        };
+    }
+
+    private get schedules(): { longer: DiveSchedule, shorter: DiveSchedule } {
+        if (this.totalDurationA < this.totalDurationB) {
+            return {
+                longer: this.scheduleB,
+                shorter: this.scheduleA
+            };
+        }
+        return {
+            longer: this.scheduleA,
+            shorter: this.scheduleB
+        };
+    }
+
+    private get restSchedules(): { longer: DiveSchedule, shorter: DiveSchedule } {
+        if (this.restDurationA < this.restDurationB) {
+            return {
+                longer: this.scheduleB,
+                shorter: this.scheduleA
+            };
+        }
+        return {
+            longer: this.scheduleA,
+            shorter: this.scheduleB
+        };
+    }
+
+    private get rests(): { longer: number, shorter: number } {
+        if (this.restDurationA < this.restDurationB) {
+            return {
+                longer: this.restDurationB,
+                shorter: this.restDurationA
+            };
+        }
+        return {
+            longer: this.restDurationA,
+            shorter: this.restDurationB
+        };
+    }
+
+    private get pressuresAsComparison(): SaturationComparison {
+        return {
+            profileAOverPressures: this.pressuresA,
+            profileBOverPressures: this.pressuresB
+        };
+    }
+
+    public createSaturationComparison(): SaturationComparison {
+        if (this.alignByEnd) {
+            this.createEndAlignPressures();
+        } else {
+            this.createStartAlignPressures();
+        }
+
+        return this.pressuresAsComparison;
+    }
+
+    private createStartAlignPressures(): void {
+        const longerDuration = this.dives.longer.totalDuration + this.rests.longer;
+        const shorterDuration = this.dives.shorter.totalDuration + this.rests.shorter;
+        const diff = longerDuration - shorterDuration;
+
+        const longerPressures = this.schedules.longer.overPressuresWithSurfaceInterval();
+        const shorterPressures = this.schedules.shorter.overPressuresWithSurfaceInterval(diff);
+
+        if (this.totalDurationA < this.totalDurationB) {
+            this.pressuresA = shorterPressures;
+            this.pressuresB = longerPressures;
+        } else {
+            this.pressuresA = longerPressures;
+            this.pressuresB = shorterPressures;
+        }
+    }
+
+    private createEndAlignPressures(): void {
+        const divePressuresDiff =
+            Math.abs(this.dives.longer.tissueOverPressures.length - this.dives.shorter.tissueOverPressures.length);
+        const emptyPressures = this.getEmptyPressures(divePressuresDiff);
+
+        const restDiff = this.rests.longer - this.rests.shorter;
+        const longerPressures = this.restSchedules.longer.overPressuresWithSurfaceInterval();
+        const shorterPressures = this.restSchedules.shorter.overPressuresWithSurfaceInterval(restDiff);
+
+        if (this.diveDurationA < this.diveDurationB) {
+            this.pressuresA = emptyPressures;
+        } else {
+            this.pressuresB = emptyPressures;
+        }
+
+        if (this.restDurationA < this.restDurationB) {
+            this.pressuresA = [...this.pressuresA, ...shorterPressures];
+            this.pressuresB = [...this.pressuresB, ...longerPressures];
+        } else {
+            this.pressuresA = [...this.pressuresA, ...longerPressures];
+            this.pressuresB = [...this.pressuresB, ...shorterPressures];
+        }
+    }
+
+    private getEmptyPressures(lengthDiff: number): HeatMapOverPressures {
+        return Array.from(
+            { length: lengthDiff },
+            () => new Array<null>(16).fill(null)
+        ) as HeatMapOverPressures;
     }
 }

@@ -4,7 +4,7 @@ import { UnitConversion } from './UnitConversion';
 import { ResamplingService } from './ResamplingService';
 import { DiveResults } from './diveresults';
 import { DateFormats } from './formaters';
-import { Ceiling, Segment } from 'scuba-physics';
+import { Ceiling, Gas, Segment, StandardGases } from 'scuba-physics';
 import { WayPoint } from './wayPoint';
 import { BoundEvent } from './models';
 
@@ -45,12 +45,15 @@ export class ChartPlotterFactory {
     private hideHoverLabels = false;
     /** in seconds */
     private timeOffset: () => number;
+    /** in seconds */
+    private restInterval: () => number;
 
     constructor(
         private resampling: ResamplingService,
         private units: UnitConversion,
         private translate: (key: string) => string = key => key) {
         this.timeOffset = () => 0;
+        this.restInterval = () => 0;
     }
 
     public createOptions(): Partial<Plotly.Config> {
@@ -185,6 +188,12 @@ export class ChartPlotterFactory {
         return this;
     }
 
+    /** Set the rest interval in seconds */
+    public withRestInterval(intervalFn: () => number): ChartPlotterFactory {
+        this.restInterval = intervalFn;
+        return this;
+    }
+
     public create(dive: () => DiveResults): DiveTracesBuilder {
         return new DiveTracesBuilder(
             dive,
@@ -192,6 +201,7 @@ export class ChartPlotterFactory {
             this.units,
             this.translate,
             this.timeOffset,
+            this.restInterval,
             this.namePrefixKey,
             this.averageDepthLineColor,
             this.depthLineColor,
@@ -220,6 +230,8 @@ export class DiveTracesBuilder {
         private translate: (key: string) => string,
         /** in seconds */
         private timeOffset: () => number,
+        /** in seconds */
+        private restInterval: () => number,
         namePrefixKey: string | null,
         averageDepthLineColor: string,
         depthLineColor: string,
@@ -297,7 +309,7 @@ export class DiveTracesBuilder {
     }
 
     private plotDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
-        const resampled = this.resampling.resampleWaypoints(wayPoints);
+        const resampled = this.resampling.resampleWaypoints(this.applyRestInterval(wayPoints));
 
         return this.identify(TraceKind.depth, {
             x: this.applyTimeOffset(resampled.xValues),
@@ -312,7 +324,7 @@ export class DiveTracesBuilder {
     }
 
     private plotEmergencyDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
-        const resampled = this.resampling.resampleWaypoints(wayPoints);
+        const resampled = this.resampling.resampleWaypoints(this.applyRestInterval(wayPoints));
 
         return this.identify(TraceKind.emergency, {
             x: this.applyTimeOffset(resampled.xValues),
@@ -396,6 +408,18 @@ export class DiveTracesBuilder {
         return timestamps.map(date =>
             new Date(date.getTime() + millisecondsOffset)
         );
+    }
+
+    private applyRestInterval(waypoints: WayPoint[]) {
+        const lastWaypoint = waypoints.at(-1);
+        if (!lastWaypoint || !this.dive().endsOnSurface) {
+            return waypoints;
+        }
+
+        const segment = new Segment(0, 0, StandardGases.air, this.restInterval());
+        const surfaceWaypoint = lastWaypoint.toLevel(segment);
+
+        return [...waypoints, surfaceWaypoint];
     }
 }
 

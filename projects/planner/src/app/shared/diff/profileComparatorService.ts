@@ -206,7 +206,7 @@ export class ProfileComparatorService extends Streamed {
 }
 
 /** Creates a ComparedWaypoint array from two WayPoint arrays */
-export class WaypointsDiffBuilder {
+class WaypointsDiffBuilder {
     public diveComparison: ComparedWaypoint[] = [];
     private wayPointA: WayPoint | undefined;
     private wayPointB: WayPoint | undefined;
@@ -326,7 +326,7 @@ export class WaypointsDiffBuilder {
 }
 
 /** Creates a ProfileComparison from two DiveSchedules, taking alignByEnd into consideration */
-export class ProfileComparisonBuilder {
+class ProfileComparisonBuilder {
     private pressuresA: HeatMapOverPressures = [];
     private pressuresB: HeatMapOverPressures = [];
 

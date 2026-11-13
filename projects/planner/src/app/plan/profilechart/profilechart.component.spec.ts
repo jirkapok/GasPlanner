@@ -143,6 +143,17 @@ describe('ProfileChartComponent', () => {
             expect(getComputedStyle(line).paddingLeft).toBe('48px');
         });
 
+        it('separates hover values with enough space', () => {
+            hover(point(TraceKind.averageDepth, 25.6), point(TraceKind.depth, 21));
+            const line = fixture.debugElement.query(By.css('[data-testid="hover-values"]')).nativeElement as HTMLElement;
+            const time = line.firstElementChild as HTMLElement;
+            const separator = line.querySelector('.hover-separator') as HTMLElement;
+
+            expect(getComputedStyle(time).marginRight).toBe('16px');
+            expect(getComputedStyle(separator).marginLeft).toBe('8px');
+            expect(getComputedStyle(separator).marginRight).toBe('8px');
+        });
+
         it('hides emergency and events when absent', () => {
             hover(point(TraceKind.depth, 21));
 

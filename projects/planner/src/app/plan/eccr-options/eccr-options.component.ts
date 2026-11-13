@@ -37,7 +37,6 @@ export class EccrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {

@@ -325,154 +325,74 @@ class WaypointsDiffBuilder {
     }
 }
 
-/** Creates a ProfileComparison from two DiveSchedules, taking alignByEnd into consideration */
+/** Creates a ProfileComparison from two DiveSchedules, taking alignByEnd into consideration. */
 class ProfileComparisonBuilder {
-    private pressuresA: HeatMapOverPressures = [];
-    private pressuresB: HeatMapOverPressures = [];
-
     constructor(
-        private scheduleA: DiveSchedule,
-        private scheduleB: DiveSchedule,
-        private alignByEnd: boolean
+        private readonly scheduleA: DiveSchedule,
+        private readonly scheduleB: DiveSchedule,
+        private readonly alignByEnd: boolean
     ) {}
 
-    private get diveDurationA(): number {
-        return this.scheduleA.diveResult.totalDuration;
-    }
-
-    private get diveDurationB(): number {
-        return this.scheduleB.diveResult.totalDuration;
-    }
-
-    private get restDurationA(): number {
-        return this.scheduleA.restInterval;
-    }
-
-    private get restDurationB(): number {
-        return this.scheduleB.restInterval;
-    }
-
-    private get totalDurationA(): number {
-        return this.diveDurationA + this.restDurationA;
-    }
-
-    private get totalDurationB(): number {
-        return this.diveDurationB + this.restDurationB;
-    }
-
-    private get dives(): { longer: DiveResults, shorter: DiveResults } {
-        if (this.diveDurationA < this.diveDurationB) {
-            return {
-                longer: this.scheduleB.diveResult,
-                shorter: this.scheduleA.diveResult
-            };
-        }
-        return {
-            longer: this.scheduleA.diveResult,
-            shorter: this.scheduleB.diveResult
-        };
-    }
-
-    private get schedules(): { longer: DiveSchedule, shorter: DiveSchedule } {
-        if (this.totalDurationA < this.totalDurationB) {
-            return {
-                longer: this.scheduleB,
-                shorter: this.scheduleA
-            };
-        }
-        return {
-            longer: this.scheduleA,
-            shorter: this.scheduleB
-        };
-    }
-
-    private get restSchedules(): { longer: DiveSchedule, shorter: DiveSchedule } {
-        if (this.restDurationA < this.restDurationB) {
-            return {
-                longer: this.scheduleB,
-                shorter: this.scheduleA
-            };
-        }
-        return {
-            longer: this.scheduleA,
-            shorter: this.scheduleB
-        };
-    }
-
-    private get rests(): { longer: number, shorter: number } {
-        if (this.restDurationA < this.restDurationB) {
-            return {
-                longer: this.restDurationB,
-                shorter: this.restDurationA
-            };
-        }
-        return {
-            longer: this.restDurationA,
-            shorter: this.restDurationB
-        };
-    }
-
-    private get pressuresAsComparison(): SaturationComparison {
-        return {
-            profileAOverPressures: this.pressuresA,
-            profileBOverPressures: this.pressuresB
-        };
-    }
-
     public createSaturationComparison(): SaturationComparison {
-        if (this.alignByEnd) {
-            this.createEndAlignPressures();
-        } else {
-            this.createStartAlignPressures();
-        }
-
-        return this.pressuresAsComparison;
+        return this.alignByEnd
+            ? this.createEndAlignComparison()
+            : this.createStartAlignComparison();
     }
 
-    private createStartAlignPressures(): void {
-        const longerDuration = this.dives.longer.totalDuration + this.rests.longer;
-        const shorterDuration = this.dives.shorter.totalDuration + this.rests.shorter;
-        const diff = longerDuration - shorterDuration;
+    private createStartAlignComparison(): SaturationComparison {
+        const totalA = this.totalDuration(this.scheduleA);
+        const totalB = this.totalDuration(this.scheduleB);
 
-        const longerPressures = this.schedules.longer.overPressuresWithSurfaceInterval();
-        const shorterPressures = this.schedules.shorter.overPressuresWithSurfaceInterval(diff);
+        const pressuresA = this.pressuresWithPadding(
+            this.scheduleA,
+            Math.max(0, totalB - totalA)
+        );
+        const pressuresB = this.pressuresWithPadding(
+            this.scheduleB,
+            Math.max(0, totalA - totalB)
+        );
 
-        if (this.totalDurationA < this.totalDurationB) {
-            this.pressuresA = shorterPressures;
-            this.pressuresB = longerPressures;
-        } else {
-            this.pressuresA = longerPressures;
-            this.pressuresB = shorterPressures;
-        }
+        return {
+            profileAOverPressures: pressuresA,
+            profileBOverPressures: pressuresB
+        };
     }
 
-    private createEndAlignPressures(): void {
-        const divePressuresDiff =
-            Math.abs(this.dives.longer.tissueOverPressures.length - this.dives.shorter.tissueOverPressures.length);
-        const emptyPressures = this.getEmptyPressures(divePressuresDiff);
+    private createEndAlignComparison(): SaturationComparison {
+        const divePressuresA = this.scheduleA.diveResult.tissueOverPressures.length;
+        const divePressuresB = this.scheduleB.diveResult.tissueOverPressures.length;
+        const restA = this.scheduleA.restInterval;
+        const restB = this.scheduleB.restInterval;
 
-        const restDiff = this.rests.longer - this.rests.shorter;
-        const longerPressures = this.restSchedules.longer.overPressuresWithSurfaceInterval();
-        const shorterPressures = this.restSchedules.shorter.overPressuresWithSurfaceInterval(restDiff);
+        const pressuresA = [
+            ...this.getEmptyPressures(Math.max(0, divePressuresB - divePressuresA)),
+            ...this.pressuresWithPadding(this.scheduleA, Math.max(0, restB - restA))
+        ];
 
-        if (this.diveDurationA < this.diveDurationB) {
-            this.pressuresA = emptyPressures;
-        } else {
-            this.pressuresB = emptyPressures;
-        }
+        const pressuresB = [
+            ...this.getEmptyPressures(Math.max(0, divePressuresA - divePressuresB)),
+            ...this.pressuresWithPadding(this.scheduleB, Math.max(0, restA - restB))
+        ];
 
-        if (this.restDurationA < this.restDurationB) {
-            this.pressuresA = [...this.pressuresA, ...shorterPressures];
-            this.pressuresB = [...this.pressuresB, ...longerPressures];
-        } else {
-            this.pressuresA = [...this.pressuresA, ...longerPressures];
-            this.pressuresB = [...this.pressuresB, ...shorterPressures];
-        }
+        return {
+            profileAOverPressures: pressuresA,
+            profileBOverPressures: pressuresB
+        };
     }
 
-    private getEmptyPressures(lengthDiff: number): HeatMapOverPressures {
+    private totalDuration(schedule: DiveSchedule): number {
+        return schedule.diveResult.totalDuration + schedule.restInterval;
+    }
+
+    private pressuresWithPadding(schedule: DiveSchedule, paddingInterval: number): HeatMapOverPressures {
+        return paddingInterval > 0
+            ? schedule.overPressuresWithSurfaceInterval(paddingInterval)
+            : schedule.overPressuresWithSurfaceInterval();
+    }
+
+    private getEmptyPressures(length: number): HeatMapOverPressures {
         return Array.from(
-            { length: lengthDiff },
+            { length },
             () => new Array<null>(16).fill(null)
         ) as HeatMapOverPressures;
     }

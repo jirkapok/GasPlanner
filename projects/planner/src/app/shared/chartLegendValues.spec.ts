@@ -1,13 +1,13 @@
 import * as Plotly from 'plotly.js-dist';
-import { ProfileHoverValues } from './profileHoverValues';
+import { ChartLegendValues } from './chartLegendValues';
 import { TraceKind } from './chartPlotter';
 
-describe('ProfileHoverValues', () => {
+describe('ChartLegendValues', () => {
     const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
         ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
 
     it('reads values by trace kind', () => {
-        const sut = ProfileHoverValues.fromPoints([
+        const sut = ChartLegendValues.fromPoints([
             point(TraceKind.averageDepth, 25.6),
             point(TraceKind.depth, 21),
             point(TraceKind.ceiling, 5)
@@ -20,19 +20,19 @@ describe('ProfileHoverValues', () => {
     });
 
     it('resolves kind from prefixed uid', () => {
-        expect(ProfileHoverValues.traceKind('diffResultsTable.profileA.depth')).toBe(TraceKind.depth);
-        expect(ProfileHoverValues.traceKind('unknown')).toBeUndefined();
-        expect(ProfileHoverValues.traceKind(undefined)).toBeUndefined();
+        expect(ChartLegendValues.traceKind('diffResultsTable.profileA.depth')).toBe(TraceKind.depth);
+        expect(ChartLegendValues.traceKind('unknown')).toBeUndefined();
+        expect(ChartLegendValues.traceKind(undefined)).toBeUndefined();
     });
 
     it('omits zero ceiling', () => {
-        const sut = ProfileHoverValues.fromPoints([point(TraceKind.ceiling, 0)]);
+        const sut = ChartLegendValues.fromPoints([point(TraceKind.ceiling, 0)]);
 
         expect(sut.ceiling).toBeUndefined();
     });
 
     it('collects event texts', () => {
-        const sut = ProfileHoverValues.fromPoints([
+        const sut = ChartLegendValues.fromPoints([
             point(TraceKind.events, 21, 'Gas switch to EAN50'),
             point(TraceKind.events, 21, 'Low gas')
         ]);
@@ -41,20 +41,20 @@ describe('ProfileHoverValues', () => {
     });
 
     it('has no events and no emergency depth when not hovered', () => {
-        const sut = ProfileHoverValues.fromPoints([point(TraceKind.depth, 21)]);
+        const sut = ChartLegendValues.fromPoints([point(TraceKind.depth, 21)]);
 
         expect(sut.events).toEqual([]);
         expect(sut.emergencyDepth).toBeUndefined();
     });
 
     it('reads emergency depth', () => {
-        const sut = ProfileHoverValues.fromPoints([point(TraceKind.emergency, 18)]);
+        const sut = ChartLegendValues.fromPoints([point(TraceKind.emergency, 18)]);
 
         expect(sut.emergencyDepth).toBe(18);
     });
 });
 
-describe('ProfileHoverValues of compared profiles', () => {
+describe('ChartLegendValues of compared profiles', () => {
     const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
         ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
 
@@ -65,14 +65,14 @@ describe('ProfileHoverValues of compared profiles', () => {
     ];
 
     it('reads only values of profile with given uid prefix', () => {
-        const sut = ProfileHoverValues.fromPoints(points, 'diffResultsTable.profileA.');
+        const sut = ChartLegendValues.fromPoints(points, 'diffResultsTable.profileA.');
 
         expect(sut.depth).toBe(3);
         expect(sut.events).toEqual(['Safety stop']);
     });
 
     it('reads time from any profile', () => {
-        const sut = ProfileHoverValues.fromPoints(points.slice(0, 1), 'diffResultsTable.profileA.');
+        const sut = ChartLegendValues.fromPoints(points.slice(0, 1), 'diffResultsTable.profileA.');
 
         expect(sut.timeStamp).toBe(1740);
         expect(sut.depth).toBeUndefined();

@@ -7,41 +7,41 @@
     }
     @if (values.depth !== undefined) {
         <span class="text-nowrap">
-            <span class="hover-marker hover-line d-inline-block me-1" [style.color]="colors.depth"></span>
+            <span class="legend-marker legend-line d-inline-block me-1" [style.color]="colors.depth"></span>
             {{ 'profileChart.depthTraceName' | translate }}
-            <span class="hover-value fw-bold" [style.color]="colors.depth">{{ values.depth | number:'1.0-1' }} {{ lengthUnit }}</span>
+            <span class="legend-value fw-bold" [style.color]="colors.depth">{{ values.depth | number:'1.0-1' }} {{ lengthUnit }}</span>
         </span>
     }
     @if (values.averageDepth !== undefined) {
-        <span class="hover-separator text-muted mx-2">|</span>
+        <span class="legend-separator text-muted mx-2">|</span>
         <span class="text-nowrap">
-            <span class="hover-marker hover-line hover-line-dotted d-inline-block me-1" [style.color]="colors.averageDepth"></span>
+            <span class="legend-marker legend-line legend-line-dotted d-inline-block me-1" [style.color]="colors.averageDepth"></span>
             {{ 'profileChart.avgDepthTraceName' | translate }}
-            <span class="hover-value fw-bold" [style.color]="colors.averageDepth">
+            <span class="legend-value fw-bold" [style.color]="colors.averageDepth">
                 {{ values.averageDepth | number:'1.0-1' }} {{ lengthUnit }}</span>
         </span>
     }
     @if (values.ceiling !== undefined) {
-        <span class="hover-separator text-muted mx-2">|</span>
+        <span class="legend-separator text-muted mx-2">|</span>
         <span class="text-nowrap">
-            <span class="hover-marker hover-line hover-ceiling-area d-inline-block me-1" [style.color]="colors.ceiling"></span>
+            <span class="legend-marker legend-line legend-ceiling-area d-inline-block me-1" [style.color]="colors.ceiling"></span>
             {{ 'profileChart.ceilingTraceName' | translate }}
-            <span class="hover-value fw-bold" [style.color]="colors.ceiling">{{ values.ceiling | number:'1.0-1' }} {{ lengthUnit }}</span>
+            <span class="legend-value fw-bold" [style.color]="colors.ceiling">{{ values.ceiling | number:'1.0-1' }} {{ lengthUnit }}</span>
         </span>
     }
     @if (values.emergencyDepth !== undefined) {
-        <span class="hover-separator text-muted mx-2">|</span>
+        <span class="legend-separator text-muted mx-2">|</span>
         <span class="text-nowrap">
-            <span class="hover-marker hover-line hover-line-dashed d-inline-block me-1" [style.color]="colors.emergency"></span>
+            <span class="legend-marker legend-line legend-line-dashed d-inline-block me-1" [style.color]="colors.emergency"></span>
             {{ 'profileChart.emergencyTraceName' | translate }}
-            <span class="hover-value fw-bold" [style.color]="colors.emergency">
+            <span class="legend-value fw-bold" [style.color]="colors.emergency">
                 {{ values.emergencyDepth | number:'1.0-1' }} {{ lengthUnit }}</span>
         </span>
     }
     @if (events) {
-        <span class="hover-separator text-muted mx-2">|</span>
+        <span class="legend-separator text-muted mx-2">|</span>
         <span class="text-nowrap">
-            <span class="hover-marker hover-circle rounded-circle d-inline-block me-1" [style.color]="colors.event"></span>
+            <span class="legend-marker legend-circle rounded-circle d-inline-block me-1" [style.color]="colors.event"></span>
             <span class="fw-bold">{{ events }}</span>
         </span>
     }

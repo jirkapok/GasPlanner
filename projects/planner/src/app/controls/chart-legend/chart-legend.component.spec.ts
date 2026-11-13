@@ -3,14 +3,14 @@ import { By } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
 import { ChartLegendComponent } from './chart-legend.component';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { HoverColors } from '../../shared/chartPlotter';
+import { ChartLegendValues } from '../../shared/chartLegendValues';
+import { ChartLegendColors } from '../../shared/chartPlotter';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ChartLegendComponent', () => {
     let fixture: ComponentFixture<ChartLegendComponent>;
 
-    const colors: HoverColors = {
+    const colors: ChartLegendColors = {
         depth: 'rgb(18, 145, 59)',
         averageDepth: 'rgb(105, 181, 120)',
         ceiling: 'rgb(252, 175, 103)',
@@ -18,8 +18,8 @@ describe('ChartLegendComponent', () => {
         event: 'rgb(0, 150, 60)'
     };
 
-    const hovered = (): ProfileHoverValues => {
-        const values = new ProfileHoverValues();
+    const hovered = (): ChartLegendValues => {
+        const values = new ChartLegendValues();
         values.timeStamp = 1740;
         values.depth = 21;
         values.averageDepth = 25.6;
@@ -30,7 +30,7 @@ describe('ChartLegendComponent', () => {
 
     const text = (): string => (fixture.nativeElement as HTMLElement).textContent?.trim() ?? '';
 
-    const samples = (): CSSStyleDeclaration[] => fixture.debugElement.queryAll(By.css('.hover-marker'))
+    const samples = (): CSSStyleDeclaration[] => fixture.debugElement.queryAll(By.css('.legend-marker'))
         .map(m => getComputedStyle(m.nativeElement as HTMLElement));
 
     beforeEach(async () => {
@@ -44,7 +44,7 @@ describe('ChartLegendComponent', () => {
         await fixture.whenStable();
     });
 
-    const show = async (values: ProfileHoverValues | undefined, inputs: Record<string, unknown> = {}): Promise<void> => {
+    const show = async (values: ChartLegendValues | undefined, inputs: Record<string, unknown> = {}): Promise<void> => {
         fixture.componentRef.setInput('values', values);
         Object.entries(inputs).forEach(([name, value]) => fixture.componentRef.setInput(name, value));
         await fixture.whenStable();
@@ -85,7 +85,7 @@ describe('ChartLegendComponent', () => {
 
         expect(samples().map(s => s.borderTopColor).slice(0, 3)).toEqual([colors.depth, colors.averageDepth, colors.ceiling]);
         expect(samples()[3].backgroundColor).toBe(colors.event);
-        const value = fixture.debugElement.query(By.css('.hover-value')).nativeElement as HTMLElement;
+        const value = fixture.debugElement.query(By.css('.legend-value')).nativeElement as HTMLElement;
         expect(getComputedStyle(value).color).toBe(colors.depth);
     });
 

@@ -21,18 +21,18 @@
 
     <div class="card-body card-minheight">
         <app-calculating [show]="!profilesCalculated"></app-calculating>
-        <div data-testid="hover-time" class="small ps-5 fw-bold">
-            @if (hoverValuesA) {
-                {{ hoverValuesA.timeStamp | duration: hoverValuesA.timeStamp }}
+        <div data-testid="chart-legend-time" class="small ps-5 fw-bold">
+            @if (legendValuesA) {
+                {{ legendValuesA.timeStamp | duration: legendValuesA.timeStamp }}
             } @else {
                 <!-- keeps the line height, so the chart doesn't move -->
                 &nbsp;
             }
         </div>
-        <app-chart-legend data-testid="hover-values-a" class="small ps-5" [values]="hoverValuesA" [colors]="hoverColorsA"
+        <app-chart-legend data-testid="chart-legend-a" class="small ps-5" [values]="legendValuesA" [colors]="legendColorsA"
             [showTime]="false" labelKey="diffResultsTable.profileA">
         </app-chart-legend>
-        <app-chart-legend data-testid="hover-values-b" class="small ps-5" [values]="hoverValuesB" [colors]="hoverColorsB"
+        <app-chart-legend data-testid="chart-legend-b" class="small ps-5" [values]="legendValuesB" [colors]="legendColorsB"
             [showTime]="false" labelKey="diffResultsTable.profileB">
         </app-chart-legend>
         <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{

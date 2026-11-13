@@ -106,7 +106,7 @@ describe('ProfileDifferenceChartComponent', () => {
         expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
     });
 
-    describe('Hover values', () => {
+    describe('Chart legend', () => {
         const point = (uid: string, y: number, text = ''): Plotly.PlotDatum =>
             ({ x: '1970-02-01 00:29:00', y, text, data: { uid } }) as unknown as Plotly.PlotDatum;
 
@@ -126,28 +126,28 @@ describe('ProfileDifferenceChartComponent', () => {
         const rowText = (testId: string): string => row(testId).textContent?.trim() ?? '';
 
         it('reserves empty rows when nothing is hovered', () => {
-            expect(rowText('hover-time')).toBe('');
-            expect(rowText('hover-values-a')).toBe('');
-            expect(rowText('hover-values-b')).toBe('');
+            expect(rowText('chart-legend-time')).toBe('');
+            expect(rowText('chart-legend-a')).toBe('');
+            expect(rowText('chart-legend-b')).toBe('');
         });
 
         it('shows hovered time once and values of each profile in own row', async () => {
             await hover();
 
-            expect(rowText('hover-time')).toBe('29:00');
-            expect(rowText('hover-values-a')).toContain('diffResultsTable.profileA');
-            expect(rowText('hover-values-a')).toContain('3 m');
-            expect(rowText('hover-values-a')).toContain('Safety stop');
-            expect(rowText('hover-values-a')).not.toContain('6 m');
-            expect(rowText('hover-values-b')).toContain('diffResultsTable.profileB');
-            expect(rowText('hover-values-b')).toContain('6 m');
-            expect(rowText('hover-values-b')).not.toContain('29:00');
+            expect(rowText('chart-legend-time')).toBe('29:00');
+            expect(rowText('chart-legend-a')).toContain('diffResultsTable.profileA');
+            expect(rowText('chart-legend-a')).toContain('3 m');
+            expect(rowText('chart-legend-a')).toContain('Safety stop');
+            expect(rowText('chart-legend-a')).not.toContain('6 m');
+            expect(rowText('chart-legend-b')).toContain('diffResultsTable.profileB');
+            expect(rowText('chart-legend-b')).toContain('6 m');
+            expect(rowText('chart-legend-b')).not.toContain('29:00');
         });
 
         it('draws profile B samples in its line colors', async () => {
             await hover();
 
-            const sample = row('hover-values-b').querySelector('.hover-marker') as HTMLElement;
+            const sample = row('chart-legend-b').querySelector('.legend-marker') as HTMLElement;
             expect(getComputedStyle(sample).borderTopColor).toBe(ChartPlotterFactory.depthLineColorB);
         });
 
@@ -157,9 +157,9 @@ describe('ProfileDifferenceChartComponent', () => {
             component.plotlyHoverLeave();
             await fixture.whenStable();
 
-            expect(rowText('hover-time')).toBe('');
-            expect(rowText('hover-values-a')).toBe('');
-            expect(rowText('hover-values-b')).toBe('');
+            expect(rowText('chart-legend-time')).toBe('');
+            expect(rowText('chart-legend-a')).toBe('');
+            expect(rowText('chart-legend-b')).toBe('');
         });
 
         // touch devices don't always send unhover, values of other time alignment would be stale
@@ -169,7 +169,7 @@ describe('ProfileDifferenceChartComponent', () => {
             page.alignByEndButton.click();
             await fixture.whenStable();
 
-            expect(rowText('hover-values-a')).toBe('');
+            expect(rowText('chart-legend-a')).toBe('');
         });
 
         it('hides plotly hover box', async () => {

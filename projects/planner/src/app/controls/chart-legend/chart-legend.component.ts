@@ -3,8 +3,8 @@ import { DecimalPipe } from '@angular/common';
 import { TranslatePipe } from '@ngx-translate/core';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { UnitConversion } from '../../shared/UnitConversion';
-import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { HoverColors } from '../../shared/chartPlotter';
+import { ChartLegendValues } from '../../shared/chartLegendValues';
+import { ChartLegendColors } from '../../shared/chartPlotter';
 
 /** One line of profile chart values at the hovered time, with samples of the chart lines like in a legend */
 @Component({
@@ -15,8 +15,8 @@ import { HoverColors } from '../../shared/chartPlotter';
 })
 export class ChartLegendComponent {
     /** Nothing is shown, but the line keeps its height, if undefined */
-    @Input() public values: ProfileHoverValues | undefined;
-    @Input({ required: true }) public colors!: HoverColors;
+    @Input() public values: ChartLegendValues | undefined;
+    @Input({ required: true }) public colors!: ChartLegendColors;
     /** Translation key of the profile name shown in front of the values */
     @Input() public labelKey: string | undefined;
     @Input() public showTime = true;

@@ -20,8 +20,8 @@ export enum TraceKind {
     events = 'events'
 }
 
-/** Colors of the chart traces used by the hover values line */
-export interface HoverColors {
+/** Colors of the chart traces used by the chart legend */
+export interface ChartLegendColors {
     depth: string;
     averageDepth: string;
     ceiling: string;
@@ -241,7 +241,7 @@ export class DiveTracesBuilder {
         return this.namePrefixKey ? `${this.namePrefixKey}.` : '';
     }
 
-    public get hoverColors(): HoverColors {
+    public get legendColors(): ChartLegendColors {
         return {
             depth: this.depthLineColor,
             averageDepth: this.averageDepthLineColor,

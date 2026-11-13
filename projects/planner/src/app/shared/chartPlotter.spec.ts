@@ -66,10 +66,10 @@ describe('DiveTracesBuilder', () => {
         expect(factory.withNamePrefix('diffResultsTable.profileA').create(() => dive).uidPrefix).toBe('diffResultsTable.profileA.');
     });
 
-    it('provides line colors for hover values', () => {
+    it('provides line colors for chart legend', () => {
         const builder = factory.wthDepthColor('rgb(1, 2, 3)').create(() => dive);
 
-        expect(builder.hoverColors).toEqual({
+        expect(builder.legendColors).toEqual({
             depth: 'rgb(1, 2, 3)',
             averageDepth: 'rgb(62, 157, 223)',
             ceiling: 'rgb(255, 160, 73)',

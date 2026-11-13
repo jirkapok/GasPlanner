@@ -9,7 +9,7 @@ import { Streamed } from '../../shared/streamed';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import {
-    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder, HoverColors
+    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder, ChartLegendColors
 } from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
@@ -18,7 +18,7 @@ import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
-import { ProfileHoverValues } from '../../shared/profileHoverValues';
+import { ChartLegendValues } from '../../shared/chartLegendValues';
 import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
@@ -35,8 +35,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
-    public hoverValues: ProfileHoverValues | undefined;
-    public readonly hoverColors: HoverColors;
+    public legendValues: ChartLegendValues | undefined;
+    public readonly legendColors: ChartLegendColors;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -59,7 +59,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .withoutHoverLabels()
             .create(() => this.dive);
-        this.hoverColors = this.profileTraces.hoverColors;
+        this.legendColors = this.profileTraces.legendColors;
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
@@ -127,7 +127,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
-        this.hoverValues = ProfileHoverValues.fromPoints(data.points);
+        this.legendValues = ChartLegendValues.fromPoints(data.points);
         this.cd.markForCheck();
     }
 
@@ -147,7 +147,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public plotlyHoverLeave(): void {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
-        this.hoverValues = undefined;
+        this.legendValues = undefined;
         this.cd.markForCheck();
     }
 

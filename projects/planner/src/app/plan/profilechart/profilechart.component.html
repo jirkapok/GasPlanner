@@ -16,7 +16,7 @@
     </app-card-header>
     <div class="card-body card-minheight">
         <app-calculating [show]="!infoCalculated"></app-calculating>
-        <app-chart-legend data-testid="hover-values" class="small ps-5" [values]="hoverValues" [colors]="hoverColors">
+        <app-chart-legend data-testid="chart-legend" class="small ps-5" [values]="legendValues" [colors]="legendColors">
         </app-chart-legend>
         <div id="diveplot" class="dive-plot" [ngClass]="{
               'plot-display': profileCalculated,

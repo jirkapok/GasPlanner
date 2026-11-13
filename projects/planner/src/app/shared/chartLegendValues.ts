@@ -3,7 +3,7 @@ import { TraceKind } from './chartPlotter';
 import { DateFormats } from './formaters';
 
 /** Values of the profile chart traces at the hovered time */
-export class ProfileHoverValues {
+export class ChartLegendValues {
     /** seconds from dive start */
     public timeStamp = 0;
     public depth?: number;
@@ -16,8 +16,8 @@ export class ProfileHoverValues {
     /**
      * @param uidPrefix reads only traces of one profile, e.g. 'diffResultsTable.profileA.' when comparing profiles
      */
-    public static fromPoints(points: Plotly.PlotDatum[], uidPrefix = ''): ProfileHoverValues {
-        const result = new ProfileHoverValues();
+    public static fromPoints(points: Plotly.PlotDatum[], uidPrefix = ''): ChartLegendValues {
+        const result = new ChartLegendValues();
         // the same time for all profiles, even if this profile has no value at this time
         result.timeStamp = DateFormats.secondsFromDate(String(points[0]?.x));
         points.filter(p => p.data?.uid?.startsWith(uidPrefix))
@@ -33,7 +33,7 @@ export class ProfileHoverValues {
     private apply(point: Plotly.PlotDatum): void {
         const value = Number(point.y);
 
-        switch (ProfileHoverValues.traceKind(point.data?.uid)) {
+        switch (ChartLegendValues.traceKind(point.data?.uid)) {
             case TraceKind.depth:
                 this.depth = value;
                 break;

@@ -6,8 +6,8 @@ import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { Streamed } from '../../shared/streamed';
-import { ChartPlotterFactory, ChartPlotter, DiveTracesBuilder, HoverColors } from '../../shared/chartPlotter';
-import { ProfileHoverValues } from '../../shared/profileHoverValues';
+import { ChartPlotterFactory, ChartPlotter, DiveTracesBuilder, ChartLegendColors } from '../../shared/chartPlotter';
+import { ChartLegendValues } from '../../shared/chartLegendValues';
 import { ProfileComparatorService } from '../../shared/diff/profileComparatorService';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { ComparedWaypoint } from '../../shared/diff/ComparedWaypoint';
@@ -28,10 +28,10 @@ import { DurationPipe } from '../../pipes/duration.pipe';
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
     public showHeatMap = true;
-    public hoverValuesA: ProfileHoverValues | undefined;
-    public hoverValuesB: ProfileHoverValues | undefined;
-    public readonly hoverColorsA: HoverColors;
-    public readonly hoverColorsB: HoverColors;
+    public legendValuesA: ChartLegendValues | undefined;
+    public legendValuesB: ChartLegendValues | undefined;
+    public readonly legendColorsA: ChartLegendColors;
+    public readonly legendColorsB: ChartLegendColors;
     protected readonly heatmapIcon = faFire;
     private plotter: ChartPlotter;
     private heatMapPlotterA: HeatMapPlotter;
@@ -66,8 +66,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
             chartPlotterFactory, this.profileBTraces, this.profileATraces);
-        this.hoverColorsA = this.profileATraces.hoverColors;
-        this.hoverColorsB = this.profileBTraces.hoverColors;
+        this.legendColorsA = this.profileATraces.legendColors;
+        this.legendColorsB = this.profileBTraces.legendColors;
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
@@ -95,8 +95,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoints.selectedTimeStamp = timeStampValue;
-        this.hoverValuesA = ProfileHoverValues.fromPoints(data.points, this.profileATraces.uidPrefix);
-        this.hoverValuesB = ProfileHoverValues.fromPoints(data.points, this.profileBTraces.uidPrefix);
+        this.legendValuesA = ChartLegendValues.fromPoints(data.points, this.profileATraces.uidPrefix);
+        this.legendValuesB = ChartLegendValues.fromPoints(data.points, this.profileBTraces.uidPrefix);
         // Plotly events are outside Angular events, so they have to schedule the change detection
         this.cd.markForCheck();
     }
@@ -104,7 +104,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     public plotlyHoverLeave(): void {
         this.selectedWaypoints.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
-        this.clearHoverValues();
+        this.clearLegendValues();
     }
 
     protected toggleHeatMap(): void {
@@ -119,9 +119,9 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.alignByEnd = !this.alignByEnd;
     }
 
-    private clearHoverValues(): void {
-        this.hoverValuesA = undefined;
-        this.hoverValuesB = undefined;
+    private clearLegendValues(): void {
+        this.legendValuesA = undefined;
+        this.legendValuesB = undefined;
         this.cd.markForCheck();
     }
 
@@ -161,7 +161,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
                     this.plotlyHoverLeave();
                 } else {
                     // chart isn't drawn yet, so there is no cursor to remove
-                    this.clearHoverValues();
+                    this.clearLegendValues();
                 }
             });
 

@@ -1,3 +1,22 @@
+# [0.23.0](https://github.com/jirkapok/GasPlanner/compare/v0.22.0...v0.23.0) (2026-11-13)
+
+
+### Bug Fixes
+
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) hover time hours and stale hover values on touch devices ([ef7282c](https://github.com/jirkapok/GasPlanner/commit/ef7282ce5bde412ca055bf0d14462b4f46d64c90))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) left align hover line with start padding ([21037dd](https://github.com/jirkapok/GasPlanner/commit/21037dd591e1d6df7198f682d0cb949e8a97e899))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) restore vertical hover line in profile chart ([a5a9c3d](https://github.com/jirkapok/GasPlanner/commit/a5a9c3dbf92643cd2a3c2aba1816fcb1748b81f3))
+
+
+### Features
+
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) colored circle markers in right aligned hover line ([d48d969](https://github.com/jirkapok/GasPlanner/commit/d48d96920032e831c8c041b2c1e90c63b9a84ecc))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) extract profile chart hover values ([12fb7bd](https://github.com/jirkapok/GasPlanner/commit/12fb7bd37b22ede8e2d032a9e6828aeaf0f21546))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) hover values above profile chart in compare dives page ([3438464](https://github.com/jirkapok/GasPlanner/commit/34384641e32d48318c9523419a6e166ce2a916e5))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) legend like line samples in profile chart hover line ([1603228](https://github.com/jirkapok/GasPlanner/commit/16032280a1b98ededff167b36e4fd9a847a4739b))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) show profile chart hover values above the chart ([edf6806](https://github.com/jirkapok/GasPlanner/commit/edf680619fa9bb635e4467ac1bd9f47b6b11d162))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) wider spacing between profile chart hover values ([8033c2f](https://github.com/jirkapok/GasPlanner/commit/8033c2fe22ae4216b401992c2cc42fe42fdebec0))
+
 # [0.22.0](https://github.com/jirkapok/GasPlanner/compare/v0.21.0...v0.22.0) (2026-11-12)
 
 

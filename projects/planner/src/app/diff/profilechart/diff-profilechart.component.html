@@ -29,12 +29,12 @@
                 &nbsp;
             }
         </div>
-        <app-hover-values data-testid="hover-values-a" class="small ps-5" [values]="hoverValuesA" [colors]="hoverColorsA"
+        <app-chart-legend data-testid="hover-values-a" class="small ps-5" [values]="hoverValuesA" [colors]="hoverColorsA"
             [showTime]="false" labelKey="diffResultsTable.profileA">
-        </app-hover-values>
-        <app-hover-values data-testid="hover-values-b" class="small ps-5" [values]="hoverValuesB" [colors]="hoverColorsB"
+        </app-chart-legend>
+        <app-chart-legend data-testid="hover-values-b" class="small ps-5" [values]="hoverValuesB" [colors]="hoverColorsB"
             [showTime]="false" labelKey="diffResultsTable.profileB">
-        </app-hover-values>
+        </app-chart-legend>
         <div id="diveplotdiff" class="diff-dive-plot" [ngClass]="{
             'plot-display': profilesCalculated,
             'plot-hidden': !profilesCalculated

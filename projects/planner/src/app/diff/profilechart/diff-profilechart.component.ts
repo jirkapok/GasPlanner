@@ -16,14 +16,14 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
-import { HoverValuesComponent } from '../../controls/hover-values/hover-values.component';
+import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
 
 @Component({
     selector: 'app-diff-profilechart',
     templateUrl: './diff-profilechart.component.html',
     styleUrls: ['./diff-profilechart.component.scss'],
-    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe, HoverValuesComponent, DurationPipe]
+    imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe, ChartLegendComponent, DurationPipe]
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;

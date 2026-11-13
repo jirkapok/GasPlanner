@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DatePipe } from '@angular/common';
-import { HoverValuesComponent } from './hover-values.component';
+import { ChartLegendComponent } from './chart-legend.component';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ProfileHoverValues } from '../../shared/profileHoverValues';
 import { HoverColors } from '../../shared/chartPlotter';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
-describe('HoverValuesComponent', () => {
-    let fixture: ComponentFixture<HoverValuesComponent>;
+describe('ChartLegendComponent', () => {
+    let fixture: ComponentFixture<ChartLegendComponent>;
 
     const colors: HoverColors = {
         depth: 'rgb(18, 145, 59)',
@@ -35,11 +35,11 @@ describe('HoverValuesComponent', () => {
 
     beforeEach(async () => {
         TestBed.configureTestingModule({
-            imports: [HoverValuesComponent],
+            imports: [ChartLegendComponent],
             providers: [UnitConversion, DatePipe, provideTestTranslate()]
         });
 
-        fixture = TestBed.createComponent(HoverValuesComponent);
+        fixture = TestBed.createComponent(ChartLegendComponent);
         fixture.componentRef.setInput('colors', colors);
         await fixture.whenStable();
     });

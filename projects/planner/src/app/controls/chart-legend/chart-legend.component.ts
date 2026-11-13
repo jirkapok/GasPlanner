@@ -8,12 +8,12 @@ import { HoverColors } from '../../shared/chartPlotter';
 
 /** One line of profile chart values at the hovered time, with samples of the chart lines like in a legend */
 @Component({
-    selector: 'app-hover-values',
-    templateUrl: './hover-values.component.html',
-    styleUrls: ['./hover-values.component.scss'],
+    selector: 'app-chart-legend',
+    templateUrl: './chart-legend.component.html',
+    styleUrls: ['./chart-legend.component.scss'],
     imports: [TranslatePipe, DecimalPipe, DurationPipe]
 })
-export class HoverValuesComponent {
+export class ChartLegendComponent {
     /** Nothing is shown, but the line keeps its height, if undefined */
     @Input() public values: ProfileHoverValues | undefined;
     @Input({ required: true }) public colors!: HoverColors;

@@ -19,7 +19,7 @@ import { StopsFilter } from '../../shared/stopsFilter.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { ProfileHoverValues } from '../../shared/profileHoverValues';
-import { HoverValuesComponent } from '../../controls/hover-values/hover-values.component';
+import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -28,7 +28,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, HoverValuesComponent]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;

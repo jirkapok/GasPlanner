@@ -94,13 +94,12 @@ describe('ProfileChartComponent', () => {
 
             const text = legendText();
             expect(text).toContain('profileChart.depthTraceName');
-            expect(text).toContain('21');
             expect(text).toContain('profileChart.avgDepthTraceName');
-            expect(text).toContain('25.6');
             expect(text).toContain('profileChart.ceilingTraceName');
-            expect(text).toContain('5');
             expect(text).toContain('Gas switch to EAN50');
-            expect(text).toContain('m');
+            const values = fixture.debugElement.queryAll(By.css('[data-testid="chart-legend"] .legend-value'))
+                .map(v => (v.nativeElement as HTMLElement).textContent?.trim());
+            expect(values).toEqual(['21 m', '25.6 m', '5 m']);
         });
 
         // the same samples as in plotly legend: line style of each trace, filled area of ceiling and marker of events

@@ -131,7 +131,7 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get overPressures(): SaturationComparison {
-        const builder = new HeatMapOverPressuresBuilder(this.profileA, this.profileB, this.alignByEnd);
+        const builder = new ProfileComparisonBuilder(this.profileA, this.profileB, this.alignByEnd);
         return builder.createSaturationComparison();
     }
 
@@ -325,7 +325,8 @@ export class WaypointsDiffBuilder {
     }
 }
 
-export class HeatMapOverPressuresBuilder {
+/** Creates a ProfileComparison from two DiveSchedules, taking alignByEnd into consideration */
+export class ProfileComparisonBuilder {
     private pressuresA: HeatMapOverPressures = [];
     private pressuresB: HeatMapOverPressures = [];
 

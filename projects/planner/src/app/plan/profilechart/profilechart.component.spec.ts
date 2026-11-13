@@ -103,7 +103,8 @@ describe('ProfileChartComponent', () => {
             expect(text).toContain('m');
         });
 
-        it('shows circle marker in line color in front of each value', () => {
+        // the same samples as in plotly legend: line style of each trace, filled area of ceiling and marker of events
+        it('shows line sample like in legend in front of each value', () => {
             hover(
                 point(TraceKind.averageDepth, 25.6),
                 point(TraceKind.depth, 21),
@@ -113,16 +114,17 @@ describe('ProfileChartComponent', () => {
             );
 
             const markers = fixture.debugElement.queryAll(By.css('[data-testid="hover-values"] .hover-marker'))
-                .map(m => m.nativeElement as HTMLElement);
-            const colors = markers.map(m => getComputedStyle(m).backgroundColor);
-            expect(colors).toEqual([
-                'rgb(31, 119, 180)',
-                'rgb(62, 157, 223)',
-                'rgb(255, 160, 73)',
-                'rgb(255, 77, 77)',
-                'rgba(31, 119, 180, 0.7)'
+                .map(m => getComputedStyle(m.nativeElement as HTMLElement));
+            const lines = markers.map(m => `${m.borderTopStyle} ${m.borderTopColor}`);
+            expect(lines.slice(0, 4)).toEqual([
+                'solid rgb(31, 119, 180)',
+                'dotted rgb(62, 157, 223)',
+                'solid rgb(255, 160, 73)',
+                'dashed rgb(255, 77, 77)'
             ]);
-            markers.forEach(m => expect(getComputedStyle(m).borderRadius).toBe('50%'));
+            expect(markers[2].backgroundColor).toBe('rgba(255, 160, 73, 0.5)');
+            expect(markers[4].backgroundColor).toBe('rgba(31, 119, 180, 0.7)');
+            expect(markers[4].borderRadius).toBe('50%');
         });
 
         it('keeps marker together with its value when the line wraps', () => {

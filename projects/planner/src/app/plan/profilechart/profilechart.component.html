@@ -21,7 +21,7 @@
                 <span class="fw-bold me-2">{{ hoverValues.timeStamp | duration: hoverValues.timeStamp }}</span>
                 @if (hoverValues.depth !== undefined) {
                     <span class="text-nowrap">
-                        <span class="hover-marker hover-depth rounded-circle d-inline-block me-1"></span>
+                        <span class="hover-marker hover-line hover-depth d-inline-block me-1"></span>
                         {{ 'profileChart.depthTraceName' | translate }}
                         <span class="hover-depth fw-bold">{{ hoverValues.depth | number:'1.0-1' }} {{ lengthUnit }}</span>
                     </span>
@@ -29,7 +29,7 @@
                 @if (hoverValues.averageDepth !== undefined) {
                     <span class="text-muted mx-1">|</span>
                     <span class="text-nowrap">
-                        <span class="hover-marker hover-avg-depth rounded-circle d-inline-block me-1"></span>
+                        <span class="hover-marker hover-line hover-line-dotted hover-avg-depth d-inline-block me-1"></span>
                         {{ 'profileChart.avgDepthTraceName' | translate }}
                         <span class="hover-avg-depth fw-bold">{{ hoverValues.averageDepth | number:'1.0-1' }} {{ lengthUnit }}</span>
                     </span>
@@ -37,7 +37,7 @@
                 @if (hoverValues.ceiling !== undefined) {
                     <span class="text-muted mx-1">|</span>
                     <span class="text-nowrap">
-                        <span class="hover-marker hover-ceiling rounded-circle d-inline-block me-1"></span>
+                        <span class="hover-marker hover-line hover-ceiling-area hover-ceiling d-inline-block me-1"></span>
                         {{ 'profileChart.ceilingTraceName' | translate }}
                         <span class="hover-ceiling fw-bold">{{ hoverValues.ceiling | number:'1.0-1' }} {{ lengthUnit }}</span>
                     </span>
@@ -45,7 +45,7 @@
                 @if (hoverValues.emergencyDepth !== undefined) {
                     <span class="text-muted mx-1">|</span>
                     <span class="text-nowrap">
-                        <span class="hover-marker hover-emergency rounded-circle d-inline-block me-1"></span>
+                        <span class="hover-marker hover-line hover-line-dashed hover-emergency d-inline-block me-1"></span>
                         {{ 'profileChart.emergencyTraceName' | translate }}
                         <span class="hover-emergency fw-bold">{{ hoverValues.emergencyDepth | number:'1.0-1' }} {{ lengthUnit }}</span>
                     </span>
@@ -53,7 +53,7 @@
                 @if (hoverEvents) {
                     <span class="text-muted mx-1">|</span>
                     <span class="text-nowrap">
-                        <span class="hover-marker hover-event rounded-circle d-inline-block me-1"></span>
+                        <span class="hover-marker hover-circle hover-event rounded-circle d-inline-block me-1"></span>
                         <span class="fw-bold">{{ hoverEvents }}</span>
                     </span>
                 }

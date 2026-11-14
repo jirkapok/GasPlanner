@@ -146,6 +146,21 @@ export class ValidatorGroups {
         };
     }
 
+    /** Has to be 0-24 hours */
+    public restInterval(): ValidatorFn {
+        return (control: AbstractControl): ValidationErrors | null => {
+            const value = control.value;
+            const parsed = DateFormats.parseToShortTime(value);
+            const twentyFourHours = 60 * 60 * 24
+
+            if (typeof parsed !== 'number' || parsed > twentyFourHours || parsed < 0) {
+                return { restInterval: true };
+            }
+
+            return null;
+        };
+    }
+
     /**
      * Form group validator: eCCR descent setpoint can't be higher than the bottom setpoint.
      * Sets the descentAboveBottom error on the group.
@@ -155,20 +170,6 @@ export class ValidatorGroups {
             const descent = Number(group.get(descentControl)?.value);
             const bottom = Number(group.get(bottomControl)?.value);
             return descent > bottom ? { descentAboveBottom: true } : null;
-        };
-    }
-
-    /** Has to be >= 0 */
-    public restInterval(): ValidatorFn {
-        return (control: AbstractControl): ValidationErrors | null => {
-            const value = control.value;
-            const parsed = DateFormats.parseToShortTime(value);
-
-            if (typeof parsed !== 'number' || !(parsed >= 0)) {
-                return { restInterval: true };
-            }
-
-            return null;
         };
     }
 

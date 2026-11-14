@@ -128,6 +128,7 @@
     "brokenCeiling": "Profondeur de sécurité minimale (plafond) dépassée ! Modifiez votre plan pour une profondeur plus faible à ce moment.",
     "lowPpo2": "Faible pression partielle d'oxygène atteinte (profondeur minimale dépassée) ! Il existe un risque d'hypoxie. Utilisez un gaz avec une teneur en oxygène plus élevée.",
     "highPpo2": "Pression partielle d'oxygène élevée atteinte (profondeur maximale dépassée) ! Il existe un risque de toxicité à l'oxygène. Réduisez la profondeur ou utilisez un gaz avec une teneur en oxygène plus faible.",
+    "loopPpO2OutOfRange": "La ppO2 de la boucle du recycleur {{ppO2}} bar est hors de la plage sûre {{min}} - {{max}} bar (décompression {{maxDeco}} bar) ! Modifiez le setpoint ou utilisez un diluant avec une autre teneur en oxygène.",
     "highDescentSpeed": "Vitesse de descente élevée ! Descendez plus longtemps ou descendez à une profondeur plus faible.",
     "highAscentSpeed": "Vitesse de remontée élevée ! Remontez uniquement à une profondeur plus faible ou remontez plus lentement.",
     "highN2Switch": "Le changement vers un gaz avec une teneur en azote plus élevée n'est pas recommandé ! Il existe un risque de contre-diffusion isobare (ICD). Changez pour un autre gaz avec une teneur en hélium plus élevée ou une teneur en azote plus faible.",
@@ -148,7 +149,7 @@
     "use": "Utiliser", "maxBottomTime": "Temps de fond maximum", "maxBottomTimeTitle": "Définir le temps de plongée au maximum selon le gaz consommé",
     "surfaceGradient": "Gradient en surface", "offgasingStart": "Début du dégazage", "highestCeiling": "Plafond le plus élevé",
     "highestGasDensity": "Densité de gaz la plus élevée", "turnTime": "Temps de demi-tour", "turnPressure": "Pression de demi-tour",
-    "otuToxicity": "Toxicité OTU", "cnsToxicity": "Toxicité CNS", "consumedTab": "Consommé", "issuesTab": "Problèmes", "inLiters": "En litres"
+    "otuToxicity": "Toxicité OTU", "cnsToxicity": "Toxicité CNS", "consumedTab": "Consommé", "rebreatherTanks": "Recycleur", "bailoutTanks": "Bailout", "supply": "Alimentation", "issuesTab": "Problèmes", "inLiters": "En litres"
   },
   "diveOptions": {
     "allUsable": "Tout utilisable", "halfUsable": "Moitié utilisable", "thirdUsable": "Tiers utilisables", "cardTitle": "Options",
@@ -168,8 +169,14 @@
   "pscrOptions": { "injectionRatio": "Rapport d'injection", "metabolicO2": "O2 métabolique" },
   "mccrOptions": { "setpoint": "ppO2 cible", "o2Flow": "Débit d'O2", "loopVolume": "Volume de la boucle", "metabolicO2": "O2 métabolique" },
   "eccrOptions": { "descentSetpoint": "Setpoint de descente", "bottomSetpoint": "Setpoint au fond", "decoSetpoint": "Setpoint de déco", "setpointSwitchDepth": "Profondeur de changement de setpoint", "descentAboveBottom": "Le setpoint de descente ne peut pas dépasser le setpoint au fond", "loopVolume": "Volume de la boucle", "metabolicO2": "O2 métabolique" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Bloc de gaz de fond", "size": "Taille", "sac": "SAC :", "workingPressure": "Pression de service", "startPressure": "Pression de départ" },
-  "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
+  "waypointsTable": { "cardTitle": "Points de passage de la plongée", "filterTitle": "Filtrer pour n'afficher que les paliers", "diveProfile": "Profil du recycleur", "bailoutProfile": "Profil de bailout", "setpoint": "SP", "depth": "Profondeur", "duration": "Durée", "run": "Cumul", "gas": "Gaz" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Pression à la profondeur",

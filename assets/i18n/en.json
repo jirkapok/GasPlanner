@@ -388,6 +388,7 @@
     "brokenCeiling": "Exceeded minimum safe (ceiling) depth! Change your plan to higher depth at this point.",
     "lowPpo2": "Reached low partial pressure of oxygen (minimum depth exceeded)! There is a risk of hypoxia. Use gas with higher oxygen content.",
     "highPpo2": "Reached high partial pressure of oxygen (maximum depth exceeded)! There is a risk of oxygen toxicity. Reduce the depth or use gas with lower oxygen content.",
+    "loopPpO2OutOfRange": "Rebreather loop ppO2 {{ppO2}} bar is out of the safe range {{min}} - {{max}} bar (decompression {{maxDeco}} bar)! Change the setpoint or use diluent with different oxygen content.",
     "highDescentSpeed": "High descent speed! Descent longer time or descent to lower depth.",
     "highAscentSpeed": "High ascent speed! Ascent to higher depth only or ascent longer time.",
     "highN2Switch": "Gas switch to gas with higher nitrogen content is not recommended! There is a risk of Isobaric Counter Diffusion (ICD). Switch to another gas with higher helium content or lower nitrogen content.",
@@ -427,6 +428,9 @@
     "otuToxicity": "OTU toxicity",
     "cnsToxicity": "CNS toxicity",
     "consumedTab": "Consumed",
+    "rebreatherTanks": "Rebreather",
+    "bailoutTanks": "Bailout",
+    "supply": "Supply",
     "issuesTab": "Issues",
     "inLiters": "In liters"
   },
@@ -529,6 +533,12 @@
     "loopVolume": "Loop volume",
     "metabolicO2": "Metabolic O2"
   },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": {
     "cardTitle": "Bottom gas tank",
     "size": "Size",
@@ -539,6 +549,9 @@
   "waypointsTable": {
     "cardTitle": "Dive way points",
     "filterTitle": "Filter to show stops only",
+    "diveProfile": "Rebreather profile",
+    "bailoutProfile": "Bailout profile",
+    "setpoint": "SP",
     "depth": "Depth",
     "duration": "Duration",
     "run": "Run",

@@ -128,6 +128,7 @@
     "brokenCeiling": "超过了最小安全（天花板）深度！请在此处将计划调整为更深的深度。",
     "lowPpo2": "达到了较低的氧分压（超过最小深度限制）！存在缺氧风险。请使用氧气含量更高的气体。",
     "highPpo2": "达到了较高的氧分压（超过最大深度限制）！存在氧中毒风险。请减小深度或使用氧气含量更低的气体。",
+    "loopPpO2OutOfRange": "循环呼吸器回路氧分压 {{ppO2}} bar 超出安全范围 {{min}} - {{max}} bar（减压 {{maxDeco}} bar）！请更改设定点或使用不同含氧量的稀释气。",
     "highDescentSpeed": "下降速度过快！请延长下降时间或下降至较浅的深度。",
     "highAscentSpeed": "上升速度过快！请仅上升至较浅的深度，或延长上升时间。",
     "highN2Switch": "不建议切换到氮气含量更高的气体！存在等压逆向扩散（ICD）风险。请切换到氦气含量更高或氮气含量更低的另一种气体。",
@@ -148,7 +149,7 @@
     "use": "使用", "maxBottomTime": "最大水底时间", "maxBottomTimeTitle": "根据消耗的气体将潜水时间设置为最大值",
     "surfaceGradient": "水面梯度", "offgasingStart": "排氮开始", "highestCeiling": "最高天花板深度",
     "highestGasDensity": "最高气体密度", "turnTime": "折返时间", "turnPressure": "折返压力",
-    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题", "inLiters": "以升为单位"
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "rebreatherTanks": "循环呼吸器", "bailoutTanks": "应急脱困", "supply": "供气", "issuesTab": "问题", "inLiters": "以升为单位"
   },
   "diveOptions": {
     "allUsable": "全部可用", "halfUsable": "一半可用", "thirdUsable": "三分之一可用", "cardTitle": "选项",
@@ -168,8 +169,14 @@
   "pscrOptions": { "injectionRatio": "注入比", "metabolicO2": "代谢耗氧" },
   "mccrOptions": { "setpoint": "目标 ppO2", "o2Flow": "O2 流量", "loopVolume": "回路容积", "metabolicO2": "代谢耗氧" },
   "eccrOptions": { "descentSetpoint": "下潜设定点", "bottomSetpoint": "水底设定点", "decoSetpoint": "减压设定点", "setpointSwitchDepth": "设定点切换深度", "descentAboveBottom": "下潜设定点不能高于水底设定点", "loopVolume": "回路容积", "metabolicO2": "代谢耗氧" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "水底气瓶", "size": "容量", "sac": "SAC：", "workingPressure": "工作压力", "startPressure": "起始压力" },
-  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
+  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "diveProfile": "循环呼吸器剖面", "bailoutProfile": "应急脱困剖面", "setpoint": "SP", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
   "learn": {
     "topics": {
       "pressureAtDepth": "深度处的压力",

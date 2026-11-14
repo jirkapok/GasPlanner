@@ -128,6 +128,7 @@
     "brokenCeiling": "Byla překročena minimální bezpečná (stropní) hloubka! Upravte plán na menší hloubku v tomto bodě.",
     "lowPpo2": "Byl dosažen nízký parciální tlak kyslíku (překročena minimální hloubka)! Hrozí riziko hypoxie. Použijte plyn s vyšším obsahem kyslíku.",
     "highPpo2": "Byl dosažen vysoký parciální tlak kyslíku (překročena maximální hloubka)! Hrozí riziko kyslíkové toxicity. Snižte hloubku nebo použijte plyn s nižším obsahem kyslíku.",
+    "loopPpO2OutOfRange": "Parciální tlak kyslíku ve smyčce rebreatheru {{ppO2}} bar je mimo bezpečný rozsah {{min}} - {{max}} bar (dekomprese {{maxDeco}} bar)! Změňte setpoint nebo použijte diluent s jiným obsahem kyslíku.",
     "highDescentSpeed": "Vysoká rychlost sestupu! Sestupujte déle nebo do menší hloubky.",
     "highAscentSpeed": "Vysoká rychlost výstupu! Vystupujte pouze do menší hloubky nebo vystupujte déle.",
     "highN2Switch": "Přepnutí na plyn s vyšším obsahem dusíku se nedoporučuje! Hrozí riziko izobarické kontradifúze (ICD). Přepněte na jiný plyn s vyšším obsahem helia nebo nižším obsahem dusíku.",
@@ -148,7 +149,7 @@
     "use": "Použít", "maxBottomTime": "Maximální doba na dně", "maxBottomTimeTitle": "Nastavit dobu ponoru na maximum podle spotřebovaného plynu",
     "surfaceGradient": "Gradient na hladině", "offgasingStart": "Začátek odsycování", "highestCeiling": "Nejvyšší strop",
     "highestGasDensity": "Nejvyšší hustota plynu", "turnTime": "Čas obratu", "turnPressure": "Tlak obratu",
-    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS", "consumedTab": "Spotřeba", "issuesTab": "Problémy", "inLiters": "V litrech"
+    "otuToxicity": "Toxicita OTU", "cnsToxicity": "Toxicita CNS", "consumedTab": "Spotřeba", "rebreatherTanks": "Rebreather", "bailoutTanks": "Bailout", "supply": "Zásobní", "issuesTab": "Problémy", "inLiters": "V litrech"
   },
   "diveOptions": {
     "allUsable": "Celý objem využitelný", "halfUsable": "Polovina objemu využitelná", "thirdUsable": "Třetina objemu využitelná", "cardTitle": "Možnosti",
@@ -168,8 +169,14 @@
   "pscrOptions": { "injectionRatio": "Poměr výměny", "metabolicO2": "Spotřeba O2" },
   "mccrOptions": { "setpoint": "Cílový ppO2", "o2Flow": "Průtok O2", "loopVolume": "Objem smyčky", "metabolicO2": "Spotřeba O2" },
   "eccrOptions": { "descentSetpoint": "Setpoint pro sestup", "bottomSetpoint": "Setpoint na dně", "decoSetpoint": "Dekompresní setpoint", "setpointSwitchDepth": "Hloubka přepnutí setpointu", "descentAboveBottom": "Setpoint pro sestup nemůže být vyšší než setpoint na dně", "loopVolume": "Objem smyčky", "metabolicO2": "Spotřeba O2" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "Lahev s dnovou směsí", "size": "Objem", "sac": "SAC:", "workingPressure": "Pracovní tlak", "startPressure": "Počáteční tlak" },
-  "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
+  "waypointsTable": { "cardTitle": "Body ponoru", "filterTitle": "Filtrovat pouze zastávky", "diveProfile": "Profil rebreatheru", "bailoutProfile": "Profil bailoutu", "setpoint": "SP", "depth": "Hloubka", "duration": "Doba", "run": "Run", "gas": "Plyn" },
   "learn": {
     "topics": {
       "pressureAtDepth": "Tlak v hloubce",

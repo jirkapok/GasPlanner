@@ -1,3 +1,51 @@
+# [0.24.0](https://github.com/jirkapok/GasPlanner/compare/v0.23.0...v0.24.0) (2026-11-14)
+
+
+### Features
+
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) gas chart legend markers and bars styled like tank chart ([0987a57](https://github.com/jirkapok/GasPlanner/commit/0987a571a0db9adf3a178b198167dc3463b8aafb))
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) gas chart shows missing gas in red after available gas ([3e44063](https://github.com/jirkapok/GasPlanner/commit/3e4406314b9e79f1301b7c4c01195afccf39c666))
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) tank chart legend markers and shorter thicker rock bottom line ([6d820e5](https://github.com/jirkapok/GasPlanner/commit/6d820e50f09f691c25a1c6de453db3661f8d6df7))
+
+# [0.23.0](https://github.com/jirkapok/GasPlanner/compare/v0.22.0...v0.23.0) (2026-11-13)
+
+
+### Bug Fixes
+
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) hover time hours and stale hover values on touch devices ([ef7282c](https://github.com/jirkapok/GasPlanner/commit/ef7282ce5bde412ca055bf0d14462b4f46d64c90))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) left align hover line with start padding ([21037dd](https://github.com/jirkapok/GasPlanner/commit/21037dd591e1d6df7198f682d0cb949e8a97e899))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) restore vertical hover line in profile chart ([a5a9c3d](https://github.com/jirkapok/GasPlanner/commit/a5a9c3dbf92643cd2a3c2aba1816fcb1748b81f3))
+
+
+### Features
+
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) colored circle markers in right aligned hover line ([d48d969](https://github.com/jirkapok/GasPlanner/commit/d48d96920032e831c8c041b2c1e90c63b9a84ecc))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) extract profile chart hover values ([12fb7bd](https://github.com/jirkapok/GasPlanner/commit/12fb7bd37b22ede8e2d032a9e6828aeaf0f21546))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) hover values above profile chart in compare dives page ([3438464](https://github.com/jirkapok/GasPlanner/commit/34384641e32d48318c9523419a6e166ce2a916e5))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) legend like line samples in profile chart hover line ([1603228](https://github.com/jirkapok/GasPlanner/commit/16032280a1b98ededff167b36e4fd9a847a4739b))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) show profile chart hover values above the chart ([edf6806](https://github.com/jirkapok/GasPlanner/commit/edf680619fa9bb635e4467ac1bd9f47b6b11d162))
+* [#123](https://github.com/jirkapok/GasPlanner/issues/123) wider spacing between profile chart hover values ([8033c2f](https://github.com/jirkapok/GasPlanner/commit/8033c2fe22ae4216b401992c2cc42fe42fdebec0))
+
+# [0.22.0](https://github.com/jirkapok/GasPlanner/compare/v0.21.0...v0.22.0) (2026-11-12)
+
+
+### Bug Fixes
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) ignore stale consumption results ([f3b12ae](https://github.com/jirkapok/GasPlanner/commit/f3b12ae6f956a7e65ea3bbcfa3d37d44367ae7d3))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) show eCCR setpoints error at the setpoint changed last ([f503c56](https://github.com/jirkapok/GasPlanner/commit/f503c5648ebae4e1b3d2a20634cef2b4278d86bd))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) unique ids of rebreather options ([1f5e4c5](https://github.com/jirkapok/GasPlanner/commit/1f5e4c559231d2caaf5e2c828cb2aa2d1c815401))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) bailout loop uses ascent setpoint after the deepest point ([99ff0e2](https://github.com/jirkapok/GasPlanner/commit/99ff0e21fe435b5d2ef175ce3199a6682b39d9d7))
+
+
+### Features
+
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) breathing circuit in dive titles ([89afd5e](https://github.com/jirkapok/GasPlanner/commit/89afd5ec143ce7798f6082e0d205c7ec3ca5e402))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) consumed tanks grouped to rebreather and bailout tanks ([1913d94](https://github.com/jirkapok/GasPlanner/commit/1913d9419e169b807f67b270501ab740e5f6c4dc))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) default rebreather oxygen tank template in metric and imperial units ([83a1deb](https://github.com/jirkapok/GasPlanner/commit/83a1deb9f20db0c1bdfb547db92dadb612f0aca0))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) rebreather and bailout profile tabs in waypoints table ([5aab8e1](https://github.com/jirkapok/GasPlanner/commit/5aab8e18bb6ae3fa4df0a2902eb8b7a9c99e3bf3))
+* **planner:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) show loop ppO2 out of range in dive issues ([2bb7c6e](https://github.com/jirkapok/GasPlanner/commit/2bb7c6e2276a3aaf4a98f6ce60c372c3fb394dec))
+* **scuba-physics:** [#26](https://github.com/jirkapok/GasPlanner/issues/26) loop ppO2 out of range event ([fe70d50](https://github.com/jirkapok/GasPlanner/commit/fe70d50abaf79f789d6597f5b41e0de4ce74037d))
+
 # [0.21.0](https://github.com/jirkapok/GasPlanner/compare/v0.20.0...v0.21.0) (2026-11-12)
 
 

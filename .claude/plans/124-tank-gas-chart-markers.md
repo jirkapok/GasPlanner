@@ -189,7 +189,7 @@ git commit -m "feat: #124 tank chart legend markers and shorter thicker rock bot
 
 ### Task 2: Gas chart (liters): legend markers, no numbers, bar styled like the tank chart
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 
@@ -218,7 +218,7 @@ git commit -m "feat: #124 tank chart legend markers and shorter thicker rock bot
   - `.required-bar { position: relative; }`. It paints above the absolutely positioned available bar.
   - Delete `.stacked-wrapper`, `.reserve-bar-stacked` and `.consumed-bar`.
 
-- [ ] **Step 1: Write the failing tests** in `gas-chart.component.spec.ts`. Add a new `describe('Bars like tank chart')` that uses the existing `render(total, consumed, reserve)` helper. In these tests, `required = consumed + reserve` and `scale = max(total, required)`.
+- [x] **Step 1: Write the failing tests** in `gas-chart.component.spec.ts`. Add a new `describe('Bars like tank chart')` that uses the existing `render(total, consumed, reserve)` helper. In these tests, `required = consumed + reserve` and `scale = max(total, required)`.
 
 ```ts
 const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
@@ -296,7 +296,7 @@ it('red required bar extends past available without reserve', () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests and confirm they fail**
+- [x] **Step 2: Run the tests and confirm they fail**
 
 Run: `npx ng test planner --no-watch --include='**/gas-chart.component.spec.ts'`
 Expected: the new tests FAIL.
@@ -304,31 +304,31 @@ Expected: the new tests FAIL.
 - There are no markers, no `.required-bar`, `.combined_wrapper` or `.reserve-bar` yet.
 - The progress text contains `500` / `1,500`.
 
-- [ ] **Step 3: Update `gas-chart.component.html`.**
+- [x] **Step 3: Update `gas-chart.component.html`.**
   - Add the three legend markers.
   - Replace the content of `.progress.gas-bar` with the three bars listed under Interfaces, with no text inside them.
   - Leave the header and legend rows otherwise unchanged.
 
-- [ ] **Step 4: Update `gas-chart.component.scss`** to contain only the two rules listed under Interfaces.
+- [x] **Step 4: Update `gas-chart.component.scss`** to contain only the two rules listed under Interfaces.
 
-- [ ] **Step 5: Run the tests and confirm they pass**
+- [x] **Step 5: Run the tests and confirm they pass**
 
 Run: `npx ng test planner --no-watch --include='**/gas-chart.component.spec.ts'`
 Expected: all tests PASS, including the existing metric and imperial tests.
 
-- [ ] **Step 6: Visual check (Review Focus 1, 3, 4).** Run `npm start` and open the results with both charts visible, using one gas with a reserve and one without. Check the following:
+- [x] **Step 6: Visual check (Review Focus 1, 3, 4).** Run `npm start` and open the results with both charts visible, using one gas with a reserve and one without. Check the following:
   - The liters bar has the same frame, bar height and rounding as the tank bar.
   - The orange line looks identical in both charts.
   - The red required bar extends past the grey available bar.
   - With 0 consumption, only the line and the grey background are visible, and nothing overflows the frame.
   - Check on both desktop and mobile width.
 
-- [ ] **Step 7: Lint and full planner tests**
+- [x] **Step 7: Lint and full planner tests**
 
 Run: `npm run lint` and then `npm run test-ci`
 Expected: lint is clean and all planner tests pass.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add projects/planner/src/app/plan/gas-chart

@@ -44,6 +44,39 @@ describe('Tank', () => {
             });
         });
 
+        describe('Assigns O2 and He together', () => {
+            it('Pins 21 % O2 to Air, when He is removed from trimix', () => {
+                tank.assignGas(21, 35);
+                tank.assignGas(21, 0);
+                expect(tank.gas.compositionEquals(StandardGases.air)).toBeTruthy();
+            });
+
+            it('Does not pin 21 % O2, when He is added to Air', () => {
+                tank.assignGas(21, 35);
+                expect(tank.gas.fO2).toBeCloseTo(0.21, 3);
+                expect(tank.gas.fHe).toBeCloseTo(0.35, 3);
+            });
+
+            it('Assigns trimix to pure oxygen tank', () => {
+                tank.assignGas(100, 0);
+                tank.assignGas(10, 70);
+                expect(tank.o2).toBeCloseTo(10, 3);
+                expect(tank.he).toBeCloseTo(70, 3);
+            });
+
+            it('He wins, when the content exceeds 100 %', () => {
+                tank.assignGas(100, 70);
+                expect(tank.o2).toBeCloseTo(30, 3);
+                expect(tank.he).toBeCloseTo(70, 3);
+            });
+
+            it('Fits stored volume to the new gas', () => {
+                tank.assignGas(10, 70);
+                const expected = Tank.realVolume2(tank.size, tank.startPressure, tank.gas);
+                expect(tank.volume).toBeCloseTo(expected, 6);
+            });
+        });
+
         describe('Not pining Air O2 for trimix', () => {
             it('Does not apply 21 % 02', () => {
                 tank.he = 10;

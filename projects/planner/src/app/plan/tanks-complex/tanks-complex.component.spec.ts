@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { TankTemplate } from 'scuba-physics';
+import { StandardGases, TankTemplate } from 'scuba-physics';
 import { ChangeDetectorRef, DebugElement } from '@angular/core';
 import _ from 'lodash';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
@@ -224,6 +224,34 @@ describe('Tanks Complex component', () => {
         complexPage.heInput(0).dispatchEvent(new Event('input'));
 
         expect(complexPage.o2Input(0).value).toBe('30');
+    });
+
+    describe('He edited together with O2', () => {
+        const editHe = (newHe: string): void => {
+            complexPage.heInput(0).value = newHe;
+            complexPage.heInput(0).dispatchEvent(new Event('input'));
+        };
+
+        it('removing He from 21/35 stores Air', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            const firstTank = schedules.selectedTanks.firstTank;
+            firstTank.he = 35;
+            firstTank.o2 = 21;
+            fixture.detectChanges();
+
+            editHe('0');
+
+            expect(firstTank.tank.gas.compositionEquals(StandardGases.air)).toBeTruthy();
+        }));
+
+        it('adding He to Air keeps 21 % O2', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            const firstTank = schedules.selectedTanks.firstTank;
+            fixture.detectChanges();
+
+            editHe('35');
+
+            expect(firstTank.tank.gas.fO2).toBeCloseTo(0.21, 3);
+            expect(firstTank.tank.gas.fHe).toBeCloseTo(0.35, 3);
+        }));
     });
 
     it('Assign tank template rebinds new size and working pressure', () => {

@@ -325,6 +325,23 @@ export class Tank implements TankFill {
         return Tank.realVolume(tank, gas);
     }
 
+    /**
+     * Assigns both gas parts at once, so the Air O2 pin is decided by the new He content.
+     * Prefer it over the o2 and he setters, when both parts change.
+     * In case the content exceeds 100 %, the He wins and O2 is reduced.
+     * @param o2Percent oxygen content in percents
+     * @param hePercent helium content in percents
+     */
+    public assignGas(o2Percent: number, hePercent: number): void {
+        const fHe = hePercent / 100;
+        const limitedO2 = Math.min(o2Percent, 100 - hePercent);
+        // He first, the pin of O2 depends on it
+        this.gas.fHe = fHe;
+        this.gas.fO2 = AirO2Pin.setO2(limitedO2, fHe);
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.fitStoredVolumes();
+    }
+
     public assignStandardGas(gasName: string): void {
         const found = StandardGases.byName(gasName);
 

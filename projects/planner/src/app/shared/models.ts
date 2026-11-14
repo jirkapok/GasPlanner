@@ -327,6 +327,12 @@ export class TankBound implements IGasContent, ITankSize {
         this.changed();
     }
 
+    /** Use instead of the o2 and he setters when both change, see Tank.assignGas */
+    public assignGas(o2: number, he: number): void {
+        this._tank.assignGas(o2, he);
+        this.changed();
+    }
+
     /** Values in liters, as calculated by the consumption worker */
     public assignConsumption(consumedVolume: number, reserveVolume: number): void {
         this._tank.consumedVolume = consumedVolume;

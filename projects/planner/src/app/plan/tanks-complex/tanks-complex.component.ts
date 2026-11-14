@@ -289,8 +289,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         bound.size = Number(values.tankSize);
         bound.workingPressure = Number(values.tankWorkPressure);
         bound.startPressure = Number(values.tankStartPressure);
-        bound.o2 = Number(values.tankO2);
-        bound.he = Number(values.tankHe);
+        bound.assignGas(Number(values.tankO2), Number(values.tankHe));
 
         this.reloadGas(bound, tankControl);
         this.dispatcher.sendTankChanged();

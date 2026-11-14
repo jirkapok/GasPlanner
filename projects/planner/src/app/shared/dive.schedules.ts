@@ -304,8 +304,9 @@ export class DiveSchedules {
         const dive = this.byId(diveId);
 
         if(dive) {
-            const currentDiveAltitude = dive.optionsService.altitude || 0;
-            ProfileTissues.createAtSurface(currentDiveAltitude);
+            // not the UI units, the tissues need altitude in meters
+            const altitude = dive.optionsService.getOptions().altitude;
+            return ProfileTissues.createAtSurface(altitude);
         }
 
         // Should never happen, but let us recover at sea level.

@@ -212,6 +212,30 @@ describe('Scheduled dives', () => {
         });
     });
 
+    describe('Previous dive tissues at altitude', () => {
+        it('First dive returns tissues saturated at its altitude', () => {
+            const units = new UnitConversion();
+            const altitudeSut = new DiveSchedules(units, new ReloadDispatcher(), circuitNames);
+            altitudeSut.dives[0].optionsService.altitude = 1000;
+
+            const tissues = altitudeSut.previousDiveTissues(1);
+
+            expect(tissues).toEqual(ProfileTissues.createAtSurface(1000));
+        });
+
+        it('First dive in imperial units returns tissues saturated at its altitude in meters', () => {
+            const units = new UnitConversion();
+            units.imperialUnits = true;
+            const altitudeSut = new DiveSchedules(units, new ReloadDispatcher(), circuitNames);
+            const options = altitudeSut.dives[0].optionsService;
+            options.altitude = 3000; // feet
+
+            const tissues = altitudeSut.previousDiveTissues(1);
+
+            expect(tissues).toEqual(ProfileTissues.createAtSurface(options.getOptions().altitude));
+        });
+    });
+
     describe('Calculating', () => {
         it('Marks Still running also all following repetitive dives', async () => {
             const sut = createSut();

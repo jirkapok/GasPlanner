@@ -318,8 +318,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
         this.options.decoStopDistance = Number(values.decoStopDistance);
 
-        this.airBreaks.oxygenDuration = Number(values.maxOxygenDuration);
-        this.airBreaks.bottomGasDuration = Number(values.backGasDuration);
+        this.options.airBreakOxygenDuration = Number(values.maxOxygenDuration);
+        this.options.airBreakBottomGasDuration = Number(values.backGasDuration);
 
         this.fireChanged();
     }

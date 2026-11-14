@@ -121,6 +121,20 @@ describe('Dive options component', () => {
         expect(schedules.selectedOptions.decoStopDistance).toBe(5);
         expect(dispatcherSpy).toHaveBeenCalledWith();
     });
+
+    it('applies air break durations through OptionsService', () => {
+        const options = schedules.selectedOptions;
+        const oxygenSpy = vi.spyOn(options, 'airBreakOxygenDuration', 'set');
+        const bottomGasSpy = vi.spyOn(options, 'airBreakBottomGasDuration', 'set');
+
+        const form = component.optionsForm;
+        form.controls.maxOxygenDuration.setValue(12);
+        form.controls.backGasDuration.setValue(6);
+        component.applyOptions();
+
+        expect(oxygenSpy).toHaveBeenCalledWith(12);
+        expect(bottomGasSpy).toHaveBeenCalledWith(6);
+    });
 });
 
 

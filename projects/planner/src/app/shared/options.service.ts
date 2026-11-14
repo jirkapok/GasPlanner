@@ -326,6 +326,18 @@ export class OptionsService {
         this.changed();
     }
 
+    /** in minutes */
+    public set airBreakOxygenDuration(newValue: number) {
+        this.options.airBreaks.oxygenDuration = newValue;
+        this.changed();
+    }
+
+    /** in minutes */
+    public set airBreakBottomGasDuration(newValue: number) {
+        this.options.airBreaks.bottomGasDuration = newValue;
+        this.changed();
+    }
+
     public set circuit(newValue: CircuitType) {
         this.options.rebreather.circuit = newValue;
         this.changed();

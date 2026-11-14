@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Options, Salinity, Tank } from 'scuba-physics';
 import { OptionsService } from './options.service';
@@ -195,6 +196,26 @@ describe('Options Service', () => {
             const first = service.toxicity;
             service.salinity = Salinity.brackish;
             expect(service.toxicity).not.toBe(first);
+        });
+    });
+
+    describe('Air breaks', () => {
+        it('refreshes readers after oxygen duration changed', () => {
+            const oxygenDuration = computed(() => service.airBreaks.oxygenDuration);
+            expect(oxygenDuration()).toBe(20);
+
+            service.airBreakOxygenDuration = 12;
+
+            expect(oxygenDuration()).toBe(12);
+        });
+
+        it('refreshes readers after bottom gas duration changed', () => {
+            const bottomGasDuration = computed(() => service.airBreaks.bottomGasDuration);
+            expect(bottomGasDuration()).toBe(5);
+
+            service.airBreakBottomGasDuration = 6;
+
+            expect(bottomGasDuration()).toBe(6);
         });
     });
 });

@@ -1,3 +1,12 @@
+# [0.24.0](https://github.com/jirkapok/GasPlanner/compare/v0.23.0...v0.24.0) (2026-11-14)
+
+
+### Features
+
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) gas chart legend markers and bars styled like tank chart ([0987a57](https://github.com/jirkapok/GasPlanner/commit/0987a571a0db9adf3a178b198167dc3463b8aafb))
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) gas chart shows missing gas in red after available gas ([3e44063](https://github.com/jirkapok/GasPlanner/commit/3e4406314b9e79f1301b7c4c01195afccf39c666))
+* [#124](https://github.com/jirkapok/GasPlanner/issues/124) tank chart legend markers and shorter thicker rock bottom line ([6d820e5](https://github.com/jirkapok/GasPlanner/commit/6d820e50f09f691c25a1c6de453db3661f8d6df7))
+
 # [0.23.0](https://github.com/jirkapok/GasPlanner/compare/v0.22.0...v0.23.0) (2026-11-13)
 
 

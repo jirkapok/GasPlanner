@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1794670395650,
+  "timestamp": 1794685431600,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -20,7 +20,7 @@
         "/assets/i18n/zh.json",
         "/favicon.ico",
         "/index.html",
-        "/main-YTFIQAPJ.js",
+        "/main-44HO4TJF.js",
         "/manifest.cs.webmanifest",
         "/manifest.de.webmanifest",
         "/manifest.es.webmanifest",
@@ -30,10 +30,10 @@
         "/manifest.zh.webmanifest",
         "/polyfills-PZSJNBYU.js",
         "/styles-BH7YCPOC.css",
-        "/worker-B6ZQTBPM.js",
-        "/worker-DQVVSX5Q.js",
-        "/worker-J6I57ELA.js",
-        "/worker-N7K6REUV.js"
+        "/worker-3VQXQEPA.js",
+        "/worker-L4LO4MRR.js",
+        "/worker-OPHESJCX.js",
+        "/worker-W42UAPDH.js"
       ],
       "patterns": []
     },
@@ -138,7 +138,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/doc/CHANGELOG.md": "bf4b424ed95a83237a602e14770302bca66e9a05",
+    "/assets/doc/CHANGELOG.md": "bcfafc1d38ed1effa90ced1d6b0c8a2d235185a2",
     "/assets/doc/altitude.md": "d6c6cf0770b212a26fe506bdd9a5350d1dbb056c",
     "/assets/doc/application.md": "58df88a2eeccffbe1e04f1f8ef828c314a5dbb16",
     "/assets/doc/consumed.md": "7ffb41cc504ab2db35a71663642b6ee3e72b6416",
@@ -215,15 +215,15 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "f3c6cc03ce981d44a50aa11f96adc8c28c102fcd",
-    "/main-YTFIQAPJ.js": "bc30a34246ed8abc697290732fe74923fa203931",
-    "/manifest.cs.webmanifest": "f2b1ff394a568636a92b2fd619a2f7c46bb3a324",
-    "/manifest.de.webmanifest": "0e11c224e11828e00896fa391ce0ad4143e0ff64",
-    "/manifest.es.webmanifest": "2cecdcc4dba9be16e5f0a18b9c37d4171b6b200a",
-    "/manifest.fr.webmanifest": "c83163a6058ce8c2e794751b0add1430ff864c3b",
-    "/manifest.ru.webmanifest": "5c991b3aba0e6c9fdb938d9cafc50adb037f8e08",
-    "/manifest.webmanifest": "63c7fa968e5913e43123587844f05a1d012e2155",
-    "/manifest.zh.webmanifest": "982f0a4279a9200bcfa125175ae9cbe2a7621d8a",
+    "/index.html": "8afda75083c2280724be2da4d258cccce442a2d1",
+    "/main-44HO4TJF.js": "2a3314c1578faebce82be895cd2ff888f0133dda",
+    "/manifest.cs.webmanifest": "eea986f616bc59a7dc801d5bfbba6ffd55a6bde5",
+    "/manifest.de.webmanifest": "d6ec393bf8f36d2964d277eb0ef67a241728ddcd",
+    "/manifest.es.webmanifest": "3c4636642024e1a03c9eb1611258250ec8564b11",
+    "/manifest.fr.webmanifest": "93a93b1f7626abedd92037625ca57ea5c4fe52c4",
+    "/manifest.ru.webmanifest": "71b146eb3414c9410da3fab84396baf8cb4188b3",
+    "/manifest.webmanifest": "31561e2c4a715e581586f2b0859c962fa7f66ead",
+    "/manifest.zh.webmanifest": "68f995410b97e59bc32d3c443dfaf7f3d3683e83",
     "/media/cn-P7M3XOME.svg": "6a132cb7d0c5fb1fd90fc5857a15057dad164fcf",
     "/media/cz-PSDLWGGB.svg": "4b0135f6aeeea3f5d3cf75a388928f2da6d40dfd",
     "/media/de-MZUAL5O7.svg": "f46bdcf00fbd79c764b116ef8250e678e4b71c8b",
@@ -233,10 +233,10 @@
     "/media/ru-FRCHSBTM.svg": "9d973fabca9eae17df6841186a2f15c7eb334e36",
     "/polyfills-PZSJNBYU.js": "38c9b370c0e9f9f932fe77ca39c98f09dc174b4d",
     "/styles-BH7YCPOC.css": "394f6eee435023fee95bc6d5a05771d8ef0174b7",
-    "/worker-B6ZQTBPM.js": "82b5343131ecdcd7832c4f738211aa1f48b44958",
-    "/worker-DQVVSX5Q.js": "f1965e3de397985703945f689b7cc35c66d010c2",
-    "/worker-J6I57ELA.js": "1249261692d52dc5927a771ba0765a8827ad5c69",
-    "/worker-N7K6REUV.js": "de2a016aacac5137fe1dd30521d636a3cf452070"
+    "/worker-3VQXQEPA.js": "47aa13b3565203b5771063a839962c8483aabddf",
+    "/worker-L4LO4MRR.js": "ea4929b394fb090e9f1bdae6c750d89a2f6233a3",
+    "/worker-OPHESJCX.js": "30c9176a46696c12c2f86c645aa3589eb2851bae",
+    "/worker-W42UAPDH.js": "5d5557f4db23853ade7c8f0fee2b1769b20c44e6"
   },
   "navigationUrls": [
     {

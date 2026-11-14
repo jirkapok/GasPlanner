@@ -1,3 +1,12 @@
+## [0.24.2](https://github.com/jirkapok/GasPlanner/compare/v0.24.1...v0.24.2) (2026-11-14)
+
+
+### Bug Fixes
+
+* air break durations changed through options service ([ccd83b9](https://github.com/jirkapok/GasPlanner/commit/ccd83b9bb620145ba0bcb469c0b32c0388296afd))
+* first dive tissues saturated at the dive altitude ([5a7c250](https://github.com/jirkapok/GasPlanner/commit/5a7c250df24311824d46eb6e3210115d6df9f86b))
+* tank O2 pinned to Air by the new He content ([41a9b04](https://github.com/jirkapok/GasPlanner/commit/41a9b043f9b4e40a076819655fbf3d85cbc71397))
+
 ## [0.24.1](https://github.com/jirkapok/GasPlanner/compare/v0.24.0...v0.24.1) (2026-11-14)
 
 

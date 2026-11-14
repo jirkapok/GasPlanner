@@ -368,6 +368,11 @@ export class Tank implements TankFill {
      * Rounding to 4 decimals first removes the compressibility search noise (precision 0.000001 b).
      */
     private consumedPressure(consumedVolume: number): number {
+        // prevents the compressibility search, if nothing was consumed
+        if (consumedVolume <= Tank.minimumZero) {
+            return Tank.minimumZero;
+        }
+
         const endVolume = Math.max(this.volume - consumedVolume, Tank.minimumZero);
         const endPressure = Tank.toTankPressure(this.gas, this.size, endVolume);
         const consumedPressure = Precision.round(this.startPressure - endPressure, 4);

@@ -2,7 +2,11 @@ import { Injectable, signal } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { ConsumptionByMix, IConsumedMix } from 'scuba-physics';
+import {
+    ConsumptionByMix, IConsumedMix,
+    SurfaceIntervalParameters, BuhlmannAlgorithm,
+    TissueOverPressures
+} from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -131,8 +135,27 @@ export class ProfileComparatorService extends Streamed {
     }
 
     public get overPressures(): SaturationComparison {
-        const builder = new ProfileComparisonBuilder(this.profileA, this.profileB, this.alignByEnd);
-        return builder.createSaturationComparison();
+        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
+        const surfaceInterval = Math.abs(durationDiff);
+
+        // Add to the shorter one and don't store it in the result, since it is used only for the diff
+        if(durationDiff > 0) {
+            const profileBOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
+            return {
+                profileAOverPressures: this.profileAResults.tissueOverPressures,
+                profileBOverPressures: profileBOverPressures
+            };
+        }
+
+        const profileAOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
+        return {
+            profileAOverPressures: profileAOverPressures,
+            profileBOverPressures: this.profileBResults.tissueOverPressures
+        };
+    }
+
+    public get restInterval(): number {
+        return this.schedules.restInterval;
     }
 
     public get alignByEnd(): boolean {
@@ -203,10 +226,36 @@ export class ProfileComparatorService extends Streamed {
         const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
         this._wayPoints.set(builder.createDiveComparison());
     }
+
+    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
+        if (this.alignByEnd) {
+            const pressuresBeforeDive = this.applySurfaceIntervalBeforeDive(profile);
+            return [...pressuresBeforeDive, ...profile.diveResult.tissueOverPressures];
+        }
+
+        const surfacePressures = this.applySurfaceIntervalAfterDive(profile, surfaceInterval);
+        return [...profile.diveResult.tissueOverPressures, ...surfacePressures];
+    }
+
+    private applySurfaceIntervalBeforeDive(profile: DiveSchedule): HeatMapOverPressures {
+        const shorterLength = profile.diveResult.tissueOverPressures.length;
+        const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
+            ? this.profileBResults.tissueOverPressures.length
+            : this.profileAResults.tissueOverPressures.length;
+        return Array.from(
+            { length: longerLength - shorterLength },
+            () => new Array<null>(16).fill(null)
+        ) as HeatMapOverPressures;
+    }
+
+    private applySurfaceIntervalAfterDive(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
+        const restInterval = this.schedules.restInterval;
+        return profile.overPressuresWithSurfaceInterval(surfaceInterval + restInterval);
+    }
 }
 
 /** Creates a ComparedWaypoint array from two WayPoint arrays */
-class WaypointsDiffBuilder {
+export class WaypointsDiffBuilder {
     public diveComparison: ComparedWaypoint[] = [];
     private wayPointA: WayPoint | undefined;
     private wayPointB: WayPoint | undefined;
@@ -322,78 +371,5 @@ class WaypointsDiffBuilder {
             this.pushBWith(undefined);
             this.updateB();
         }
-    }
-}
-
-/** Creates a ProfileComparison from two DiveSchedules, taking alignByEnd into consideration. */
-class ProfileComparisonBuilder {
-    constructor(
-        private readonly scheduleA: DiveSchedule,
-        private readonly scheduleB: DiveSchedule,
-        private readonly alignByEnd: boolean
-    ) {}
-
-    public createSaturationComparison(): SaturationComparison {
-        return this.alignByEnd
-            ? this.createEndAlignComparison()
-            : this.createStartAlignComparison();
-    }
-
-    private createStartAlignComparison(): SaturationComparison {
-        const totalA = this.totalDuration(this.scheduleA);
-        const totalB = this.totalDuration(this.scheduleB);
-
-        const pressuresA = this.pressuresWithPadding(
-            this.scheduleA,
-            Math.max(0, totalB - totalA)
-        );
-        const pressuresB = this.pressuresWithPadding(
-            this.scheduleB,
-            Math.max(0, totalA - totalB)
-        );
-
-        return {
-            profileAOverPressures: pressuresA,
-            profileBOverPressures: pressuresB
-        };
-    }
-
-    private createEndAlignComparison(): SaturationComparison {
-        const divePressuresA = this.scheduleA.diveResult.tissueOverPressures.length;
-        const divePressuresB = this.scheduleB.diveResult.tissueOverPressures.length;
-        const restA = this.scheduleA.restInterval;
-        const restB = this.scheduleB.restInterval;
-
-        const pressuresA = [
-            ...this.getEmptyPressures(Math.max(0, divePressuresB - divePressuresA)),
-            ...this.pressuresWithPadding(this.scheduleA, Math.max(0, restB - restA))
-        ];
-
-        const pressuresB = [
-            ...this.getEmptyPressures(Math.max(0, divePressuresA - divePressuresB)),
-            ...this.pressuresWithPadding(this.scheduleB, Math.max(0, restA - restB))
-        ];
-
-        return {
-            profileAOverPressures: pressuresA,
-            profileBOverPressures: pressuresB
-        };
-    }
-
-    private totalDuration(schedule: DiveSchedule): number {
-        return schedule.diveResult.totalDuration + schedule.restInterval;
-    }
-
-    private pressuresWithPadding(schedule: DiveSchedule, paddingInterval: number): HeatMapOverPressures {
-        return paddingInterval > 0
-            ? schedule.overPressuresWithSurfaceInterval(paddingInterval)
-            : schedule.overPressuresWithSurfaceInterval();
-    }
-
-    private getEmptyPressures(length: number): HeatMapOverPressures {
-        return Array.from(
-            { length },
-            () => new Array<null>(16).fill(null)
-        ) as HeatMapOverPressures;
     }
 }

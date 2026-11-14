@@ -53,7 +53,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
             .withoutHoverLabels()
             .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
-            .withRestInterval(() => this.profileComparatorService.profileA.restInterval)
+            .withRestInterval(() => this.profileComparatorService.restInterval)
             .create(() => this.profileComparatorService.profileAResults);
         this.profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -63,7 +63,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor(ChartPlotterFactory.eventFillColorB)
             .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
-            .withRestInterval(() => this.profileComparatorService.profileB.restInterval)
+            .withRestInterval(() => this.profileComparatorService.restInterval)
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,

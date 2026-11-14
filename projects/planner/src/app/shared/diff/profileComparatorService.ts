@@ -2,11 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import {
-    ConsumptionByMix, IConsumedMix,
-    SurfaceIntervalParameters, BuhlmannAlgorithm,
-    TissueOverPressures
-} from 'scuba-physics';
+import { ConsumptionByMix, IConsumedMix, } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -136,18 +132,49 @@ export class ProfileComparatorService extends Streamed {
 
     public get overPressures(): SaturationComparison {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const rest = this.schedules.restInterval;
+        const rest = this.restInterval;
         const diff = Math.abs(durationDiff);
+        const aIsLonger = durationDiff > 0;
 
+
+        if (this.alignByEnd) {
+            const pressuresA = this.profileA.overPressuresWithSurfaceInterval(rest);
+            const pressuresB = this.profileB.overPressuresWithSurfaceInterval(rest);
+            const lenDiff = Math.abs(pressuresA.length - pressuresB.length);
+
+            return aIsLonger
+                ? {
+                    profileAOverPressures: pressuresA,
+                    profileBOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresB]
+                }
+                : {
+                    profileAOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresA],
+                    profileBOverPressures: pressuresB
+                }
+        }
+
+        return aIsLonger
+            ? {
+                profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest),
+                profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest + diff)
+            }
+            : {
+                profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest + diff),
+                profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest)
+            }
+
+        /*
         return durationDiff > 0
             ? {
                 profileAOverPressures: this.longerDivePressures(this.profileA, rest),
+                // diff only gets applied if alignByEnd is false, else the diff is represented by the empty padding
                 profileBOverPressures: this.shorterDivePressures(this.profileB, rest + diff)
             }
             : {
                 profileAOverPressures: this.shorterDivePressures(this.profileA, rest + diff),
                 profileBOverPressures: this.longerDivePressures(this.profileB, rest)
             };
+        */
     }
 
     public get restInterval(): number {
@@ -223,26 +250,9 @@ export class ProfileComparatorService extends Streamed {
         this._wayPoints.set(builder.createDiveComparison());
     }
 
-    private longerDivePressures(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
-        return profile.overPressuresWithSurfaceInterval(surfaceInterval);
-    }
-
-    private shorterDivePressures(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
-        if (this.alignByEnd) {
-            const pressuresBeforeDive = this.createEmptyPressures(profile);
-            return [...pressuresBeforeDive, ...profile.overPressuresWithSurfaceInterval(surfaceInterval)];
-        }
-
-        return profile.overPressuresWithSurfaceInterval(surfaceInterval);
-    }
-
-    private createEmptyPressures(profile: DiveSchedule): HeatMapOverPressures {
-        const shorterLength = profile.diveResult.tissueOverPressures.length;
-        const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
-            ? this.profileBResults.tissueOverPressures.length
-            : this.profileAResults.tissueOverPressures.length;
+    private createEmptyPressures(length: number): HeatMapOverPressures {
         return Array.from(
-            { length: longerLength - shorterLength },
+            { length },
             () => new Array<null>(16).fill(null)
         ) as HeatMapOverPressures;
     }

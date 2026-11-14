@@ -21,7 +21,7 @@ Build order matters: the `scuba-physics` library must be built before the `plann
 - `npm run test-ci` / `npm run test-lib-ci` — headless, single-run variants with coverage used in CI (Cobertura in `coverage/<project>`, JUnit in `test-results/<project>`).
 - `npm run test-performance` — `scuba-physics` `*.performance.spec.ts` (separate `test-performance` target, Chromium with memory measurement flags, see `projects/scuba-physics/vitest-performance.config.mts`).
 - Vitest runner settings (spy restore, reporters, module resolution) live in `projects/*/vitest-base.config.mts`, referenced by `runnerConfig` in `angular.json`. Test helpers shared between specs go to `*.testing.ts` files, never export them from a `*.spec.ts` (Vitest would run the exporting spec again in every importing file).
-- `npm run lint` — `ng lint` (Angular ESLint) across both projects.
+- `npm run lint` — `ng lint` (Angular ESLint) across both projects; the `planner` target also lints the Playwright `e2e/` specs and `playwright.config.ts` (type checked through `e2e/tsconfig.json`).
 - `npm run e2e` — Playwright E2E (`playwright-ng-schematics` builder), auto-starts the dev server; single spec currently in `e2e/startupSmoke.spec.ts`.
 - Run a single spec file: `ng test planner --no-watch --include='**/foo.spec.ts'` (swap `planner` for `scuba-physics` for library specs).
 - Windows PowerShell equivalents of the main build/test flow are in `build/*.ps1`, but the npm scripts above are the primary workflow.

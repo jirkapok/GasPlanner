@@ -31,4 +31,13 @@ export default defineConfig([globalIgnores([
             style: 'kebab-case',
         }],
     },
+}, {
+    // Playwright E2E tests of the planner, not part of any planner tsconfig
+    files: ['e2e/**/*.ts', 'playwright.config.ts'],
+
+    languageOptions: {
+        parserOptions: {
+            project: ['e2e/tsconfig.json'],
+        },
+    },
 }]);

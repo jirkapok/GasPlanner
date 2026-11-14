@@ -127,7 +127,9 @@
             "eslintConfig": "projects/planner/eslint.config.mjs",
             "lintFilePatterns": [
               "projects/planner/**/*.ts",
-              "projects/planner/**/*.html"
+              "projects/planner/**/*.html",
+              "e2e/**/*.ts",
+              "playwright.config.ts"
             ]
           }
         },

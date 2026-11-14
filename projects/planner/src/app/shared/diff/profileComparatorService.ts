@@ -136,22 +136,18 @@ export class ProfileComparatorService extends Streamed {
 
     public get overPressures(): SaturationComparison {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const surfaceInterval = Math.abs(durationDiff);
+        const rest = this.schedules.restInterval;
+        const diff = Math.abs(durationDiff);
 
-        // Add to the shorter one and don't store it in the result, since it is used only for the diff
-        if(durationDiff > 0) {
-            const profileBOverPressures = this.applySurfaceInterval(this.profileB, surfaceInterval);
-            return {
-                profileAOverPressures: this.profileAResults.tissueOverPressures,
-                profileBOverPressures: profileBOverPressures
+        return durationDiff > 0
+            ? {
+                profileAOverPressures: this.longerDivePressures(this.profileA, rest),
+                profileBOverPressures: this.shorterDivePressures(this.profileB, rest + diff)
+            }
+            : {
+                profileAOverPressures: this.shorterDivePressures(this.profileA, rest + diff),
+                profileBOverPressures: this.longerDivePressures(this.profileB, rest)
             };
-        }
-
-        const profileAOverPressures = this.applySurfaceInterval(this.profileA, surfaceInterval);
-        return {
-            profileAOverPressures: profileAOverPressures,
-            profileBOverPressures: this.profileBResults.tissueOverPressures
-        };
     }
 
     public get restInterval(): number {
@@ -227,17 +223,20 @@ export class ProfileComparatorService extends Streamed {
         this._wayPoints.set(builder.createDiveComparison());
     }
 
-    private applySurfaceInterval(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
-        if (this.alignByEnd) {
-            const pressuresBeforeDive = this.applySurfaceIntervalBeforeDive(profile);
-            return [...pressuresBeforeDive, ...profile.diveResult.tissueOverPressures];
-        }
-
-        const surfacePressures = this.applySurfaceIntervalAfterDive(profile, surfaceInterval);
-        return [...profile.diveResult.tissueOverPressures, ...surfacePressures];
+    private longerDivePressures(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
+        return profile.overPressuresWithSurfaceInterval(surfaceInterval);
     }
 
-    private applySurfaceIntervalBeforeDive(profile: DiveSchedule): HeatMapOverPressures {
+    private shorterDivePressures(profile: DiveSchedule, surfaceInterval: number): HeatMapOverPressures {
+        if (this.alignByEnd) {
+            const pressuresBeforeDive = this.createEmptyPressures(profile);
+            return [...pressuresBeforeDive, ...profile.overPressuresWithSurfaceInterval(surfaceInterval)];
+        }
+
+        return profile.overPressuresWithSurfaceInterval(surfaceInterval);
+    }
+
+    private createEmptyPressures(profile: DiveSchedule): HeatMapOverPressures {
         const shorterLength = profile.diveResult.tissueOverPressures.length;
         const longerLength = this.profileAResults.tissueOverPressures.length === shorterLength
             ? this.profileBResults.tissueOverPressures.length
@@ -246,11 +245,6 @@ export class ProfileComparatorService extends Streamed {
             { length: longerLength - shorterLength },
             () => new Array<null>(16).fill(null)
         ) as HeatMapOverPressures;
-    }
-
-    private applySurfaceIntervalAfterDive(profile: DiveSchedule, surfaceInterval: number): TissueOverPressures[] {
-        const restInterval = this.schedules.restInterval;
-        return profile.overPressuresWithSurfaceInterval(surfaceInterval + restInterval);
     }
 }
 

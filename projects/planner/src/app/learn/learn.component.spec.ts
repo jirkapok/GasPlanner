@@ -1,7 +1,7 @@
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LearnComponent } from './learn.component';
-import { NgxMdModule } from 'ngx-md';
+import { provideDocsMarkdown } from '../shared/markdownDocs';
 import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,8 @@ import { ReloadDispatcher } from '../shared/reloadDispatcher';
 import { ApplicationSettingsService } from '../shared/ApplicationSettings';
 import { LanguageService } from '../shared/language.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../testing/onPush.testing';
+import { TranslateService } from '@ngx-translate/core';
 
 describe('LearnComponent', () => {
     let component: LearnComponent;
@@ -33,7 +35,6 @@ describe('LearnComponent', () => {
                 CommonModule,
                 FormsModule,
                 ReactiveFormsModule,
-                NgxMdModule,
                 FontAwesomeModule,
                 LearnComponent,
                 MdbModalModule,
@@ -41,6 +42,7 @@ describe('LearnComponent', () => {
             providers: [
                 provideHttpClient(withXhr()),
                 provideHttpClientTesting(),
+                provideDocsMarkdown(),
                 Urls,
                 QuizService,
                 SubViewStorage, ViewStates, Preferences, PreferencesStore,
@@ -118,5 +120,44 @@ describe('LearnComponent', () => {
 
         expect(component.showScore).toBeFalsy();
         expect(component.question).not.toBe(oldQuestion);
+    });
+});
+
+describe('LearnComponent OnPush', () => {
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [LearnComponent],
+            providers: [
+                provideHttpClient(withXhr()), provideHttpClientTesting(),
+                Urls, QuizService, SubViewStorage, ViewStates, Preferences, PreferencesStore,
+                ViewSwitchService, DiveSchedules, UnitConversion, ReloadDispatcher,
+                ApplicationSettingsService, LanguageService, provideTestTranslate()
+            ]
+        });
+    });
+
+    it('renders question selected outside Angular events', async () => {
+        const fixture = await renderOnPush(LearnComponent);
+        const quizService = TestBed.inject(QuizService);
+        const topic = quizService.topics[1];
+
+        quizService.selectByName(topic.name, topic.categories[0].name);
+        await fixture.whenStable();
+
+        const text = (fixture.nativeElement as HTMLElement).textContent;
+        expect(text).toContain(`${topic.name} / ${topic.categories[0].name}`);
+        expect(text).toContain(quizService.question.renderedQuestion);
+    });
+
+    it('renders question retranslated outside Angular events', async () => {
+        const fixture = await renderOnPush(LearnComponent);
+        const templateKey = TestBed.inject(QuizService).question.templateKey;
+        const translate = TestBed.inject(TranslateService);
+        translate.setTranslation('cs', { [templateKey]: 'Ceska otazka' });
+
+        translate.use('cs');
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('Ceska otazka');
     });
 });

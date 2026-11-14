@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-depth',
     templateUrl: './depth.component.html',
     styleUrls: ['./depth.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, TranslatePipe]
 })
 export class DepthComponent implements OnInit {
@@ -23,15 +22,15 @@ export class DepthComponent implements OnInit {
     @Output() public depthChange = new EventEmitter<number>();
     @Output() public assignMaxDepth = new EventEmitter();
 
-    constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
-    }
+        public units: UnitConversion
+    ) {}
 
     public get depthInvalid(): boolean {
         const depthField = this.depthForm.get(this.controlName);
-        return !depthField || this.inputs.controlInValid(depthField);
+        return !depthField || InputControls.isControlInvalid(depthField);
     }
 
     public depthChanged() {

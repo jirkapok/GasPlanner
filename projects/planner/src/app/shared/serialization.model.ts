@@ -39,6 +39,8 @@ export interface AppOptionsDto {
     imperialUnits: boolean;
     isComplex: boolean;
     consumptionInLiters: boolean;
+    /** Rebreather waypoints show the bailout profile, optional because of upgrade */
+    showBailoutProfile?: boolean;
     language: string;
     maxDensity: number;
     primaryTankReserve: number;
@@ -57,7 +59,7 @@ export interface ITankBound {
     id: number;
     /** in bars to avoid conversions */
     workingPressureBars: number;
-    tank: Tank;
+    tank: Readonly<Tank>;
 }
 
 export interface PlanRequestDto {
@@ -132,6 +134,7 @@ export interface EventDto {
     type: EventType;
     message?: string;
     gas?: GasDto;
+    value?: number;
 }
 
 export interface CalculatedProfileDto {
@@ -166,9 +169,9 @@ export interface ConsumptionOptionsDto {
 export interface ConsumedDto {
     /** Tank id */
     id: number;
-    // Using pressure instead of volumes, to prevent precision loss when serializing, volume isn't rounded anyway.
-    consumed: number;
-    reserve: number;
+    // Liters, the primary value of the consumption calculation, bars are derived by the Tank.
+    consumedVolume: number;
+    reserveVolume: number;
 }
 
 export interface ConsumedGasDto {
@@ -261,6 +264,14 @@ export interface RebreatherDto {
     setpoint?: number;
     /** mCCR oxygen flow in liters/minute, optional because of upgrade */
     o2Flow?: number;
+    /** eCCR setpoint in bars shallower than the switch depth, optional because of upgrade */
+    descentSetpoint?: number;
+    /** eCCR setpoint in bars deeper than the switch depth, optional because of upgrade */
+    bottomSetpoint?: number;
+    /** eCCR setpoint in bars from the deepest point, optional because of upgrade */
+    decoSetpoint?: number;
+    /** eCCR setpoint switch depth in meters, optional because of upgrade */
+    setpointSwitchDepth?: number;
 }
 
 export interface QuizSessionDto {

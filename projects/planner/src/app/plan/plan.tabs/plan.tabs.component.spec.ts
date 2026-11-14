@@ -19,6 +19,11 @@ import { provideHttpClient, withXhr } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
+import { TranslateService } from '@ngx-translate/core';
+import { CircuitType } from 'scuba-physics';
+import { useEnglishCircuitNames } from '../../shared/circuit-names.testing';
 
 describe('PlanTabsComponent', () => {
     let component: PlanTabsComponent;
@@ -47,5 +52,101 @@ describe('PlanTabsComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+});
+
+describe('PlanTabsComponent OnPush', () => {
+    let fixture: ComponentFixture<PlanTabsComponent>;
+
+    const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        fixture = await renderOnPush(PlanTabsComponent);
+    });
+
+    it('renders tab of dive added outside the component', async () => {
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        await fixture.whenStable();
+
+        expect(text()).toContain(second.title);
+    });
+
+    it('renders removed dive tab', async () => {
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        await fixture.whenStable();
+        const title = second.title;
+        expect(text()).toContain(title);
+
+        schedules.remove(second);
+        await fixture.whenStable();
+
+        expect(text()).not.toContain(title);
+    });
+});
+
+describe('PlanTabsComponent OnPush title', () => {
+    it('renders title of depth changed outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
+        const fixture = await renderOnPush(PlanTabsComponent);
+
+        TestBed.inject(DiveSchedules).selectedDepths.plannedDepth = 40;
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. OC 40 m');
+    });
+
+    it('renders title of circuit changed outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
+        const fixture = await renderOnPush(PlanTabsComponent);
+
+        // as the tanks card switches the circuit
+        TestBed.inject(DiveSchedules).selectedOptions.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('1. mCCR');
+    });
+});
+
+describe('PlanTabsComponent OnPush titles reset', () => {
+    it('renders titles of all dives reset to simple', async () => {
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        const fixture = await renderOnPush(PlanTabsComponent);
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.depths.plannedDepth = 20;
+        second.depths.addSegment();
+        second.depths.levels[0].duration = 0.1;
+        second.depths.levels[1].duration = 0.1;
+        second.depths.levels[2].duration = 0.1;
+        second.depths.levelChanged();
+        await fixture.whenStable();
+        const complexTitle = second.title;
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).toContain(complexTitle);
+
+        TestBed.inject(ViewSwitchService).isComplex = false;
+        await fixture.whenStable();
+
+        expect(second.title).not.toBe(complexTitle);
+        expect(text()).toContain(second.title);
+        expect(text()).not.toContain(complexTitle);
     });
 });

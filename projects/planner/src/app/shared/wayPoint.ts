@@ -71,9 +71,9 @@ export class WayPoint {
     }
 
     public static fromSegment(units: UnitConversion, segment: Segment, startOffset: number = 0): WayPoint {
-        const duration = segment.duration + startOffset;
-        const newWayPoint = new WayPoint(units, duration, segment.endDepth, segment.startDepth);
+        const newWayPoint = new WayPoint(units, segment.duration, segment.endDepth, segment.startDepth);
         newWayPoint.startTime = startOffset;
+        newWayPoint.endTime = Precision.roundTwoDecimals(startOffset + segment.duration);
         const gasName = GasNames.nameFor(segment.gas.fO2, segment.gas.fHe);
         newWayPoint._gasName = gasName;
         newWayPoint.speed = segment.speed;

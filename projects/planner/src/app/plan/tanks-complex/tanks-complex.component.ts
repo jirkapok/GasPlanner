@@ -1,9 +1,10 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { faBatteryHalf, faPlus, faMinus, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { Precision, TankTemplate, GasToxicity, CircuitType, RebreatherTanks } from 'scuba-physics';
 import { PscrOptionsComponent } from '../pscr-options/pscr-options.component';
 import { MccrOptionsComponent } from '../mccr-options/mccr-options.component';
+import { EccrOptionsComponent } from '../eccr-options/eccr-options.component';
 import { takeUntil } from 'rxjs';
 import { FormArray, NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
@@ -41,7 +42,6 @@ interface TanksForm {
     selector: 'app-tanks-complex',
     templateUrl: './tanks-complex.component.html',
     styleUrls: ['./tanks-complex.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule,
         CardHeaderComponent,
@@ -54,7 +54,8 @@ interface TanksForm {
         TranslatePipe,
         MdbDropdownModule,
         PscrOptionsComponent,
-        MccrOptionsComponent
+        MccrOptionsComponent,
+        EccrOptionsComponent
     ],
 })
 export class TanksComplexComponent extends Streamed implements OnInit {
@@ -70,7 +71,6 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
@@ -107,6 +107,15 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         return this.schedules.selectedOptions.isPscr;
     }
 
+    public get isEccr(): boolean {
+        return this.schedules.selectedOptions.isEccr;
+    }
+
+    /** mCCR or eCCR with diluent and oxygen tanks */
+    public get isClosedCircuit(): boolean {
+        return this.schedules.selectedOptions.isClosedCircuit;
+    }
+
     /** Help of the currently shown tab */
     public get helpDocument(): string {
         return this.rebreatherTab ? 'rebreather' : 'tanks';
@@ -126,7 +135,8 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     public get rebreatherInvalid(): boolean {
         const pscrInvalid = this.rootForm.get(PscrOptionsComponent.formName)?.invalid ?? false;
         const mccrInvalid = this.rootForm.get(MccrOptionsComponent.formName)?.invalid ?? false;
-        return pscrInvalid || mccrInvalid;
+        const eccrInvalid = this.rootForm.get(EccrOptionsComponent.formName)?.invalid ?? false;
+        return pscrInvalid || mccrInvalid || eccrInvalid;
     }
 
     private get tanksService(): TanksService {
@@ -169,18 +179,23 @@ export class TanksComplexComponent extends Streamed implements OnInit {
     }
 
     public useMccr(): void {
-        this.tanksService.prepareForMccr();
+        this.tanksService.prepareForClosedCircuit();
         this.applyCircuit(CircuitType.mccr);
     }
 
-    /** mCCR diluent label */
-    public isDiluent(index: number): boolean {
-        return this.isMccr && index === 0;
+    public useEccr(): void {
+        this.tanksService.prepareForClosedCircuit();
+        this.applyCircuit(CircuitType.eccr);
     }
 
-    /** mCCR oxygen label, its gas can't be changed */
+    /** mCCR/eCCR diluent label */
+    public isDiluent(index: number): boolean {
+        return this.isClosedCircuit && index === 0;
+    }
+
+    /** mCCR/eCCR oxygen label, its gas can't be changed */
     public isOxygen(index: number): boolean {
-        return this.isMccr && index === RebreatherTanks.oxygenIndex;
+        return this.isClosedCircuit && index === RebreatherTanks.oxygenIndex;
     }
 
     public canRemove(index: number): boolean {
@@ -198,33 +213,33 @@ export class TanksComplexComponent extends Streamed implements OnInit {
 
     public gasSac(index: number): number {
         const bound = this.tanks[index];
-        const sac = this.schedules.selectedOptions.diverOptions.gasSac(bound.tank);
+        const sac = this.schedules.selectedOptions.diverOptions.gasSac(bound.algorithmTank);
         return this.units.fromBar(sac);
     }
 
     public gasHeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankHe);
+        return InputControls.isControlInvalid(tank.controls.tankHe);
     }
 
     public gasO2Invalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankO2);
+        return InputControls.isControlInvalid(tank.controls.tankO2);
     }
 
     public workPressureInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankWorkPressure);
+        return InputControls.isControlInvalid(tank.controls.tankWorkPressure);
     }
 
     public startPressureInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankStartPressure);
+        return InputControls.isControlInvalid(tank.controls.tankStartPressure);
     }
 
     public tankSizeInvalid(index: number): boolean {
         const tank = this.tanksGroup.at(index);
-        return this.inputs.controlInValid(tank.controls.tankSize);
+        return InputControls.isControlInvalid(tank.controls.tankSize);
     }
 
     public addTank(): void {
@@ -274,8 +289,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         bound.size = Number(values.tankSize);
         bound.workingPressure = Number(values.tankWorkPressure);
         bound.startPressure = Number(values.tankStartPressure);
-        bound.o2 = Number(values.tankO2);
-        bound.he = Number(values.tankHe);
+        bound.assignGas(Number(values.tankO2), Number(values.tankHe));
 
         this.reloadGas(bound, tankControl);
         this.dispatcher.sendTankChanged();
@@ -330,7 +344,7 @@ export class TanksComplexComponent extends Streamed implements OnInit {
         this.cdr.markForCheck();
     }
 
-    /** mCCR oxygen tank gas is fixed, only its size and pressure are editable */
+    /** mCCR/eCCR oxygen tank gas is fixed, only its size and pressure are editable */
     private lockOxygenGas(): void {
         this.tanksGroup.controls.forEach((tankControl, index) => {
             const gasControls = [tankControl.controls.tankO2, tankControl.controls.tankHe];

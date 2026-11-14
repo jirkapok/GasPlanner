@@ -15,29 +15,108 @@ import { Preferences } from '../../shared/preferences';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { DiveSchedules } from '../../shared/dive.schedules';
+import { CircuitType, Tank } from 'scuba-physics';
 import { ShareDiveService } from '../../shared/ShareDiveService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../shared/language.service';
 import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { renderOnPush } from '../../../testing/onPush.testing';
+
+const configureTestBed = (): void => {
+    TestBed.configureTestingModule({
+        imports: [DiveInfoComponent],
+        declarations: [MdbTabComponent, MdbTabsComponent],
+        providers: [
+            UnitConversion, PlannerService, SubViewStorage,
+            WorkersFactoryCommon, WayPointsService,
+            ViewStates, PreferencesStore, Preferences,
+            ViewSwitchService, ReloadDispatcher,
+            DiveSchedules, ShareDiveService, ApplicationSettingsService, DatePipe,
+            MdbModalService, provideTestTranslate(), LanguageService
+        ]
+    });
+};
+
+describe('DiveInfoComponent OnPush', () => {
+    let fixture: ComponentFixture<DiveInfoComponent>;
+    let element: HTMLElement;
+
+    const showConsumedTab = async (): Promise<void> => {
+        fixture.componentInstance.tabs?.setActiveTab(1);
+        await fixture.whenStable();
+    };
+
+    beforeEach(async () => {
+        configureTestBed();
+        fixture = await renderOnPush(DiveInfoComponent);
+        element = fixture.nativeElement as HTMLElement;
+    });
+
+    it('renders total dive time calculated outside Angular events', async () => {
+        const before = element.querySelector('#total-dive-time-value')?.textContent;
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        const after = element.querySelector('#total-dive-time-value')?.textContent;
+        expect(after).not.toEqual(before);
+    });
+
+    it('renders tank chart after consumption finished outside Angular events', async () => {
+        await showConsumedTab();
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(0);
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(1);
+    });
+
+    it('open circuit consumed tanks are not grouped', async () => {
+        await showConsumedTab();
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelector('#rebreatherTanksTitle')).toBeNull();
+        expect(element.querySelector('#bailoutTanksTitle')).toBeNull();
+    });
+
+    it('closed circuit consumed tanks are grouped to rebreather and bailout', async () => {
+        const dive = TestBed.inject(DiveSchedules).selected;
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+        dive.optionsService.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await showConsumedTab();
+        TestBed.inject(PlannerService).calculate(dive.id);
+        await fixture.whenStable();
+
+        expect(element.querySelector('#rebreatherTanksTitle')?.textContent).toContain('diveInfo.rebreatherTanks');
+        expect(element.querySelector('#bailoutTanksTitle')?.textContent).toContain('diveInfo.bailoutTanks');
+        expect(element.querySelector('#tankChartRole-1')?.textContent).toContain('tanksComplex.diluent');
+        expect(element.querySelector('#tankChartRole-2')?.textContent).toContain('tanksComplex.oxygen');
+        expect(element.querySelector('#tankChartRole-3')).toBeNull();
+        expect(element.querySelectorAll('app-tankchart').length).toEqual(3);
+    });
+
+    it('renders gas chart after consumption finished outside Angular events', async () => {
+        TestBed.inject(ViewSwitchService).switchConsumption();
+        await showConsumedTab();
+
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelectorAll('app-gaschart').length).toEqual(1);
+    });
+});
 
 describe('DiveInfoComponent', () => {
     let component: DiveInfoComponent;
     let fixture: ComponentFixture<DiveInfoComponent>;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [DiveInfoComponent],
-            declarations: [MdbTabComponent, MdbTabsComponent],
-            providers: [
-                UnitConversion, PlannerService, SubViewStorage,
-                WorkersFactoryCommon, WayPointsService,
-                ViewStates, PreferencesStore, Preferences,
-                ViewSwitchService, ReloadDispatcher,
-                DiveSchedules, ShareDiveService, ApplicationSettingsService, DatePipe,
-                MdbModalService, provideTestTranslate(), LanguageService
-            ]
-        });
+        configureTestBed();
         fixture = TestBed.createComponent(DiveInfoComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
@@ -98,5 +177,22 @@ describe('DiveInfoComponent', () => {
             expect(viewSwitch.consumptionInLiters).toBe(false);
             expect(calculateSpy).not.toHaveBeenCalled();
         });
+    });
+});
+
+describe('DiveInfoComponent view switch', () => {
+    it('renders consumption in liters switched outside the component', async () => {
+        configureTestBed();
+        const fixture = await renderOnPush(DiveInfoComponent);
+        const checkbox = (): HTMLInputElement | null =>
+            (fixture.nativeElement as HTMLElement).querySelector('#consumptionInLiters');
+        fixture.componentInstance.tabs?.setActiveTab(1);
+        await fixture.whenStable();
+        expect(checkbox()?.checked).toBe(false);
+
+        TestBed.inject(ViewSwitchService).consumptionInLiters = true;
+        await fixture.whenStable();
+
+        expect(checkbox()?.checked).toBe(true);
     });
 });

@@ -163,7 +163,8 @@ export class PlanUrlSerialization {
 
     /**
      * Optional rebreather group: index 0 = circuit type, the rest are indexed rebreather options:
-     * pSCR injection ratio, metabolic O2, mCCR oxygen flow, loop volume, setpoint.
+     * pSCR injection ratio, metabolic O2, mCCR oxygen flow, loop volume, setpoint,
+     * eCCR descent, bottom and deco setpoints, setpoint switch depth in meters.
      * Missing values use defaults, missing group means open circuit.
      */
     private static fromRebreatherParam(rebreatherParam: string): RebreatherDto | undefined {
@@ -180,14 +181,19 @@ export class PlanUrlSerialization {
             metabolicO2: context.parseNumberOrDefault(2, RebreatherDefaults.metabolicO2),
             o2Flow: context.parseNumberOrDefault(3, RebreatherDefaults.o2Flow),
             loopVolume: context.parseNumberOrDefault(4, RebreatherDefaults.loopVolume),
-            setpoint: context.parseNumberOrDefault(5, RebreatherDefaults.setpoint)
+            setpoint: context.parseNumberOrDefault(5, RebreatherDefaults.setpoint),
+            descentSetpoint: context.parseNumberOrDefault(6, RebreatherDefaults.descentSetpoint),
+            bottomSetpoint: context.parseNumberOrDefault(7, RebreatherDefaults.bottomSetpoint),
+            decoSetpoint: context.parseNumberOrDefault(8, RebreatherDefaults.decoSetpoint),
+            setpointSwitchDepth: context.parseNumberOrDefault(9, RebreatherDefaults.setpointSwitchDepth)
         };
     }
 
     private static toRebreatherParam(rebreather: RebreatherOptions): string {
         // all values for every rebreather, so the indexes stay stable
         return `${rebreather.circuit},${rebreather.injectionRatio},${rebreather.metabolicO2},` +
-            `${rebreather.o2Flow},${rebreather.loopVolume},${rebreather.setpoint}`;
+            `${rebreather.o2Flow},${rebreather.loopVolume},${rebreather.setpoint},` +
+            `${rebreather.descentSetpoint},${rebreather.bottomSetpoint},${rebreather.decoSetpoint},${rebreather.setpointSwitchDepth}`;
     }
 
     private static fromDiverParam(parseParam: string): DiverDto {

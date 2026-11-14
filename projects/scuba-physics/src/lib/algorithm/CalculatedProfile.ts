@@ -38,6 +38,8 @@ export enum EventType {
     maxDepth = 14,
     /* Unable ot switch to bottom gas, in case of generating air breaks */
     missingAirBreak = 15,
+    /* Rebreather loop ppO2 is lower than minimum or higher than maximum ppO2, value contains the loop ppO2 */
+    ppO2OutOfRange = 16,
 }
 
 export class Event {
@@ -51,7 +53,13 @@ export class Event {
         /** Optional explanation of the event or empty string */
         public message?: string,
         /** Optional data associated with the event, e.g. Gas for gas switch */
-        public gas?: Gas
+        public gas?: Gas,
+        /**
+         * Optional number quantifying the event.
+         * For isobaric counter diffusion it is the fraction of nitrogen (0-1),
+         * by which the gas switch exceeds the limit of the 1/5 rule.
+         */
+        public value?: number
     ) { }
 
     public static create(type: EventType, timeStamp: number, depth: number, gas?: Gas): Event {
@@ -88,6 +96,13 @@ export class EventsFactory {
         return Event.create(EventType.highPpO2, timeStamp, depth);
     }
 
+    /** @param ppO2 loop oxygen partial pressure in bars */
+    public static createPpO2OutOfRange(timeStamp: number, depth: number, ppO2: number): Event {
+        const event = Event.create(EventType.ppO2OutOfRange, timeStamp, depth);
+        event.value = ppO2;
+        return event;
+    }
+
     public static createHighAscentSpeed(timeStamp: number, depth: number): Event {
         return Event.create(EventType.highAscentSpeed, timeStamp, depth);
     }
@@ -104,8 +119,14 @@ export class EventsFactory {
         return Event.create(EventType.maxEndExceeded, timeStamp, depth, gas);
     }
 
-    public static createIsobaricCounterDiffusion(timeStamp: number, depth: number, gas: Gas): Event {
-        return Event.create(EventType.isobaricCounterDiffusion, timeStamp, depth, gas);
+    /**
+     * @param n2OverLimit Fraction of nitrogen (0-1), by which the increase of nitrogen content
+     * exceeds the limit allowed by the 1/5 rule (one fifth of the helium content decrease).
+     */
+    public static createIsobaricCounterDiffusion(timeStamp: number, depth: number, gas: Gas, n2OverLimit?: number): Event {
+        const event = Event.create(EventType.isobaricCounterDiffusion, timeStamp, depth, gas);
+        event.value = n2OverLimit;
+        return event;
     }
 
     public static createHighDensity(timeStamp: number, depth: number, gas: Gas): Event {

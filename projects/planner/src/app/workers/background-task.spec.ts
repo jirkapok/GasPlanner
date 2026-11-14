@@ -31,31 +31,35 @@ class FakeWorker {
 
 describe('BackgroundTask', () => {
     let worker: FakeWorker;
-    let steps: string[];
     let sut: BackgroundTask<number, string>;
 
     beforeEach(() => {
         worker = new FakeWorker();
-        steps = [];
-        sut = new BackgroundTask<number, string>(worker as unknown as Worker, () => steps.push('refreshed'));
+        sut = new BackgroundTask<number, string>(worker as unknown as Worker);
     });
 
-    it('calls afterMessage after subscribers received the message', () => {
-        sut.calculated$.subscribe(() => steps.push('received'));
+    it('Posts request to the worker', () => {
+        sut.calculate(1);
+        expect(worker.posted).toEqual([1]);
+    });
+
+    it('Reports message of the worker', () => {
+        const received: string[] = [];
+        sut.calculated$.subscribe(m => received.push(m));
         worker.reply('a');
-        expect(steps).toEqual(['received', 'refreshed']);
+        expect(received).toEqual(['a']);
     });
 
-    it('calls afterMessage after failure was reported', () => {
-        sut.failed$.subscribe(() => steps.push('failed'));
+    it('Reports error of the worker', () => {
+        let failures = 0;
+        sut.failed$.subscribe(() => failures++);
         worker.fail();
-        expect(steps).toEqual(['failed', 'refreshed']);
+        expect(failures).toEqual(1);
     });
 });
 
 describe('RestartableBackgroundTask', () => {
     let created: FakeWorker[];
-    let steps: string[];
     let sut: RestartableBackgroundTask<number, string>;
 
     const createWorker = (): Worker => {
@@ -66,27 +70,7 @@ describe('RestartableBackgroundTask', () => {
 
     beforeEach(() => {
         created = [];
-        steps = [];
-        sut = new RestartableBackgroundTask<number, string>(createWorker, () => steps.push('refreshed'));
-    });
-
-    it('calls afterMessage after subscribers received the message', () => {
-        sut.calculated$.subscribe(() => steps.push('received'));
-        created[0].reply('a');
-        expect(steps).toEqual(['received', 'refreshed']);
-    });
-
-    it('calls afterMessage after failure was reported', () => {
-        sut.failed$.subscribe(() => steps.push('failed'));
-        created[0].fail();
-        expect(steps).toEqual(['failed', 'refreshed']);
-    });
-
-    it('does not call afterMessage for messages of cancelled worker', () => {
-        sut.cancel();
-        created[0].reply('late');
-        created[0].fail();
-        expect(steps).toEqual([]);
+        sut = new RestartableBackgroundTask<number, string>(createWorker);
     });
 
     it('Posts request to the worker', () => {

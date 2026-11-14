@@ -13,6 +13,7 @@ import { IRestartableTask } from '../../workers/background-task';
 import { ComputerRequestDto, ComputerResultDto, RunTimePointDto } from '../serialization.model';
 import { ComputerProfileService } from './computer-profile.service';
 import { DtoSerialization } from '../dtoSerialization';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 /** Replaces the worker, the test decides what the worker reports */
 class FakeComputerTask implements IRestartableTask<ComputerRequestDto, ComputerResultDto> {
@@ -90,6 +91,7 @@ describe('ComputerProfileService', () => {
         worker = workers.computerTask;
         TestBed.configureTestingModule({
             providers: [
+                provideTestTranslate(),
                 ComputerProfileService, DiveSchedules, ReloadDispatcher, UnitConversion,
                 { provide: WorkersFactoryCommon, useValue: workers }
             ]

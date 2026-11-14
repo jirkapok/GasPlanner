@@ -64,6 +64,11 @@ class RebreatherTabPage {
         return this.fixture.debugElement.query(By.css('app-mccr-options'))?.nativeElement as HTMLElement | undefined;
     }
 
+    /** Undefined, when not rendered */
+    public get eccrOptions(): HTMLElement | undefined {
+        return this.fixture.debugElement.query(By.css('app-eccr-options'))?.nativeElement as HTMLElement | undefined;
+    }
+
     public get helpDocument(): string {
         const header = this.fixture.debugElement.query(By.directive(CardHeaderComponent));
         return (header.componentInstance as CardHeaderComponent).helpDocument;
@@ -103,6 +108,10 @@ class RebreatherTabPage {
 
     public selectMccr(): void {
         this.selectCircuit(() => document.querySelector('#circuitMccr') as HTMLElement);
+    }
+
+    public selectEccr(): void {
+        this.selectCircuit(() => document.querySelector('#circuitEccr') as HTMLElement);
     }
 
     public selectPscr(): void {
@@ -187,6 +196,13 @@ describe('Tanks Complex component - Rebreather', () => {
     it('rebreather options render also in open circuit', () => {
         expect(rebreatherPage.rebreatherOptions).toBeDefined();
         expect(rebreatherPage.mccrOptions).toBeDefined();
+    });
+
+    it('options of all rebreathers rendered together have unique ids', () => {
+        const ids = fixture.debugElement.queryAll(By.css('app-pscr-options [id], app-mccr-options [id], app-eccr-options [id]'))
+            .map(e => (e.nativeElement as HTMLElement).id);
+        const duplicates = ids.filter((id, index) => ids.indexOf(id) !== index);
+        expect(duplicates).toEqual([]);
     });
 
     it('selecting pSCR switches circuit and fires options change', () => {
@@ -399,6 +415,65 @@ describe('Tanks Complex component - Rebreather', () => {
             expect(rebreatherPage.helpDocument).toBe('tanks');
             rebreatherPage.showRebreatherTab();
             expect(rebreatherPage.helpDocument).toBe('rebreather');
+        });
+    });
+
+    describe('eCCR', () => {
+        const tanks = (): TanksService => schedules.selectedTanks;
+
+        beforeEach(() => {
+            tanks().loadFrom([new Tank(12, 200, 21), new Tank(11, 200, 50), new Tank(11, 200, 21)]);
+            fixture.detectChanges();
+            rebreatherPage.selectEccr();
+        });
+
+        it('eCCR switches circuit and inserts oxygen as second tank', () => {
+            expect(schedules.selectedOptions.circuit).toBe(CircuitType.eccr);
+            expect(tanks().tanks.length).toBe(4);
+            expect(tanks().oxygenTank?.tank.gas.compositionEquals(StandardGases.oxygen)).toBe(true);
+            expect(optionsChangedSpy).toHaveBeenCalledWith();
+        });
+
+        it('header shows eCCR', () => {
+            expect(rebreatherPage.circuitTypeBtn.textContent).toContain('tanksComplex.eccr');
+        });
+
+        it('rebreather tab shows only eCCR options', () => {
+            rebreatherPage.showRebreatherTab();
+            expect(rebreatherPage.eccrOptions?.hidden).toBe(false);
+            expect(rebreatherPage.mccrOptions?.hidden).toBe(true);
+            expect(rebreatherPage.rebreatherOptions?.hidden).toBe(true);
+        });
+
+        it('invalid mCCR value doesn\'t block the planner after switch to eCCR', () => {
+            rebreatherPage.selectMccr();
+            rebreatherPage.showRebreatherTab();
+            rebreatherPage.typeSetpoint('2');
+            rebreatherPage.selectEccr();
+            expect(fixture.componentInstance.rootForm.valid).toBe(true);
+        });
+
+        it('invalid eCCR value marks rebreather tab with error', () => {
+            rebreatherPage.showRebreatherTab();
+            const input = fixture.debugElement.query(By.css('#decoSetpoint')).nativeElement as HTMLInputElement;
+            rebreatherPage.type(input, '2');
+            rebreatherPage.showTanksTab();
+            expect(rebreatherPage.rebreatherTabError).toBeDefined();
+        });
+
+        it('labels diluent and oxygen tanks', () => {
+            expect(rebreatherPage.tankRole(0)).toBe('tanksComplex.diluent');
+            expect(rebreatherPage.tankRole(1)).toBe('tanksComplex.oxygen');
+        });
+
+        it('eCCR oxygen gas can\'t be changed', () => {
+            expect(rebreatherPage.tankO2Input(1).disabled).toBe(true);
+            expect(rebreatherPage.tankHeInput(1).disabled).toBe(true);
+        });
+
+        it('eCCR diluent and oxygen can\'t be removed', () => {
+            expect(rebreatherPage.removeTankBtn(1)).toBeUndefined();
+            expect(rebreatherPage.removeTankBtn(2)).toBeDefined();
         });
     });
 

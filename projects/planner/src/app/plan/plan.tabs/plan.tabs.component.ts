@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { faPlus, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 import { takeUntil } from 'rxjs';
@@ -14,7 +14,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-plan-tabs',
     templateUrl: './plan.tabs.component.html',
     styleUrls: ['./plan.tabs.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MdbTabsModule, FaIconComponent, TranslatePipe]
 })
 export class PlanTabsComponent extends Streamed implements AfterViewInit {

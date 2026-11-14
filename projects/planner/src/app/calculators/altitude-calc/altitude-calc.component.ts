@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faMountainSun } from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,6 @@ interface AltitudeDepthForm {
     selector: 'app-altitude-calc',
     templateUrl: './altitude-calc.component.html',
     styleUrls: ['./altitude-calc.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, AltitudeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class AltitudeCalcComponent implements OnInit {
@@ -36,7 +35,6 @@ export class AltitudeCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage) {
@@ -50,12 +48,12 @@ export class AltitudeCalcComponent implements OnInit {
 
     public get pressureInvalid(): boolean {
         const pressureControl = this.altitudeForm.controls.pressure;
-        return this.inputs.controlInValid(pressureControl);
+        return InputControls.isControlInvalid(pressureControl);
     }
 
     public get actualDepthInvalid(): boolean {
         const depthControl = this.altitudeForm.controls.actualDepth;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get calcAltitude(): number {

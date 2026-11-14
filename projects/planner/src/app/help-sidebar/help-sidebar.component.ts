@@ -1,13 +1,11 @@
 import { AfterViewInit, Component, ElementRef, signal, ViewChild } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { NgxMdModule } from 'ngx-md';
-import { MarkdownCustomization } from '../shared/markdown-customization.service';
+import { MarkdownComponent } from 'ngx-markdown';
 import { HelpService } from '../shared/learn/help.service';
 
 @Component({
     selector: 'app-help-sidebar',
-    imports: [NgxMdModule, TranslatePipe],
-    providers: [MarkdownCustomization],
+    imports: [MarkdownComponent, TranslatePipe],
     templateUrl: './help-sidebar.component.html',
     styleUrl: './help-sidebar.component.scss',
     host: {
@@ -22,11 +20,7 @@ export class HelpSidebarComponent implements AfterViewInit {
     protected document = this.helpService.document;
     protected isInitialized = signal(false);
 
-    constructor(
-        private markdown: MarkdownCustomization,
-        private helpService: HelpService
-    ) {
-        this.markdown.configure();
+    constructor(private helpService: HelpService) {
     }
 
     ngAfterViewInit(): void {

@@ -14,29 +14,34 @@
     height: 100%;
  }
 
- .reserve-overlay {
-     position: relative;
- }
-
- .reserve-value {
-     position: absolute;
-     bottom: -3.75em;
-     right: 3px;
-     text-align: right;
- }
-
+ // Orange reserve line spanning the frame padding box (5px vertical padding of .gas-bar)
  .reserve-bar {
      position: absolute;
-     padding: 0px;
-     height: 4em;
-     top: -.1em;
-     left: 0px;
-     text-align: right;
-     font-size: .75em;
-     border-right: 2px solid darkorange;
+     left: 0;
+     top: -5px;
+     bottom: -5px;
+     padding: 0;
+     border-right: 4px solid darkorange;
  }
 
  .combined_wrapper {
     position: relative;
     width: 100%;
+}
+
+// Legend markers shared with the gas chart, colored as the corresponding bar
+.legend-marker {
+    display: inline-block;
+    width: .75em;
+    height: .75em;
+    border-radius: .2em;
+    vertical-align: middle;
+}
+
+.legend-marker-reserve {
+    background-color: darkorange;
+}
+
+.legend-marker-available {
+    background-color: #bdbdbd;
 }

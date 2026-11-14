@@ -1,18 +1,27 @@
 import _ from 'lodash';
+import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { UnitConversion } from './UnitConversion';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ReloadDispatcher } from './reloadDispatcher';
-import { HighestDensity, ProfileTissues, Time } from 'scuba-physics';
+import { CircuitNames } from './circuit-names.service';
+import { useEnglishCircuitNames } from './circuit-names.testing';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
+import { CircuitType, HighestDensity, ProfileTissues, Tank, Time } from 'scuba-physics';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
+    let circuitNames: CircuitNames;
 
     const createSut = (): DiveSchedules => {
-        sut = new DiveSchedules(new UnitConversion(), new ReloadDispatcher());
+        sut = new DiveSchedules(new UnitConversion(), new ReloadDispatcher(), circuitNames);
         return sut;
     };
 
     beforeEach(() => {
+        TestBed.configureTestingModule({ providers: [provideTestTranslate()] });
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
+        circuitNames = TestBed.inject(CircuitNames);
         sut = createSut();
         sut.add();
     });
@@ -31,8 +40,26 @@ describe('Scheduled dives', () => {
     it('Dive title respects imperial units setting', () => {
         const units = new UnitConversion();
         units.imperialUnits = true;
-        const dive = new DiveSchedule(0, units, new ReloadDispatcher());
-        expect(dive.title).toEqual('1. 100 ft, 12 min');
+        const dive = new DiveSchedule(0, units, new ReloadDispatcher(), circuitNames);
+        expect(dive.title).toEqual('1. OC 100 ft, 12 min');
+    });
+
+    it('Dive title contains the circuit', () => {
+        const dive = sut.dives[1];
+        dive.optionsService.circuit = CircuitType.mccr;
+        dive.depths.plannedDepth = 40;
+        dive.depths.planDuration = 25;
+        expect(dive.circuit).toBe(CircuitType.mccr);
+        expect(dive.circuitName).toBe('mCCR');
+        expect(dive.title).toEqual('2. mCCR 40 m, 25 min');
+    });
+
+    it('Dive title follows circuit switch', () => {
+        const dive = sut.dives[1];
+        dive.optionsService.circuit = CircuitType.eccr;
+        expect(dive.title).toEqual('2. eCCR 30 m, 12 min');
+        dive.optionsService.circuit = CircuitType.oc;
+        expect(dive.title).toEqual('2. OC 30 m, 12 min');
     });
 
     describe('Selected dive', () => {
@@ -55,7 +82,7 @@ describe('Scheduled dives', () => {
         });
 
         it('Does not change selected if not in current list', () => {
-            const toBeSelected = new DiveSchedule(0, new UnitConversion(), new ReloadDispatcher());
+            const toBeSelected = new DiveSchedule(0, new UnitConversion(), new ReloadDispatcher(), circuitNames);
             sut.selected = toBeSelected;
             expect(sut.selected).not.toBe(toBeSelected);
         });
@@ -72,7 +99,7 @@ describe('Scheduled dives', () => {
 
         it('has title', () => {
             // this means it has depths and time configured
-            expect(sut.dives[1].title).toEqual('2. 30 m, 12 min');
+            expect(sut.dives[1].title).toEqual('2. OC 30 m, 12 min');
         });
 
         it('Assigns dive number', () => {
@@ -81,12 +108,42 @@ describe('Scheduled dives', () => {
 
         it('Rounds depth to one decimal', () => {
             sut.dives[1].depths.plannedDepth = 31.287;
-            expect(sut.dives[1].title).toEqual('2. 31.3 m, 12 min');
+            expect(sut.dives[1].title).toEqual('2. OC 31.3 m, 12 min');
         });
 
         it('Rounds duration to one decimal', () => {
             sut.dives[1].depths.planDuration = 12.3456;
-            expect(sut.dives[1].title).toEqual('2. 30 m, 12.3 min');
+            expect(sut.dives[1].title).toEqual('2. OC 30 m, 12.3 min');
+        });
+    });
+
+    describe('Rebreather and bailout tanks', () => {
+        let dive: DiveSchedule;
+
+        beforeEach(() => {
+            dive = sut.dives[0];
+            dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+        });
+
+        it('open circuit has no groups', () => {
+            expect(dive.rebreatherTanks).toEqual([]);
+            expect(dive.bailoutTanks).toEqual([]);
+        });
+
+        it('closed circuit uses diluent and oxygen, the rest is bailout', () => {
+            dive.optionsService.circuit = CircuitType.eccr;
+            const tanks = dive.tanksService.tanks;
+            expect(dive.rebreatherTanks).toEqual([tanks[0], tanks[1]]);
+            expect(dive.bailoutTanks).toEqual([tanks[2]]);
+        });
+
+        it('pSCR uses supply tanks assigned to depth levels, the rest is bailout', () => {
+            dive.optionsService.circuit = CircuitType.pscr;
+            const tanks = dive.tanksService.tanks;
+            dive.depths.assignTank(dive.depths.levels[0], tanks[0]);
+            dive.depths.assignTank(dive.depths.levels[1], tanks[2]);
+            expect(dive.rebreatherTanks).toEqual([tanks[0], tanks[2]]);
+            expect(dive.bailoutTanks).toEqual([tanks[1]]);
         });
     });
 
@@ -122,42 +179,66 @@ describe('Scheduled dives', () => {
     });
 
     describe('Previous dive tissues', () => {
-        const sut: DiveSchedules = createSut();
+        const schedules: DiveSchedules = createSut();
         const loadedTissues = ProfileTissues.createAtSurface();
-        sut.dives[0].diveResult.updateProfile([], loadedTissues, []);
+        schedules.dives[0].diveResult.updateProfile([], loadedTissues, []);
 
-        const repetitive = sut.add();
+        const repetitive = schedules.add();
         repetitive.surfaceInterval = Time.oneHour;
         repetitive.diveResult.updateProfile([], ProfileTissues.createAtSurface(), []);
 
-        sut.add();
+        schedules.add();
 
         const defaultTissues = ProfileTissues.createAtSurface(0);
 
         it('First dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(1);
+            const tissues = schedules.previousDiveTissues(1);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Repetitive dive returns previous dive tissues', () => {
-            const tissues = sut.previousDiveTissues(2);
+            const tissues = schedules.previousDiveTissues(2);
             expect(tissues).toEqual(loadedTissues);
         });
 
         it('Non repetitive dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(3);
+            const tissues = schedules.previousDiveTissues(3);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Non existing dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(5);
+            const tissues = schedules.previousDiveTissues(5);
             expect(tissues).toEqual(defaultTissues);
+        });
+    });
+
+    describe('Previous dive tissues at altitude', () => {
+        it('First dive returns tissues saturated at its altitude', () => {
+            const units = new UnitConversion();
+            const altitudeSut = new DiveSchedules(units, new ReloadDispatcher(), circuitNames);
+            altitudeSut.dives[0].optionsService.altitude = 1000;
+
+            const tissues = altitudeSut.previousDiveTissues(1);
+
+            expect(tissues).toEqual(ProfileTissues.createAtSurface(1000));
+        });
+
+        it('First dive in imperial units returns tissues saturated at its altitude in meters', () => {
+            const units = new UnitConversion();
+            units.imperialUnits = true;
+            const altitudeSut = new DiveSchedules(units, new ReloadDispatcher(), circuitNames);
+            const options = altitudeSut.dives[0].optionsService;
+            options.altitude = 3000; // feet
+
+            const tissues = altitudeSut.previousDiveTissues(1);
+
+            expect(tissues).toEqual(ProfileTissues.createAtSurface(options.getOptions().altitude));
         });
     });
 
     describe('Calculating', () => {
         it('Marks Still running also all following repetitive dives', async () => {
-            const sut = createSut();
+            sut = createSut();
             sut.add();
             const third = sut.add();
             third.surfaceInterval = Time.oneHour;

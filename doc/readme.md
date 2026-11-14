@@ -1,9 +1,9 @@
 # Application help
 
-* [Supported platforms](./readme.md#supported-platforms)
-* [Theoretical model](./readme.md#theoretical-model)
-* [Limitations](./readme.md#limitations)
-* [Screen structure](./readme.md#screen-structure)
+* [Supported platforms](./application.md#supported-platforms)
+* [Theoretical model](./application.md#theoretical-model)
+* [Limitations](./application.md#limitations)
+* [Screen structure](./application.md#screen-structure)
 * Plan
     * [Tanks](./tanks.md)
     * [Standard gases](./standard_gases.md)

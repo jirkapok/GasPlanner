@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { UnitConversion } from '../../../../shared/UnitConversion';
 import { StandardGases } from 'scuba-physics';
 import { faArrowLeft, faArrowRight, faMinus } from '@fortawesome/free-solid-svg-icons';
@@ -13,7 +13,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-diff-gas-consumed-tank-chart',
     templateUrl: './diff-gas-consumed-tank-chart.component.html',
     styleUrl: './diff-gas-consumed-tank-chart.component.scss',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [FaIconComponent, NgClass, LocaleNumberPipe, TranslatePipe]
 })
 export class GasConsumedDifferenceTankComponent {

@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable, Input, Output } from '@angular/core';
+import { EventEmitter, Injectable, Input, Output, signal } from '@angular/core';
 import { DiveSchedules } from './dive.schedules';
 import { DateFormats } from './formaters';
 import { WayPoint } from './wayPoint';
@@ -6,7 +6,8 @@ import { WayPoint } from './wayPoint';
 @Injectable()
 export class SelectedWaypoint {
     @Output() public selectedChanged = new EventEmitter<WayPoint | undefined>();
-    private lastSelected: WayPoint | undefined;
+    // selected by hovering the profile chart, while the way points table shows it
+    private readonly _lastSelected = signal<WayPoint | undefined>(undefined);
 
     constructor(private schedules: DiveSchedules) {}
 
@@ -24,18 +25,20 @@ export class SelectedWaypoint {
 
     @Input()
     public set selected(point: WayPoint | undefined) {
-        if (this.lastSelected) {
-            this.lastSelected.selected = false;
+        const lastSelected = this._lastSelected();
+        if (lastSelected) {
+            lastSelected.selected = false;
         }
-
-        this.lastSelected = point;
 
         if (point) {
-            if (this.lastSelected) {
-                this.lastSelected.selected = true;
-            }
+            point.selected = true;
         }
 
-        this.selectedChanged.emit(this.lastSelected);
+        this._lastSelected.set(point);
+        this.selectedChanged.emit(point);
+    }
+
+    public isSelected(point: WayPoint): boolean {
+        return this._lastSelected() === point;
     }
 }

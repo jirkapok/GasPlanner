@@ -71,6 +71,50 @@ describe('Options Service - Rebreather', () => {
         expect(service.loopVolume).toBeCloseTo(0.2, 6);
     });
 
+    it('applies eCCR values', () => {
+        service.circuit = CircuitType.eccr;
+        service.descentSetpoint = 0.6;
+        service.bottomSetpoint = 1.2;
+        service.decoSetpoint = 1.4;
+        service.setpointSwitchDepth = 15;
+
+        const rebreather = service.getOptions().rebreather;
+        expect(rebreather.descentSetpoint).toBeCloseTo(0.6, 6);
+        expect(rebreather.bottomSetpoint).toBeCloseTo(1.2, 6);
+        expect(rebreather.decoSetpoint).toBeCloseTo(1.4, 6);
+        expect(rebreather.setpointSwitchDepth).toBeCloseTo(15, 6);
+    });
+
+    it('identifies circuit types', () => {
+        const expectCircuit = (circuit: CircuitType, isEccr: boolean, isClosedCircuit: boolean) => {
+            service.circuit = circuit;
+            expect(service.isEccr).toBe(isEccr);
+            expect(service.isClosedCircuit).toBe(isClosedCircuit);
+        };
+
+        expectCircuit(CircuitType.oc, false, false);
+        expectCircuit(CircuitType.pscr, false, false);
+        expectCircuit(CircuitType.mccr, false, true);
+        expectCircuit(CircuitType.eccr, true, true);
+    });
+
+    it('stores eCCR switch depth in meters for imperial units', () => {
+        units.imperialUnits = true;
+        service.setpointSwitchDepth = 66;
+        expect(service.getOptions().rebreather.setpointSwitchDepth).toBeCloseTo(units.toMeters(66), 6);
+        expect(service.setpointSwitchDepth).toBeCloseTo(66, 6);
+    });
+
+    it('eCCR setpoints aren\'t converted for imperial units', () => {
+        units.imperialUnits = true;
+        service.descentSetpoint = 0.6;
+        service.bottomSetpoint = 1.2;
+        service.decoSetpoint = 1.4;
+        expect(service.descentSetpoint).toBeCloseTo(0.6, 6);
+        expect(service.bottomSetpoint).toBeCloseTo(1.2, 6);
+        expect(service.decoSetpoint).toBeCloseTo(1.4, 6);
+    });
+
     it('setpoint isn\'t converted for imperial units', () => {
         units.imperialUnits = true;
         service.setpoint = 1.1;

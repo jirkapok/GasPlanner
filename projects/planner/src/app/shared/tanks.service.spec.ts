@@ -53,6 +53,55 @@ describe('TanksService', () => {
         });
     });
 
+    describe('Copy consumption', () => {
+        beforeEach(() => {
+            service.addTank();
+        });
+
+        it('copies consumption by tank id', () => {
+            service.copyTanksConsumption([
+                { id: 2, consumedVolume: 500, reserveVolume: 600 },
+                { id: 1, consumedVolume: 300, reserveVolume: 400 }
+            ]);
+
+            expect(service.tanks[0].tank.consumedVolume).toBe(300);
+            expect(service.tanks[0].tank.reserveVolume).toBe(400);
+            expect(service.tanks[1].tank.consumedVolume).toBe(500);
+            expect(service.tanks[1].tank.reserveVolume).toBe(600);
+        });
+
+        it('keeps consumption of tank added during calculation', () => {
+            service.copyTanksConsumption([{ id: 1, consumedVolume: 300, reserveVolume: 400 }]);
+
+            expect(service.tanks[0].tank.consumedVolume).toBe(300);
+            expect(service.tanks[1].tank.consumedVolume).toBe(0);
+        });
+
+        it('keeps consumed liters sent by the worker', () => {
+            service.copyTanksConsumption([{ id: 1, consumedVolume: 1000, reserveVolume: 500 }]);
+
+            expect(service.tanks[0].tank.consumedVolume).toBe(1000);
+            const tank = service.tanks[0].tank;
+            const reference = new Tank(tank.size, tank.startPressure, tank.o2);
+            reference.consumedVolume = 1000;
+
+            expect(tank.reserveVolume).toBe(500);
+            expect(tank.consumed).toBe(reference.consumed);
+        });
+
+        it('ignores consumption of tank removed during calculation', () => {
+            service.removeTank(service.tanks[1]);
+
+            service.copyTanksConsumption([
+                { id: 1, consumedVolume: 300, reserveVolume: 400 },
+                { id: 2, consumedVolume: 500, reserveVolume: 600 }
+            ]);
+
+            expect(service.tanks.length).toBe(1);
+            expect(service.tanks[0].tank.consumedVolume).toBe(300);
+        });
+    });
+
     describe('Load from', () => {
         it('Doesn\'t update by empty array', () => {
             service.loadFrom([]);

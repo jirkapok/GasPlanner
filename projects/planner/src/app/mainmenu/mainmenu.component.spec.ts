@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MainMenuComponent } from './mainmenu.component';
@@ -11,6 +11,7 @@ import { Urls } from '../shared/navigation.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { LayoutService } from '../shared/layout.service';
 import { createSpyObj } from '../../testing/spy-testing.helpers';
+import { renderOnPush } from '../../testing/onPush.testing';
 import { Mocked } from 'vitest';
 
 describe('Main menu component', () => {
@@ -44,7 +45,8 @@ describe('Main menu component', () => {
         }).compileComponents();
 
         fixture = TestBed.createComponent(MainMenuComponent);
-        fixture.componentInstance.inPlanner = true;
+        // the dive menu is shown only in planner
+        await TestBed.inject(Router).navigateByUrl('/');
         fixture.detectChanges();
     });
 
@@ -71,5 +73,28 @@ describe('Main menu component', () => {
             clickItem('#menuCloneDeeperAndLonger');
             expect(schedules.cloneSelectedDeeperAndLonger).toHaveBeenCalledTimes(1);
         });
+    });
+});
+
+describe('Main menu component OnPush', () => {
+    it('renders planner menu after navigation outside the component', async () => {
+        TestBed.configureTestingModule({
+            imports: [MainMenuComponent],
+            providers: [
+                provideRouter([]), provideTestTranslate(), provideNoopAnimations(),
+                LanguageService, LayoutService, Urls,
+                { provide: ManagedDiveSchedules, useValue: createSpyObj<ManagedDiveSchedules>(['cloneSelected']) },
+                { provide: ShareDiveService, useValue: createSpyObj<ShareDiveService>(['sharePlan']) },
+                { provide: PreferencesStore, useValue: createSpyObj<PreferencesStore>(['save']) }
+            ]
+        });
+        const fixture = await renderOnPush(MainMenuComponent);
+        const diveMenu = (): Element | null => (fixture.nativeElement as HTMLElement).querySelector('#dive');
+        expect(diveMenu()).toBeNull();
+
+        await TestBed.inject(Router).navigateByUrl('/');
+        await fixture.whenStable();
+
+        expect(diveMenu()).not.toBeNull();
     });
 });

@@ -7,6 +7,7 @@ import { WayPointsService } from '../waypoints.service';
 import { HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import _ from 'lodash';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 interface AssertedWayPoint {
     runTime: number;
@@ -27,6 +28,7 @@ describe('WayPoints Difference Service', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 ProfileComparatorService,
                 DiveSchedules, UnitConversion, ReloadDispatcher,
                 WayPointsService

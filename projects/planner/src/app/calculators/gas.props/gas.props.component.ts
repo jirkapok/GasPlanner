@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faFileLines, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -32,7 +32,6 @@ interface GasForm {
     selector: 'app-gas-props-calc',
     templateUrl: './gas.props.component.html',
     styleUrls: ['./gas.props.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, OxygenDropDownComponent, PpO2Component, MdbFormsModule, FaIconComponent,
         LocaleNumberPipe, TranslatePipe]
 })
@@ -46,7 +45,6 @@ export class GasPropertiesCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         settings: ApplicationSettingsService,
@@ -67,17 +65,17 @@ export class GasPropertiesCalcComponent implements OnInit {
 
     public get gasHeInvalid(): boolean {
         const heControl = this.gasForm.controls.he;
-        return this.inputs.controlInValid(heControl);
+        return InputControls.isControlInvalid(heControl);
     }
 
     public get depthInvalid(): boolean {
         const depthControl = this.gasForm.controls.depth;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get narcoticDepthInvalid(): boolean {
         const mndLimitControl = this.gasForm.controls.mndLimit;
-        return this.inputs.controlInValid(mndLimitControl);
+        return InputControls.isControlInvalid(mndLimitControl);
     }
 
     public get nitrogen(): number {

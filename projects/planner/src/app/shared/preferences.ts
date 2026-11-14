@@ -102,6 +102,7 @@ export class Preferences {
         // now we are able to switch the view
         this.viewSwitch.isComplex = loaded.options.isComplex;
         this.viewSwitch.consumptionInLiters = loaded.options.consumptionInLiters;
+        this.viewSwitch.showBailoutProfile = loaded.options.showBailoutProfile ?? false;
         // not using normalization to fix values here, because expecting they are valid
     }
 
@@ -133,6 +134,7 @@ export class Preferences {
             imperialUnits: this.units.imperialUnits,
             isComplex: this.viewSwitch.isComplex,
             consumptionInLiters: this.viewSwitch.consumptionInLiters,
+            showBailoutProfile: this.viewSwitch.showBailoutProfile,
             language: this.languages.currentCode,
             maxDensity: settings.maxGasDensity,
             primaryTankReserve: settings.primaryTankReserve,

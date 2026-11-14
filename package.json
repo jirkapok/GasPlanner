@@ -1,6 +1,6 @@
 {
   "name": "planner",
-  "version": "0.17.2",
+  "version": "0.24.2",
   "license": "MIT",
   "scripts": {
     "start": "ng build scuba-physics && ng serve",
@@ -43,9 +43,10 @@
     "canvas-confetti": "^1.9.4",
     "flag-icons": "^7.6.0",
     "lodash": "^4.18.1",
+    "marked": "^18.2.0",
     "mdb-angular-ui-kit": "^11.0.0",
     "ngx-clipboard": "^16.0.0",
-    "ngx-md": "^19.0.0",
+    "ngx-markdown": "^22.1.1",
     "plotly.js-dist": "^4.1.2",
     "rxjs": "^7.8.2",
     "scuba-physics": "file:dist/scuba-physics",
@@ -68,7 +69,6 @@
     "@semantic-release/git": "^11.0.1",
     "@types/canvas-confetti": "^1.9.0",
     "@types/lodash": "^4.17.27",
-    "@types/marked": "^5.0.2",
     "@types/node": "^26.6.5",
     "@typescript-eslint/eslint-plugin": "^8.72.0",
     "@typescript-eslint/parser": "^8.72.0",

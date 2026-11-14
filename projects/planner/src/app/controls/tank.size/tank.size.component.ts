@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { Precision, Tank, TankTemplate } from 'scuba-physics';
 import { AbstractControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
@@ -16,8 +16,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
         ReactiveFormsModule,
         MdbFormsModule,
         MdbDropdownModule
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager
+    ]
 })
 export class TankSizeComponent implements OnInit {
     @Input() public sizeForm!: FormGroup;
@@ -26,10 +25,11 @@ export class TankSizeComponent implements OnInit {
     @Output() public sizeChange = new EventEmitter<number>();
     @Output() public applyTemplate = new EventEmitter<TankTemplate>();
 
-    constructor(public units: UnitConversion,
+    constructor(
+        public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
-        private validators: ValidatorGroups) {
+        private validators: ValidatorGroups
+    ) {
         const source = Tank.createDefault();
         this.tank = new TankBound(source, this.units);
         const tankDefaults = this.units.defaults.tanks;
@@ -47,7 +47,7 @@ export class TankSizeComponent implements OnInit {
 
     public get tankSizeInvalid(): boolean {
         const tankSize = this.sizeForm.get(this.controlName) as AbstractControl;
-        return this.inputs.controlInValid(tankSize);
+        return InputControls.isControlInvalid(tankSize);
     }
 
     public ngOnInit(): void {

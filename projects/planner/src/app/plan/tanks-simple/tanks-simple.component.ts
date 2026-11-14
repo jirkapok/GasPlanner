@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { faBatteryHalf } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -30,7 +30,6 @@ interface TankForm {
     selector: 'app-tanks-simple',
     templateUrl: './tanks-simple.component.html',
     styleUrls: ['./tanks-simple.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, TankSizeComponent, OxygenComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class TanksSimpleComponent extends Streamed implements OnInit {
@@ -40,7 +39,6 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private diveSchedules: DiveSchedules,
         private dispatcher: ReloadDispatcher) {
@@ -62,17 +60,17 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
 
     public get firstTankSizeInvalid(): boolean {
         const firstTankSize = this.tanksForm.controls.firstTankSize;
-        return this.inputs.controlInValid(firstTankSize);
+        return InputControls.isControlInvalid(firstTankSize);
     }
 
     public get workPressureInvalid(): boolean {
         const workPressure = this.tanksForm.controls.workPressure;
-        return this.inputs.controlInValid(workPressure);
+        return InputControls.isControlInvalid(workPressure);
     }
 
     public get firstTankStartPressureInvalid(): boolean {
         const firstTankStartPressure = this.tanksForm.controls.firstTankStartPressure;
-        return this.inputs.controlInValid(firstTankStartPressure);
+        return InputControls.isControlInvalid(firstTankStartPressure);
     }
 
     public ngOnInit(): void {
@@ -102,7 +100,7 @@ export class TanksSimpleComponent extends Streamed implements OnInit {
     }
 
     public gasSac(): number {
-        const tank = this.firstTank.tank;
+        const tank = this.firstTank.algorithmTank;
         const sac = this.diveSchedules.selectedOptions.diverOptions.gasSac(tank);
         return this.units.fromBar(sac);
     }

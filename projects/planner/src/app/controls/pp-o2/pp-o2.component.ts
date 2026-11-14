@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -11,7 +11,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-pp-o2',
     templateUrl: './pp-o2.component.html',
     styleUrls: ['./pp-o2.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, TranslatePipe]
 })
 export class PpO2Component implements OnInit {
@@ -22,13 +21,12 @@ export class PpO2Component implements OnInit {
     @Output() public ppO2Change = new EventEmitter<number>();
 
     constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) { }
 
     public get ppO2Invalid(): boolean {
         const maxPpO2Field = this.pO2Form.get(this.controlName);
-        return !maxPpO2Field || this.inputs.controlInValid(maxPpO2Field);
+        return !maxPpO2Field || InputControls.isControlInvalid(maxPpO2Field);
     }
 
     public ngOnInit(): void {

@@ -3,7 +3,7 @@ import { DecimalPipe } from '@angular/common';
 import { ComponentFixture, TestBed, inject } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { TankTemplate } from 'scuba-physics';
+import { StandardGases, TankTemplate } from 'scuba-physics';
 import { ChangeDetectorRef, DebugElement } from '@angular/core';
 import _ from 'lodash';
 import { OxygenDropDownComponent } from '../../controls/oxygen-dropdown/oxygen-dropdown.component';
@@ -26,6 +26,8 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 export class ComplexTanksPage {
     constructor(private fixture: ComponentFixture<TanksComplexComponent>) { }
@@ -224,6 +226,34 @@ describe('Tanks Complex component', () => {
         expect(complexPage.o2Input(0).value).toBe('30');
     });
 
+    describe('He edited together with O2', () => {
+        const editHe = (newHe: string): void => {
+            complexPage.heInput(0).value = newHe;
+            complexPage.heInput(0).dispatchEvent(new Event('input'));
+        };
+
+        it('removing He from 21/35 stores Air', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            const firstTank = schedules.selectedTanks.firstTank;
+            firstTank.he = 35;
+            firstTank.o2 = 21;
+            fixture.detectChanges();
+
+            editHe('0');
+
+            expect(firstTank.tank.gas.compositionEquals(StandardGases.air)).toBeTruthy();
+        }));
+
+        it('adding He to Air keeps 21 % O2', inject([DiveSchedules], (schedules: DiveSchedules) => {
+            const firstTank = schedules.selectedTanks.firstTank;
+            fixture.detectChanges();
+
+            editHe('35');
+
+            expect(firstTank.tank.gas.fO2).toBeCloseTo(0.21, 3);
+            expect(firstTank.tank.gas.fHe).toBeCloseTo(0.35, 3);
+        }));
+    });
+
     it('Assign tank template rebinds new size and working pressure', () => {
         fixture.detectChanges();
 
@@ -236,5 +266,53 @@ describe('Tanks Complex component', () => {
         fixture.debugElement.injector.get(ChangeDetectorRef).markForCheck();
         fixture.detectChanges();
         expect(complexPage.sizeInput(0).value).toBe('30');
+    });
+});
+
+describe('Tanks Complex component OnPush', () => {
+    let fixture: ComponentFixture<TanksComplexComponent>;
+
+    const element = (): HTMLElement => fixture.nativeElement as HTMLElement;
+    const tankRows = (): number => element().querySelectorAll('app-gaslabel').length;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            providers: planTestProviders,
+            imports: [ReactiveFormsModule, TanksComplexComponent]
+        });
+        fixture = await renderOnPush(TanksComplexComponent);
+    });
+
+    it('renders tanks of the dive selected outside the component', async () => {
+        const before = tankRows();
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.tanksService.addTank();
+
+        schedules.selected = second;
+        await fixture.whenStable();
+
+        expect(tankRows()).toBeGreaterThan(before);
+    });
+
+    it('renders gas label of maximum ppO2 changed outside the component', async () => {
+        const label = (): string | null | undefined => element().querySelector('app-gaslabel')?.textContent;
+        const before = label();
+
+        TestBed.inject(DiveSchedules).selectedOptions.maxPpO2 = 1.6;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        await fixture.whenStable();
+
+        expect(label()).not.toEqual(before);
+    });
+
+    it('renders MOD after diver options changed outside Angular events', async () => {
+        const label = (): string | null | undefined => element().querySelector('app-gaslabel')?.textContent;
+        const before = label();
+
+        TestBed.inject(DiveSchedules).selectedOptions.diverOptions.maxPpO2 = 1.2;
+        await fixture.whenStable();
+
+        expect(label()).not.toEqual(before);
     });
 });

@@ -13,6 +13,12 @@ import { SafetyStop } from '../algorithm/Options';
 import { Salinity } from '../physics/pressure-converter';
 import { Precision } from '../common/precision';
 import { StandardGases } from '../gases/StandardGases';
+import { Options } from '../algorithm/Options';
+import { Segments } from '../depths/Segments';
+import { DepthConverterFactory } from '../physics/depth-converter';
+import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
+import { AlgorithmParams } from '../algorithm/BuhlmannAlgorithmParameters';
+import { Tanks } from './Tanks';
 
 interface Calculated {
     gases: ConsumedGas[];
@@ -274,6 +280,17 @@ describe('Consumption by gas', () => {
             expect(empty.hasReserve).toBe(true);
         });
 
+        it('Missing is part of required not covered by available', () => {
+            const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 2800, 500);
+            expect(consumed.percentsMissing).toBeCloseTo(300 / 3300 * 100, 6);
+            expect(consumed.percentsAvailable + consumed.percentsMissing).toBeCloseTo(100, 6);
+        });
+
+        it('No missing gas when available covers required', () => {
+            const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 1500, 500);
+            expect(consumed.percentsMissing).toEqual(0);
+        });
+
         it('Required is sum of consumed and reserve', () => {
             const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 1500, 500);
             expect(consumed.required).toEqual(2000);
@@ -304,5 +321,51 @@ describe('Consumption by gas', () => {
         it('Throws for empty emergency ascent', () => {
             expect(() => sut.consume([segment, segment], [], [tank], consumptionOptions)).toThrowError();
         });
+    });
+});
+
+describe('Tank and gas consumption agree (#138)', () => {
+    const options = new Options(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+    options.ascentSpeed50perc = 9;
+    options.ascentSpeed50percTo6m = 3;
+    options.ascentSpeed6m = 3;
+    options.descentSpeed = 18;
+    options.gasSwitchDuration = 2;
+    options.lastStopDepth = 3;
+    options.maxEND = 30;
+    options.minimumAutoStopDepth = 10;
+    options.oxygenNarcotic = true;
+    options.problemSolvingDuration = 1;
+    options.roundStopsToMinutes = false;
+    options.safetyStop = SafetyStop.auto;
+    const depthConverter = new DepthConverterFactory(options).create();
+    const breathing = new OpenCircuitBreathing(depthConverter);
+    const consumptionOptions: ConsumptionOptions = {
+        diver: new Diver(20, 30),
+        primaryTankReserve: Consumption.defaultPrimaryReserve,
+        stageTankReserve: Consumption.defaultStageReserve
+    };
+    const tank = new Tank(15, 200, 20.9);
+    const tanks = [tank];
+    const plan = new Segments();
+    plan.add(30, tank, 102);
+    plan.addFlat(tank, 1020);
+    const parameters = AlgorithmParams.forMultilevelDive(plan, Tanks.toGases(tanks), options, breathing);
+    const profile = new BuhlmannAlgorithm().decompression(parameters).segments;
+    const emergencyAscent = PlanFactory.emergencyAscent(profile, options, tanks, breathing);
+    new Consumption(depthConverter, breathing).consumeFromTanks2(profile, emergencyAscent, tanks, consumptionOptions);
+    const gas = new ConsumptionByGas(depthConverter, breathing).consume(profile, emergencyAscent, tanks, consumptionOptions)[0];
+
+    it('Gas in liters has not enough gas', () => {
+        expect(gas.hasReserve).toBe(false);
+    });
+
+    it('Tank in bars has not enough gas', () => {
+        expect(tank.hasReserve).toBe(false);
+    });
+
+    it('Tank consumed bars are pressure drop of consumed liters', () => {
+        expect(tank.consumed).toBe(126);
+        expect(tank.reserve).toBe(82);
     });
 });

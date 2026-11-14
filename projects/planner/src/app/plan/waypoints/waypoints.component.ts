@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import {
     faArrowDown, faArrowUp, faArrowRight, faTasks,
     faRandom, IconDefinition, faFilter
@@ -20,7 +20,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-waypoints',
     templateUrl: './waypoints.component.html',
     styleUrls: ['./waypoints.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class WayPointsComponent {
@@ -39,6 +38,14 @@ export class WayPointsComponent {
 
     public get isComplex(): boolean {
         return this.viewSwitch.isComplex;
+    }
+
+    public showDiveProfile(): void {
+        this.viewSwitch.showBailoutProfile = false;
+    }
+
+    public showBailoutProfile(): void {
+        this.viewSwitch.showBailoutProfile = true;
     }
 
     public swimActionIcon(point: WayPoint): IconDefinition {
@@ -71,6 +78,10 @@ export class WayPointsComponent {
         };
 
         return classes;
+    }
+
+    public isSelected(point: WayPoint): boolean {
+        return this.selectedWaypoint.isSelected(point);
     }
 
     public highlightRow(point: WayPoint | undefined): void {

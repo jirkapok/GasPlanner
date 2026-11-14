@@ -4,6 +4,7 @@ import {
     Diver, GasDensity, Consumption,
     Event, EventType, GasNames
 } from 'scuba-physics';
+import { signal } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 
 export enum Strategies {
@@ -60,7 +61,7 @@ export class Level {
     }
 
     public set tank(newValue: TankBound) {
-        this.segment.tank = newValue.tank;
+        this.segment.tank = newValue.algorithmTank;
         this.tankBound = newValue;
     }
 }
@@ -79,7 +80,10 @@ export class AppSettings {
 }
 
 export class DiverOptions {
-    constructor(private options: Options = new Options(), private diver: Diver = new Diver()) { }
+    constructor(
+        private options: Options = new Options(),
+        private diver: Diver = new Diver(),
+        private onChanged: () => void = () => {}) { }
 
     public get maxPpO2(): number {
         return this.options.maxPpO2;
@@ -99,18 +103,22 @@ export class DiverOptions {
 
     public set maxPpO2(newValue: number) {
         this.options.maxPpO2 = newValue;
+        this.onChanged();
     }
 
     public set maxDecoPpO2(newValue: number) {
         this.options.maxDecoPpO2 = newValue;
+        this.onChanged();
     }
 
     public set rmv(newValue: number) {
         this.diver.rmv = newValue;
+        this.onChanged();
     }
 
     public set stressRmv(newValue: number) {
         this.diver.stressRmv = newValue;
+        this.onChanged();
     }
 
     public loadFrom(other: DiverOptions): void {
@@ -145,11 +153,32 @@ export interface ITankSize {
 
 export class TankBound implements IGasContent, ITankSize {
     private _workingPressureBars: number;
+    // The tank is edited in place by other components than the ones showing it and consumption comes from web worker.
+    // Each setter increases it and each getter reads it to track the change.
+    private readonly _version = signal(0);
 
-    constructor(public tank: Tank, private units: UnitConversion) {
+    private readonly _tank: Tank;
+
+    constructor(tank: Tank, private units: UnitConversion) {
+        this._tank = tank;
         const defaultTanks = this.units.defaults.tanks;
         const newWorkPressure = defaultTanks.primary.workingPressure;
         this._workingPressureBars = this.units.toBar(newWorkPressure);
+    }
+
+    /** The tank with tracked changes, use it to calculate values shown in the view. Change the tank only by setters of this class. */
+    public get tank(): Readonly<Tank> {
+        this._version();
+        return this._tank;
+    }
+
+    /**
+     * The tracked tank for scuba-physics APIs requiring the Tank type (its private members make Readonly<Tank> unassignable).
+     * Pass it only for reading, change the tank only by setters of this class.
+     */
+    public get algorithmTank(): Tank {
+        this._version();
+        return this._tank;
     }
 
     public get id(): number {
@@ -165,10 +194,11 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public get workingPressure(): number {
-        return this.units.fromBar(this._workingPressureBars);
+        return this.units.fromBar(this.workingPressureBars);
     }
 
     public get workingPressureBars(): number {
+        this._version();
         return this._workingPressureBars;
     }
 
@@ -184,15 +214,46 @@ export class TankBound implements IGasContent, ITankSize {
         return this.tank.n2;
     }
 
+    public get name(): string {
+        return this.tank.name;
+    }
+
+    /** In respective pressure units */
+    public get consumed(): number {
+        return this.units.fromBar(this.tank.consumed);
+    }
+
+    /** In respective pressure units */
+    public get reserve(): number {
+        return this.units.fromBar(this.tank.reserve);
+    }
+
+    /** In respective pressure units */
+    public get endPressure(): number {
+        return this.units.fromBar(this.tank.endPressure);
+    }
+
+    public get percentsReserve(): number {
+        return this.tank.percentsReserve;
+    }
+
+    public get percentsRemaining(): number {
+        return this.tank.percentsRemaining;
+    }
+
+    public get hasReserve(): boolean {
+        return this.tank.hasReserve;
+    }
+
     public get label(): string {
         const volume = Precision.round(this.size, 1);
-        let startPressure = this.units.fromBar(this.tank.startPressure);
-        startPressure = Precision.round(startPressure, 1);
-        return `${this.tank.id}. ${this.tank.name}/${volume}/${startPressure}`;
+        const startPressure = Precision.round(this.startPressure, 1);
+        return `${this.id}. ${this.name}/${volume}/${startPressure}`;
     }
 
     public set id(newValue: number) {
-        this.tank.id = newValue;
+        this._tank.id = newValue;
+        this.changed();
     }
 
     /** Rounded to one decimal place in respective volume units */
@@ -201,7 +262,26 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public set startPressure(newValue: number) {
-        this.tank.startPressure = this.units.toBar(newValue);
+        this._tank.startPressure = this.units.toBar(newValue);
+        this.changed();
+    }
+
+    /** Size in liters regardless of the units, for restoring metric state */
+    public set sizeLiters(newValue: number) {
+        this._tank.size = newValue;
+        this.changed();
+    }
+
+    /** Start pressure in bars regardless of the units */
+    public set startPressureBars(newValue: number) {
+        this._tank.startPressure = newValue;
+        this.changed();
+    }
+
+    /** Consumed in bars regardless of the units */
+    public set consumedBars(newValue: number) {
+        this._tank.consumed = newValue;
+        this.changed();
     }
 
     public set workingPressure(newValue: number) {
@@ -224,14 +304,17 @@ export class TankBound implements IGasContent, ITankSize {
         }
 
         this._workingPressureBars = newValue;
+        this.changed();
     }
 
     public set o2(newValue: number) {
-        this.tank.o2 = newValue;
+        this._tank.o2 = newValue;
+        this.changed();
     }
 
     public set he(newValue: number) {
-        this.tank.he = newValue;
+        this._tank.he = newValue;
+        this.changed();
     }
 
     public assignTemplate(template: TankTemplate): void {
@@ -240,11 +323,30 @@ export class TankBound implements IGasContent, ITankSize {
     }
 
     public assignStandardGas(gasName: string): void {
-        this.tank.assignStandardGas(gasName);
+        this._tank.assignStandardGas(gasName);
+        this.changed();
+    }
+
+    /** Use instead of the o2 and he setters when both change, see Tank.assignGas */
+    public assignGas(o2: number, he: number): void {
+        this._tank.assignGas(o2, he);
+        this.changed();
+    }
+
+    /** Values in liters, as calculated by the consumption worker */
+    public assignConsumption(consumedVolume: number, reserveVolume: number): void {
+        this._tank.consumedVolume = consumedVolume;
+        this._tank.reserveVolume = reserveVolume;
+        this.changed();
     }
 
     private assignSize(newValue: number): void {
-        this.tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+        this._tank.size = this.units.toTankLiters(newValue, this._workingPressureBars);
+        this.changed();
+    }
+
+    private changed(): void {
+        this._version.update(v => v + 1);
     }
 }
 
@@ -306,11 +408,29 @@ export class BoundEvent {
         return this.event.type === EventType.missingAirBreak;
     }
 
+    public get isPpO2OutOfRange(): boolean {
+        return this.event.type === EventType.ppO2OutOfRange;
+    }
+
     public get timeStamp(): number {
         return this.event.timeStamp;
     }
     public get depth(): number {
         return this.units.fromMeters(this.event.depth);
+    }
+
+    /**
+     * Percentage points of nitrogen, by which the gas switch exceeds
+     * the isobaric counter diffusion limit (1/5 rule). 0 for other events.
+     */
+    public get n2OverLimit(): number {
+        const fraction = this.event.value ?? 0;
+        return Precision.round(fraction * 100, 1);
+    }
+
+    /** Rebreather loop ppO2 in bars rounded to two decimals, 0 for other events */
+    public get ppO2(): number {
+        return Precision.round(this.event.value ?? 0, 2);
     }
 
     /** Name of the gas associated with the event, empty if the event has no gas */
@@ -335,6 +455,7 @@ export class BoundEvent {
             case EventType.brokenCeiling:
             case EventType.lowPpO2:
             case EventType.highPpO2:
+            case EventType.ppO2OutOfRange:
                 return EventSeverity.error;
 
             case EventType.highAscentSpeed:

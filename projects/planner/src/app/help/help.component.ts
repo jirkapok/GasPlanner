@@ -1,11 +1,10 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import _ from 'lodash';
-import { NgxMdModule  } from 'ngx-md';
+import { MarkdownComponent } from 'ngx-markdown';
 import { NgClass, Location } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { Urls } from '../shared/navigation.service';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { MarkdownCustomization } from '../shared/markdown-customization.service';
 import { HelpViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
@@ -27,10 +26,8 @@ interface HelpSection {
 
 @Component({
     selector: 'app-help',
-    imports: [NgxMdModule, FontAwesomeModule, NgClass, TranslatePipe],
-    providers: [MarkdownCustomization],
+    imports: [MarkdownComponent, FontAwesomeModule, NgClass, TranslatePipe],
     templateUrl: './help.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./help.component.scss']
 })
 export class HelpComponent implements OnInit {
@@ -52,6 +49,7 @@ export class HelpComponent implements OnInit {
                 { label: 'help.menu.plan.tanks', path: 'tanks' },
                 { label: 'help.menu.plan.rebreather', path: 'rebreather' },
                 { label: 'help.menu.plan.mccr', path: 'rebreather', anchor: 'mccr' },
+                { label: 'help.menu.plan.eccr', path: 'rebreather', anchor: 'eccr' },
                 { label: 'help.menu.plan.standardGases', path: 'standard_gases' },
                 { label: 'help.menu.plan.depths', path: 'depths' },
                 { label: 'help.menu.plan.surfaceInterval', path: 'depths', anchor: 'repetitive-dives-and-surface-interval' }
@@ -107,9 +105,7 @@ export class HelpComponent implements OnInit {
     constructor(
         public urls: Urls,
         private location: Location,
-        private viewStates: SubViewStorage,
-        markdown: MarkdownCustomization) {
-        markdown.configure();
+        private viewStates: SubViewStorage) {
     }
 
     public get document(): string {

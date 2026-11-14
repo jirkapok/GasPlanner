@@ -1,10 +1,10 @@
-import { Component, ViewChild, ElementRef, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgClass } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faMedal, faCircleInfo, faUndo, faChartSimple } from '@fortawesome/free-solid-svg-icons';
-import { NgxMdModule } from 'ngx-md';
+import { MarkdownComponent } from 'ngx-markdown';
 import { TranslatePipe } from '@ngx-translate/core';
 import { CategoryStatus, QuizService, TopicStatus } from '../shared/learn/quiz.service';
 import { Category, RoundType, Topic } from '../shared/learn/learn.models';
@@ -16,15 +16,12 @@ import { LearnViewState } from '../shared/views.model';
 import { KnownViews } from '../shared/viewStates';
 import { SubViewStorage } from '../shared/subViewStorage';
 import { HelpService } from '../shared/learn/help.service';
-import { MarkdownCustomization } from '../shared/markdown-customization.service';
 import { Urls } from '../shared/navigation.service';
 
 @Component({
     selector: 'app-learn',
-    imports: [CommonModule, NgxMdModule, FontAwesomeModule, NgClass, FormsModule, TranslatePipe],
-    providers: [MarkdownCustomization],
+    imports: [CommonModule, MarkdownComponent, FontAwesomeModule, NgClass, FormsModule, TranslatePipe],
     templateUrl: './learn.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     styleUrls: ['./learn.component.scss']
 })
 export class LearnComponent {
@@ -43,11 +40,9 @@ export class LearnComponent {
         public urls: Urls,
         private help: HelpService,
         private preferencesStore: PreferencesStore,
-        private markdown: MarkdownCustomization,
         private viewStates: SubViewStorage,
     ) {
         this.loadState();
-        this.markdown.configure();
     }
 
     public get topics(): Topic[] {

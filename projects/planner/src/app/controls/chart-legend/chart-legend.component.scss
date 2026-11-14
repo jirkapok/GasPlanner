@@ -1,0 +1,33 @@
+:host {
+    display: block;
+}
+
+// samples like in the chart legend, colored by the current text color
+.legend-marker {
+    vertical-align: middle;
+}
+
+.legend-circle {
+    width: 0.6em;
+    height: 0.6em;
+    background-color: currentColor;
+}
+
+.legend-line {
+    width: 1.6em;
+    border-top: 2px solid currentColor;
+}
+
+.legend-line-dotted {
+    border-top-style: dotted;
+}
+
+.legend-line-dashed {
+    border-top-style: dashed;
+}
+
+// ceiling is filled area in the chart
+.legend-ceiling-area {
+    height: 0.6em;
+    background-color: color-mix(in srgb, currentColor 50%, transparent);
+}

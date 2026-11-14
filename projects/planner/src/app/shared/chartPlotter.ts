@@ -11,16 +11,38 @@ import { BoundEvent } from './models';
 /** Layout which always defines both axes, so they can be updated without null checks */
 type ChartLayout = Partial<Plotly.Layout> & Required<Pick<Plotly.Layout, 'xaxis' | 'yaxis'>>;
 
+/** Last segment of every trace uid, identifies the trace in hover events */
+export enum TraceKind {
+    averageDepth = 'averageDepth',
+    depth = 'depth',
+    emergency = 'emergency',
+    ceiling = 'ceiling',
+    events = 'events'
+}
+
+/** Colors of the chart traces used by the chart legend */
+export interface ChartLegendColors {
+    depth: string;
+    averageDepth: string;
+    ceiling: string;
+    emergency: string;
+    event: string;
+}
+
 /** Cant be Injectable because is builder pattern which keeps state from last configuration */
 export class ChartPlotterFactory {
     public static readonly depthLineColorA = 'rgb(31, 119, 180)';
-    public static readonly depthLineColorB = 'rgb(141, 143, 144)';
+    public static readonly depthLineColorB = 'rgb(18, 145, 59)';
+    public static readonly ceilingLineColorB = 'rgb(252, 175, 103)';
+    public static readonly eventFillColorB = 'rgb(0, 150, 60)';
+    public static readonly averageDepthColorB = 'rgb(105, 181, 120)';
     private namePrefixKey: string | null = null;
     private averageDepthLineColor = 'rgb(62, 157, 223)';
     private ceilingLineColor = 'rgb(255, 160, 73)';
     private eventLineColor = 'rgba(31, 119, 180, 0.7)';
     private eventFillColor = 'rgba(31, 119, 180, 0.5)';
     private depthLineColor = ChartPlotterFactory.depthLineColorA;
+    private hideHoverLabels = false;
     /** in seconds */
     private timeOffset: () => number;
 
@@ -43,7 +65,7 @@ export class ChartPlotterFactory {
         };
     }
 
-    public createCursor(): Partial<Plotly.Shape> {
+    public createCursorA(): Partial<Plotly.Shape> {
         return {
             type: 'line',
             // x-reference is assigned to the x-values
@@ -62,8 +84,27 @@ export class ChartPlotterFactory {
         };
     }
 
-    public createLayout(): ChartLayout {
+    public createCursorB(): Partial<Plotly.Shape> {
         return {
+            type: 'line',
+            // x-reference is assigned to the x-values
+            xref: 'x',
+            // y-reference is assigned to the plot paper [0,1]
+            yref: 'y',
+            x0: new Date('2001-06-12 12:30'), // dummy values
+            y0: 0,
+            x1: new Date('2001-06-12 12:30'),
+            y1: 1,
+            fillcolor: '#d3d3d3',
+            line: {
+                color: ChartPlotterFactory.depthLineColorB,
+                width: 5
+            }
+        };
+    }
+
+    public createLayout(): ChartLayout {
+        const layout: ChartLayout = {
             autosize: true,
             showlegend: false,
             xaxis: {
@@ -80,18 +121,36 @@ export class ChartPlotterFactory {
                 }
             },
             margin: { l: 40, r: 10, b: 40, t: 10 },
-            hovermode: 'x unified',
+            // unified box ignores trace hoverinfo 'none', so it would still be drawn
+            hovermode: this.hideHoverLabels ? 'x' : 'x unified',
             hoverlabel: {
                 bgcolor: 'rgba(200, 200, 200, 0.25)',
                 bordercolor: 'rgba(200, 200, 200, 0.25)'
             },
             shapes: []
         };
+
+        if (this.hideHoverLabels) {
+            // the same vertical line, which unified hover draws by default
+            layout.xaxis.showspikes = true;
+            layout.xaxis.spikemode = 'across';
+            layout.xaxis.spikedash = 'dot';
+            layout.xaxis.spikethickness = 1.5;
+            layout.xaxis.spikecolor = '#444';
+        }
+
+        return layout;
     }
 
     /** Translation key (e.g. 'diffResultsTable.profileA') for the trace-name prefix, or null for no prefix. */
     public withNamePrefix(prefixKey: string | null): ChartPlotterFactory {
         this.namePrefixKey = prefixKey;
+        return this;
+    }
+
+    /** Plotly doesn't draw the hover box, but still fires the hover events */
+    public withoutHoverLabels(): ChartPlotterFactory {
+        this.hideHoverLabels = true;
         return this;
     }
 
@@ -139,11 +198,13 @@ export class ChartPlotterFactory {
             this.ceilingLineColor,
             this.eventLineColor,
             this.eventFillColor,
+            this.hideHoverLabels,
         );
     }
 }
 
 export class DiveTracesBuilder {
+    private static readonly emergencyLineColor = 'rgb(255, 77, 77)';
     public showEmergencyAscent = false;
     private readonly namePrefixKey: string | null = null;
     private readonly averageDepthLineColor: string = 'rgb(62, 157, 223)';
@@ -165,6 +226,7 @@ export class DiveTracesBuilder {
         ceilingLineColor: string,
         eventLineColor: string,
         eventFillColor: string,
+        private hideHoverLabels: boolean,
     ) {
         this.namePrefixKey = namePrefixKey;
         this.averageDepthLineColor = averageDepthLineColor;
@@ -172,6 +234,21 @@ export class DiveTracesBuilder {
         this.ceilingLineColor = ceilingLineColor;
         this.eventLineColor = eventLineColor;
         this.eventFillColor = eventFillColor;
+    }
+
+    /** Start of uid of all traces of this builder, distinguishes compared profiles in hover events */
+    public get uidPrefix(): string {
+        return this.namePrefixKey ? `${this.namePrefixKey}.` : '';
+    }
+
+    public get legendColors(): ChartLegendColors {
+        return {
+            depth: this.depthLineColor,
+            averageDepth: this.averageDepthLineColor,
+            ceiling: this.ceilingLineColor,
+            emergency: DiveTracesBuilder.emergencyLineColor,
+            event: this.eventLineColor
+        };
     }
 
     /** Re-resolved on every trace build so a language switch updates it without recreating the builder. */
@@ -204,7 +281,7 @@ export class DiveTracesBuilder {
     private plotAverageDepth(profile: Segment[]): Partial<Plotly.ScatterData> {
         const resampleAverageDepth = this.resampling.resampleAverageDepth(profile);
 
-        return {
+        return this.identify(TraceKind.averageDepth, {
             x: this.applyTimeOffset(resampleAverageDepth.xValues),
             y: resampleAverageDepth.yValues,
             type: 'scatter',
@@ -216,13 +293,13 @@ export class DiveTracesBuilder {
                 color: this.averageDepthLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
+        });
     }
 
     private plotDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
-        return {
+        return this.identify(TraceKind.depth, {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
@@ -231,13 +308,13 @@ export class DiveTracesBuilder {
                 color: this.depthLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
+        });
     }
 
     private plotEmergencyDepths(wayPoints: WayPoint[]): Partial<Plotly.ScatterData> {
         const resampled = this.resampling.resampleWaypoints(wayPoints);
 
-        return {
+        return this.identify(TraceKind.emergency, {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
@@ -246,10 +323,10 @@ export class DiveTracesBuilder {
                 dash: <Plotly.Dash>'dash'
             },
             marker: {
-                color: 'rgb(255, 77, 77)'
+                color: DiveTracesBuilder.emergencyLineColor
             },
             hovertemplate: `%{y:.2f}  ${this.units.length}`
-        };
+        });
     }
 
     private plotCeilings(ceilings: Ceiling[]): Partial<Plotly.ScatterData> {
@@ -258,7 +335,7 @@ export class DiveTracesBuilder {
         const dataCeilings = {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
-            type: <Plotly.PlotType>'scatter',
+            type: <Plotly.TraceType>'scatter',
             fill: 'tozeroy',
             name: this.namePrefix + this.translate('profileChart.ceilingTraceName'),
             marker: {
@@ -267,7 +344,7 @@ export class DiveTracesBuilder {
             hovertemplate: `%{y:.2f}  ${this.units.length}`
         };
 
-        return <Partial<Plotly.ScatterData>>dataCeilings;
+        return this.identify(TraceKind.ceiling, <Partial<Plotly.ScatterData>>dataCeilings);
     }
 
     private plotEvents(events: BoundEvent[], totalDuration: number): Partial<Plotly.ScatterData> {
@@ -278,7 +355,7 @@ export class DiveTracesBuilder {
             y: resampled.yValues,
             labels: resampled.labels,
             text: resampled.labels,
-            type: <Plotly.PlotType>'scatter',
+            type: <Plotly.TraceType>'scatter',
             mode: 'text+markers',
             fill: 'tozeroy',
             name: this.namePrefix + this.translate('profileChart.eventTraceName'),
@@ -299,7 +376,19 @@ export class DiveTracesBuilder {
             showlegend: false
         };
 
-        return <Partial<Plotly.ScatterData>>dataEvents;
+        return this.identify(TraceKind.events, <Partial<Plotly.ScatterData>>dataEvents);
+    }
+
+    private identify(kind: TraceKind, trace: Partial<Plotly.ScatterData>): Partial<Plotly.ScatterData> {
+        trace.uid = this.uidPrefix + kind;
+
+        if (this.hideHoverLabels) {
+            trace.hoverinfo = 'none';
+            // takes precedence over hoverinfo
+            delete trace.hovertemplate;
+        }
+
+        return trace;
     }
 
     private applyTimeOffset(timestamps: Date[]): Date[] {
@@ -313,7 +402,8 @@ export class DiveTracesBuilder {
 export class ChartPlotter {
     private builders: DiveTracesBuilder[];
     private options: Partial<Plotly.Config>;
-    private cursor1: Partial<Plotly.Shape>;
+    private cursorA: Partial<Plotly.Shape>;
+    private cursorB: Partial<Plotly.Shape>;
     private layout: ChartLayout;
 
     /** Provide traces in reverse order to keep the last on top */
@@ -322,7 +412,8 @@ export class ChartPlotter {
                 private chartPlotterFactory: ChartPlotterFactory,
                 ...traceBuilders: DiveTracesBuilder[]) {
         this.builders = traceBuilders;
-        this.cursor1 = chartPlotterFactory.createCursor();
+        this.cursorA = chartPlotterFactory.createCursorA();
+        this.cursorB = chartPlotterFactory.createCursorB();
         this.layout = chartPlotterFactory.createLayout();
         this.options = chartPlotterFactory.createOptions();
     }
@@ -335,12 +426,18 @@ export class ChartPlotter {
         this.plotCharts(b => b.profileTraces());
     }
 
-    public plotCursor(wayPoint: WayPoint | undefined): void {
+    public plotCursors(wayPointA?: WayPoint, wayPointB?: WayPoint): void {
         const shapes: Partial<Plotly.Shape>[] = [];
 
-        if(wayPoint) {
-            this.updateCursor(wayPoint, this.cursor1);
-            shapes.push(this.cursor1);
+        if (wayPointA) {
+            const cursor = structuredClone(this.cursorA);
+            this.updateCursor(wayPointA, cursor);
+            shapes.push(cursor);
+        }
+        if (wayPointB) {
+            const cursor = structuredClone(this.cursorB);
+            this.updateCursor(wayPointB, cursor);
+            shapes.push(cursor);
         }
 
         const update: Partial<Plotly.Layout> = { shapes };

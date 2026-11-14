@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
     AbstractControl, FormControl, FormGroup,
     NonNullableFormBuilder, ReactiveFormsModule
@@ -22,7 +22,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-surface-interval',
     templateUrl: './surface-interval.component.html',
     styleUrls: ['./surface-interval.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MaskitoDirective,
         ReactiveFormsModule,
@@ -44,14 +43,13 @@ export class SurfaceIntervalComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         private fb: NonNullableFormBuilder,
         private dispatcher: ReloadDispatcher,
-        private inputs: InputControls,
         private validators: ValidatorGroups) {
         super();
     }
 
     public get surfaceIntervalInvalid(): boolean {
         const surfaceControl = this.form.get(this.controlName) as AbstractControl;
-        return this.inputs.controlInValid(surfaceControl);
+        return InputControls.isControlInvalid(surfaceControl);
     }
 
     public get surfaceReadOnly(): boolean {

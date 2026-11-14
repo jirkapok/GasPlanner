@@ -1,13 +1,22 @@
-<div class="no-wrap">
-    <div class="label-header" [@labelState]="state">
-        <div class="profile-header primary-header">
-            {{ 'diffTabs.profileA' | translate }}
-        </div>
-
-        <div class="profile-header secondary-header">
-            {{ 'diffTabs.profileB' | translate }}
-        </div>
+<div class="ms-2 h-100">
+    <div class="position-relative h-50">
+        @if (state === 'primary') {
+            <div class="position-absolute w-100 rounded-top text-white text-center initialism bg-primary"
+                animate.enter="flip-in" animate.leave="flip-out" data-testid="profile-a-label">
+                {{ 'diffTabs.profileA' | translate }}
+            </div>
+        } @else if (state === 'secondary') {
+            <div class="position-absolute w-100 rounded-top text-white text-center initialism bg-success"
+                animate.enter="flip-in" animate.leave="flip-out" data-testid="profile-b-label">
+                {{ 'diffTabs.profileB' | translate }}
+            </div>
+        }
     </div>
-    <button type="button" class="btn" [ngClass]="{'btn-outline-secondary': selected, 'btn-secondary': !selected}" (click)="selectProfile()">
-        {{this.title}}</button>
+    <button type="button" class="btn"
+        [class.btn-outline-secondary]="selected"
+        [class.btn-secondary]="!selected"
+        (click)="selectProfile()"
+        data-testid="select-button">
+        {{ this.title }}
+    </button>
 </div>

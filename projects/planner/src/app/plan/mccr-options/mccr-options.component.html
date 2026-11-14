@@ -21,9 +21,9 @@
     }
   </div>
   <div class="mb-4 col col-12 col-sm-6 col-md-3">
-    <label for="loopVolume" class="form-label">{{ 'mccrOptions.loopVolume' | translate }}
+    <label for="mccrLoopVolume" class="form-label">{{ 'mccrOptions.loopVolume' | translate }}
       [{{ units.volume }}]:</label>
-    <input id="loopVolume" class="form-control" type="number" formControlName="loopVolume"
+    <input id="mccrLoopVolume" class="form-control" type="number" formControlName="loopVolume"
       required [min]="ranges.loopVolume[0]" [max]="ranges.loopVolume[1]" [step]="volumeStep"
       (input)="applyOptions()" [class.is-invalid]="loopVolumeInvalid" />
     @if (loopVolumeInvalid) {
@@ -32,9 +32,9 @@
     }
   </div>
   <div class="mb-4 col col-12 col-sm-6 col-md-3">
-    <label for="metabolicO2" class="form-label">{{ 'mccrOptions.metabolicO2' | translate }}
+    <label for="mccrMetabolicO2" class="form-label">{{ 'mccrOptions.metabolicO2' | translate }}
       [{{ units.volume }}/min]:</label>
-    <input id="metabolicO2" class="form-control" type="number" formControlName="metabolicO2"
+    <input id="mccrMetabolicO2" class="form-control" type="number" formControlName="metabolicO2"
       required [min]="ranges.metabolicO2[0]" [max]="ranges.metabolicO2[1]" [step]="volumeStep"
       (input)="applyOptions()" [class.is-invalid]="metabolicO2Invalid" />
     @if (metabolicO2Invalid) {

@@ -1,4 +1,5 @@
-import { test, expect, Page, type Locator, BrowserContext } from '@playwright/test';
+import { test, expect } from './fixtures';
+import { Page, type Locator } from '@playwright/test';
 
 class DiveInfoPage {
     private readonly timeValueSelector = '#total-dive-time-value';
@@ -108,12 +109,10 @@ class LearnPage {
 }
 
 test.describe('Dive planner smoke tests', () => {
-    let context: BrowserContext;
     let page: Page;
 
-    test.beforeEach(async ({ browser }) => {
-        context = await browser.newContext();
-        page = await context.newPage();
+    test.beforeEach(async ({ page: testPage }) => {
+        page = testPage;
 
         await page.goto('/');
     });

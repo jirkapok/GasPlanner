@@ -23,6 +23,8 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
 
 export class ComplexDepthsPage {
     constructor(private fixture: ComponentFixture<DepthsComplexComponent>) { }
@@ -188,5 +190,56 @@ describe('Depths Complex Component', () => {
             clickItem('#extendDepth');
             expect(complexPage.depthInput(1).value).toBe(String(originalDepth + 5));
         });
+    });
+});
+
+describe('Depths Complex Component OnPush', () => {
+    let fixture: ComponentFixture<DepthsComplexComponent>;
+
+    const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [ReactiveFormsModule, DepthsComplexComponent],
+            providers: planTestProviders
+        });
+        fixture = await renderOnPush(DepthsComplexComponent);
+    });
+
+    it('renders gas of a tank changed in tanks', async () => {
+        const tankLabel = (): string | undefined =>
+            (fixture.nativeElement as HTMLElement).querySelector<HTMLInputElement>('[id^="tanks"]')?.value;
+        expect(tankLabel()).not.toContain('EAN50');
+
+        TestBed.inject(DiveSchedules).selectedTanks.tanks[0].o2 = 50;
+        TestBed.inject(ReloadDispatcher).sendTankChanged();
+        await fixture.whenStable();
+
+        expect(tankLabel()).toContain('EAN50');
+    });
+
+    it('renders levels reloaded outside the component', async () => {
+        const depths = TestBed.inject(DiveSchedules).selectedDepths;
+        expect(text()).not.toContain('42 min');
+
+        depths.levels[0].duration = 42;
+        TestBed.inject(ReloadDispatcher).sendDepthsReloaded(depths);
+        await fixture.whenStable();
+
+        expect(text()).toContain('42 min');
+    });
+
+    it('renders levels of the dive selected outside the component', async () => {
+        const rows = (): number => (fixture.nativeElement as HTMLElement).querySelectorAll('[id^="removeLevel"]').length;
+        const before = rows();
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.depths.addSegment();
+        second.depths.addSegment();
+
+        schedules.selected = second;
+        await fixture.whenStable();
+
+        expect(rows()).toBeGreaterThan(before);
     });
 });

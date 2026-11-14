@@ -23,7 +23,6 @@ import { WayPoint } from './wayPoint';
 import { ApplicationSettingsService } from './ApplicationSettings';
 import { IgnoredIssuesService } from './IgnoredIssues.service';
 import { BoundEvent } from './models';
-import { ViewRefresh } from './viewRefresh';
 
 
 @Injectable()
@@ -40,8 +39,7 @@ export class PlannerService extends Streamed {
         private viewSwitch: ViewSwitchService,
         private appSettings: ApplicationSettingsService,
         workerFactory: WorkersFactoryCommon,
-        private units: UnitConversion,
-        private viewRefresh: ViewRefresh) {
+        private units: UnitConversion) {
         super();
 
         this.waypoints = new WayPointsService(units);
@@ -73,8 +71,7 @@ export class PlannerService extends Streamed {
         }
 
         Logger.debug(`Planner calculated: ${diveId}`);
-        // the still running state is shown by timer outside Angular events
-        this.schedules.markStart(diveId, () => this.viewRefresh.refresh());
+        this.schedules.markStart(diveId);
         const profileRequest = this.createPlanRequest(dive);
         this.profileTask.calculate(profileRequest);
     }
@@ -194,6 +191,11 @@ export class PlannerService extends Streamed {
         }
 
         const tanks = dive.tanksService;
+        // result of a plan with other tanks arrived after the tanks were changed, the following result will be applied
+        if (result.tanks.length !== tanks.tanks.length) {
+            return;
+        }
+
         tanks.copyTanksConsumption(result.tanks);
         const diveResult = dive.diveResult;
         const turnPressure = tanks.calculateTurnPressure();

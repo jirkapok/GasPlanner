@@ -21,7 +21,7 @@ Build order matters: the `scuba-physics` library must be built before the `plann
 - `npm run test-ci` / `npm run test-lib-ci` — headless, single-run variants with coverage used in CI (Cobertura in `coverage/<project>`, JUnit in `test-results/<project>`).
 - `npm run test-performance` — `scuba-physics` `*.performance.spec.ts` (separate `test-performance` target, Chromium with memory measurement flags, see `projects/scuba-physics/vitest-performance.config.mts`).
 - Vitest runner settings (spy restore, reporters, module resolution) live in `projects/*/vitest-base.config.mts`, referenced by `runnerConfig` in `angular.json`. Test helpers shared between specs go to `*.testing.ts` files, never export them from a `*.spec.ts` (Vitest would run the exporting spec again in every importing file).
-- `npm run lint` — `ng lint` (Angular ESLint) across both projects.
+- `npm run lint` — `ng lint` (Angular ESLint) across both projects; the `planner` target also lints the Playwright `e2e/` specs and `playwright.config.ts` (type checked through `e2e/tsconfig.json`).
 - `npm run e2e` — Playwright E2E (`playwright-ng-schematics` builder), auto-starts the dev server; single spec currently in `e2e/startupSmoke.spec.ts`.
 - Run a single spec file: `ng test planner --no-watch --include='**/foo.spec.ts'` (swap `planner` for `scuba-physics` for library specs).
 - Windows PowerShell equivalents of the main build/test flow are in `build/*.ps1`, but the npm scripts above are the primary workflow.
@@ -44,7 +44,7 @@ Two Angular projects under `projects/`:
 
 ### App composition (`app.config.ts` / `app.routes.ts`)
 
-- `app.config.ts` is the single composition root: standalone components are listed in the `STANDALONE` array, injectable services in `SERVICES`, third-party Angular modules (MDB UI Kit, `NgxMdModule`, `ServiceWorkerModule`, etc.) alongside them. When adding a new standalone component or service, register it in the matching array here rather than importing it ad hoc elsewhere.
+- `app.config.ts` is the single composition root: standalone components are listed in the `STANDALONE` array, injectable services in `SERVICES`, third-party Angular modules and providers (MDB UI Kit, `provideDocsMarkdown()` (ngx-markdown), `ServiceWorkerModule`, etc.) alongside them. When adding a new standalone component or service, register it in the matching array here rather than importing it ad hoc elsewhere.
 - `app.routes.ts` defines flat routes per feature/calculator (`KnownViews` enum) plus a catch-all `DashboardComponent` route guarded by `canActivateDashboard`, which redirects an empty-query root navigation back to the last-viewed dashboard view (state tracked in `ViewStates`).
 
 ### State & services (`projects/planner/src/app/shared/*`)
@@ -57,7 +57,7 @@ Heavy dive-profile/consumption/decompression math runs off the main thread. `pro
 
 ### Docs / Help
 
-Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob of the `build` target in `angular.json` (the `test` target reuses it through `buildTarget`). They're rendered at runtime by `HelpComponent` using `ngx-md`, routed as `/help/:document/:anchor`.
+Markdown docs live in `doc/` at the repo root and are copied into the app bundle as `assets/doc` via the `assets` glob of the `build` target in `angular.json` (the `test` target reuses it through `buildTarget`). They're rendered at runtime by `HelpComponent` using `ngx-markdown` (setup and marked renderer overrides in `shared/markdownDocs.ts`; heading anchors from `HeadingSlugger`, compatible with the old marked 4 ids), routed as `/help/:document/:anchor`. ngx-markdown optionally imports `marked-katex-extension`, which is not installed: it is declared in `externalDependencies` of the `build` target and aliased to a stub in `projects/planner/vitest-base.config.mts`.
 
 ### CI/CD pipeline (`.github/workflows/main.yml`, `build/*.ps1`)
 
@@ -74,23 +74,25 @@ Use the Superpowers plugin skills for feature and bug-fix work:
 
 1. `superpowers:brainstorming` — clarify the feature and get the design/spec approved before planning.
 2. `superpowers:writing-plans` — write the implementation plan into `.claude/plans/` (not the skill's default `docs/superpowers/plans/`); all plans live there. Give every task a `- [ ] Status` checkbox.
-3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement the plan, but override their continuous execution:
-   implement ONE task per request, run its verification (tests + `npm run lint`), tick its `- [ ] Status` checkbox, then STOP for my review.
-   Don't continue to the next task or run `superpowers:finishing-a-development-branch` without my explicit go-ahead.
-4. Use `superpowers:systematic-debugging` for bugs and test failures, and `superpowers:verification-before-completion` before claiming anything works.
+3. `superpowers:executing-plans` (or `superpowers:subagent-driven-development`) — implement all tasks of the plan continuously: for each task run its verification (tests + `npm run lint`), tick each of its step checkboxes as the step is done and its `- [ ] Status` checkbox when the task is done, commit it, then continue with the next task without stopping.
+4. After the last task, run the final whole-branch review with `superpowers:requesting-code-review`: dispatch a fresh code-reviewer subagent on the most capable model (this explicitly authorizes the subagent) over the range from the branch's merge-base with `master` to `HEAD`, passing the plan, its Review Focus section and the ledger's rulings. Fix its Critical and Important findings test-first, then STOP for my review.
+   Don't run `superpowers:finishing-a-development-branch` (push, PR, merge) without my explicit go-ahead.
+5. Use `superpowers:systematic-debugging` for bugs and test failures, and `superpowers:verification-before-completion` before claiming anything works.
 
 The project rules in this file take precedence over the Superpowers skills where they conflict.
 
 ## Conventions
 
 - Keep new UI/state code in the standalone-component style (no NgModules); don't reintroduce them.
-- The app runs zoneless (`provideZonelessChangeDetection()`, no zone.js). State changed outside Angular template events (web worker messages, timers, promises, third-party callbacks like Plotly events) must notify Angular: services call `ViewRefresh.refresh()` (`shared/viewRefresh.ts`, marks the root components for check), components call `ChangeDetectorRef.markForCheck()`. Worker messages already refresh the view in `BackgroundTask`.
+- The app runs zoneless (`provideZonelessChangeDetection()`, no zone.js). State changed outside Angular template events (web worker messages, timers, promises, third-party callbacks like Plotly events) must notify Angular: services keep such UI state in signals (`signal()` exposed through the existing getters, e.g. `DiveResults`, `TankBound` consumption), so templates reading it are refreshed. Components call `ChangeDetectorRef.markForCheck()` only for third-party callbacks changing their own state. Replace arrays/records kept in a signal instead of mutating them, and don't put signals into value-like classes copied and compared by tests (e.g. `WayPoint`), keep the state in the owning service instead (see `SelectedWaypoint`). Test it with `renderOnPush` (`projects/planner/src/testing/onPush.testing.ts`): change the state outside template events and `await fixture.whenStable()`.
+- All components use the Angular 22 default `ChangeDetectionStrategy.OnPush`: don't set `changeDetection` (`@angular-eslint/prefer-on-push-component-change-detection` reports `Eager`). An OnPush component is refreshed only by its own template events, changed input references or signals it reads. So pass a new object instead of mutating an input (e.g. a new `GasToxicity` after options changed). State edited in place is tracked by a `_version` signal of the owning service or wrapper, increased by each write and read by each getter (see `TankBound`, `DepthsService`, `OptionsService`). A component rebuilding its own form controls on a `ReloadDispatcher` event calls `markForCheck()` (see `depths-complex`). Reactive form controls refresh their host component by themselves.
 - Push logic into `scuba-physics` wherever it's pure computation/domain logic — keep `planner` focused on UI, routing, and orchestration.
 - Use test-driven development as defined by the `superpowers:test-driven-development` skill (failing test first, then minimal code to pass, then refactor) for every feature and bug fix. Write the tests as component tests for `planner` app code and as unit tests for library (`scuba-physics`) code.
 - Add E2E coverage only for the happy path of a key scenario when introducing a new page — not for every case.
 - Prefer Angular MDbootstrap library classes over custom CSS/SCSS where possible (note: current UI relies on `mdb-angular-ui-kit`).
 - Don't edit generated output in `dist/`, `.angular/`, or `coverage/`.
 - ESLint enforces 4-space indent, single quotes, required semicolons, 140-char line length, and Angular-specific rules (`app` element/attribute prefix, kebab-case component selectors, camelCase directive selectors); run `npm run lint` before considering a change done.
+- Before changing a file, first fix all its existing lint issues (check with `npx eslint <file>`), including the ones not caused by your change, and commit that cleanup separately (`style:` or `refactor:`) before the change itself.
 - Implement layouts for both desktop and mobile using the existing `col-12 col-sm-* col-md-*...` Bootstrap/MDB grid pattern (see `diveoptions.component.html`) — mobile is the `sm` breakpoint and below (<768px, i.e. no `col-md`-or-larger override applies). Don't introduce custom media queries for this.
 - Keep component minimum code inside the angular component by putting only formatting (e.g. Precision.round for display), form accessors, component initialization, validation wiring, and thin event handlers that delegate a single UI value or action to a service call with no computation of their own (see diveoptions.component.ts). Extract anything that computes or derives a value into the separate service.
 - Always provide validation of inputs: apply [class.is-invalid] to the control when out of the UnitConversion range, and show a message in a sibling element immediately below it (see the O2 % field in oxygen-dropdown.component.html).

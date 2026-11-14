@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faPercent } from '@fortawesome/free-solid-svg-icons';
@@ -31,7 +31,6 @@ interface NitroxForm {
     selector: 'app-nitrox',
     templateUrl: './nitrox.component.html',
     styleUrls: ['./nitrox.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, OxygenDropDownComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class NitroxComponent implements OnInit {
@@ -49,7 +48,6 @@ export class NitroxComponent implements OnInit {
         public units: UnitConversion,
         public location: Location,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private schedules: DiveSchedules,
         private viewStates: SubViewStorage,
@@ -65,17 +63,17 @@ export class NitroxComponent implements OnInit {
 
     public get pO2Invalid(): boolean {
         const pO2 = this.nitroxForm.controls.pO2;
-        return this.inputs.controlInValid(pO2);
+        return InputControls.isControlInvalid(pO2);
     }
 
     public get modInvalid(): boolean {
         const mod = this.nitroxForm.controls.mod;
-        return this.inputs.controlInValid(mod);
+        return InputControls.isControlInvalid(mod);
     }
 
     public get depthInvalid(): boolean {
         const depth = this.nitroxForm.controls.depth;
-        return this.inputs.controlInValid(depth);
+        return InputControls.isControlInvalid(depth);
     }
 
     public get calcMod(): number {

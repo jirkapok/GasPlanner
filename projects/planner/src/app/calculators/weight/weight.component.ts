@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { faWeightHanging } from '@fortawesome/free-solid-svg-icons';
@@ -28,7 +28,6 @@ interface WeightForm {
     selector: 'app-weight-calc',
     templateUrl: './weight.component.html',
     styleUrls: ['./weight.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class WeightCalcComponent implements OnInit {
@@ -39,7 +38,6 @@ export class WeightCalcComponent implements OnInit {
     constructor(
         private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         public units: UnitConversion,
         public location: Location,
         private viewStates: SubViewStorage,
@@ -55,21 +53,21 @@ export class WeightCalcComponent implements OnInit {
 
     public get consumedInvalid(): boolean {
         const depthControl = this.weightForm.controls.consumed;
-        return this.inputs.controlInValid(depthControl);
+        return InputControls.isControlInvalid(depthControl);
     }
 
     public get workPressureInvalid(): boolean {
         const pressureControl = this.weightForm.controls.workPressure;
-        return this.inputs.controlInValid(pressureControl);
+        return InputControls.isControlInvalid(pressureControl);
     }
 
     public get tankSizeInvalid(): boolean {
         const tankSize = this.weightForm.get('tankSize') as AbstractControl;
-        return this.inputs.controlInValid(tankSize);
+        return InputControls.isControlInvalid(tankSize);
     }
 
     public get weight(): number {
-        let result = AirWeight.tankVolumeWeight(this.tank.tank);
+        let result = AirWeight.tankVolumeWeight(this.tank.algorithmTank);
         result = this.units.fromKilogram(result);
         return Precision.round(result, 1);
     }
@@ -110,12 +108,16 @@ export class WeightCalcComponent implements OnInit {
 
         const values = this.weightForm.value;
         const consumed = Number(values.consumed);
-        const t = this.tank.tank;
-        const reserve = this.setttings.appSettings.primaryTankReserve;
-        t.startPressure = reserve + consumed;
-        t.consumed = this.units.toBar(consumed);
+        this.assignConsumed(this.units.toBar(consumed));
         this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
+    }
+
+    /** Consumed gas is the pressure drop from start pressure, so the start pressure needs to be set first */
+    private assignConsumed(consumedBars: number): void {
+        const reserve = this.setttings.appSettings.primaryTankReserve;
+        this.tank.startPressureBars = reserve + consumedBars;
+        this.tank.consumedBars = consumedBars;
     }
 
     private loadState(): void {
@@ -125,10 +127,10 @@ export class WeightCalcComponent implements OnInit {
             state = this.createState();
         }
 
-        this.tank.tank.size = state.tankSize;
+        this.tank.sizeLiters = state.tankSize;
         const workPressure = this.units.fromBar(state.workPressure);
         this.setWorkingPressure(workPressure);
-        this.tank.tank.consumed = state.consumed;
+        this.assignConsumed(state.consumed);
     }
 
     private saveState(): void {

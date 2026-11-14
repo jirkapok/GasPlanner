@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Salinity } from 'scuba-physics';
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -10,7 +10,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-salinity',
     templateUrl: './salinity.component.html',
     styleUrls: ['./salinity.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule,
         MdbFormsModule,

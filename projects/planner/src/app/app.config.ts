@@ -18,7 +18,6 @@ import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
 
 import { environment } from '../environments/environment';
 import { routes } from './app.routes';
-import { NgxMdModule } from 'ngx-md';
 
 import { SacComponent } from './calculators/sac/sac.component';
 import { NitroxComponent } from './calculators/nitrox/nitrox.component';
@@ -30,6 +29,7 @@ import { RedundanciesComponent } from './calculators/redundancies/redundancies.c
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 
 import { CalculatingComponent } from './controls/calculating/calculating.component';
+import { ChartLegendComponent } from './controls/chart-legend/chart-legend.component';
 import { AltitudeComponent } from './controls/altitude/altitude.component';
 import { GaslabelComponent } from './controls/gaslabel/gaslabel.component';
 import { SalinityComponent } from './controls/salinity/salinity.component';
@@ -47,6 +47,7 @@ import { TanksSimpleComponent } from './plan/tanks-simple/tanks-simple.component
 import { TanksComplexComponent } from './plan/tanks-complex/tanks-complex.component';
 import { PscrOptionsComponent } from './plan/pscr-options/pscr-options.component';
 import { MccrOptionsComponent } from './plan/mccr-options/mccr-options.component';
+import { EccrOptionsComponent } from './plan/eccr-options/eccr-options.component';
 import { DiverComponent } from './plan/diver/diver.component';
 import { DiveOptionsComponent } from './plan/diveoptions/diveoptions.component';
 import { DiveInfoComponent } from './plan/diveinfo/diveinfo.component';
@@ -83,7 +84,6 @@ import { WorkersFactoryCommon } from './shared/serial.workers.factory';
 import { NdlService } from './shared/ndl.service';
 import { OptionsService } from './shared/options.service';
 import { DelayedScheduleService } from './shared/delayedSchedule.service';
-import { InputControls } from './shared/inputcontrols';
 import { ValidatorGroups } from './shared/ValidatorGroups';
 import { DepthsService } from './shared/depths.service';
 import { TanksService } from './shared/tanks.service';
@@ -97,6 +97,7 @@ import { WayPointsService } from './shared/waypoints.service';
 import { StopsFilter } from './shared/stopsFilter.service';
 import { ViewStates } from './shared/viewStates';
 import { Urls } from './shared/navigation.service';
+import { provideDocsMarkdown } from './shared/markdownDocs';
 import { SubViewStorage } from './shared/subViewStorage';
 import { DashboardStartUp } from './shared/startUp';
 import { DiveResults } from './shared/diveresults';
@@ -140,6 +141,7 @@ const MDB_MODULES = [
 const STANDALONE = [
     PscrOptionsComponent,
     MccrOptionsComponent,
+    EccrOptionsComponent,
     AltitudeCalcComponent,
     DashboardComponent,
     DepthComponent,
@@ -186,6 +188,7 @@ const STANDALONE = [
     DurationPipe,
     LocaleNumberPipe,
     CalculatingComponent,
+    ChartLegendComponent,
     AltitudeComponent,
     GaslabelComponent,
     SalinityComponent,
@@ -196,6 +199,7 @@ const STANDALONE = [
 const SERVICES = [
     MdbModalService,
     provideHttpClient(withXhr(), withInterceptorsFromDi()),
+    provideDocsMarkdown(),
     provideTranslateService({
         loader: provideTranslateHttpLoader({ prefix: '/assets/i18n/', suffix: '.json' }),
         fallbackLang: 'en',
@@ -217,7 +221,6 @@ const SERVICES = [
     DiveResults,
     DiveSchedules,
     GasBlenderService,
-    InputControls,
     ManagedDiveSchedules,
     NdlService,
     NitroxCalculatorService,
@@ -257,7 +260,6 @@ export const CONFIG = {
         ...ANGULAR_MODULES,
         ...MDB_MODULES,
         STANDALONE,
-        NgxMdModule.forRoot(),
         ClipboardModule,
     ],
     exports: [],

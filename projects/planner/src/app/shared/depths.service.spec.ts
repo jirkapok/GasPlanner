@@ -1,4 +1,5 @@
 import { MockInstance } from 'vitest';
+import { computed } from '@angular/core';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { DepthsService } from './depths.service';
@@ -66,6 +67,28 @@ describe('Depths service', () => {
         });
     });
 
+    describe('Tracking', () => {
+        it('tracks planned depth', () => {
+            const tracked = computed(() => depthService.plannedDepth);
+            expect(tracked()).toBe(30);
+
+            depthService.plannedDepth = 40;
+
+            expect(tracked()).toBe(40);
+        });
+
+        it('tracks level edited in place', () => {
+            depthService.addSegment();
+            const tracked = computed(() => depthService.levels[1].endDepth);
+            tracked();
+
+            depthService.levels[1].endDepth = 25;
+            depthService.levelChanged();
+
+            expect(tracked()).toBe(25);
+        });
+    });
+
     describe('Depths', () => {
         let tanksService: TanksService;
 
@@ -111,7 +134,7 @@ describe('Depths service', () => {
             const secondTank = tanksService.tanks[1];
             depthService.addSegment();
             const lastSegment = depthService.segments[1];
-            lastSegment.tank = secondTank.tank;
+            lastSegment.tank = secondTank.algorithmTank;
             tanksService.removeTank(secondTank);
 
             expect(lastSegment.tank).toEqual(tanksService.firstTank.tank);

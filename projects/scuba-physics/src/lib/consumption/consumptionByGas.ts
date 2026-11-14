@@ -48,6 +48,12 @@ export class ConsumedGas implements IConsumedMix {
         return this.percentsOfScale(this.required);
     }
 
+    /** Required gas not covered by available gas in percents of scale, 0 if there is enough gas */
+    public get percentsMissing(): number {
+        const missing = Math.max(this.required - this.total, 0);
+        return this.percentsOfScale(missing);
+    }
+
     /** Consumed gas in percents of scale */
     public get percentsConsumed(): number {
         return this.percentsOfScale(this.consumed);

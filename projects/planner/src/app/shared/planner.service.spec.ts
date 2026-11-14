@@ -27,7 +27,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { ViewRefresh } from './viewRefresh';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('PlannerService', () => {
     let planner: PlannerService;
@@ -41,6 +41,7 @@ describe('PlannerService', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 WorkersFactoryCommon,
                 PlannerService, UnitConversion,
                 DiveSchedules, ReloadDispatcher,
@@ -69,13 +70,14 @@ describe('PlannerService', () => {
             vi.useRealTimers();
         });
 
-        it('Refreshes view after still running check', () => {
+        it('Keeps finished results after still running check', () => {
             vi.useFakeTimers();
-            const refresh = vi.spyOn(TestBed.inject(ViewRefresh), 'refresh').mockImplementation(() => {});
             planner.calculate(1);
 
             vi.advanceTimersByTime(500);
-            expect(refresh).toHaveBeenCalled();
+            expect(dive.calculated).toBe(true);
+            expect(dive.running).toBe(false);
+            expect(dive.wayPoints.length).toBeGreaterThan(0);
         });
     });
 
@@ -218,16 +220,16 @@ describe('PlannerService', () => {
             expect(dive.timeToSurface).toEqual(8);
         });
 
-        it('18 minutes maximum dive time', () => {
-            expect(dive.maxTime).toEqual(18);
+        it('17 minutes maximum dive time', () => {
+            expect(dive.maxTime).toEqual(17);
         });
 
         it('77 bar rock bottom', () => {
             expect(tanksService.firstTank.tank.reserve).toEqual(77);
         });
 
-        it('125 bar remaining gas', () => {
-            expect(tanksService.firstTank.tank.endPressure).toEqual(125);
+        it('117 bar remaining gas', () => {
+            expect(tanksService.firstTank.tank.endPressure).toEqual(117);
         });
 
         it('Consumption by gas is calculated together with tanks', () => {

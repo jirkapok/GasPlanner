@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { ViewSwitchService } from '../../../shared/viewSwitchService';
 import { UnitConversion } from '../../../shared/UnitConversion';
 import { ProfileComparatorService } from '../../../shared/diff/profileComparatorService';
@@ -15,7 +15,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-diff-diveresults-table',
     templateUrl: './diff-diveresults-table.component.html',
     styleUrls: ['./diff-diveresults-table.component.scss', '../../diff.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CalculatingComponent, FaIconComponent, LocaleNumberPipe, DurationPipe, TranslatePipe]
 })
 export class DiveResultsTableDifferenceComponent {

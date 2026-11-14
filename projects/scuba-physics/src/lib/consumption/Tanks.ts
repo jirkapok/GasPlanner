@@ -118,7 +118,10 @@ export class Tank implements TankFill {
         return this._size;
     }
 
-    /** Gets or sets the consumed pressure of gas in bars. */
+    /**
+     * Gets or sets the consumed pressure of gas in bars.
+     * It is the pressure drop from the start pressure, not the pressure of the consumed gas alone in an empty tank.
+     */
     public get consumed(): number {
         return this._consumed;
     }
@@ -237,7 +240,7 @@ export class Tank implements TankFill {
         // gas needs to be set first, since it affects compressibility factor.
         this._gas.fO2 = AirO2Pin.setO2(newValue, this.gas.fHe);
         // update volume based on compressibility, protecting pressure defined by user, not volume.
-        this.startPressure = this.startPressure;
+        this.fitStoredVolumes();
     }
 
     /** The helium part of tank gas in percents */
@@ -245,7 +248,7 @@ export class Tank implements TankFill {
         // gas needs to be set first, since it affects compressibility factor.
         this.gas.fHe = newValue / 100;
         // update volume based on compressibility, protecting pressure defined by user, not volume.
-        this.startPressure = this.startPressure;
+        this.fitStoredVolumes();
     }
 
     public set startPressure(newValue: number) {
@@ -270,8 +273,9 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newPressure: number) {
-        const newConsumedVolume = Tank.realVolume2(this.size, newPressure, this.gas);
-        this.updateConsumed(newPressure, newConsumedVolume);
+        newPressure = Math.min(Math.max(newPressure, Tank.minimumZero), this.startPressure);
+        const endVolume = Tank.realVolume2(this.size, this.startPressure - newPressure, this.gas);
+        this.updateConsumed(newPressure, this.volume - endVolume);
     }
 
     public set consumedVolume(newVolume: number) {
@@ -279,8 +283,7 @@ export class Tank implements TankFill {
             newVolume = this.volume;
         }
 
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
-        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        const newConsumedPressure = this.consumedPressure(newVolume);
         this.updateConsumed(newConsumedPressure, newVolume);
     }
 
@@ -311,15 +314,32 @@ export class Tank implements TankFill {
         return realVolume;
     }
 
+    public static realVolume2(size: number, pressure: number, gas: Gas): number {
+        const tank = { size, startPressure: pressure };
+        return Tank.realVolume(tank, gas);
+    }
+
     private static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
         const compressibility = new Compressibility();
         const pressure = compressibility.tankPressure(gas, tankSize, volume);
         return pressure;
     }
 
-    public static realVolume2(size: number, pressure: number, gas: Gas): number {
-        const tank = { size, startPressure: pressure };
-        return Tank.realVolume(tank, gas);
+    /**
+     * Assigns both gas parts at once, so the Air O2 pin is decided by the new He content.
+     * Prefer it over the o2 and he setters, when both parts change.
+     * In case the content exceeds 100 %, the He wins and O2 is reduced.
+     * @param o2Percent oxygen content in percents
+     * @param hePercent helium content in percents
+     */
+    public assignGas(o2Percent: number, hePercent: number): void {
+        const fHe = hePercent / 100;
+        const limitedO2 = Math.min(o2Percent, 100 - hePercent);
+        // He first, the pin of O2 depends on it
+        this.gas.fHe = fHe;
+        this.gas.fO2 = AirO2Pin.setO2(limitedO2, fHe);
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.fitStoredVolumes();
     }
 
     public assignStandardGas(gasName: string): void {
@@ -331,6 +351,8 @@ export class Tank implements TankFill {
 
         this.gas.fO2 = found.fO2;
         this.gas.fHe = found.fHe;
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.fitStoredVolumes();
     }
 
     /** Copies all properties from another tank except id */
@@ -343,7 +365,8 @@ export class Tank implements TankFill {
         this.size = other.size;
         this.startPressure = other.startPressure;
         this.consumedVolume = other.consumedVolume;
-        this.reserve = other.reserve;
+        // both values as they are, to prevent precision loss by rounding
+        this.updateReserve(other.reserve, other.reserveVolume);
     }
 
     public toString(): string {
@@ -354,9 +377,24 @@ export class Tank implements TankFill {
         this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
         // limit the pressure to reasonable maximum value, since for high pressures compressibility factor no longer works.
         const newConsumedVolume = this.consumedVolume > this._startVolume ? this._startVolume : this.consumedVolume;
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newConsumedVolume);
-        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        const newConsumedPressure = this.consumedPressure(newConsumedVolume);
         this.updateConsumed(newConsumedPressure, newConsumedVolume);
+    }
+
+    /**
+     * Pressure drop from start pressure in bars rounded up, when the consumed volume leaves the tank.
+     * Rounding to 4 decimals first removes the compressibility search noise (precision 0.000001 b).
+     */
+    private consumedPressure(consumedVolume: number): number {
+        // prevents the compressibility search, if nothing was consumed
+        if (consumedVolume <= Tank.minimumZero) {
+            return Tank.minimumZero;
+        }
+
+        const endVolume = Math.max(this.volume - consumedVolume, Tank.minimumZero);
+        const endPressure = Tank.toTankPressure(this.gas, this.size, endVolume);
+        const consumedPressure = Precision.round(this.startPressure - endPressure, 4);
+        return Math.max(Precision.ceil(consumedPressure), Tank.minimumZero);
     }
 
     /** to keep volume and pressure aligned */

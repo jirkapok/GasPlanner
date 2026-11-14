@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Precision, StandardGases, Tank } from 'scuba-physics';
 import { InputControls } from '../../shared/inputcontrols';
@@ -14,7 +14,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-oxygen-dropdown',
     templateUrl: './oxygen-dropdown.component.html',
     styleUrls: ['./oxygen-dropdown.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, MdbDropdownModule, TranslatePipe]
 })
 export class OxygenDropDownComponent implements OnInit {
@@ -32,7 +31,6 @@ export class OxygenDropDownComponent implements OnInit {
     @Output() public standardGasApplied = new EventEmitter<string>();
 
     constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion) {
     }
@@ -65,7 +63,7 @@ export class OxygenDropDownComponent implements OnInit {
 
     public get gasO2Invalid(): boolean {
         const o2Field = this.nitroxForm.get(this.controlName);
-        return !o2Field || this.inputs.controlInValid(o2Field);
+        return !o2Field || InputControls.isControlInvalid(o2Field);
     }
 
     public ngOnInit(): void {

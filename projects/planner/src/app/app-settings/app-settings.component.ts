@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {
     NonNullableFormBuilder, FormGroup, Validators, FormControl, ReactiveFormsModule
 } from '@angular/forms';
@@ -32,8 +32,7 @@ import { LanguageDropdownComponent } from '../language-dropdown/language-dropdow
         MdbFormsModule,
         TranslatePipe,
         LanguageDropdownComponent
-    ],
-    changeDetection: ChangeDetectionStrategy.Eager
+    ]
 })
 export class AppSettingsComponent implements OnInit {
     public readonly flagIcon = faFlag;
@@ -59,7 +58,6 @@ export class AppSettingsComponent implements OnInit {
         private viewStates: SubViewStorage,
         private formBuilder: NonNullableFormBuilder,
         private cd: ChangeDetectorRef,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public location: Location) {
         this.loadState();
@@ -72,17 +70,17 @@ export class AppSettingsComponent implements OnInit {
 
     public get maxDensityInvalid(): boolean {
         const control = this.settingsForm.controls.maxDensity;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get primaryTankReserveInvalid(): boolean {
         const control = this.settingsForm.controls.primaryTankReserve;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get stageTankReserveInvalid(): boolean {
         const control = this.settingsForm.controls.stageTankReserve;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get densityStep(): number {

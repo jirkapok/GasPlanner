@@ -9,6 +9,7 @@ Supported types:
 * `Open circuit` (default): You breathe directly from the tank assigned to the depth level.
 * `pSCR`: Passive semi-closed rebreather.
 * `mCCR`: Manual closed circuit rebreather.
+* `eCCR`: Electronic closed circuit rebreather.
 
 When a rebreather is selected, the `Tanks` card shows two tabs:
 
@@ -26,7 +27,7 @@ The gas you breathe from the loop is leaner than the supply gas, because your bo
 * `Injection ratio`: Ratio of breathed volume to dumped volume. E.g. 8 means 1/8 of each breath is replaced with fresh supply gas. Range 4 - 20, default 8.
 * `Metabolic O2 [l/min]`: Oxygen consumed by your body. Range 0.5 - 4 l/min, default 1 l/min.
 
-The loop gas gets leaner when you ascend, because less fresh gas is added at lower ambient pressure. At shallow depths the loop may become hypoxic, even with a nitrox supply gas. In such case the planner shows `Low ppO2` warning.
+The loop gas gets leaner when you ascend, because less fresh gas is added at lower ambient pressure. At shallow depths the loop may become hypoxic, even with a nitrox supply gas. In such case the planner shows `Loop ppO2 out of range` error.
 The decompression, oxygen toxicity (CNS, OTU), gas density and narcotic depth are calculated from the loop gas.
 
 Gas consumption of the supply tank is `RMV × ambient pressure / injection ratio`, which is much lower than for open circuit.
@@ -48,7 +49,7 @@ The loop can't hold a ppO2 lower than the diluent ppO2 at the current depth (dil
 * Tank 2 is the **oxygen**. Its gas is always 100 % oxygen, you can change only its size and pressure.
 * Both tanks can't be removed. All other tanks are bailout tanks.
 
-When you switch to mCCR, the planner prepares the tanks without overwriting any of them: an existing oxygen tank is moved to position 2, otherwise a new 3 l/200 bar oxygen tank is added as tank 2. Switching back to open circuit keeps the order of the tanks.
+When you switch to mCCR or eCCR, the planner prepares the tanks without overwriting any of them: an existing oxygen tank is moved to position 2, otherwise a new oxygen tank (3 l/200 bar, in imperial units AL19/3000 psi) is added as tank 2. Switching back to open circuit keeps the order of the tanks.
 If tank 2 doesn't contain oxygen (e.g. in a shared link), the dive can't be calculated and the planner shows an error.
 
 ### Consumption
@@ -56,12 +57,34 @@ If tank 2 doesn't contain oxygen (e.g. in a shared link), the dive can't be calc
 * Oxygen: The higher of the O2 flow and the metabolic O2 for the whole dive. If the flow is lower than your consumption, the rest is added manually.
 * Diluent: Only the loop volume added during descent, `loop volume × pressure difference`. The diluent used for flushing the loop isn't calculated.
 
+## eCCR
+
+An electronic closed circuit rebreather measures the ppO2 in the loop and its solenoid adds oxygen to hold the setpoint. The electronics switch between three setpoints:
+
+* `Descent setpoint [bar]`: Held before the deepest point of the dive, shallower than the switch depth. A low setpoint prevents a too rich loop at the start of the dive. Range 0.4 - 1.6 bar, default 0.7 bar.
+* `Bottom setpoint [bar]`: Held before the deepest point of the dive, at or deeper than the switch depth. Range 0.4 - 1.6 bar, default 1.1 bar. It can't be lower than the descent setpoint.
+* `Deco setpoint [bar]`: Held from the deepest point of the dive until the surface. It applies also to depth levels you defined after the deepest point (e.g. multilevel dives) and to the calculated ascent. Range 0.4 - 1.6 bar, default 1.3 bar.
+* `Setpoint switch depth [m]`: Depth, where the descent setpoint is switched to the bottom setpoint. Range 3 - 30 m, default 20 m.
+* `Loop volume [l]`: Volume of the breathing loop, used to calculate the diluent added during descent. Range 2 - 10 l, default 6 l.
+* `Metabolic O2 [l/min]`: Oxygen consumed by your body. Range 0.5 - 4 l/min, default 1 l/min.
+
+The planner uses the current setpoint for decompression, oxygen toxicity (CNS, OTU), gas density and narcotic depth. As for mCCR, the loop can't hold a ppO2 lower than the diluent ppO2 or higher than the ambient pressure, and there are no gas switches and no air breaks during the dive.
+
+The tanks are the same as for mCCR: tank 1 is the **diluent**, tank 2 is the **oxygen** and all other tanks are bailout tanks, see the `Tanks` section of mCCR above.
+
+Consumption:
+
+* Oxygen: The metabolic O2 plus 10 % for losses (mask clearing, small leaks) for the whole dive.
+* Diluent: Only the loop volume added during descent, the same as for mCCR.
+
 ## Bailout and reserve
 
-The emergency ascent is used to calculate the rock bottom reserve. The user defined part of the dive, including the deepest point, is breathed from the loop. The diver bails out at the start of the generated ascent, and only this ascent is breathed as **open circuit** from the bailout tanks. For mCCR all tanks are bailout gases, including the diluent and the oxygen tank. Because the leaner loop gas loads the tissues more, the bailout ascent may need longer decompression than the same dive on open circuit. The ascent is consumed using the stress RMV and the same rules as for open circuit dives (see [Tanks](./tanks.md)).
+The emergency ascent is used to calculate the rock bottom reserve. The user defined part of the dive, including the deepest point, is breathed from the loop. The diver bails out at the start of the generated ascent, and only this ascent is breathed as **open circuit** from the bailout tanks. For mCCR and eCCR all tanks are bailout gases, including the diluent and the oxygen tank. Because the leaner loop gas loads the tissues more, the bailout ascent may need longer decompression than the same dive on open circuit. The ascent is consumed using the stress RMV and the same rules as for open circuit dives (see [Tanks](./tanks.md)).
+
+The `Consumed` tab of the dive results shows the tanks in two groups: `Rebreather` tanks breathed from the loop (mCCR and eCCR: `Diluent` and `Oxygen`; pSCR: the `Supply` tanks assigned to depth levels) and `Bailout` tanks, which only keep the reserve for the emergency ascent. The view by gas (`In liters`) isn't grouped.
 
 ## Limits
 
-* Electronic closed circuit rebreathers will follow.
+* The eCCR oxygen losses are fixed at 10 % of the metabolic O2.
 * The pSCR loop gas is calculated as a steady state. Changes of the loop after depth or gas change are not modeled.
-* A hypoxic loop (ppO2 below 0.18 bar) is shown as `Low ppO2` warning. A loop with too high ppO2 isn't reported yet, the high ppO2 warning is evaluated for the supply gas (pSCR) or diluent (mCCR).
+* For rebreathers the planner checks the loop ppO2 instead of the tank gas. A loop ppO2 below 0.18 bar or above the maximum ppO2 (maximum deco ppO2 after the deepest point of the dive) is shown as `Loop ppO2 out of range` error, together with the loop ppO2 and the allowed range. It is shown once, when the loop gets out of range, again only after it was within the range.

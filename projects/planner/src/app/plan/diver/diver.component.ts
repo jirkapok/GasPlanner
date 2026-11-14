@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -15,7 +15,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-diver',
     templateUrl: './diver.component.html',
     styleUrls: ['./diver.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, MdbFormsModule, PpO2Component, TranslatePipe]
 })
 export class DiverComponent extends Streamed implements OnInit {
@@ -25,10 +24,11 @@ export class DiverComponent extends Streamed implements OnInit {
 
     private _rmvStep = 0.1;
 
-    constructor(private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
+    constructor(
+        private fb: NonNullableFormBuilder,
         private validators: ValidatorGroups,
-        public units: UnitConversion) {
+        public units: UnitConversion
+    ) {
         super();
     }
 
@@ -52,12 +52,12 @@ export class DiverComponent extends Streamed implements OnInit {
 
     public get rmvInvalid(): boolean {
         const rmv = this.diverForm.controls.rmv;
-        return this.inputs.controlInValid(rmv);
+        return InputControls.isControlInvalid(rmv);
     }
 
     public get stressRmvInvalid(): boolean {
         const rmv = this.diverForm.controls.srtessRmv;
-        return this.inputs.controlInValid(rmv);
+        return InputControls.isControlInvalid(rmv);
     }
 
     public get rmvStep(): number {

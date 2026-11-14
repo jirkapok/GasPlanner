@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormArray, FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -34,7 +34,6 @@ interface DepthsForm {
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule,
         LocaleNumberPipe, TranslatePipe]
 })
@@ -47,11 +46,11 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     constructor(
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         public units: UnitConversion,
         private schedules: DiveSchedules,
-        public dispatcher: ReloadDispatcher) {
+        public dispatcher: ReloadDispatcher,
+        private cd: ChangeDetectorRef) {
         super();
         this.rootForm = this.fb.group({});
     }
@@ -88,13 +87,13 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public depthItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index);
         const endDepth = level.controls.endDepth;
-        return this.inputs.controlInValid(endDepth);
+        return InputControls.isControlInvalid(endDepth);
     }
 
     public durationItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index);
         const duration = level.controls.duration;
-        return this.inputs.controlInValid(duration);
+        return InputControls.isControlInvalid(duration);
     }
 
     public startDepth(index: number): number {
@@ -133,6 +132,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
                     this.reload();
                 }
             });
+
 
         this.rootForm.addControl('depths', this.complexForm);
     }
@@ -190,6 +190,8 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));
+        // reload comes from outside of this component (e.g. url, other dive or applied duration), the rebuilt form controls are not signals
+        this.cd.markForCheck();
     }
 
     private createLevelControls(): FormGroup<LevelRow>[] {

@@ -10,6 +10,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { InputControls } from '../../shared/inputcontrols';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { renderOnPush } from '../../../testing/onPush.testing';
 
 export class TankSizePage {
     constructor(private fixture: ComponentFixture<TankSizeComponent>) { }
@@ -82,5 +83,22 @@ describe('TankSizeComponent', () => {
         expect(component.tank.size).toBeCloseTo(165);
         expect(component.tank.workingPressure).toBeCloseTo(2640);
         expect(component.applyTemplate.emit).toHaveBeenCalledTimes(1);
+    });
+});
+
+describe('TankSizeComponent OnPush', () => {
+    it('renders invalid state after parent patched form outside Angular events', async () => {
+        TestBed.configureTestingModule({
+            providers: [UnitConversion, InputControls, DecimalPipe, ValidatorGroups, provideNoopAnimations()],
+            imports: [CommonModule, ReactiveFormsModule, MdbFormsModule, MdbDropdownModule, NgFor]
+        });
+        const fixture = await renderOnPush(TankSizeComponent);
+        const control = fixture.componentInstance.sizeForm.get('tankSize');
+
+        control?.markAsDirty();
+        control?.setValue(-1000);
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('.is-invalid')).not.toBeNull();
     });
 });

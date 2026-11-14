@@ -25,6 +25,9 @@ import { MdbModalService } from 'mdb-angular-ui-kit/modal';
 import { BrowserAnimationsModule, } from '@angular/platform-browser/animations';
 import { LanguageService } from '../../shared/language.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
+import { planTestProviders } from '../../../testing/plan.testing';
+import { SettingsNormalizationService } from '../../shared/settings-normalization.service';
 
 export class SimpleTanksPage {
     constructor(private fixture: ComponentFixture<TanksSimpleComponent>) { }
@@ -159,5 +162,48 @@ describe('Tanks Simple component', () => {
                 const sac = component.gasSac();
                 expect(sac).toBeCloseTo(19.33837, 5);
             }));
+    });
+});
+
+describe('Tanks Simple component OnPush', () => {
+    it('renders tank of the dive selected outside the component', async () => {
+        TestBed.configureTestingModule({
+            providers: planTestProviders,
+            imports: [ReactiveFormsModule, TanksSimpleComponent]
+        });
+        const fixture = await renderOnPush(TanksSimpleComponent);
+        const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+        expect(text()).not.toContain('EAN32');
+        const schedules = TestBed.inject(DiveSchedules);
+        const second = schedules.add();
+        second.tanksService.firstTank.o2 = 32;
+
+        schedules.selected = second;
+        await fixture.whenStable();
+
+        expect(text()).toContain('EAN32');
+    });
+});
+
+describe('Tanks Simple component units switch', () => {
+    // The view creates the work pressure control only in imperial units, so it is rendered again after the switch, as the app does
+    it('renders tank size in new units after normalization', async () => {
+        TestBed.configureTestingModule({
+            providers: [...planTestProviders, SettingsNormalizationService],
+            imports: [ReactiveFormsModule, TanksSimpleComponent]
+        });
+        const units = TestBed.inject(UnitConversion);
+        const schedules = TestBed.inject(DiveSchedules);
+        const metricSize = schedules.selectedTanks.firstTank.size;
+
+        units.imperialUnits = true;
+        TestBed.inject(SettingsNormalizationService).apply();
+        const fixture = await renderOnPush(TanksSimpleComponent);
+
+        const sizeInput = (fixture.nativeElement as HTMLElement).querySelector('#tankSize') as HTMLInputElement;
+        const tank = schedules.selectedTanks.firstTank;
+        expect(tank.workingPressure).toBeGreaterThan(0);
+        expect(Number(sizeInput.value)).toBeCloseTo(tank.size, 1);
+        expect(Number(sizeInput.value)).toBeGreaterThan(metricSize * 3);
     });
 });

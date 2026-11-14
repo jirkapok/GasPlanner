@@ -55,8 +55,8 @@ export class DtoSerialization {
             const tank = tanks[index];
             const converted = {
                 id: tank.id,
-                consumed: tank.consumed,
-                reserve: tank.reserve
+                consumedVolume: tank.consumedVolume,
+                reserveVolume: tank.reserveVolume
             };
             result.push(converted);
         }
@@ -200,6 +200,7 @@ export class DtoSerialization {
         dto.forEach(d => {
             const e = Event.create(d.type, d.timeStamp, d.depth);
             e.message = d.message;
+            e.value = d.value;
 
             if (d.gas) {
                 e.gas = DtoSerialization.toGas(d.gas);
@@ -218,6 +219,7 @@ export class DtoSerialization {
                 depth: e.depth,
                 type: e.type,
                 message: e.message,
+                value: e.value,
             };
 
             if (e.gas) {
@@ -326,7 +328,11 @@ export class DtoSerialization {
             loopVolume: rebreather.loopVolume,
             injectionRatio: rebreather.injectionRatio,
             setpoint: rebreather.setpoint,
-            o2Flow: rebreather.o2Flow
+            o2Flow: rebreather.o2Flow,
+            descentSetpoint: rebreather.descentSetpoint,
+            bottomSetpoint: rebreather.bottomSetpoint,
+            decoSetpoint: rebreather.decoSetpoint,
+            setpointSwitchDepth: rebreather.setpointSwitchDepth
         };
     }
 
@@ -338,6 +344,10 @@ export class DtoSerialization {
             rebreather.injectionRatio = rebreatherDto.injectionRatio;
             rebreather.setpoint = rebreatherDto.setpoint ?? rebreather.setpoint;
             rebreather.o2Flow = rebreatherDto.o2Flow ?? rebreather.o2Flow;
+            rebreather.descentSetpoint = rebreatherDto.descentSetpoint ?? rebreather.descentSetpoint;
+            rebreather.bottomSetpoint = rebreatherDto.bottomSetpoint ?? rebreather.bottomSetpoint;
+            rebreather.decoSetpoint = rebreatherDto.decoSetpoint ?? rebreather.decoSetpoint;
+            rebreather.setpointSwitchDepth = rebreatherDto.setpointSwitchDepth ?? rebreather.setpointSwitchDepth;
         }
     }
 

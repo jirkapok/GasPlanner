@@ -50,7 +50,7 @@ describe('Consumption', () => {
             segments.addFlat(airTank.gas, Time.oneMinute);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            expect(maxBottomTime).toEqual(27);
+            expect(maxBottomTime).toEqual(26);
         });
 
         it('NO Deco dive is calculated using all tanks', () => {
@@ -88,7 +88,7 @@ describe('Consumption', () => {
             segments.addFlat(tank.gas, Time.oneMinute * 10);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            expect(maxBottomTime).toEqual(51);
+            expect(maxBottomTime).toEqual(49);
         });
 
         it('Profile ending on surface can consume gas also on surface', () => {
@@ -101,7 +101,7 @@ describe('Consumption', () => {
             segments.add(0, tank.gas, Time.oneMinute * 10);
 
             const maxBottomTime = consumption.calculateMaxBottomTime(segments, tanks, consumptionOptions, options);
-            expect(maxBottomTime).toEqual(177);
+            expect(maxBottomTime).toEqual(173);
         });
 
         it('Repetitive dive counts with previous tissues loading', () => {
@@ -164,9 +164,10 @@ describe('Consumption', () => {
                     new Segment(20, 0, tank.gas, 2 * Time.oneMinute)
                 ];
 
-                // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
+                // Ideal gas: (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes) = 72 b
+                // real gas consumed from the full tank needs more bars
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
-                expect(tank.consumed).toEqual(71);
+                expect(tank.consumed).toEqual(79);
             });
         });
     });
@@ -188,8 +189,8 @@ describe('Consumption', () => {
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Both tanks are consumed', () => {
-                expect(airTank.consumed).toEqual(51);
-                expect(ean50Tank.consumed).toEqual(10);
+                expect(airTank.consumed).toEqual(58);
+                expect(ean50Tank.consumed).toEqual(11);
             });
 
             it('Reserve is updated for both tanks', () => {
@@ -216,8 +217,8 @@ describe('Consumption', () => {
 
             it('Consumption is updated from second tank only', () => {
                 expect(airTank.consumed).toEqual(0);
-                expect(ean50Tank.consumed).toEqual(10);
-                expect(airTank2.consumed).toEqual(103); // rounding
+                expect(ean50Tank.consumed).toEqual(11);
+                expect(airTank2.consumed).toEqual(111); // rounding
             });
         });
 
@@ -238,7 +239,7 @@ describe('Consumption', () => {
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Consumption is updated from both air tanks', () => {
-                expect(airTank.consumed).toEqual(7);
+                expect(airTank.consumed).toEqual(8);
                 expect(ean50Tank.consumed).toEqual(10);
                 expect(airTank2.consumed).toEqual(130);
             });
@@ -258,7 +259,7 @@ describe('Consumption', () => {
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Consumes only user defined tank', () => {
-                expect(airTank.consumed).toEqual(71);
+                expect(airTank.consumed).toEqual(79);
                 expect(ean50Tank.consumed).toEqual(0);
             });
 
@@ -392,10 +393,10 @@ describe('Consumption', () => {
             consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
             it('Gas is Consumed from required tank', () => {
-                expect(airTank.consumed).toEqual(59); // user defined by swim segment
+                expect(airTank.consumed).toEqual(60); // user defined by swim segment
                 expect(airTank2.consumed).toEqual(0); // not touched
-                expect(ean50Tank.consumed).toEqual(8); // user defined by descent segment
-                expect(ean50Tank2.consumed).toEqual(16); // ascent has chosen consume from last in the list
+                expect(ean50Tank.consumed).toEqual(9); // user defined by descent segment
+                expect(ean50Tank2.consumed).toEqual(18); // ascent has chosen consume from last in the list
             });
 
             it('Reserve is not relevant to assigned tanks', () => {
@@ -459,7 +460,7 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
 
                 expect(airTank.reserve).toEqual(42); // 3 min at 3 m + 2 min. solving
-                expect(airTank.consumed).toEqual(71); // up to the limit
+                expect(airTank.consumed).toEqual(72); // up to the limit
             });
         });
     });
@@ -472,10 +473,10 @@ describe('Consumption', () => {
             const first = new Segment(0, 10, tank, Time.oneMinute * 10);
             const second = new Segment(10, 0, tank, Time.oneMinute * 10);
             const segments = [first, second];
-            // 1.5 * 20 * 2 = 60
+            // Ideal gas: 1.5 * 20 * 2 = 60 b, real gas consumed from the full tank needs more bars
 
             consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
-            expect(tank.consumed).toEqual(60);
+            expect(tank.consumed).toEqual(67);
             // emergency ascent: ((2 * 2 * 2) + (1.5 * 10 * 2)) * 3 = 33
             expect(tank.reserve).toEqual(114);
         });
@@ -606,8 +607,8 @@ describe('Consumption', () => {
                 consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
 
                 it('counts the consumption', () => {
-                    expect(tank1.consumed).toEqual(109);
-                    expect(tank2.consumed).toEqual(31);
+                    expect(tank1.consumed).toEqual(117);
+                    expect(tank2.consumed).toEqual(36);
                 });
 
                 it('counts the reserve', () => {

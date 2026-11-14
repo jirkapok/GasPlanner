@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { takeUntil } from 'rxjs';
 import { Precision } from 'scuba-physics';
@@ -20,7 +20,6 @@ interface PscrForm {
 @Component({
     selector: 'app-pscr-options',
     templateUrl: './pscr-options.component.html',
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, TranslatePipe]
 })
 export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy {
@@ -33,7 +32,6 @@ export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     constructor(
         public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules) {
@@ -46,11 +44,11 @@ export class PscrOptionsComponent extends Streamed implements OnInit, OnDestroy 
     }
 
     public get injectionRatioInvalid(): boolean {
-        return this.inputs.controlInValid(this.rebreatherForm.controls.injectionRatio);
+        return InputControls.isControlInvalid(this.rebreatherForm.controls.injectionRatio);
     }
 
     public get metabolicO2Invalid(): boolean {
-        return this.inputs.controlInValid(this.rebreatherForm.controls.metabolicO2);
+        return InputControls.isControlInvalid(this.rebreatherForm.controls.metabolicO2);
     }
 
     /** Volume per minute the same as diver rmv */

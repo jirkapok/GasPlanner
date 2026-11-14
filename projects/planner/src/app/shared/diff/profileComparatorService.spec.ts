@@ -14,6 +14,7 @@ import { PlannerService } from '../planner.service';
 import { ViewSwitchService } from '../viewSwitchService';
 import { ApplicationSettingsService } from '../ApplicationSettings';
 import { WorkersFactoryCommon } from '../serial.workers.factory';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('ProfileComparatorService', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
@@ -25,6 +26,7 @@ describe('ProfileComparatorService', () => {
             declarations: [],
             imports: [],
             providers: [
+                provideTestTranslate(),
                 ProfileComparatorService, UnitConversion,
                 ReloadDispatcher, DiveSchedules,
                 PlannerService, ViewSwitchService,
@@ -247,5 +249,16 @@ describe('ProfileComparatorService', () => {
         sut.alignByEnd = true;
 
         expect(emitted).toEqual(true);
+    });
+
+    it('Replaces difference array after info calculated', () => {
+        const planner = TestBed.inject(PlannerService);
+        planner.calculate(1);
+        const before = sut.difference;
+
+        planner.calculate(1);
+
+        expect(sut.difference.length).toBeGreaterThan(0);
+        expect(sut.difference).not.toBe(before);
     });
 });

@@ -6,6 +6,7 @@ import { ReloadDispatcher } from '../reloadDispatcher';
 import { ConsumedGasDifference, GasesComparisonService } from './gases-comparison.service';
 import { StandardGases } from 'scuba-physics';
 import { TanksService } from '../tanks.service';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 describe('GasesComparisonService', () => {
     let sut: GasesComparisonService;
@@ -23,6 +24,7 @@ describe('GasesComparisonService', () => {
         await TestBed.configureTestingModule({
             declarations: [],
             providers: [
+                provideTestTranslate(),
                 GasesComparisonService,
                 ProfileComparatorService,
                 DiveSchedules,
@@ -141,7 +143,7 @@ describe('GasesComparisonService', () => {
         const firstGas = sut.gasesDifference[0];
 
         expect(firstGas.profileA.total).toBeCloseTo(102.165, 3);
-        expect(firstGas.profileA.consumed).toBeCloseTo(53.226, 3);
+        expect(firstGas.profileA.consumed).toBeCloseTo(48.938, 3);
         expect(firstGas.profileA.reserve).toBeCloseTo(26.728, 3);
         expect(firstGas.profileB.total).toBeCloseTo(102.165, 3);
     });

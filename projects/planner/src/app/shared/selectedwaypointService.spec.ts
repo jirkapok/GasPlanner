@@ -6,6 +6,7 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
 import { TestBedExtensions } from './TestbedExtensions.testing';
 import { WayPoint } from './wayPoint';
+import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('Selected Waypoint', () => {
     const segment = new Segment(5, 10, StandardGases.air, 60);
@@ -14,6 +15,7 @@ describe('Selected Waypoint', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
+                provideTestTranslate(),
                 SelectedWaypoint,
                 UnitConversion, ReloadDispatcher,
                 DiveSchedules

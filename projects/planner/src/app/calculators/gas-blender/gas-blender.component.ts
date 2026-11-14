@@ -1,11 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { faFaucet, faExclamationTriangle, faSackDollar } from '@fortawesome/free-solid-svg-icons';
 import { FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
 import {
-    Precision, StandardGases, Tank, GasMixtures
+    Precision, StandardGases, GasMixtures
 } from 'scuba-physics';
 import { RangeConstants, UnitConversion } from '../../shared/UnitConversion';
 import { GasBlenderService } from '../../shared/gas-blender.service';
+import { TankBound } from '../../shared/models';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { InputControls } from '../../shared/inputcontrols';
 import { BlenderMode, BlenderViewState, TankMix } from '../../shared/views.model';
@@ -37,7 +38,6 @@ interface IGasBlenderForm {
     selector: 'app-gas-blender',
     templateUrl: './gas-blender.component.html',
     styleUrls: ['./gas-blender.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [ReactiveFormsModule, CardHeaderComponent, NgClass, FaIconComponent, OxygenDropDownComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class GasBlenderComponent implements OnInit {
@@ -52,7 +52,6 @@ export class GasBlenderComponent implements OnInit {
         public calc: GasBlenderService,
         public pricing: BlendPricingService,
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         private viewStates: SubViewStorage,
         private fb: NonNullableFormBuilder) {
     }
@@ -63,29 +62,29 @@ export class GasBlenderComponent implements OnInit {
 
     public get sourceHeInvalid(): boolean {
         const control = this.blenderForm.controls.sourceHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get topMixHeInvalid(): boolean {
         const control = this.blenderForm.controls.topMixHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get targetHeInvalid(): boolean {
         const control = this.blenderForm.controls.targetHe;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     // we don't need working pressure for source and target,
     // since don't count with volume only percentage
     public get sourcePressureInvalid(): boolean {
         const control = this.blenderForm.controls.sourcePressure;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get targetPressureInvalid(): boolean {
         const control = this.blenderForm.controls.targetPressure;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get finalPressureBelowSource(): boolean {
@@ -102,17 +101,17 @@ export class GasBlenderComponent implements OnInit {
 
     public get o2UnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.o2UnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get heUnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.heUnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public get topMixUnitPriceInvalid(): boolean {
         const control = this.blenderForm.controls.topMixUnitPrice;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     public ngOnInit(): void {
@@ -207,8 +206,8 @@ export class GasBlenderComponent implements OnInit {
 
     private applyState(state: BlenderViewState) {
         this.calc.mode = state.mode ?? BlenderMode.blend; // added with identify mix, does not have to be present
-        this.loadTankState(this.calc.sourceTank.tank, state.source);
-        this.loadTankState(this.calc.targetTank.tank, state.target);
+        this.loadTankState(this.calc.sourceTank, state.source);
+        this.loadTankState(this.calc.targetTank, state.target);
         this.calc.topMix.o2 = state.topMix.o2;
         this.calc.topMix.he = state.topMix.he;
 
@@ -223,8 +222,8 @@ export class GasBlenderComponent implements OnInit {
         const viewState: BlenderViewState = {
             id: KnownViews.blender,
             mode: this.calc.mode,
-            source: this.toTankState(this.calc.sourceTank.tank),
-            target: this.toTankState(this.calc.targetTank.tank),
+            source: this.toTankState(this.calc.sourceTank),
+            target: this.toTankState(this.calc.targetTank),
             topMix: {
                 o2: this.calc.topMix.tank.o2,
                 he: this.calc.topMix.tank.he
@@ -265,17 +264,17 @@ export class GasBlenderComponent implements OnInit {
         };
     }
 
-    private loadTankState(tank: Tank, state: TankMix): void {
+    private loadTankState(tank: TankBound, state: TankMix): void {
         tank.o2 = state.o2;
         tank.he = state.he;
-        tank.startPressure = state.pressure;
+        tank.startPressureBars = state.pressure;
     }
 
-    private toTankState(tank: Tank): TankMix {
+    private toTankState(tank: TankBound): TankMix {
         return {
             o2: tank.o2,
             he: tank.he,
-            pressure: tank.startPressure
+            pressure: tank.tank.startPressure
         };
     }
 

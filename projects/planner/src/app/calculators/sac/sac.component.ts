@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
 import { FormControl, NonNullableFormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -32,7 +32,6 @@ interface SacForm {
     selector: 'app-sac',
     templateUrl: './sac.component.html',
     styleUrls: ['./sac.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [CardHeaderComponent, ReactiveFormsModule, MdbFormsModule, TankSizeComponent, LocaleNumberPipe, TranslatePipe]
 })
 export class SacComponent implements OnInit {
@@ -47,7 +46,6 @@ export class SacComponent implements OnInit {
 
     constructor(
         private validators: ValidatorGroups,
-        private inputs: InputControls,
         private formBuilder: NonNullableFormBuilder,
         private options: OptionsService,
         private cd: ChangeDetectorRef,
@@ -64,32 +62,32 @@ export class SacComponent implements OnInit {
 
     public get depthInvalid(): boolean {
         const depth = this.formSac.controls.depth;
-        return this.inputs.controlInValid(depth);
+        return InputControls.isControlInvalid(depth);
     }
 
     public get tankInvalid(): boolean {
         const tankSize = this.formSac.controls.tankSize;
-        return this.inputs.controlInValid(tankSize);
+        return InputControls.isControlInvalid(tankSize);
     }
 
     public get workPressureInvalid(): boolean {
         const workPressure = this.formSac.controls.workPressure;
-        return this.inputs.controlInValid(workPressure);
+        return InputControls.isControlInvalid(workPressure);
     }
 
     public get usedInvalid(): boolean {
         const used = this.formSac.controls.used;
-        return this.inputs.controlInValid(used);
+        return InputControls.isControlInvalid(used);
     }
 
     public get rmvInvalid(): boolean {
         const rmv = this.formSac.controls.rmv;
-        return this.inputs.controlInValid(rmv);
+        return InputControls.isControlInvalid(rmv);
     }
 
     public get durationInvalid(): boolean {
         const duration = this.formSac.controls.duration;
-        return this.inputs.controlInValid(duration);
+        return InputControls.isControlInvalid(duration);
     }
 
     public get calcDepth(): number {
@@ -256,7 +254,7 @@ export class SacComponent implements OnInit {
         this.calc.depth = state.avgDepth;
         this.tank.workingPressureBars = state.workPressure;
         this.calc.tankSize = state.tankSize;
-        this.tank.tank.size = this.calc.tankSize;
+        this.tank.sizeLiters = this.calc.tankSize;
         this.calc.used = state.used;
         this.calc.duration = state.duration;
     }

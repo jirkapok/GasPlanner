@@ -5,7 +5,6 @@ import { PlanUrlSerialization } from './PlanUrlSerialization';
 import { SubViewStorage } from './subViewStorage';
 import { ViewStates } from './viewStates';
 import { HelpService } from './learn/help.service';
-import { ViewRefresh } from './viewRefresh';
 
 @Injectable()
 export class DashboardStartUp {
@@ -20,8 +19,7 @@ export class DashboardStartUp {
         private urlSerialization: PlanUrlSerialization,
         private viewStore: SubViewStorage,
         private views: ViewStates,
-        private help: HelpService,
-        private viewRefresh: ViewRefresh
+        private help: HelpService
     ) {
         this._showDisclaimer = this.preferences.disclaimerEnabled();
         this._showInstallButton = this.preferences.installEnabled();
@@ -112,9 +110,8 @@ export class DashboardStartUp {
         setTimeout(() => {
             if (this.preferences.quizWelcomeEnabled()) {
                 this.preferences.disableQuizWelcome();
+                // attaching the overlay view notifies Angular, even when opened by timer
                 this.help.openLearnWelcome();
-                // opened by timer outside Angular events
-                this.viewRefresh.refresh();
             }
         }, threeMinutes);
     }

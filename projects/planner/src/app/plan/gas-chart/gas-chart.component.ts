@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { ConsumedGas, StandardGases } from 'scuba-physics';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -9,7 +9,6 @@ import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
     selector: 'app-gaschart',
     templateUrl: './gas-chart.component.html',
     styleUrls: ['../tank-chart/tank-chart.component.scss', './gas-chart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [NgClass, LocaleNumberPipe, TranslatePipe]
 })
 export class GasChartComponent {

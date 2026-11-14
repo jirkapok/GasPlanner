@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { LanguageOption, LanguageService } from '../shared/language.service';
 import { PreferencesStore } from '../shared/preferencesStore';
@@ -7,7 +7,6 @@ import { PreferencesStore } from '../shared/preferencesStore';
     selector: 'app-language-dropdown',
     templateUrl: './language-dropdown.component.html',
     styleUrls: ['./language-dropdown.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [MdbDropdownModule]
 })
 export class LanguageDropdownComponent {

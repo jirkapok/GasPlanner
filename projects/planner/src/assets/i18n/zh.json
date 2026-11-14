@@ -28,7 +28,7 @@
   "help": {
     "menu": {
       "application": { "title": "应用程序", "usage": "应用程序使用说明", "settings": "应用程序设置" },
-      "plan": { "title": "潜水计划", "tanks": "气瓶", "rebreather": "循环呼吸器", "mccr": "mCCR", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
+      "plan": { "title": "潜水计划", "tanks": "气瓶", "rebreather": "循环呼吸器", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
       "options": { "title": "潜水选项", "general": "常规", "environment": "环境", "conservatism": "保守度", "gases": "气体", "airBreaks": "纯氧间歇", "stops": "停留点", "speeds": "速度", "diver": "潜水员" },
       "results": { "title": "潜水结果", "diveInfoTable": "潜水信息表", "oxygenToxicity": "氧气毒性", "events": "导致错误和警告的事件", "consumedGasCharts": "气体消耗图表", "wayPointsTable": "潜水航点表", "profileChart": "潜水剖面图", "tissuesHeatMap": "组织热力图" },
       "calculators": { "title": "计算器", "sac": "RMV/SAC", "nitrox": "氮氧", "ndl": "免减压极限 (NDL) 表", "altitude": "海拔", "weight": "配重", "gasProperties": "气体属性", "redundancies": "气瓶平衡", "gasBlender": "气体混合" }
@@ -128,9 +128,11 @@
     "brokenCeiling": "超过了最小安全（天花板）深度！请在此处将计划调整为更深的深度。",
     "lowPpo2": "达到了较低的氧分压（超过最小深度限制）！存在缺氧风险。请使用氧气含量更高的气体。",
     "highPpo2": "达到了较高的氧分压（超过最大深度限制）！存在氧中毒风险。请减小深度或使用氧气含量更低的气体。",
+    "loopPpO2OutOfRange": "循环呼吸器回路氧分压 {{ppO2}} bar 超出安全范围 {{min}} - {{max}} bar（减压 {{maxDeco}} bar）！请更改设定点或使用不同含氧量的稀释气。",
     "highDescentSpeed": "下降速度过快！请延长下降时间或下降至较浅的深度。",
     "highAscentSpeed": "上升速度过快！请仅上升至较浅的深度，或延长上升时间。",
-    "highN2Switch": "不建议切换到氮气含量更高的气体！存在等压逆向扩散（IDC）风险。请切换到氦气含量更高或氮气含量更低的另一种气体。",
+    "highN2Switch": "不建议切换到氮气含量更高的气体！存在等压逆向扩散（ICD）风险。请切换到氦气含量更高或氮气含量更低的另一种气体。",
+    "highN2SwitchOverLimit": "氮气含量的增加超出 1/5 规则限值 {{points}} 个百分点。",
     "mndExceeded": "超过了所选气体的最大氮醉深度！请减小深度或使用氦气含量更高的气体。",
     "highDensity": "超过了建议的最大气体密度！请减小深度或使用氦气含量更高（即密度更低）的气体。",
     "minDepth": "长时间计划在浅深度潜水可能导致饱和潜水！请将潜水时间缩短至5小时以内。",
@@ -147,7 +149,7 @@
     "use": "使用", "maxBottomTime": "最大水底时间", "maxBottomTimeTitle": "根据消耗的气体将潜水时间设置为最大值",
     "surfaceGradient": "水面梯度", "offgasingStart": "排氮开始", "highestCeiling": "最高天花板深度",
     "highestGasDensity": "最高气体密度", "turnTime": "折返时间", "turnPressure": "折返压力",
-    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "issuesTab": "问题", "inLiters": "以升为单位"
+    "otuToxicity": "OTU毒性", "cnsToxicity": "CNS毒性", "consumedTab": "消耗量", "rebreatherTanks": "循环呼吸器", "bailoutTanks": "应急脱困", "supply": "供气", "issuesTab": "问题", "inLiters": "以升为单位"
   },
   "diveOptions": {
     "allUsable": "全部可用", "halfUsable": "一半可用", "thirdUsable": "三分之一可用", "cardTitle": "选项",
@@ -163,11 +165,18 @@
   "surfaceInterval": { "label": "水面间隔时间", "firstDive": "首次潜水", "thirtyMinutes": "30分钟", "oneHour": "1小时", "twoHours": "2小时", "invalidFormat": "必须为hh:mm格式的文本" },
   "tankChart": { "gasRemaining": "剩余气体：", "rockBottom": "最低安全气量：" },
   "gasChart": { "reserve": "储备：", "consumed": "已消耗：", "available": "可用：" },
-  "tanksComplex": { "cardTitle": "气瓶", "size": "容量", "workPressure": "工作压力", "pressure": "压力", "he": "He", "o2": "O2", "sac": "SAC：", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力", "openCircuit": "开路", "pscr": "pSCR", "tanksTab": "气瓶", "rebreatherTab": "循环呼吸器", "mccr": "mCCR", "diluent": "稀释气", "oxygen": "氧气" },
+  "tanksComplex": { "cardTitle": "气瓶", "size": "容量", "workPressure": "工作压力", "pressure": "压力", "he": "He", "o2": "O2", "sac": "SAC：", "workingPressureLabel": "工作压力", "startPressureLabel": "起始压力", "openCircuit": "开路", "pscr": "pSCR", "tanksTab": "气瓶", "rebreatherTab": "循环呼吸器", "mccr": "mCCR", "eccr": "eCCR", "diluent": "稀释气", "oxygen": "氧气" },
   "pscrOptions": { "injectionRatio": "注入比", "metabolicO2": "代谢耗氧" },
   "mccrOptions": { "setpoint": "目标 ppO2", "o2Flow": "O2 流量", "loopVolume": "回路容积", "metabolicO2": "代谢耗氧" },
+  "eccrOptions": { "descentSetpoint": "下潜设定点", "bottomSetpoint": "水底设定点", "decoSetpoint": "减压设定点", "setpointSwitchDepth": "设定点切换深度", "descentAboveBottom": "下潜设定点不能高于水底设定点", "loopVolume": "回路容积", "metabolicO2": "代谢耗氧" },
+  "circuit": {
+    "oc": "OC",
+    "pscr": "pSCR",
+    "mccr": "mCCR",
+    "eccr": "eCCR"
+  },
   "tanksSimple": { "cardTitle": "水底气瓶", "size": "容量", "sac": "SAC：", "workingPressure": "工作压力", "startPressure": "起始压力" },
-  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
+  "waypointsTable": { "cardTitle": "潜水航点", "filterTitle": "筛选仅显示停留点", "diveProfile": "循环呼吸器剖面", "bailoutProfile": "应急脱困剖面", "setpoint": "SP", "depth": "深度", "duration": "持续时间", "run": "累计时间", "gas": "气体" },
   "learn": {
     "topics": {
       "pressureAtDepth": "深度处的压力",

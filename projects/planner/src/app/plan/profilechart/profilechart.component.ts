@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, effect, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -9,14 +9,17 @@ import { Streamed } from '../../shared/streamed';
 import { DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import {
-    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder
+    ChartPlotter, ChartPlotterFactory, DiveTracesBuilder, ChartLegendColors
 } from '../../shared/chartPlotter';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
+import { StopsFilter } from '../../shared/stopsFilter.service';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
+import { ChartLegendValues } from '../../shared/chartLegendValues';
+import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.component';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
@@ -25,19 +28,21 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
+    public legendValues: ChartLegendValues | undefined;
+    public readonly legendColors: ChartLegendColors;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
     private heatmapPlotter: HeatMapPlotter;
     private profileTraces: DiveTracesBuilder;
+    private initialized = false;
 
     constructor(
         units: UnitConversion,
@@ -46,12 +51,15 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private dispatcher: ReloadDispatcher,
         private schedules: DiveSchedules,
         private translate: TranslateService,
-        private cd: ChangeDetectorRef) {
+        private cd: ChangeDetectorRef,
+        stops: StopsFilter) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
+            .withoutHoverLabels()
             .create(() => this.dive);
+        this.legendColors = this.profileTraces.legendColors;
         this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
@@ -71,12 +79,25 @@ export class ProfileChartComponent extends Streamed implements OnInit {
                 }
             });
 
+        // touch devices don't always send unhover, so hovered values would be stale
         this.dispatcher.selectedChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotAllCharts());
+            .subscribe(() => {
+                this.plotAllCharts();
+                this.plotlyHoverLeave();
+            });
         this.selectedWaypoint.selectedChanged.pipe(takeUntil(this.unsubscribe$))
             .subscribe((wayPoint) => this.selectWayPoint(wayPoint));
         this.translate.onLangChange.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => this.plotAllCharts());
+            .subscribe(() => {
+                this.plotAllCharts();
+                this.plotlyHoverLeave();
+            });
+
+        // the waypoints bailout tab shows the emergency ascent also in the chart
+        effect(() => {
+            const showBailout = stops.showBailout;
+            untracked(() => this.showBailoutAscent(showBailout));
+        });
     }
 
     public get profileCalculated(): boolean {
@@ -97,6 +118,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     public ngOnInit(): void {
+        this.initialized = true;
         this.plotAllCharts();
         this.hookChartEvents();
     }
@@ -105,6 +127,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         // first data is the dive profile chart, x value is the timestamp as string
         const timeStampValue: string = data.points[0].x?.toString() ?? '';
         this.selectedWaypoint.selectedTimeStamp = timeStampValue;
+        this.legendValues = ChartLegendValues.fromPoints(data.points);
+        this.cd.markForCheck();
     }
 
     public switchHeatMap(): void {
@@ -117,15 +141,32 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public switchEmergencyAscent(): void {
         this.profileTraces.showEmergencyAscent = !this.profileTraces.showEmergencyAscent;
         this.plotAllCharts();
+        this.plotlyHoverLeave();
     }
 
-    private plotlyHoverLeave() {
+    public plotlyHoverLeave(): void {
         this.selectedWaypoint.selectedTimeStamp = '';
         this.selectWayPoint(undefined);
+        this.legendValues = undefined;
+        this.cd.markForCheck();
+    }
+
+    private showBailoutAscent(show: boolean): void {
+        if (this.profileTraces.showEmergencyAscent === show) {
+            return;
+        }
+
+        this.profileTraces.showEmergencyAscent = show;
+        this.cd.markForCheck();
+
+        // the chart element exists only after the component was initialized
+        if (this.initialized) {
+            this.plotAllCharts();
+        }
     }
 
     private selectWayPoint(wayPoint: WayPoint | undefined) {
-        this.plotter.plotCursor(wayPoint);
+        this.plotter.plotCursors(wayPoint);
     }
 
     private plotProfile(): void {

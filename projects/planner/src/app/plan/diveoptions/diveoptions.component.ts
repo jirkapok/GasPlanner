@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NonNullableFormBuilder, FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { faCog } from '@fortawesome/free-solid-svg-icons';
 import { takeUntil } from 'rxjs';
@@ -28,7 +28,6 @@ import { TranslatePipe } from '@ngx-translate/core';
     selector: 'app-diveoptions',
     templateUrl: './diveoptions.component.html',
     styleUrls: ['./diveoptions.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         ReactiveFormsModule, CardHeaderComponent, SalinityComponent, AltitudeComponent, GradientsComponent,
         MdbTabsModule, MdbFormsModule, MdbDropdownModule, DiverComponent, TranslatePipe
@@ -65,7 +64,6 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     constructor(public units: UnitConversion,
         private fb: NonNullableFormBuilder,
-        private inputs: InputControls,
         private validators: ValidatorGroups,
         private viewSwitch: ViewSwitchService,
         private schedules: DiveSchedules,
@@ -85,52 +83,52 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public get narcoticDepthInvalid(): boolean {
         const narcoticDepth = this.optionsForm.controls.maxEND;
-        return this.inputs.controlInValid(narcoticDepth);
+        return InputControls.isControlInvalid(narcoticDepth);
     }
 
     public get problemInvalid(): boolean {
         const problem = this.optionsForm.controls.problem;
-        return this.inputs.controlInValid(problem);
+        return InputControls.isControlInvalid(problem);
     }
 
     public get switchDurationInvalid(): boolean {
         const gasSwitch = this.optionsForm.controls.gasSwitch;
-        return this.inputs.controlInValid(gasSwitch);
+        return InputControls.isControlInvalid(gasSwitch);
     }
 
     public get lastStopInvalid(): boolean {
         const lastStopDepth = this.optionsForm.controls.lastStopDepth;
-        return this.inputs.controlInValid(lastStopDepth);
+        return InputControls.isControlInvalid(lastStopDepth);
     }
 
     public get descSpeedInvalid(): boolean {
         const descentSpeed = this.optionsForm.controls.descentSpeed;
-        return this.inputs.controlInValid(descentSpeed);
+        return InputControls.isControlInvalid(descentSpeed);
     }
 
     public get ascSpeedInvalid(): boolean {
         const ascentSpeed6m = this.optionsForm.controls.ascentSpeed6m;
-        return this.inputs.controlInValid(ascentSpeed6m);
+        return InputControls.isControlInvalid(ascentSpeed6m);
     }
 
     public get ascentSpeed50percTo6mInvalid(): boolean {
         const ascentSpeed50percTo6m = this.optionsForm.controls.ascentSpeed50percTo6m;
-        return this.inputs.controlInValid(ascentSpeed50percTo6m);
+        return InputControls.isControlInvalid(ascentSpeed50percTo6m);
     }
 
     public get ascentSpeed50percInvalid(): boolean {
         const ascentSpeed50perc = this.optionsForm.controls.ascentSpeed50perc;
-        return this.inputs.controlInValid(ascentSpeed50perc);
+        return InputControls.isControlInvalid(ascentSpeed50perc);
     }
 
     public get maxOxygenDurationInvalid(): boolean {
         const maxOxygenDuration = this.optionsForm.controls.maxOxygenDuration;
-        return this.inputs.controlInValid(maxOxygenDuration);
+        return InputControls.isControlInvalid(maxOxygenDuration);
     }
 
     public get backGasDurationInvalid(): boolean {
         const backGasDuration= this.optionsForm.controls.backGasDuration;
-        return this.inputs.controlInValid(backGasDuration);
+        return InputControls.isControlInvalid(backGasDuration);
     }
 
     public get options(): OptionsService {
@@ -143,7 +141,7 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
 
     public get decoStopDistanceInvalid(): boolean {
         const control = this.optionsForm.controls.decoStopDistance;
-        return this.inputs.controlInValid(control);
+        return InputControls.isControlInvalid(control);
     }
 
     private get rmv(): number {
@@ -320,8 +318,8 @@ export class DiveOptionsComponent extends Streamed implements OnInit {
         this.options.ascentSpeed50perc = Number(values.ascentSpeed50perc);
         this.options.decoStopDistance = Number(values.decoStopDistance);
 
-        this.airBreaks.oxygenDuration = Number(values.maxOxygenDuration);
-        this.airBreaks.bottomGasDuration = Number(values.backGasDuration);
+        this.options.airBreakOxygenDuration = Number(values.maxOxygenDuration);
+        this.options.airBreakBottomGasDuration = Number(values.backGasDuration);
 
         this.fireChanged();
     }

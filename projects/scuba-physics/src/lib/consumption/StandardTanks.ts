@@ -20,6 +20,15 @@ class TankConstants {
 
     /** S80 aluminum 11L cylinder default single tank cylinder */
     public static readonly metricStageSize = 11.1;
+
+    /** AL19 aluminum cylinder for rebreather oxygen */
+    public static readonly imperialRebreatherOxygenSize = 19;
+
+    /** AL19 aluminum 3000 PSI working pressure for rebreather oxygen */
+    public static readonly imperialRebreatherOxygenWorkPressure = 3000;
+
+    /** 3L steel cylinder for rebreather oxygen */
+    public static readonly metricRebreatherOxygenSize = 3;
 }
 
 
@@ -36,6 +45,8 @@ export interface StandardTanks {
     available: TankTemplate[];
     primary: TankTemplate;
     stage: TankTemplate;
+    /** Oxygen cylinder of closed circuit rebreathers */
+    rebreatherOxygen: TankTemplate;
 }
 
 export class ImperialTanks implements StandardTanks {
@@ -67,7 +78,8 @@ export class ImperialTanks implements StandardTanks {
                 name: 'HP100',
                 size: 106.7,
                 workingPressure: 3442,
-            }
+            },
+            this.rebreatherOxygen
         ];
     }
 
@@ -84,6 +96,14 @@ export class ImperialTanks implements StandardTanks {
             name: 'S80',
             size: TankConstants.imperialStageSize,
             workingPressure: TankConstants.imperialStageWorkPressure,
+        };
+    }
+
+    public get rebreatherOxygen(): TankTemplate {
+        return {
+            name: 'AL19',
+            size: TankConstants.imperialRebreatherOxygenSize,
+            workingPressure: TankConstants.imperialRebreatherOxygenWorkPressure,
         };
     }
 }
@@ -112,7 +132,8 @@ export class MetricTanks implements StandardTanks {
                 name: '12 L',
                 size: 12,
                 workingPressure: 0,
-            }
+            },
+            this.rebreatherOxygen
         ];
     }
 
@@ -128,6 +149,14 @@ export class MetricTanks implements StandardTanks {
         return {
             name: 'S80',
             size: TankConstants.metricStageSize,
+            workingPressure: 0,
+        };
+    }
+
+    public get rebreatherOxygen(): TankTemplate {
+        return {
+            name: '3 L',
+            size: TankConstants.metricRebreatherOxygenSize,
             workingPressure: 0,
         };
     }

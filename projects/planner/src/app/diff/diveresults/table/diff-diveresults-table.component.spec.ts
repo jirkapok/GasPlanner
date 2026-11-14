@@ -10,6 +10,11 @@ import { ProfileComparatorService } from '../../../shared/diff/profileComparator
 import { ResultsComparison } from '../../../shared/diff/results-comparison.service';
 import { provideTestTranslate } from '../../../../testing/translate-testing.helpers';
 import { LanguageService } from '../../../shared/language.service';
+import { renderOnPush } from '../../../../testing/onPush.testing';
+import { TranslateService } from '@ngx-translate/core';
+import { CircuitType } from 'scuba-physics';
+import { useEnglishCircuitNames } from '../../../shared/circuit-names.testing';
+import { compareTwoCalculatedDives, diffTestProviders, swapComparedProfiles } from '../../../../testing/diff.testing';
 
 describe('DiveResultsTableDifferenceComponent', () => {
     let component: DiveResultsTableDifferenceComponent;
@@ -36,5 +41,51 @@ describe('DiveResultsTableDifferenceComponent', () => {
 
     it('should create', () => {
         expect(component).toBeTruthy();
+    });
+});
+
+describe('DiveResultsTableDifferenceComponent OnPush', () => {
+    let fixture: ComponentFixture<DiveResultsTableDifferenceComponent>;
+
+    const text = (): string | null => (fixture.nativeElement as HTMLElement).textContent;
+
+    beforeEach(async () => {
+        TestBed.configureTestingModule({
+            imports: [DiveResultsTableDifferenceComponent],
+            providers: diffTestProviders
+        });
+        fixture = await renderOnPush(DiveResultsTableDifferenceComponent);
+    });
+
+    it('renders results calculated outside Angular events', async () => {
+        expect((fixture.nativeElement as HTMLElement).querySelector('#table-header')).toBeNull();
+
+        compareTwoCalculatedDives();
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('#table-header')).not.toBeNull();
+    });
+
+    it('profile titles show the circuit of compared dives', async () => {
+        useEnglishCircuitNames(TestBed.inject(TranslateService));
+        const first = TestBed.inject(DiveSchedules).selected;
+        first.tanksService.prepareForClosedCircuit();
+        first.optionsService.circuit = CircuitType.mccr;
+        compareTwoCalculatedDives();
+        await fixture.whenStable();
+
+        expect(text()).toContain('1. mCCR 30 m');
+        expect(text()).toContain('2. OC 40 m');
+    });
+
+    it('renders results of profiles swapped outside Angular events', async () => {
+        compareTwoCalculatedDives();
+        await fixture.whenStable();
+        const before = text();
+
+        swapComparedProfiles();
+        await fixture.whenStable();
+
+        expect(text()).not.toEqual(before);
     });
 });

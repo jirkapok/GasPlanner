@@ -1,3 +1,4 @@
+import { computed } from '@angular/core';
 import { EventsFactory, StandardGases, Tank } from 'scuba-physics';
 import { UnitConversion } from './UnitConversion';
 import { BoundEvent, TankBound } from './models';
@@ -24,6 +25,37 @@ describe('Bound tank', () => {
     it('Rounds size to one decimal', () => {
         tank.size = 12.354;
         expect(tank.size).toBe(12.4);
+    });
+
+    it('sizeLiters keeps liters', () => {
+        units.imperialUnits = true;
+        tank.sizeLiters = 15;
+        expect(tank.tank.size).toBe(15);
+        units.imperialUnits = false;
+        expect(tank.size).toBe(15);
+    });
+
+    it('startPressureBars keeps bars', () => {
+        units.imperialUnits = true;
+        tank.startPressureBars = 180;
+        expect(tank.tank.startPressure).toBe(180);
+        units.imperialUnits = false;
+        expect(tank.startPressure).toBe(180);
+    });
+
+    it('consumedBars keeps bars', () => {
+        units.imperialUnits = true;
+        tank.consumedBars = 50;
+        expect(tank.tank.consumed).toBe(50);
+        units.imperialUnits = false;
+        expect(tank.consumed).toBe(50);
+    });
+
+    it('tank reads are tracked', () => {
+        const c = computed(() => tank.tank.o2);
+        expect(c()).toBe(21);
+        tank.o2 = 32;
+        expect(c()).toBe(32);
     });
 
     describe('Imperial units', () => {
@@ -60,6 +92,17 @@ describe('BoundEvent', () => {
     it('Gas name of gas switch', () => {
         const sut = new BoundEvent(new UnitConversion(), EventsFactory.createGasSwitch(10, 21, StandardGases.ean50));
         expect(sut.gasName).toEqual('EAN50');
+    });
+
+    it('Nitrogen over ICD limit is in percentage points', () => {
+        const event = EventsFactory.createIsobaricCounterDiffusion(10, 21, StandardGases.ean50, 0.0412);
+        const sut = new BoundEvent(new UnitConversion(), event);
+        expect(sut.n2OverLimit).toEqual(4.1);
+    });
+
+    it('Nitrogen over ICD limit is 0 for other events', () => {
+        const sut = new BoundEvent(new UnitConversion(), EventsFactory.createHighPpO2(10, 20));
+        expect(sut.n2OverLimit).toEqual(0);
     });
 
     it('Empty gas name for event without gas', () => {

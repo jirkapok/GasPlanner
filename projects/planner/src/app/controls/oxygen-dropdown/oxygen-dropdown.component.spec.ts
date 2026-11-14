@@ -9,6 +9,7 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
 import { OxygenDropDownComponent } from './oxygen-dropdown.component';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { renderOnPush } from '../../../testing/onPush.testing';
 
 export class OxygenDropDownPage {
     constructor(private fixture: ComponentFixture<OxygenDropDownComponent>) { }
@@ -96,5 +97,22 @@ describe('Oxygen DropDown component', () => {
         it('Fires event', () => {
             expect(component.standardGasApplied.emit).toHaveBeenCalledExactlyOnceWith('Oxygen');
         });
+    });
+});
+
+describe('Oxygen DropDown component OnPush', () => {
+    it('renders invalid state after parent patched form outside Angular events', async () => {
+        TestBed.configureTestingModule({
+            providers: [UnitConversion, InputControls, DecimalPipe, ValidatorGroups, OptionsService, provideTestTranslate()],
+            imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule, OxygenDropDownComponent]
+        });
+        const fixture = await renderOnPush(OxygenDropDownComponent);
+        const control = fixture.componentInstance.nitroxForm.get('o2');
+
+        control?.markAsDirty();
+        control?.setValue(-1000);
+        await fixture.whenStable();
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('.is-invalid')).not.toBeNull();
     });
 });

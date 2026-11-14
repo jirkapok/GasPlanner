@@ -21,7 +21,7 @@ class PscrOptionsPage {
     }
 
     public get metabolicO2Input(): HTMLInputElement {
-        return this.fixture.debugElement.query(By.css('#metabolicO2')).nativeElement as HTMLInputElement;
+        return this.fixture.debugElement.query(By.css('#pscrMetabolicO2')).nativeElement as HTMLInputElement;
     }
 
     public typeInjectionRatio(value: string): void {

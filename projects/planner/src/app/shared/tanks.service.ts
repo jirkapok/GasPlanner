@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import {
     CircuitType, DefaultValues, Precision, GasNames, RebreatherTanks, StandardGases, Tank, Tanks
 } from 'scuba-physics';
@@ -10,7 +10,8 @@ import { ReloadDispatcher } from './reloadDispatcher';
 
 @Injectable()
 export class TanksService {
-    private _tanks: TankBound[] = [];
+    // tanks are added and removed by other components than the ones showing them
+    private readonly _tanks = signal<TankBound[]>([]);
 
     constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher) {
         const defaultTanks = this.units.defaults.tanks;
@@ -22,26 +23,26 @@ export class TanksService {
     }
 
     public get tanks(): TankBound[] {
-        return this._tanks.slice();
+        return this._tanks().slice();
     }
 
     /** only for recreational diver use case */
     public get firstTank(): TankBound {
-        return this._tanks[0];
+        return this._tanks()[0];
     }
 
     /** Closed circuit rebreather diluent */
     public get diluentTank(): TankBound | undefined {
-        return this._tanks[0];
+        return this._tanks()[0];
     }
 
     /** Closed circuit rebreather oxygen */
     public get oxygenTank(): TankBound | undefined {
-        return this._tanks[RebreatherTanks.oxygenIndex];
+        return this._tanks()[RebreatherTanks.oxygenIndex];
     }
 
     public get singleTank(): boolean {
-        return this._tanks.length === 1;
+        return this._tanks().length === 1;
     }
 
     public get enoughGas(): boolean {
@@ -49,7 +50,7 @@ export class TanksService {
     }
 
     public get tankData(): Tank[] {
-        return _(this._tanks).map(bt => bt.tank)
+        return _(this._tanks()).map(bt => bt.algorithmTank)
             .value();
     }
 
@@ -60,26 +61,26 @@ export class TanksService {
     }
 
     public removeTank(tank: TankBound): void {
-        this._tanks = this._tanks.filter(g => g !== tank);
+        this._tanks.set(this._tanks().filter(g => g !== tank));
         this.renumberIds();
-        this.dispatcher.sendTanksRemoved(tank.tank);
+        this.dispatcher.sendTanksRemoved(tank.algorithmTank);
     }
 
     /** Closed circuit rebreathers need the diluent and oxygen tanks, they can't be removed */
     public canRemove(tank: TankBound, circuit: CircuitType): boolean {
-        if (circuit !== CircuitType.mccr) {
+        if (circuit !== CircuitType.mccr && circuit !== CircuitType.eccr) {
             return true;
         }
 
-        return this._tanks.indexOf(tank) > RebreatherTanks.oxygenIndex;
+        return this._tanks().indexOf(tank) > RebreatherTanks.oxygenIndex;
     }
 
     /**
      * Ensures the second tank is oxygen without overwriting any existing tank.
      * Existing oxygen tank is moved to the second position, otherwise new oxygen tank is inserted.
      */
-    public prepareForMccr(): void {
-        const tanks = this._tanks.slice();
+    public prepareForClosedCircuit(): void {
+        const tanks = this._tanks().slice();
         const oxygenIndex = RebreatherTanks.oxygenIndex;
 
         if (!this.isOxygen(tanks[oxygenIndex])) {
@@ -93,7 +94,7 @@ export class TanksService {
             tanks.splice(oxygenIndex, 0, oxygen);
         }
 
-        this._tanks = tanks;
+        this._tanks.set(tanks);
         this.renumberIds();
         this.dispatcher.sendTanksReloaded(this);
     }
@@ -106,19 +107,20 @@ export class TanksService {
                 this.addTankFor(newTanks, tank);
             }
 
-            this._tanks = newTanks;
+            this._tanks.set(newTanks);
         }
 
         this.dispatcher.sendTanksReloaded(this);
     }
 
     public copyTanksConsumption(tanks: ConsumedDto[]) {
-        for (let index = 0; index < this.tanks.length; index++) {
-            const source = tanks[index];
-            const target = this.tanks[index];
-            target.tank.consumed = source.consumed;
-            target.tank.reserve = source.reserve;
-        }
+        this._tanks().forEach(target => {
+            const source = tanks.find(t => t.id === target.id);
+
+            if (source) {
+                target.assignConsumption(source.consumedVolume, source.reserveVolume);
+            }
+        });
     }
 
     /** even in case thirds rule, the last third is reserve, so we always divide by 2 */
@@ -128,15 +130,15 @@ export class TanksService {
     }
 
     public resetToSimple(): void {
-        this._tanks = this._tanks.slice(0, 1);
+        this._tanks.set(this._tanks().slice(0, 1));
 
         if (this.firstTank.he > 0) {
-            this.firstTank.tank.assignStandardGas(GasNames.airName);
+            this.firstTank.assignStandardGas(GasNames.airName);
         }
     }
 
     public firstBy(tank: Tank): TankBound | undefined {
-        return _(this._tanks).find(t => t.tank === tank);
+        return _(this._tanks()).find(t => t.tank === tank);
     }
 
     private isOxygen(bound: TankBound | undefined): boolean {
@@ -144,9 +146,19 @@ export class TanksService {
     }
 
     /** Small rebreather oxygen cylinder 3 L/200 bar */
+    /** Rebreather oxygen cylinder from the template in current units, filled to its working pressure if defined */
     private createOxygen(): TankBound {
-        const oxygen = new Tank(3, 200, 100);
-        return new TankBound(oxygen, this.units);
+        const template = this.units.defaults.tanks.rebreatherOxygen;
+        const bound = new TankBound(Tank.createDefault(), this.units);
+        bound.workingPressure = template.workingPressure;
+        bound.size = template.size;
+        bound.o2 = 100;
+
+        if (template.workingPressure > 0) {
+            bound.startPressure = template.workingPressure;
+        }
+
+        return bound;
     }
 
     private createDiluent(): TankBound {
@@ -160,9 +172,11 @@ export class TanksService {
     /** both arguments in respective units */
     private addTankBy(size: number, workingPressure: number): void {
         const tank = Tank.createDefault();
-        const bound = this.addTankFor(this._tanks, tank);
+        const tanks = this._tanks().slice();
+        const bound = this.addTankFor(tanks, tank);
         bound.workingPressure = workingPressure;
         bound.size = size;
+        this._tanks.set(tanks);
     }
 
     private addTankFor(target: TankBound[], source: Tank): TankBound {
@@ -173,8 +187,8 @@ export class TanksService {
     }
 
     private renumberIds(): void {
-        for (let index = 0; index < this._tanks.length; index++) {
-            const current = this._tanks[index];
+        for (let index = 0; index < this._tanks().length; index++) {
+            const current = this._tanks()[index];
             current.id = index + 1;
         }
     }

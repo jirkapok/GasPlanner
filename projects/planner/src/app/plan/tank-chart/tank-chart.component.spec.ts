@@ -70,6 +70,64 @@ describe('TankChartComponent', () => {
         expect(remainingText()).toContain('100/200');
     });
 
+    describe('Legend markers and rock bottom line', () => {
+        const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
+
+        const renderConsumed = async (consumed: number, reserve: number): Promise<void> => {
+            tank = new TankBound(Tank.createDefault(), units);
+            tank.assignConsumption(consumed, reserve);
+            fixture = await renderOnPush(TankChartComponent, { tank });
+        };
+
+        it('bars contain no numbers', async () => {
+            await renderConsumed(100, 50);
+            expect(host().querySelector('.progress')?.textContent?.trim()).toBe('');
+        });
+
+        it('shows remaining and rock bottom markers in bar colors', async () => {
+            await renderConsumed(100, 50);
+            const markers = host().querySelectorAll('.legend-marker');
+            expect(markers.length).toBe(2);
+            expect(markers[0].classList).toContain('bg-success');
+            expect(markers[1].classList).toContain('legend-marker-reserve');
+        });
+
+        it('rock bottom marker has reserve line color and own size', async () => {
+            await renderConsumed(0, 0);
+            const marker = host().querySelector('.legend-marker-reserve') as HTMLElement;
+            expect(getComputedStyle(marker).backgroundColor).toBe('rgb(255, 140, 0)');
+            expect(marker.getBoundingClientRect().width).toBeGreaterThan(0);
+        });
+
+        it('remaining marker turns red when consumption changes outside Angular events', async () => {
+            tank = new TankBound(Tank.createDefault(), units);
+            fixture = await renderOnPush(TankChartComponent, { tank });
+
+            tank.assignConsumption(180, 50);
+            await fixture.whenStable();
+
+            const remainingMarker = host().querySelectorAll('.legend-marker')[0];
+            expect(remainingMarker.classList).toContain('bg-danger');
+        });
+
+        it('rock bottom line is thicker', async () => {
+            await renderConsumed(100, 50);
+            const line = host().querySelector('.reserve-bar') as HTMLElement;
+            expect(getComputedStyle(line).borderRightWidth).toBe('4px');
+        });
+
+        it('rock bottom line is shortened to the chart frame', async () => {
+            await renderConsumed(100, 50);
+            const frame = host().querySelector('.gas-bar') as HTMLElement;
+            const frameRect = frame.getBoundingClientRect();
+            const lineRect = (host().querySelector('.reserve-bar') as HTMLElement).getBoundingClientRect();
+            const border = parseFloat(getComputedStyle(frame).borderTopWidth);
+            // spans the frame padding box: from inner top edge to inner bottom edge of the frame border
+            expect(lineRect.top).toBeCloseTo(frameRect.top + border, 0);
+            expect(lineRect.bottom).toBeCloseTo(frameRect.bottom - border, 0);
+        });
+    });
+
     it('renders start pressure changed outside Angular events', async () => {
         tank = new TankBound(Tank.createDefault(), units);
         fixture = await renderOnPush(TankChartComponent, { tank });

@@ -60,7 +60,7 @@
 
 ### Task 1: Tank chart (bars): legend markers, no numbers, thicker and shorter rock bottom line
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 
@@ -80,7 +80,7 @@
   `<span class="legend-marker legend-marker-reserve me-1" aria-hidden="true"></span>`
 - Legend mapping in this chart: the "Gas remaining" `<small>` gets the remaining marker (`bg-success` when `tank.hasReserve`, else `bg-danger`). The "Rock bottom" `<small>` gets the `.legend-marker-reserve` marker.
 
-- [ ] **Step 1: Write the failing tests** in `tank-chart.component.spec.ts`. In the tests below, `assignConsumption(consumed, reserve)` is in bars, and the default tank is 200 bar.
+- [x] **Step 1: Write the failing tests** in `tank-chart.component.spec.ts`. In the tests below, `assignConsumption(consumed, reserve)` is in bars, and the default tank is 200 bar.
 
 ```ts
 const host = (): HTMLElement => fixture.nativeElement as HTMLElement;
@@ -144,7 +144,7 @@ it('rock bottom line is shortened to the chart frame', async () => {
 });
 ```
 
-- [ ] **Step 2: Run the tests and confirm they fail**
+- [x] **Step 2: Run the tests and confirm they fail**
 
 Run: `npx ng test planner --no-watch --include='**/tank-chart.component.spec.ts'`
 Expected: the 6 new tests FAIL.
@@ -153,32 +153,32 @@ Expected: the 6 new tests FAIL.
 - The line border is `2px`.
 - The line (`height: 4em`) reaches below the frame.
 
-- [ ] **Step 3: Update `tank-chart.component.html`.**
+- [x] **Step 3: Update `tank-chart.component.html`.**
   - Add the two markers.
   - Remove the `reserve-overlay` / `reserve-value` block and the `{{endPressure ...}}` text from the remaining bar.
   - Remove the `rounded-progress` class from the reserve bar div. Its `height: 100%` would override `bottom`.
 
-- [ ] **Step 4: Update `tank-chart.component.scss`.**
+- [x] **Step 4: Update `tank-chart.component.scss`.**
   - Add the marker classes and set `.reserve-bar` exactly as listed under Interfaces.
   - Remove from `.reserve-bar`: `height: 4em`, `top: -.1em`, `font-size: .75em` and `text-align: right`. These only existed to place the number below the bar.
   - Delete the unused `.reserve-overlay` and `.reserve-value` rules. Do not touch the diff chart's own `.reserve-value` in its own scss.
 
-- [ ] **Step 5: Run the tests and confirm they pass**
+- [x] **Step 5: Run the tests and confirm they pass**
 
 Run: `npx ng test planner --no-watch --include='**/tank-chart.component.spec.ts'` and then `npx ng test planner --no-watch --include='**/gas-chart.component.spec.ts'`. The gas chart shares this scss, so run both.
 Expected: all tests PASS.
 
-- [ ] **Step 6: Visual check (Review Focus 2, 3).** Run `npm start` and open the plan with 2 tanks, including one with no reserve (red). Check the following:
+- [x] **Step 6: Visual check (Review Focus 2, 3).** Run `npm start` and open the plan with 2 tanks, including one with no reserve (red). Check the following:
   - The rock bottom line spans only the bar frame and ends at its bottom border.
   - The line stays inside the frame with a 0 reserve and with a reserve equal to the start pressure.
   - Markers are aligned with the legend text, on both desktop and mobile width.
 
-- [ ] **Step 7: Lint**
+- [x] **Step 7: Lint**
 
 Run: `npm run lint`
 Expected: `All files pass linting.`
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add projects/planner/src/app/plan/tank-chart

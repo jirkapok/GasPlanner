@@ -9,23 +9,24 @@
     <app-gaslabel [tank]="tank" [toxicity]="toxicity"  [showName]="false" class="text-end"></app-gaslabel>
   </div>
   <div class="d-flex flex-row justify-content-between">
-    <small class="text-start text-muted">{{ 'tankChart.gasRemaining' | translate }}
+    <small class="text-start text-muted">
+      <span aria-hidden="true" [ngClass]="{'legend-marker me-1': true, 'bg-success': tank.hasReserve, 'bg-danger': !tank.hasReserve }"></span>
+      {{ 'tankChart.gasRemaining' | translate }}
       <span id="tankRemaining-{{ tank.id }}">{{ endPressure | number:'1.0-0'  }}/{{ startPressure | number:'1.0-0'  }}</span> {{units.pressure}}</small>
-    <small class="text-end text-muted">{{ 'tankChart.rockBottom' | translate }} <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
+    <small class="text-end text-muted">
+      <span class="legend-marker legend-marker-reserve me-1" aria-hidden="true"></span>
+      {{ 'tankChart.rockBottom' | translate }} <strong>{{ reserve | number:'1.0-0' }}</strong> {{units.pressure}}</small>
   </div>
   <div class="progress gas-bar mt-1 mb-2">
     <div class="combined_wrapper">
       <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="startPressure"
-        [attr.aria-valuenow]="reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar rounded-progress">
-        <div class="reserve-overlay">
-          <div class="reserve-value">{{reserve | number:'1.0-0' }}</div>
-        </div>
+        [attr.aria-valuenow]="reserve" [style.width]="tank.percentsReserve + '%'" class="reserve-bar">
       </div>
 
       <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="startPressure"
         [ngClass]="{'progress-bar rounded-progress': true, 'bg-success': tank.hasReserve, 'bg-danger': !tank.hasReserve }"
         [attr.aria-valuenow]="endPressure" [style.width]="tank.percentsRemaining + '%'">
-      {{endPressure | number:'1.0-0' }}</div>
+      </div>
     </div>
   </div>
 </div>

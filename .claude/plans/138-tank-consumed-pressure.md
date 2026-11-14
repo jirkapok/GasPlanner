@@ -179,7 +179,7 @@ Existing tests there assert bars: change their DTO values to the liters of the s
 ### Task 4: Final verification
 - [ ] Status
 
-- [ ] **Step 1:** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` — all PASS.
-- [ ] **Step 2:** `npm run e2e` (stop any dev server on 4200 first) — PASS.
-- [ ] **Step 3:** Manual check: `npm start`, open `/?t=1-15-0-200-0.209-0&de=0-30-102-1,30-30-1020-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5&ao=1,0`; consumption tab shows not enough gas both in tank (bars) and gas (liters) view, tank consumed 126 b, reserve 82 b.
+- [x] **Step 1:** `npm run test-lib-ci`, `npm run build-lib`, `npm run test-ci`, `npm run lint` — all PASS.
+- [x] **Step 2:** `npm run e2e` (stop any dev server on 4200 first) — PASS.
+- [x] **Step 3:** Manual check: `npm start`, open `/?t=1-15-0-200-0.209-0&de=0-30-102-1,30-30-1020-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5&ao=1,0`; consumption tab shows not enough gas both in tank (bars) and gas (liters) view, tank consumed 126 b, reserve 82 b.
 - [ ] **Step 4:** Whole-branch review per CLAUDE.md (superpowers:requesting-code-review), fix Critical/Important findings test-first, then stop for the user's review.

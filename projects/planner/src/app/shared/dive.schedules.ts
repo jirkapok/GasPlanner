@@ -18,7 +18,6 @@ export class DiveSchedule {
     // changes without selecting other dive, when a previous dive is removed
     private readonly _id = signal(0);
     private _surfaceInterval = Number.POSITIVE_INFINITY;
-    private _restInterval = 0;
     private readonly _diveResult = new DiveResults();
     private readonly _optionsService: OptionsService;
     private readonly _tanks: TanksService;
@@ -52,24 +51,12 @@ export class DiveSchedule {
         return this._surfaceInterval;
     }
 
-    /**
-     * The time interval in seconds which the diver
-     * will spend on the surface after this dive
-     */
-    public get restInterval(): number {
-        return this._restInterval;
-    }
-
     public get surfaceIntervalText(): string | null {
         if(!this.isRepetitive) {
             return null;
         }
 
         return DateFormats.formatShortTime(this.surfaceInterval);
-    }
-
-    public get restIntervalText(): string {
-        return DateFormats.formatShortTime(this.restInterval);
     }
 
     /**
@@ -157,11 +144,6 @@ export class DiveSchedule {
         this.dispatcher.sendDepthChanged();
     }
 
-    public set restInterval(newValue: number) {
-        this._restInterval = newValue;
-        this.dispatcher.sendInfoCalculated(this.id);
-    }
-
     public assignIndex(index: number): void {
         this._index = index;
         this._id.set(index + 1);
@@ -178,18 +160,7 @@ export class DiveSchedule {
         this.depths.setSimple();
     }
 
-    /**
-     * Returns the TissueOverPressures[] of the dive, the schedule's
-     * rest interval + the surface interval specified.
-     */
     public overPressuresWithSurfaceInterval(surfaceInterval: number = 0): TissueOverPressures[] {
-        surfaceInterval += this.restInterval;
-
-        // Avoid unnecessary work
-        if (surfaceInterval === 0) {
-            return this.diveResult.tissueOverPressures;
-        }
-
         const altitude = this.optionsService.altitude;
         const tissues = this.diveResult.finalTissues;
         const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);
@@ -216,22 +187,6 @@ export class DiveSchedule {
     public apply2HourSurfaceInterval(): void {
         this.surfaceInterval = Time.oneHour * 2;
     }
-
-    public apply0MinutesRestInterval(): void {
-        this.restInterval = 0;
-    }
-
-    public applyOneHourRestInterval(): void {
-        this.restInterval = Time.oneHour;
-    }
-
-    public apply30MinutesRestInterval(): void {
-        this.restInterval = Time.oneMinute * 30;
-    }
-
-    public apply2HoursRestInterval(): void {
-        this.restInterval = Time.oneHour * 2;
-    }
 }
 
 @Injectable()
@@ -239,6 +194,7 @@ export class DiveSchedules {
     // dives are added, removed and selected by other components than the ones showing them
     private readonly _dives: WritableSignal<DiveSchedule[]>;
     private readonly _selected: WritableSignal<DiveSchedule>;
+    private _restInterval = 0;
 
     constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher, private circuitNames: CircuitNames) {
         const first = new DiveSchedule(0, this.units, this.dispatcher, this.circuitNames);
@@ -282,11 +238,20 @@ export class DiveSchedules {
         return this.selected.optionsService.toxicity;
     }
 
+    public get restInterval(): number {
+        return this._restInterval;
+    }
+
     public set selected(newValue: DiveSchedule) {
         if (this._dives().includes(newValue)) {
             this._selected.set(newValue);
             this.dispatcher.sendSelectedChanged(newValue.id);
         }
+    }
+
+    public set restInterval(newValue: number) {
+        this._restInterval = newValue;
+        this.dispatcher.sendInfoCalculated(this.selected.id);
     }
 
     // consider unify usage by id or by diveId
@@ -410,5 +375,21 @@ export class DiveSchedules {
         const currentIndex = dive.id - 1;
         const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
         this._selected.set(this._dives()[newIndex]);
+    }
+
+    public apply0MinutesRestInterval(): void {
+        this.restInterval = 0;
+    }
+
+    public applyOneHourRestInterval(): void {
+        this.restInterval = Time.oneHour;
+    }
+
+    public apply30MinutesRestInterval(): void {
+        this.restInterval = Time.oneMinute * 30;
+    }
+
+    public apply2HoursRestInterval(): void {
+        this.restInterval = Time.oneHour * 2;
     }
 }

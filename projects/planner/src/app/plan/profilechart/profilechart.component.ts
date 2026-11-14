@@ -57,7 +57,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
-            .withRestInterval(() => this.schedules.selected.restInterval)
+            .withRestInterval(() => this.schedules.restInterval)
             .withoutHoverLabels()
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;

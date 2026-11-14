@@ -49,7 +49,7 @@ export class RestIntervalComponent extends Streamed implements OnInit {
     }
 
     private get restInterval(): string {
-        return this.schedules.selected.restIntervalText;
+        return DateFormats.formatShortTime(this.schedules.restInterval);
     }
 
     public ngOnInit(): void {
@@ -68,22 +68,22 @@ export class RestIntervalComponent extends Streamed implements OnInit {
     }
 
     public apply0Minutes(): void {
-        this.schedules.selected.apply0MinutesRestInterval();
+        this.schedules.apply0MinutesRestInterval();
         this.reload();
     }
 
     public applyOneHour(): void {
-        this.schedules.selected.applyOneHourRestInterval();
+        this.schedules.applyOneHourRestInterval();
         this.reload();
     }
 
     public apply30Minutes(): void {
-        this.schedules.selected.apply30MinutesRestInterval();
+        this.schedules.apply30MinutesRestInterval();
         this.reload();
     }
 
     public apply2Hours(): void {
-        this.schedules.selected.apply2HoursRestInterval();
+        this.schedules.apply2HoursRestInterval();
         this.reload();
     }
 
@@ -100,7 +100,7 @@ export class RestIntervalComponent extends Streamed implements OnInit {
         const parsed = DateFormats.parseToShortTime(newValue);
 
         if(parsed) {
-            this.schedules.selected.restInterval = parsed;
+            this.schedules.restInterval = parsed;
         }
     }
 

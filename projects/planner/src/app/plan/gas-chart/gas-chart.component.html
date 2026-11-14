@@ -18,10 +18,17 @@
       <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="consumed.scale"
         [attr.aria-valuenow]="consumed.total" [style.width]="consumed.percentsAvailable + '%'" class="available-bar rounded-progress">
       </div>
-      <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="consumed.scale"
-        [attr.aria-valuenow]="consumed.required" [style.width]="consumed.percentsRequired + '%'"
-        [ngClass]="{'progress-bar rounded-progress required-bar': true, 'bg-success': consumed.hasReserve, 'bg-danger': !consumed.hasReserve }">
-      </div>
+      @if (consumed.hasReserve) {
+        <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="consumed.scale"
+          [attr.aria-valuenow]="consumed.required" [style.width]="consumed.percentsRequired + '%'"
+          class="progress-bar rounded-progress required-bar bg-success">
+        </div>
+      } @else {
+        <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="consumed.scale"
+          [attr.aria-valuenow]="consumed.required" [style.left]="consumed.percentsAvailable + '%'"
+          [style.width]="consumed.percentsMissing + '%'" class="progress-bar rounded-progress missing-bar bg-danger">
+        </div>
+      }
       <div role="progressbar" aria-valuemin="0" [attr.aria-valuemax]="consumed.scale"
         [attr.aria-valuenow]="consumed.reserve" [style.width]="consumed.percentsReserve + '%'" class="reserve-bar">
       </div>

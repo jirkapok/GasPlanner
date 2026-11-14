@@ -274,6 +274,17 @@ describe('Consumption by gas', () => {
             expect(empty.hasReserve).toBe(true);
         });
 
+        it('Missing is part of required not covered by available', () => {
+            const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 2800, 500);
+            expect(consumed.percentsMissing).toBeCloseTo(300 / 3300 * 100, 6);
+            expect(consumed.percentsAvailable + consumed.percentsMissing).toBeCloseTo(100, 6);
+        });
+
+        it('No missing gas when available covers required', () => {
+            const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 1500, 500);
+            expect(consumed.percentsMissing).toEqual(0);
+        });
+
         it('Required is sum of consumed and reserve', () => {
             const consumed = new ConsumedGas(StandardGases.air.copy(), 3000, 1500, 500);
             expect(consumed.required).toEqual(2000);

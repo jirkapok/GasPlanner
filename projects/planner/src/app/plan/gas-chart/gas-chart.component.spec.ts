@@ -55,10 +55,10 @@ describe('GasChartComponent', () => {
             expect(markers[2].classList).toContain('legend-marker-available');
         });
 
-        it('consumed marker and required bar are red without reserve', () => {
+        it('consumed marker and missing bar are red without reserve', () => {
             render(3000, 2800, 500);
             expect(host().querySelectorAll('.legend-marker')[1].classList).toContain('bg-danger');
-            expect(host().querySelector('.required-bar')?.classList).toContain('bg-danger');
+            expect(host().querySelector('.missing-bar')?.classList).toContain('bg-danger');
         });
 
         it('required bar spans reserve and consumed from the start', () => {
@@ -104,9 +104,32 @@ describe('GasChartComponent', () => {
             expect(onLine?.classList).toContain('reserve-bar');
         });
 
-        it('red required bar extends past available without reserve', () => {
-            render(3000, 2800, 500); // scale 3300
-            expect(rect('.required-bar').width).toBeGreaterThan(rect('.available-bar').width);
+        describe('Not enough gas', () => {
+            beforeEach(() => {
+                render(3000, 2800, 500); // scale 3300, available 3000, missing 300
+            });
+
+            it('shows grey available from the start instead of required bar', () => {
+                expect(host().querySelector('.required-bar')).toBeNull();
+                const wrapper = rect('.combined_wrapper');
+                const y = wrapper.top + wrapper.height / 2;
+                const nearStart = document.elementFromPoint(wrapper.left + wrapper.width * 0.5, y);
+                expect(nearStart?.classList).toContain('available-bar');
+            });
+
+            it('red missing bar continues after available to the end', () => {
+                const wrapper = rect('.combined_wrapper');
+                const available = rect('.available-bar');
+                const missing = rect('.missing-bar');
+                expect(missing.left).toBeCloseTo(available.right, 0);
+                expect(missing.right).toBeCloseTo(wrapper.right, 0);
+                expect(missing.height).toBeCloseTo(wrapper.height, 0);
+            });
+        });
+
+        it('has no missing bar with enough gas', () => {
+            render(3000, 1500, 500);
+            expect(host().querySelector('.missing-bar')).toBeNull();
         });
     });
 

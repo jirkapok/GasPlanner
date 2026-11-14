@@ -10,3 +10,9 @@
 .required-bar {
     position: relative;
 }
+
+// Not enough gas: continues after the available bar up to the required volume
+.missing-bar {
+    position: absolute;
+    top: 0;
+}

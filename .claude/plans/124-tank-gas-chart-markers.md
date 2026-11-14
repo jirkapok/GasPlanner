@@ -34,7 +34,7 @@
 - **Grey available background:** `#bdbdbd`, from 0 to `percentsAvailable`.
 - **Required bar** (reserve + consumed): green/red, from 0 to `percentsRequired`. It replaces the separate orange reserve box and the consumed box.
 - **Orange reserve line:** at `percentsReserve`, the same `.reserve-bar` as the tank chart. The reserve is the part left of the line, and the consumed gas is the part between the line and the end of the required bar.
-- **No reserve:** when the required gas exceeds the available gas, the red required bar extends past the grey background, because the scale is `max(total, required)`.
+- **No reserve:** when the required gas exceeds the available gas, the grey available bar is shown from the start and a red missing bar continues after it up to the required volume (end of the scale `max(total, required)`). Changed by Task 3, originally the red required bar covered the whole scale.
 
 ## Global Constraints
 
@@ -50,7 +50,7 @@
 
 ## Review Focus
 
-1. **No-reserve state.** When consumed gas exceeds the usable gas (`hasReserve === false`), the remaining/consumed marker and its bar must turn red together. In the liters chart, the red bar must extend past the grey available background. The `bg-danger` tests in both tasks cover this.
+1. **No-reserve state.** When consumed gas exceeds the usable gas (`hasReserve === false`), the remaining/consumed marker and its bar must turn red together. In the liters chart, the grey available bar stays visible from the start and the red missing bar follows it to the end (Task 3). The `bg-danger` tests in both tasks cover this.
 2. **Zero-width segments.** With a 0 reserve or 0 consumption, a segment has width 0%, but its legend marker must still render with its color and size. The marker size test in Task 1 checks this.
 3. **Reserve line at extreme values.** With a 0 reserve the line sits at the left frame edge. With the reserve at or above the start pressure (bars) or the scale (liters), it sits at the right edge. In both cases it must stay inside the frame and must not overflow horizontally (visual check in both tasks).
 4. **Stacking order in the liters bar.** From bottom to top: grey available, then the colored required bar, then the orange line. A positioned element paints over a static one, so the required bar must be positioned as well (see Task 2 Step 4). The paint order test in Task 2 checks this.
@@ -334,3 +334,30 @@ Expected: lint is clean and all planner tests pass.
 git add projects/planner/src/app/plan/gas-chart
 git commit -m "feat: #124 gas chart legend markers and bars styled like tank chart"
 ```
+
+---
+
+### Task 3: Gas chart (liters): grey available followed by red missing gas when not enough gas
+
+- [x] Status
+
+User request after the review: when the required gas is higher than the available gas, the left part of the bar shows the grey available gas and the rest up to the required volume is red.
+
+**Files:**
+
+- Modify: `projects/scuba-physics/src/lib/consumption/consumptionByGas.ts`: `ConsumedGas.percentsMissing: number`, the part of the required gas not covered by the available gas in percents of scale (0 with enough gas).
+- Test: `projects/scuba-physics/src/lib/consumption/consumptionByGas.spec.ts`
+- Modify: `projects/planner/src/app/plan/gas-chart/gas-chart.component.html`, `.scss`
+- Test: `projects/planner/src/app/plan/gas-chart/gas-chart.component.spec.ts`
+
+**Interfaces:**
+
+- With enough gas (`consumed.hasReserve`): the green `.required-bar` from 0 to `percentsRequired`, unchanged.
+- Without enough gas: no `.required-bar`. A red `.missing-bar` (`progress-bar rounded-progress missing-bar bg-danger`, `position: absolute; top: 0`) with `left: percentsAvailable%` and `width: percentsMissing%`. The orange reserve line stays on top.
+
+- [x] **Step 1: Write the failing tests**: lib tests "Missing is part of required not covered by available" and "No missing gas when available covers required"; planner tests "consumed marker and missing bar are red without reserve", "shows grey available from the start instead of required bar", "red missing bar continues after available to the end", "has no missing bar with enough gas".
+- [x] **Step 2: Run them and confirm they fail** (missing property; no `.missing-bar`).
+- [x] **Step 3: Implement `percentsMissing`, run `npm run build-lib`, then update the template and scss.**
+- [x] **Step 4: Run the tests and confirm they pass**, then visual check at 45 m depth.
+- [x] **Step 5: Lint, `npm run test-lib-ci` and `npm run test-ci`.**
+- [x] **Step 6: Commit** `feat: #124 gas chart shows missing gas in red after available gas`

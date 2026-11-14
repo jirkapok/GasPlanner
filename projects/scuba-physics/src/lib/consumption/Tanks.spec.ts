@@ -320,6 +320,17 @@ describe('Tank', () => {
             modified.loadFrom(tank);
             expect(modified).toEqual(Tank.createDefault());
         });
+
+        it('Copies precise reserve volume', () => {
+            const source = Tank.createDefault();
+            source.reserveVolume = 664.3824705;
+            const target = new Tank(10, 100, 32);
+
+            target.loadFrom(source);
+
+            expect(target.reserveVolume).toBe(664.3824705);
+            expect(target.reserve).toBe(source.reserve);
+        });
     });
 
     describe('Create valid', () => {

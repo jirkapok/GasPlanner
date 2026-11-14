@@ -348,7 +348,8 @@ export class Tank implements TankFill {
         this.size = other.size;
         this.startPressure = other.startPressure;
         this.consumedVolume = other.consumedVolume;
-        this.reserve = other.reserve;
+        // both values as they are, to prevent precision loss by rounding
+        this.updateReserve(other.reserve, other.reserveVolume);
     }
 
     public toString(): string {

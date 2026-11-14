@@ -240,7 +240,7 @@ export class Tank implements TankFill {
         // gas needs to be set first, since it affects compressibility factor.
         this._gas.fO2 = AirO2Pin.setO2(newValue, this.gas.fHe);
         // update volume based on compressibility, protecting pressure defined by user, not volume.
-        this.startPressure = this.startPressure;
+        this.fitStoredVolumes();
     }
 
     /** The helium part of tank gas in percents */
@@ -248,7 +248,7 @@ export class Tank implements TankFill {
         // gas needs to be set first, since it affects compressibility factor.
         this.gas.fHe = newValue / 100;
         // update volume based on compressibility, protecting pressure defined by user, not volume.
-        this.startPressure = this.startPressure;
+        this.fitStoredVolumes();
     }
 
     public set startPressure(newValue: number) {
@@ -314,15 +314,15 @@ export class Tank implements TankFill {
         return realVolume;
     }
 
+    public static realVolume2(size: number, pressure: number, gas: Gas): number {
+        const tank = { size, startPressure: pressure };
+        return Tank.realVolume(tank, gas);
+    }
+
     private static toTankPressure(gas: Gas, tankSize: number, volume: number): number {
         const compressibility = new Compressibility();
         const pressure = compressibility.tankPressure(gas, tankSize, volume);
         return pressure;
-    }
-
-    public static realVolume2(size: number, pressure: number, gas: Gas): number {
-        const tank = { size, startPressure: pressure };
-        return Tank.realVolume(tank, gas);
     }
 
     /**

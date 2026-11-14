@@ -179,35 +179,35 @@ describe('Scheduled dives', () => {
     });
 
     describe('Previous dive tissues', () => {
-        const sut: DiveSchedules = createSut();
+        const schedules: DiveSchedules = createSut();
         const loadedTissues = ProfileTissues.createAtSurface();
-        sut.dives[0].diveResult.updateProfile([], loadedTissues, []);
+        schedules.dives[0].diveResult.updateProfile([], loadedTissues, []);
 
-        const repetitive = sut.add();
+        const repetitive = schedules.add();
         repetitive.surfaceInterval = Time.oneHour;
         repetitive.diveResult.updateProfile([], ProfileTissues.createAtSurface(), []);
 
-        sut.add();
+        schedules.add();
 
         const defaultTissues = ProfileTissues.createAtSurface(0);
 
         it('First dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(1);
+            const tissues = schedules.previousDiveTissues(1);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Repetitive dive returns previous dive tissues', () => {
-            const tissues = sut.previousDiveTissues(2);
+            const tissues = schedules.previousDiveTissues(2);
             expect(tissues).toEqual(loadedTissues);
         });
 
         it('Non repetitive dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(3);
+            const tissues = schedules.previousDiveTissues(3);
             expect(tissues).toEqual(defaultTissues);
         });
 
         it('Non existing dive returns empty tissues', () => {
-            const tissues = sut.previousDiveTissues(5);
+            const tissues = schedules.previousDiveTissues(5);
             expect(tissues).toEqual(defaultTissues);
         });
     });
@@ -238,7 +238,7 @@ describe('Scheduled dives', () => {
 
     describe('Calculating', () => {
         it('Marks Still running also all following repetitive dives', async () => {
-            const sut = createSut();
+            sut = createSut();
             sut.add();
             const third = sut.add();
             third.surfaceInterval = Time.oneHour;

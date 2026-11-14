@@ -130,28 +130,27 @@ export class ProfileComparatorService extends Streamed {
         return this.profileAResults.showResults && this.profileBResults.showResults;
     }
 
+    public get restInterval(): number {
+        return this.schedules.restInterval;
+    }
+
+    public get alignByEnd(): boolean {
+        return this._alignByEnd();
+    }
+
     public get overPressures(): SaturationComparison {
+        if (this.alignByEnd) {
+            return this.endAlignedOverPressures
+        }
+        return this.startAlignedOverPressures
+
+    }
+
+    private get startAlignedOverPressures(): SaturationComparison {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
+        const aIsLonger = durationDiff > 0;
         const rest = this.restInterval;
         const diff = Math.abs(durationDiff);
-        const aIsLonger = durationDiff > 0;
-
-
-        if (this.alignByEnd) {
-            const pressuresA = this.profileA.overPressuresWithSurfaceInterval(rest);
-            const pressuresB = this.profileB.overPressuresWithSurfaceInterval(rest);
-            const lenDiff = Math.abs(pressuresA.length - pressuresB.length);
-
-            return aIsLonger
-                ? {
-                    profileAOverPressures: pressuresA,
-                    profileBOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresB]
-                }
-                : {
-                    profileAOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresA],
-                    profileBOverPressures: pressuresB
-                }
-        }
 
         return aIsLonger
             ? {
@@ -162,27 +161,24 @@ export class ProfileComparatorService extends Streamed {
                 profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest + diff),
                 profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest)
             }
+    }
 
-        /*
-        return durationDiff > 0
+    private get endAlignedOverPressures(): SaturationComparison {
+        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
+        const aIsLonger = durationDiff > 0;
+        const pressuresA = this.profileA.overPressuresWithSurfaceInterval(this.restInterval);
+        const pressuresB = this.profileB.overPressuresWithSurfaceInterval(this.restInterval);
+        const lenDiff = Math.abs(pressuresA.length - pressuresB.length);
+
+        return aIsLonger
             ? {
-                profileAOverPressures: this.longerDivePressures(this.profileA, rest),
-                // diff only gets applied if alignByEnd is false, else the diff is represented by the empty padding
-                profileBOverPressures: this.shorterDivePressures(this.profileB, rest + diff)
+                profileAOverPressures: pressuresA,
+                profileBOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresB]
             }
             : {
-                profileAOverPressures: this.shorterDivePressures(this.profileA, rest + diff),
-                profileBOverPressures: this.longerDivePressures(this.profileB, rest)
-            };
-        */
-    }
-
-    public get restInterval(): number {
-        return this.schedules.restInterval;
-    }
-
-    public get alignByEnd(): boolean {
-        return this._alignByEnd();
+                profileAOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresA],
+                profileBOverPressures: pressuresB
+            }
     }
 
     /** Deep-copied waypoints with offset applied */

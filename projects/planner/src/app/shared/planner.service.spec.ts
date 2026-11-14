@@ -220,16 +220,16 @@ describe('PlannerService', () => {
             expect(dive.timeToSurface).toEqual(8);
         });
 
-        it('18 minutes maximum dive time', () => {
-            expect(dive.maxTime).toEqual(18);
+        it('17 minutes maximum dive time', () => {
+            expect(dive.maxTime).toEqual(17);
         });
 
         it('77 bar rock bottom', () => {
             expect(tanksService.firstTank.tank.reserve).toEqual(77);
         });
 
-        it('125 bar remaining gas', () => {
-            expect(tanksService.firstTank.tank.endPressure).toEqual(125);
+        it('117 bar remaining gas', () => {
+            expect(tanksService.firstTank.tank.endPressure).toEqual(117);
         });
 
         it('Consumption by gas is calculated together with tanks', () => {

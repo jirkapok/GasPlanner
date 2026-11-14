@@ -118,7 +118,7 @@ export class TanksService {
             const source = tanks.find(t => t.id === target.id);
 
             if (source) {
-                target.assignConsumption(source.consumed, source.reserve);
+                target.assignConsumption(source.consumedVolume, source.reserveVolume);
             }
         });
     }

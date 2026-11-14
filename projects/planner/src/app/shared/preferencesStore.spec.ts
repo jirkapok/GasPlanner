@@ -139,12 +139,12 @@ describe('PreferencesStore', () => {
                 planner.calculate(1); // not called automatically
                 const expected1 = new Tank(15, 150, 21);
                 expected1.id = 1;
-                expected1.consumed = 107;
-                expected1.reserveVolume = 665.8107445570627; // precise value to simplify the assertion
+                expected1.consumedVolume = 1601.2190984999997; // precise liters from the consumption worker
+                expected1.reserveVolume = 664.3824705;
                 const expected2 = new Tank(11.1, 200, 50);
                 expected2.id = 2;
-                expected2.consumed = 22;
-                expected2.reserveVolume = 393.6696946571216;
+                expected2.consumedVolume = 238.7782215;
+                expected2.reserveVolume = 388.8923955;
                 // JSON serialization prevents order of items in an array
                 const expected: Tank[] = [expected1, expected2];
                 expect(tanksService.tankData).toEqual(expected);

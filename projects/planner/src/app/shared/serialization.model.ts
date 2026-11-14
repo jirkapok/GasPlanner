@@ -169,9 +169,9 @@ export interface ConsumptionOptionsDto {
 export interface ConsumedDto {
     /** Tank id */
     id: number;
-    // Using pressure instead of volumes, to prevent precision loss when serializing, volume isn't rounded anyway.
-    consumed: number;
-    reserve: number;
+    // Liters, the primary value of the consumption calculation, bars are derived by the Tank.
+    consumedVolume: number;
+    reserveVolume: number;
 }
 
 export interface ConsumedGasDto {

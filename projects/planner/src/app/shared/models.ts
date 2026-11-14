@@ -327,10 +327,10 @@ export class TankBound implements IGasContent, ITankSize {
         this.changed();
     }
 
-    /** Values in bars, as calculated by the consumption worker */
-    public assignConsumption(consumed: number, reserve: number): void {
-        this._tank.consumed = consumed;
-        this._tank.reserve = reserve;
+    /** Values in liters, as calculated by the consumption worker */
+    public assignConsumption(consumedVolume: number, reserveVolume: number): void {
+        this._tank.consumedVolume = consumedVolume;
+        this._tank.reserveVolume = reserveVolume;
         this.changed();
     }
 

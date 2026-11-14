@@ -143,7 +143,7 @@ describe('GasesComparisonService', () => {
         const firstGas = sut.gasesDifference[0];
 
         expect(firstGas.profileA.total).toBeCloseTo(102.165, 3);
-        expect(firstGas.profileA.consumed).toBeCloseTo(53.226, 3);
+        expect(firstGas.profileA.consumed).toBeCloseTo(48.938, 3);
         expect(firstGas.profileA.reserve).toBeCloseTo(26.728, 3);
         expect(firstGas.profileB.total).toBeCloseTo(102.165, 3);
     });

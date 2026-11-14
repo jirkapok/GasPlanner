@@ -7,6 +7,14 @@ import { provideTestTranslate } from '../../../testing/translate-testing.helpers
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { LanguageService } from '../../shared/language.service';
 
+/** Consumption is assigned in liters as calculated by the worker, the tests work with bars */
+const assignBars = (target: TankBound, consumed: number, reserve: number): void => {
+    const reference = Tank.createDefault();
+    reference.consumed = consumed;
+    reference.reserve = reserve;
+    target.assignConsumption(reference.consumedVolume, reference.reserveVolume);
+};
+
 describe('TankChartComponent', () => {
     let component: TankChartComponent;
     let fixture: ComponentFixture<TankChartComponent>;
@@ -28,7 +36,7 @@ describe('TankChartComponent', () => {
         beforeEach(async () => {
             units.imperialUnits = true;
             tank = new TankBound(Tank.createDefault(), units);
-            tank.assignConsumption(100, 50);
+            assignBars(tank, 100, 50);
             fixture = await renderOnPush(TankChartComponent, { tank });
             component = fixture.componentInstance;
         });
@@ -64,7 +72,7 @@ describe('TankChartComponent', () => {
         fixture = await renderOnPush(TankChartComponent, { tank });
         expect(remainingText()).toContain('200/200');
 
-        tank.assignConsumption(100, 50);
+        assignBars(tank, 100, 50);
         await fixture.whenStable();
 
         expect(remainingText()).toContain('100/200');
@@ -75,7 +83,7 @@ describe('TankChartComponent', () => {
 
         const renderConsumed = async (consumed: number, reserve: number): Promise<void> => {
             tank = new TankBound(Tank.createDefault(), units);
-            tank.assignConsumption(consumed, reserve);
+            assignBars(tank, consumed, reserve);
             fixture = await renderOnPush(TankChartComponent, { tank });
         };
 
@@ -103,7 +111,7 @@ describe('TankChartComponent', () => {
             tank = new TankBound(Tank.createDefault(), units);
             fixture = await renderOnPush(TankChartComponent, { tank });
 
-            tank.assignConsumption(180, 50);
+            assignBars(tank, 180, 50);
             await fixture.whenStable();
 
             const remainingMarker = host().querySelectorAll('.legend-marker')[0];

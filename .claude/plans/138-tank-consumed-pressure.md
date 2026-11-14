@@ -143,7 +143,7 @@ expect(tank.reserve).toBe(82);
 - [x] **Step 3: `npm run lint`, commit** `test: #138 tank and gas consumption agree`
 
 ### Task 3: Worker sends consumed liters to the UI
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/planner/src/app/shared/serialization.model.ts` (`ConsumedDto` L169)
@@ -155,7 +155,7 @@ expect(tank.reserve).toBe(82);
 **Interfaces:**
 - Produces: `interface ConsumedDto { id: number; consumedVolume: number; reserveVolume: number; }` (liters, not rounded); `TankBound.assignConsumption(consumedVolume: number, reserveVolume: number): void` (liters).
 
-- [ ] **Step 1: Write the failing test** in `tanks.service.spec.ts` → `Copy consumption`: rewrite the DTO literals to liters and add
+- [x] **Step 1: Write the failing test** in `tanks.service.spec.ts` → `Copy consumption`: rewrite the DTO literals to liters and add
 
 ```typescript
 it('keeps consumed liters sent by the worker', () => {
@@ -166,15 +166,15 @@ it('keeps consumed liters sent by the worker', () => {
 ```
 Existing tests there assert bars: change their DTO values to the liters of the same bars on that tank (`new Tank(size, bars, 21).volume` is the reserve liters; consumed liters per Task 1 rule) or assert `consumedVolume`/`reserveVolume` instead.
 
-- [ ] **Step 2: Run** `npm run build-lib`, then `npx ng test planner --no-watch --include='**/tanks.service.spec.ts'` — FAIL (type error / wrong fields).
+- [x] **Step 2: Run** `npm run build-lib`, then `npx ng test planner --no-watch --include='**/tanks.service.spec.ts'` — FAIL (type error / wrong fields).
 
-- [ ] **Step 3: Implement** the Interfaces: `toConsumed` writes `tank.consumedVolume`/`tank.reserveVolume`; `copyTanksConsumption` passes them; `assignConsumption` sets `_tank.consumedVolume` then `_tank.reserveVolume`. Replace the `ConsumedDto` comment "Using pressure instead of volumes, to prevent precision loss" with "Liters, the primary value of the consumption calculation, bars are derived by Tank".
+- [x] **Step 3: Implement** the Interfaces: `toConsumed` writes `tank.consumedVolume`/`tank.reserveVolume`; `copyTanksConsumption` passes them; `assignConsumption` sets `_tank.consumedVolume` then `_tank.reserveVolume`. Replace the `ConsumedDto` comment "Using pressure instead of volumes, to prevent precision loss" with "Liters, the primary value of the consumption calculation, bars are derived by Tank".
 
-- [ ] **Step 4: Update** `tank-chart.component.spec.ts` calls `assignConsumption(bars, bars)` to liters (or set `tank.tank.consumed`/`tank.tank.reserve` directly where the test is about bars), keeping its assertions.
+- [x] **Step 4: Update** `tank-chart.component.spec.ts` calls `assignConsumption(bars, bars)` to liters (or set `tank.tank.consumed`/`tank.tank.reserve` directly where the test is about bars), keeping its assertions.
 
-- [ ] **Step 5: Run** `npm run test-ci` — all planner tests PASS. Value changes only where consumed bars changed (e.g. planner/consumption specs); explain them in the commit body.
+- [x] **Step 5: Run** `npm run test-ci` — all planner tests PASS. Value changes only where consumed bars changed (e.g. planner/consumption specs); explain them in the commit body.
 
-- [ ] **Step 6: `npm run lint`, commit** `fix: #138 consumption worker sends tank consumption in liters`
+- [x] **Step 6: `npm run lint`, commit** `fix: #138 consumption worker sends tank consumption in liters`
 
 ### Task 4: Final verification
 - [ ] Status

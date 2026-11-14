@@ -78,7 +78,7 @@ describe('WeightCalcComponent', () => {
             setConsumed('100');
             setConsumed('200');
             expect(component.tank.startPressure).toBeCloseTo(230, 3);
-            expect(component.weight).toBeCloseTo(3.5, 3);
+            expect(component.weight).toBeCloseTo(3.4, 3);
         });
     });
 
@@ -94,7 +94,7 @@ describe('WeightCalcComponent', () => {
             const reserve = TestBed.inject(ApplicationSettingsService).appSettings.primaryTankReserve;
             expect(component.tank.tank.consumed).toBeCloseTo(consumedBars, 0); // the tank rounds consumed up to whole bars
             expect(component.tank.tank.startPressure).toBeCloseTo(reserve + consumedBars, 1);
-            expect(component.weight).toBeCloseTo(7.8, 1);
+            expect(component.weight).toBeCloseTo(7.6, 1);
         });
     });
 });

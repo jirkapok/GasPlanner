@@ -55,8 +55,8 @@ export class DtoSerialization {
             const tank = tanks[index];
             const converted = {
                 id: tank.id,
-                consumed: tank.consumed,
-                reserve: tank.reserve
+                consumedVolume: tank.consumedVolume,
+                reserveVolume: tank.reserveVolume
             };
             result.push(converted);
         }

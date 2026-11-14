@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1794660455176,
+  "timestamp": 1794670395650,
   "index": "/index.html",
   "assetGroups": [
     {
@@ -20,7 +20,7 @@
         "/assets/i18n/zh.json",
         "/favicon.ico",
         "/index.html",
-        "/main-XWXOWDW3.js",
+        "/main-YTFIQAPJ.js",
         "/manifest.cs.webmanifest",
         "/manifest.de.webmanifest",
         "/manifest.es.webmanifest",
@@ -30,10 +30,10 @@
         "/manifest.zh.webmanifest",
         "/polyfills-PZSJNBYU.js",
         "/styles-BH7YCPOC.css",
-        "/worker-C3SFB5IH.js",
-        "/worker-CTWQOD2M.js",
-        "/worker-KLX6JQPA.js",
-        "/worker-ZFJIVVJ2.js"
+        "/worker-B6ZQTBPM.js",
+        "/worker-DQVVSX5Q.js",
+        "/worker-J6I57ELA.js",
+        "/worker-N7K6REUV.js"
       ],
       "patterns": []
     },
@@ -138,7 +138,7 @@
   ],
   "dataGroups": [],
   "hashTable": {
-    "/assets/doc/CHANGELOG.md": "205e459d0ee825674e7053c18f053ebd284e5437",
+    "/assets/doc/CHANGELOG.md": "bf4b424ed95a83237a602e14770302bca66e9a05",
     "/assets/doc/altitude.md": "d6c6cf0770b212a26fe506bdd9a5350d1dbb056c",
     "/assets/doc/application.md": "58df88a2eeccffbe1e04f1f8ef828c314a5dbb16",
     "/assets/doc/consumed.md": "7ffb41cc504ab2db35a71663642b6ee3e72b6416",
@@ -187,7 +187,7 @@
     "/assets/doc/tanks.md": "1ba51dbe49741665d550f438d206618ab78272c0",
     "/assets/doc/target_depth_properties.png": "a2baf8c3928ace42553d22c4beaa8a4f51c8bf3d",
     "/assets/doc/waypoints_table.md": "fda40b60881122fec55ea8a67504034ec2c06973",
-    "/assets/doc/weight.md": "b58f2591b7b478d9b655d7720de82dbd7366d8aa",
+    "/assets/doc/weight.md": "ffd9df071071a9a9f03b5cdf61c619cae0dfa764",
     "/assets/doc/whydugong.md": "915f351542f06541267079327a46e211a453316b",
     "/assets/i18n/cs.json": "56afce69a16579a1325088569267ae9631ee4448",
     "/assets/i18n/de.json": "f18028d54e0dfe8b8d3536c44cb6ae046ca7061d",
@@ -215,15 +215,15 @@
     "/assets/splash/apple_splash_640.png": "aa065aaea122cf10e2b3da73b58a3a61a8c8c694",
     "/assets/splash/apple_splash_750.png": "d31ed0f6f9ce5cab5294b6789739d2179b1acb08",
     "/favicon.ico": "010b086b99a2ed272b98e651e1dfaa5011b3ac6f",
-    "/index.html": "3af134f852fa6dc2c384f4ce664293a33bfd7af9",
-    "/main-XWXOWDW3.js": "7f9dbcccb8fc421ffbaa5a0ce787a0482f49e739",
-    "/manifest.cs.webmanifest": "3fefd3320dbafd52386b6a71c26fe52cce151934",
-    "/manifest.de.webmanifest": "2fbdcfea8b3e85d191ad7e491f922c41c79d1279",
-    "/manifest.es.webmanifest": "826e1c69bd7c6814a25a4c18c9bf83de09640f30",
-    "/manifest.fr.webmanifest": "ea619237b6e26b8931d28b1b328827805a80fedc",
-    "/manifest.ru.webmanifest": "635bd4cad42ea7ffcf73a18f05bad60224ffc986",
-    "/manifest.webmanifest": "2b8910b80e6cee2f6a6ec57c92bb571bc120d770",
-    "/manifest.zh.webmanifest": "88a99de3189868ab54dfca0e62a2ee284eb1506c",
+    "/index.html": "f3c6cc03ce981d44a50aa11f96adc8c28c102fcd",
+    "/main-YTFIQAPJ.js": "bc30a34246ed8abc697290732fe74923fa203931",
+    "/manifest.cs.webmanifest": "f2b1ff394a568636a92b2fd619a2f7c46bb3a324",
+    "/manifest.de.webmanifest": "0e11c224e11828e00896fa391ce0ad4143e0ff64",
+    "/manifest.es.webmanifest": "2cecdcc4dba9be16e5f0a18b9c37d4171b6b200a",
+    "/manifest.fr.webmanifest": "c83163a6058ce8c2e794751b0add1430ff864c3b",
+    "/manifest.ru.webmanifest": "5c991b3aba0e6c9fdb938d9cafc50adb037f8e08",
+    "/manifest.webmanifest": "63c7fa968e5913e43123587844f05a1d012e2155",
+    "/manifest.zh.webmanifest": "982f0a4279a9200bcfa125175ae9cbe2a7621d8a",
     "/media/cn-P7M3XOME.svg": "6a132cb7d0c5fb1fd90fc5857a15057dad164fcf",
     "/media/cz-PSDLWGGB.svg": "4b0135f6aeeea3f5d3cf75a388928f2da6d40dfd",
     "/media/de-MZUAL5O7.svg": "f46bdcf00fbd79c764b116ef8250e678e4b71c8b",
@@ -233,10 +233,10 @@
     "/media/ru-FRCHSBTM.svg": "9d973fabca9eae17df6841186a2f15c7eb334e36",
     "/polyfills-PZSJNBYU.js": "38c9b370c0e9f9f932fe77ca39c98f09dc174b4d",
     "/styles-BH7YCPOC.css": "394f6eee435023fee95bc6d5a05771d8ef0174b7",
-    "/worker-C3SFB5IH.js": "f81e74e8cda27ae55a065f2c499bfffb0572893f",
-    "/worker-CTWQOD2M.js": "cd75363553113c53d8ef35740641664c2f5508b1",
-    "/worker-KLX6JQPA.js": "5445b2da7fd60ec6285795d831e722d297169d01",
-    "/worker-ZFJIVVJ2.js": "cb82815fa17275febf1b1f2585ee21d00614a4fe"
+    "/worker-B6ZQTBPM.js": "82b5343131ecdcd7832c4f738211aa1f48b44958",
+    "/worker-DQVVSX5Q.js": "f1965e3de397985703945f689b7cc35c66d010c2",
+    "/worker-J6I57ELA.js": "1249261692d52dc5927a771ba0765a8827ad5c69",
+    "/worker-N7K6REUV.js": "de2a016aacac5137fe1dd30521d636a3cf452070"
   },
   "navigationUrls": [
     {

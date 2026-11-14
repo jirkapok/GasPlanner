@@ -1,3 +1,13 @@
+## [0.24.1](https://github.com/jirkapok/GasPlanner/compare/v0.24.0...v0.24.1) (2026-11-14)
+
+
+### Bug Fixes
+
+* [#138](https://github.com/jirkapok/GasPlanner/issues/138) consumption worker sends tank consumption in liters ([c53034d](https://github.com/jirkapok/GasPlanner/commit/c53034db0b9b9a3dfbfe036e9c6142b9ae8a9ac4))
+* [#138](https://github.com/jirkapok/GasPlanner/issues/138) tank consumed bars as pressure drop from start pressure ([6a6eb6f](https://github.com/jirkapok/GasPlanner/commit/6a6eb6fadaba3e23ee051d5a61c08b0ee85599a5))
+* [#138](https://github.com/jirkapok/GasPlanner/issues/138) tank copy keeps precise reserve volume ([aec193f](https://github.com/jirkapok/GasPlanner/commit/aec193fcf1b3414597ad192dd32409381a56a6b1))
+* [#138](https://github.com/jirkapok/GasPlanner/issues/138) weight calculator restores start pressure with consumed gas ([a06d362](https://github.com/jirkapok/GasPlanner/commit/a06d36240af29a8655052f586359e674a1a88f41))
+
 # [0.24.0](https://github.com/jirkapok/GasPlanner/compare/v0.23.0...v0.24.0) (2026-11-14)
 
 

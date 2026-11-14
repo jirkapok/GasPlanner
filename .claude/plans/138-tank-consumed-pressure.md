@@ -18,8 +18,8 @@
 URL: `t=1-15-0-200-0.209-0&de=0-30-102-1,30-30-1020-1&di=20,30&o=0,9,3,3,3,18,2,0.85,0.4,3,1.6,30,1.4,10,1,1,0,2,1,0,20,5`
 (15 L air 200 b, 30 m, 1:42 descent + 17 min, RMV 20/30, GF 40/85, fresh water, safety stop auto, problem solving 1 min).
 
-| | Liters (`ConsumedGas`) | Bars (`Tank`) before | Bars (`Tank`) after |
-|---|---|---|---|
+| Value | Liters (`ConsumedGas`) | Bars (`Tank`) before | Bars (`Tank`) after |
+| --- | --- | --- | --- |
 | Available | 2893 L | 200 b | 200 b |
 | Consumed | 1759 L | 118 b = `ceil(pressure(1759 L from empty))` = ceil(117.18) | 126 b = ceil(200 − 74.98) |
 | Reserve | 1226 L | 82 b = ceil(81.08) | 82 b |
@@ -49,6 +49,7 @@ Air compressibility makes the bar ↔ liter relation non linear; the consumed ga
 - Compare everything in liters: rejected, duplicates `ConsumedGas`.
 
 ### Non-goals
+
 - No UI layout or text change, no new translations.
 - Docs: only the `doc/weight.md` example value is corrected (it didn't match the calculator before this branch either).
 - Reserve conversion and `ConsumptionByGas` stay as they are.
@@ -74,6 +75,7 @@ Air compressibility makes the bar ↔ liter relation non linear; the consumed ga
 - [x] Status
 
 **Files:**
+
 - Modify: `projects/scuba-physics/src/lib/consumption/Tanks.ts` (`consumed` setter, `consumedVolume` setter, `fitStoredVolumes`, new private `consumedPressure`, `assignStandardGas`)
 - Test: `projects/scuba-physics/src/lib/consumption/Tanks.spec.ts`
 - Modify (expected values only): `consumption.spec.ts`, `consumption.customReserve.spec.ts`, `consumptionByMix.spec.ts`; `consumption.eccr.spec.ts` sets diluent helium via `Tank.he`
@@ -157,6 +159,7 @@ expect(tank.reserve).toBe(82);
 - [x] Status
 
 **Files:**
+
 - Modify: `projects/planner/src/app/shared/serialization.model.ts` (`ConsumedDto`)
 - Modify: `projects/planner/src/app/shared/dtoSerialization.ts` (`toConsumed`)
 - Modify: `projects/planner/src/app/shared/models.ts` (`TankBound.assignConsumption`)
@@ -201,9 +204,11 @@ it('keeps consumed liters sent by the worker', () => {
 - [x] **Step 4:** Whole-branch review per CLAUDE.md (superpowers:requesting-code-review) — verdict "With fixes", one Important finding, fixed in Task 5.
 
 ### Task 5: Review fix — weight calculator reload
+
 - [x] Status
 
 **Files:**
+
 - Modify: `projects/planner/src/app/calculators/weight/weight.component.ts` (private `assignConsumed(consumedBars)` used by `inputChanged` and `loadState`)
 - Test: `projects/planner/src/app/calculators/weight/weight.component.spec.ts`
 
@@ -212,6 +217,7 @@ it('keeps consumed liters sent by the worker', () => {
 - [x] **Step 3: Commit** `fix: #138 weight calculator restores start pressure with consumed gas`
 
 ### Task 6: Review follow-ups requested by the user
+
 - [x] Status
 
 - [x] **Step 1:** `Tank.loadFrom` copies reserve bars and liters as they are (`updateReserve`). Test `Load From` → `Copies precise reserve volume` RED (665.81 vs 664.38 L) → GREEN. Commit `fix: #138 tank copy keeps precise reserve volume`.
@@ -221,6 +227,7 @@ it('keeps consumed liters sent by the worker', () => {
 - [x] **Step 5:** `npm run test-lib-ci` 1040/1040, `npm run build-lib`, `npm run test-ci` 1076/1076 PASS, library lint unchanged.
 
 ## Deferred (not in scope, from the final review)
+
 - Bars and liters can still differ by up to 1 b right at the limit (ceil rounding of consumed and reserve), always on the safe side.
 - Changing `tank.gas` directly (outside `Tank`) leaves a stale start volume, which now shows up as phantom consumed bars. Production paths are safe.
 - `TanksService.calculateTurnPressure` halves consumed bars, which is slightly late for real gas (existed before, improved by the fix).

@@ -164,7 +164,8 @@ describe('Consumption', () => {
                     new Segment(20, 0, tank.gas, 2 * Time.oneMinute)
                 ];
 
-                // (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes)
+                // Ideal gas: (2b avg depth * 2 bar/min * 1 minutes) + (3b * 2 bar/min * 10 minutes) + (2b * 2 bar/min * 2 minutes) = 72 b
+                // real gas consumed from the full tank needs more bars
                 consumption.consumeFromTanks(profile, options2, tanks, consumptionOptions);
                 expect(tank.consumed).toEqual(79);
             });
@@ -472,7 +473,7 @@ describe('Consumption', () => {
             const first = new Segment(0, 10, tank, Time.oneMinute * 10);
             const second = new Segment(10, 0, tank, Time.oneMinute * 10);
             const segments = [first, second];
-            // 1.5 * 20 * 2 = 60
+            // Ideal gas: 1.5 * 20 * 2 = 60 b, real gas consumed from the full tank needs more bars
 
             consumption.consumeFromTanks(segments, options2, tanks, consumptionOptions);
             expect(tank.consumed).toEqual(67);

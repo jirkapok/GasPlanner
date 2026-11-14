@@ -65,7 +65,7 @@ Air compressibility makes the bar ↔ liter relation non linear; the consumed ga
 ---
 
 ### Task 1: `Tank` consumed conversion as pressure drop
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/scuba-physics/src/lib/consumption/Tanks.ts` (`consumed` setter ~L271, `consumedVolume` setter ~L277, `fitStoredVolumes` ~L353)
@@ -74,7 +74,7 @@ Air compressibility makes the bar ↔ liter relation non linear; the consumed ga
 **Interfaces:**
 - Produces: unchanged public API of `Tank`; `consumed`/`consumedVolume` semantics per Design.
 
-- [ ] **Step 1: Write the failing tests** in `Tanks.spec.ts` → `Real volumes`:
+- [x] **Step 1: Write the failing tests** in `Tanks.spec.ts` → `Real volumes`:
 
 ```typescript
 it('End volume equals volume of end pressure', () => {
@@ -109,19 +109,19 @@ it('consumed bars round trip', () => {
 });
 ```
 
-- [ ] **Step 2: Run** `npx ng test scuba-physics --no-watch --include='**/Tanks.spec.ts'` — Expected: the new tests FAIL (e.g. consumed 118 instead of 126).
+- [x] **Step 2: Run** `npx ng test scuba-physics --no-watch --include='**/Tanks.spec.ts'` — Expected: the new tests FAIL (e.g. consumed 118 instead of 126).
 
-- [ ] **Step 3: Implement** in `Tanks.ts` a private helper `consumedPressure(consumedVolume: number): number` returning `Precision.ceil(Precision.round(startPressure − toTankPressure(gas, size, volume − consumedVolume), 6))`, used by the `consumedVolume` setter and `fitStoredVolumes`; the `consumed` setter clamps the pressure to 0..startPressure and stores volume `this.volume − Tank.realVolume2(size, startPressure − pressure, gas)`. `updateConsumed` clamps stay. Update the `consumed`/`consumedVolume` doc comments to say "pressure drop from start pressure".
+- [x] **Step 3: Implement** in `Tanks.ts` a private helper `consumedPressure(consumedVolume: number): number` returning `Precision.ceil(Precision.round(startPressure − toTankPressure(gas, size, volume − consumedVolume), 6))`, used by the `consumedVolume` setter and `fitStoredVolumes`; the `consumed` setter clamps the pressure to 0..startPressure and stores volume `this.volume − Tank.realVolume2(size, startPressure − pressure, gas)`. `updateConsumed` clamps stay. Update the `consumed`/`consumedVolume` doc comments to say "pressure drop from start pressure".
 
-- [ ] **Step 4: Run** the spec again. New tests PASS. Existing tests asserting bar ↔ liter values (`Sets only valid values` → `Start pressure`/`Size`/`Consumed Volume`, `Real volumes` → `Real consumed volume`, `End volume is complement...`) may fail: recompute each expected value from the new definition (keep the matchers), and keep the `prevents minimum 0 b end pressure` / clamping expectations untouched.
+- [x] **Step 4: Run** the spec again. New tests PASS. Existing tests asserting bar ↔ liter values (`Sets only valid values` → `Start pressure`/`Size`/`Consumed Volume`, `Real volumes` → `Real consumed volume`, `End volume is complement...`) may fail: recompute each expected value from the new definition (keep the matchers), and keep the `prevents minimum 0 b end pressure` / clamping expectations untouched.
 
-- [ ] **Step 5: Run the whole library suite** `npm run test-lib-ci`. Update only value expectations changed by the new bars (expected in `consumption*.spec.ts`, max bottom time, weight); for each changed file note in the commit body why. Any failure not explained by consumed bars → stop and debug (superpowers:systematic-debugging).
+- [x] **Step 5: Run the whole library suite** `npm run test-lib-ci`. Update only value expectations changed by the new bars (expected in `consumption*.spec.ts`, max bottom time, weight); for each changed file note in the commit body why. Any failure not explained by consumed bars → stop and debug (superpowers:systematic-debugging).
 
-- [ ] **Step 6: `npm run lint`, commit**
+- [x] **Step 6: `npm run lint`, commit**
 `fix: #138 tank consumed bars as pressure drop from start pressure`
 
 ### Task 2: #138 regression in consumption
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Test: `projects/scuba-physics/src/lib/consumption/consumptionByGas.spec.ts`
@@ -129,7 +129,7 @@ it('consumed bars round trip', () => {
 **Interfaces:**
 - Consumes: Task 1 `Tank`; `Consumption.consumeFromTanks2`, `ConsumptionByGas.consume`, `PlanFactory.emergencyAscent`, `BuhlmannAlgorithm.decompression`.
 
-- [ ] **Step 1: Add** `describe('Tank and gas agree (#138)')`: build the #138 dive (options per Design URL: `new Options(0.4, 0.85, 1.4, 1.6, Salinity.fresh)`, ascent speeds 9/3/3, descent 18, gas switch 2, last stop 3, maxEND 30, min auto stop 10, oxygenNarcotic, problem solving 1, no rounding, `SafetyStop.auto`; tank `new Tank(15, 200, 20.9)`; segments `add(30, tank, 102)`, `addFlat(tank, 1020)`; diver `new Diver(20, 30)`, reserves `Consumption.defaultPrimaryReserve`/`defaultStageReserve`), calculate the profile, emergency ascent, both consumptions. Assertions:
+- [x] **Step 1: Add** `describe('Tank and gas agree (#138)')`: build the #138 dive (options per Design URL: `new Options(0.4, 0.85, 1.4, 1.6, Salinity.fresh)`, ascent speeds 9/3/3, descent 18, gas switch 2, last stop 3, maxEND 30, min auto stop 10, oxygenNarcotic, problem solving 1, no rounding, `SafetyStop.auto`; tank `new Tank(15, 200, 20.9)`; segments `add(30, tank, 102)`, `addFlat(tank, 1020)`; diver `new Diver(20, 30)`, reserves `Consumption.defaultPrimaryReserve`/`defaultStageReserve`), calculate the profile, emergency ascent, both consumptions. Assertions:
 
 ```typescript
 expect(gas.hasReserve).toBe(false);
@@ -138,9 +138,9 @@ expect(tank.consumed).toBe(126);
 expect(tank.reserve).toBe(82);
 ```
 
-- [ ] **Step 2: Run** `npx ng test scuba-physics --no-watch --include='**/consumptionByGas.spec.ts'` — PASS (Task 1 already fixed it; this pins the bug). Temporarily revert Task 1's `Tanks.ts` (`git stash` of the file) to see it FAIL with `tank.hasReserve` true, then restore.
+- [x] **Step 2: Run** `npx ng test scuba-physics --no-watch --include='**/consumptionByGas.spec.ts'` — PASS (Task 1 already fixed it; this pins the bug). Temporarily revert Task 1's `Tanks.ts` (`git stash` of the file) to see it FAIL with `tank.hasReserve` true, then restore.
 
-- [ ] **Step 3: `npm run lint`, commit** `test: #138 tank and gas consumption agree`
+- [x] **Step 3: `npm run lint`, commit** `test: #138 tank and gas consumption agree`
 
 ### Task 3: Worker sends consumed liters to the UI
 - [ ] Status

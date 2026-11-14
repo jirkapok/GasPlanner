@@ -118,7 +118,10 @@ export class Tank implements TankFill {
         return this._size;
     }
 
-    /** Gets or sets the consumed pressure of gas in bars. */
+    /**
+     * Gets or sets the consumed pressure of gas in bars.
+     * It is the pressure drop from the start pressure, not the pressure of the consumed gas alone in an empty tank.
+     */
     public get consumed(): number {
         return this._consumed;
     }
@@ -270,8 +273,9 @@ export class Tank implements TankFill {
     }
 
     public set consumed(newPressure: number) {
-        const newConsumedVolume = Tank.realVolume2(this.size, newPressure, this.gas);
-        this.updateConsumed(newPressure, newConsumedVolume);
+        newPressure = Math.min(Math.max(newPressure, Tank.minimumZero), this.startPressure);
+        const endVolume = Tank.realVolume2(this.size, this.startPressure - newPressure, this.gas);
+        this.updateConsumed(newPressure, this.volume - endVolume);
     }
 
     public set consumedVolume(newVolume: number) {
@@ -279,8 +283,7 @@ export class Tank implements TankFill {
             newVolume = this.volume;
         }
 
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newVolume);
-        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        const newConsumedPressure = this.consumedPressure(newVolume);
         this.updateConsumed(newConsumedPressure, newVolume);
     }
 
@@ -331,6 +334,8 @@ export class Tank implements TankFill {
 
         this.gas.fO2 = found.fO2;
         this.gas.fHe = found.fHe;
+        // update volume based on compressibility, protecting pressure defined by user, not volume.
+        this.fitStoredVolumes();
     }
 
     /** Copies all properties from another tank except id */
@@ -354,9 +359,19 @@ export class Tank implements TankFill {
         this._startVolume = Tank.realVolume2(this.size, this.startPressure, this.gas);
         // limit the pressure to reasonable maximum value, since for high pressures compressibility factor no longer works.
         const newConsumedVolume = this.consumedVolume > this._startVolume ? this._startVolume : this.consumedVolume;
-        let newConsumedPressure = Tank.toTankPressure(this.gas, this.size, newConsumedVolume);
-        newConsumedPressure = Precision.ceil(newConsumedPressure);
+        const newConsumedPressure = this.consumedPressure(newConsumedVolume);
         this.updateConsumed(newConsumedPressure, newConsumedVolume);
+    }
+
+    /**
+     * Pressure drop from start pressure in bars rounded up, when the consumed volume leaves the tank.
+     * Rounding to 4 decimals first removes the compressibility search noise (precision 0.000001 b).
+     */
+    private consumedPressure(consumedVolume: number): number {
+        const endVolume = Math.max(this.volume - consumedVolume, Tank.minimumZero);
+        const endPressure = Tank.toTankPressure(this.gas, this.size, endVolume);
+        const consumedPressure = Precision.round(this.startPressure - endPressure, 4);
+        return Math.max(Precision.ceil(consumedPressure), Tank.minimumZero);
     }
 
     /** to keep volume and pressure aligned */

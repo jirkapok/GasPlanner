@@ -37,12 +37,12 @@ describe('ConsumedByMix', () => {
         });
 
         it('Sums total volume', () => {
-            const expected = [3082.8, 2893];
+            const expected = [3082.8, 2924.3];
             assertResult(r => r.total, expected);
         });
 
         it('Sums consumed volume', () => {
-            const expected = [1463.1, 1359];
+            const expected = [1420.0, 1238.9];
             assertResult(r => r.consumed, expected);
         });
 

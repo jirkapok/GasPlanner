@@ -33,7 +33,7 @@ describe('Consumption - eCCR', () => {
 
     beforeEach(() => {
         diluent = new Tank(12, 200, 18);
-        diluent.gas.fHe = 0.45;
+        diluent.he = 45;
         oxygen = new Tank(3, 200, 100);
         bailout = new Tank(11, 200, 21);
         const tanks = [diluent, oxygen, bailout];

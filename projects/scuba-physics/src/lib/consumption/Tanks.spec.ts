@@ -163,8 +163,8 @@ describe('Tank', () => {
             it('preserves consumed volume', () => {
                 tank.consumed = 50;
                 tank.startPressure = 150;
-                expect(tank.endPressure).toBe(100);
-                expect(tank.consumed).toBe(50);
+                expect(tank.endPressure).toBe(103);
+                expect(tank.consumed).toBe(47);
             });
 
             it('0 b start pressure does not preserve consumed', () => {
@@ -193,8 +193,8 @@ describe('Tank', () => {
             it('preserves consumed volume', () => {
                 tank.consumed = 50;
                 tank.size = 7.5;
-                expect(tank.endPressure).toBe(99);
-                expect(tank.consumed).toBe(101);
+                expect(tank.endPressure).toBe(103);
+                expect(tank.consumed).toBe(97);
             });
 
             it('0 L size preserves consumed', () => {
@@ -240,7 +240,7 @@ describe('Tank', () => {
             it('Sets corresponding volume', () => {
                 tank.consumedVolume = 1500;
                 expect(tank.consumedVolume).toBe(1500);
-                expect(tank.consumed).toBe(100);
+                expect(tank.consumed).toBe(108);
             });
 
             it('Can`t set more consumed volume then available', () => {
@@ -289,6 +289,13 @@ describe('Tank', () => {
             const modified = new Tank(10, 200, 21);
             modified.assignStandardGas('10/70');
             expect(modified.gas).toEqual(StandardGases.trimix1070);
+        });
+
+        it('Updates volume to the new gas', () => {
+            tank.assignStandardGas('Ean32');
+            const expected = new Tank(15, 200, 32).volume;
+
+            expect(tank.volume).toBeCloseTo(expected, 6);
         });
 
         it('Nothing changed if, gas wasn\'t found', () => {
@@ -343,7 +350,7 @@ describe('Tank', () => {
 
         it('Real consumed volume', () => {
             filledTank.consumed = 100;
-            expect(filledTank.consumedVolume).toBeCloseTo(1004.803, 3);
+            expect(filledTank.consumedVolume).toBeCloseTo(923.849, 3);
         });
 
         it('End pressure is complement of start pressure and consumed', () => {
@@ -360,8 +367,43 @@ describe('Tank', () => {
             sut.consumed = 100;
 
             expect(sut.volume).toBeCloseTo(2225.389, 3);
-            expect(sut.consumedVolume).toBeCloseTo(1507.204, 3);
-            expect(sut.endVolume).toBeCloseTo(718.184, 3);
+            expect(sut.consumedVolume).toBeCloseTo(1468.531, 3);
+            expect(sut.endVolume).toBeCloseTo(756.857, 3);
+        });
+
+        it('End volume equals volume of end pressure', () => {
+            const sut = Tank.createDefault();
+            sut.startPressure = 150;
+            sut.consumed = 100;
+            const endTank = new Tank(15, 50, 21);
+
+            expect(sut.endVolume).toBeCloseTo(endTank.volume, 3);
+        });
+
+        it('Consumed volume is pressure drop from start pressure', () => {
+            const sut = new Tank(15, 200, 20.9);
+            sut.consumedVolume = 1758.7324649999996; // #138 dive
+
+            expect(sut.consumed).toBe(126);
+            expect(sut.endPressure).toBe(74);
+        });
+
+        it('zero consumed volume is zero bars', () => {
+            const sut = new Tank(15, 200, 20.9);
+            sut.consumedVolume = 0;
+
+            expect(sut.consumed).toBe(0);
+            expect(sut.endPressure).toBe(200);
+        });
+
+        it('consumed bars round trip', () => {
+            const sut = Tank.createDefault();
+            sut.consumed = 100;
+            const volume = sut.consumedVolume;
+            sut.consumedVolume = volume;
+
+            expect(sut.consumed).toBe(100);
+            expect(sut.endVolume).toBeCloseTo(new Tank(15, 100, 21).volume, 6);
         });
 
         it('Real volume of helium in 50 L tank at 200 b is 9134 L', () => {

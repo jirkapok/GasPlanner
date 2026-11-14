@@ -108,13 +108,16 @@ export class WeightCalcComponent implements OnInit {
 
         const values = this.weightForm.value;
         const consumed = Number(values.consumed);
-        const t = this.tank;
-        const reserve = this.setttings.appSettings.primaryTankReserve;
-        const consumedBars = this.units.toBar(consumed);
-        t.startPressureBars = reserve + consumedBars;
-        t.consumedBars = consumedBars;
+        this.assignConsumed(this.units.toBar(consumed));
         this.setWorkingPressure(Number(values.workPressure));
         this.saveState();
+    }
+
+    /** Consumed gas is the pressure drop from start pressure, so the start pressure needs to be set first */
+    private assignConsumed(consumedBars: number): void {
+        const reserve = this.setttings.appSettings.primaryTankReserve;
+        this.tank.startPressureBars = reserve + consumedBars;
+        this.tank.consumedBars = consumedBars;
     }
 
     private loadState(): void {
@@ -127,7 +130,7 @@ export class WeightCalcComponent implements OnInit {
         this.tank.sizeLiters = state.tankSize;
         const workPressure = this.units.fromBar(state.workPressure);
         this.setWorkingPressure(workPressure);
-        this.tank.consumedBars = state.consumed;
+        this.assignConsumed(state.consumed);
     }
 
     private saveState(): void {

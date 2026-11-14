@@ -68,6 +68,16 @@ describe('WeightCalcComponent', () => {
             expect(component.weight).toBeCloseTo(2.7, 3);
         });
 
+        it('Restores the same weight after reload', () => {
+            setConsumed('100');
+            const weight = component.weight;
+
+            createComponent();
+
+            expect(component.tank.startPressure).toBeCloseTo(130, 3);
+            expect(component.weight).toBeCloseTo(weight, 3);
+        });
+
         it('Calculates weight for 0 bars consumed', () => {
             setConsumed('0');
             expect(component.tank.startPressure).toBeCloseTo(30, 3);

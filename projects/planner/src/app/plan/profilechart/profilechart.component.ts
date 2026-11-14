@@ -176,7 +176,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotAllCharts(): void {
-        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval();
+        const restInterval = this.schedules.restInterval;
+        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(restInterval);
         this.plotter.plotAllCharts();
         this.plotHeatMap(tissues);
     }

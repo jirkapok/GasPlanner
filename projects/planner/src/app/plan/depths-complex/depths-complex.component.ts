@@ -19,7 +19,6 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
-import { RestIntervalComponent } from '../rest-interval/rest-interval.component';
 
 interface LevelRow {
     duration: FormControl<number>;
@@ -28,7 +27,6 @@ interface LevelRow {
 
 interface DepthsForm {
     surfaceInterval: FormControl<string | null>;
-    restInterval: FormControl<string>;
     levels: FormArray<FormGroup<LevelRow>>;
 }
 
@@ -40,7 +38,6 @@ interface DepthsForm {
         CardHeaderComponent,
         ReactiveFormsModule,
         SurfaceIntervalComponent,
-        RestIntervalComponent,
         MdbAccordionModule,
         FaIconComponent,
         MdbDropdownModule,
@@ -95,10 +92,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
         return this.schedules.selected.surfaceIntervalText;
     }
 
-    private get restInterval(): string {
-        return this.schedules.selected.restIntervalText;
-    }
-
     public depthItemInvalid(index: number): boolean {
         const level = this.levelControls.at(index);
         const endDepth = level.controls.endDepth;
@@ -132,7 +125,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     public ngOnInit(): void {
         this.complexForm = this.fb.group({
             surfaceInterval: [this.surfaceInterval, this.validators.surfaceInterval()],
-            restInterval: [this.restInterval, this.validators.restInterval()],
             levels: this.fb.array(this.createLevelControls())
         });
 
@@ -203,7 +195,6 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
     private reload(): void {
         this.complexForm.patchValue({
             surfaceInterval: this.surfaceInterval,
-            restInterval: this.restInterval
         });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));

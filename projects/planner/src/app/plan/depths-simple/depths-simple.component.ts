@@ -18,11 +18,9 @@ import { DepthComponent } from '../depth/depth.component';
 import { SurfaceIntervalComponent } from '../surface-interval/surface-interval.component';
 import { TranslatePipe } from '@ngx-translate/core';
 import { LocaleNumberPipe } from '../../pipes/locale-number.pipe';
-import { RestIntervalComponent } from '../rest-interval/rest-interval.component';
 
 interface SimpleDepthsForm {
     surfaceInterval: FormControl<string | null>;
-    restInterval: FormControl<string>;
     planDuration: FormControl<number>;
     depth: FormControl<number>;
 }
@@ -37,7 +35,6 @@ interface SimpleDepthsForm {
         MdbFormsModule,
         DepthComponent,
         SurfaceIntervalComponent,
-        RestIntervalComponent,
         LocaleNumberPipe,
         TranslatePipe
     ]
@@ -86,14 +83,10 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
         return this.schedules.selected.surfaceIntervalText;
     }
 
-    private get restInterval(): string {
-        return this.schedules.selected.restIntervalText;
-    }
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({
             surfaceInterval: [this.surfaceInterval, this.validators.surfaceInterval()],
-            restInterval: [this.restInterval, this.validators.restInterval()],
             planDuration: [Precision.round(this.depths.planDuration, 1), this.validators.duration],
             depth: [Precision.round(this.depths.plannedDepth, 1), this.validators.depth]
         });
@@ -143,7 +136,6 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     private reload(): void {
         this.simpleForm.patchValue({
             surfaceInterval: this.surfaceInterval,
-            restInterval: this.restInterval,
             planDuration: Precision.round(this.depths.planDuration, 1),
             depth: Precision.round(this.depths.plannedDepth, 1)
         });

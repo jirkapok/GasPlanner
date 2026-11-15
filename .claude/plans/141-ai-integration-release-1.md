@@ -233,7 +233,7 @@ it('consumption consumes gas from the tank', () => {
 ## Stage 3 — Dive planning as MCP tool and Skill
 
 ### Task 7: `plan_dive` input schema
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/dugong-mcp/src/core/planDiveInput.ts`, `planDiveInput.spec.ts`
@@ -266,7 +266,7 @@ it('consumption consumes gas from the tank', () => {
 ```
   Every field has a `.describe()` text with unit and default (used as the MCP tool input documentation). Unknown fields are rejected (`strict`), so Release 2 additions stay explicit.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```ts
 it('accepts minimal air dive', () => {
@@ -281,10 +281,10 @@ it('rejects unknown field', () => expectError({ ...air, levels: [] }, ''));
 // expectError(input, path): safeParse fails and an issue path joined by '.' starts with `path`, message non-empty
 ```
 
-- [ ] **Step 2: Run to verify they fail** → FAIL, module not found.
-- [ ] **Step 3: Implement `planDiveInputSchema`** with ranges read from `new MetricRanges()` (no duplicated numbers except the gradient and duration100 limits, commented with their planner source).
-- [ ] **Step 4: Verify** — tests PASS; `npm run lint` clean.
-- [ ] **Step 5: Commit** — `feat: #141 plan_dive input schema`
+- [x] **Step 2: Run to verify they fail** → FAIL, module not found.
+- [x] **Step 3: Implement `planDiveInputSchema`** with ranges read from `new MetricRanges()` (no duplicated numbers except the gradient and duration100 limits, commented with their planner source).
+- [x] **Step 4: Verify** — tests PASS; `npm run lint` clean.
+- [x] **Step 5: Commit** — `feat: #141 plan_dive input schema`
 
 ### Task 8: `planDive` core function
 - [ ] Status

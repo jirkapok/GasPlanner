@@ -132,8 +132,9 @@ projects/dugong-mcp/
   - optional `diver`: RMV (l/min),
   - rebreather fields are not part of the Release 1 schema (open circuit only); the schema must allow adding them in Release 2.
   - Validation ranges equal to the app's (`UnitConversion` metric ranges); errors are readable text the AI can act on.
-    The ranges live in the planner today; if they are pure data, move the metric ranges into the library and let
-    `UnitConversion` reuse them, otherwise reference them from the core schema. *(builder's call)*
+    The ranges live in the planner today. Only the metric ranges move into the library (decided by the owner); the MCP
+    core schema validates against them and the app's `UnitConversion` reuses them for its metric ranges. Imperial ranges
+    stay in the planner.
 - **Output** (JSON + short text summary as MCP content):
   - runtime, no-deco or deco dive flag, NDL, time to surface, max/average depth,
   - deco stops `[{depth, duration, gas}]`,

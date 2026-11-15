@@ -16,7 +16,7 @@ The work is split into two releases (decided by the owner). **This design and it
 | | Release 1 (this design) | Release 2 (deferred) |
 | --- | --- | --- |
 | Dive planning | single open circuit dive at one depth level (the app's simple plan, bottom gas plus optional deco gases) | multilevel dives, repetitive dives |
-| Gas supply | open circuit only | closed circuit rebreather (CCR) gas supplies: diluent, oxygen and bailout tanks, setpoints, as supported by the app |
+| Gas supply | open circuit only | all non open circuit gas supplies supported by the app: closed circuit rebreathers (eCCR, mCCR) and pSCR, with their diluent, oxygen and bailout tanks and setpoints |
 | Calculators | none | SAC, Nitrox, NDL, altitude, weight, gas properties, blender, redundancies |
 | Delivery | MCP server (`.mcpb`), Skill, library refactoring, build pipeline, promotion in the app | new tools added to the same MCP server and Skill using the Release 1 pattern |
 
@@ -33,8 +33,7 @@ Release 1 must keep the input schema extensible, so Release 2 adds to it without
 
 ## Non-goals (Release 1)
 
-- Release 2 scope: multilevel dives, repetitive dives, CCR gas supplies, all calculators (see [Releases](#releases)).
-- pSCR dives (not planned in either release).
+- Release 2 scope: multilevel dives, repetitive dives, rebreather (CCR, pSCR) gas supplies, all calculators (see [Releases](#releases)).
 - Remote hosting (Cloudflare Worker). Not confirmed yet; the design keeps it possible without refactoring.
 - Publishing to npm or the MCP registry, signing the `.mcpb`, Anthropic extension directory listing, auto-update.
 - WebMCP (`navigator.modelContext`) in the PWA.
@@ -114,7 +113,7 @@ projects/dugong-mcp/
 ### Stage 3 — Dive planning as MCP tool and Skill
 
 - Release 1 scope (decided by the owner): **one open circuit dive at one depth level**.
-  Multilevel dives, repetitive dives, CCR gas supplies and calculators belong to Release 2.
+  Multilevel dives, repetitive dives, rebreather (CCR, pSCR) gas supplies and calculators belong to Release 2.
 - One shared core function `planDive(input) → result` in `src/core`, used by the MCP tool and the CLI,
   so both return identical JSON. It builds the plan the way the app builds a simple plan (descent to the depth, bottom
   time, calculated ascent and deco — reuse `PlanFactory`/the app's simple plan logic), maps it to `PlanRequestDto`

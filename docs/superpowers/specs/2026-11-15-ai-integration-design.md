@@ -7,7 +7,7 @@ Branch: `feature/141-ai-integration`
 
 Divers should be able to use Dugong's dive planning from their AI assistant ("use this planning tool from any app").
 An AI asks for a plan in structured form, gets the same numbers the app would show, explains them, and hands the user
-a link that opens the same plan in https://dugong.online.
+a link that opens the same plan in <https://dugong.online>.
 
 This first delivery covers **dive planning only**. The other calculators (SAC, Nitrox, NDL, altitude, weight,
 gas properties, blender, redundancies) follow later using the same pattern.
@@ -61,7 +61,7 @@ gas properties, blender, redundancies) follow later using the same pattern.
 
 ### Stage 1 — Skeleton
 
-```
+```text
 projects/dugong-mcp/
   src/core/          tool definitions, schemas, handlers (transport independent, no Node-only APIs)
   src/stdio.ts       MCP stdio entry point (Claude Desktop .mcpb, Claude Code, npx)
@@ -118,7 +118,7 @@ projects/dugong-mcp/
   - deco stops `[{depth, duration, gas}]`,
   - per tank: start, end and reserve pressure, consumed volume, whether reserve is kept,
   - CNS %, OTU, max density, events/warnings (as the app's dive info events, English text),
-  - `shareUrl` to https://dugong.online with the same dive,
+  - `shareUrl` to <https://dugong.online> with the same dive,
   - `disclaimer`: fixed text — for planning/education only, verify with your dive computer and training.
 - Tool description instructs the AI to always show the disclaimer and the share link and never to present the plan
   as authoritative.

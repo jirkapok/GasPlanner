@@ -142,7 +142,7 @@ build/
   - deco stops `[{depth, duration, gas}]`,
   - per tank: start, end and reserve pressure, consumed volume, whether reserve is kept,
   - CNS %, OTU, max density, events/warnings (as the app's dive info events, English text),
-  - `disclaimer`: fixed text — for planning/education only, verify with your dive computer and training.
+  - `disclaimer`: the disclaimer already shown in the app (English `disclaimerText` from `en.json`), copied verbatim.
 - Tool description instructs the AI to always show the disclaimer and never to present the plan as authoritative.
 - **Skill**: `SKILL.md` explains when to use it and how to call `node scripts/dugong.mjs plan_dive` with JSON input on
   stdin (or an `--input` file), documents input/output with one example, and requires showing the disclaimer.

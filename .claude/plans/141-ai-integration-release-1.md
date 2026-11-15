@@ -19,7 +19,7 @@
 - All build/package/version/deploy scripts are PowerShell in `build/`; npm scripts and the workflow only call them.
 - Units on the wire are metric: meters, bars, liters, minutes, percent for gas content and gradient factors.
 - Release 1 scope only: one open circuit dive, one depth level. No multilevel, repetitive, rebreather, calculators, share link, QR code or chart.
-- Every `plan_dive` result carries the disclaimer, exact text: `For planning and education only. Not a substitute for dive training, a dive computer or your own judgement. Verify every plan before diving.`
+- Every `plan_dive` result carries the disclaimer, exact text: `None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.` It is the `disclaimerText` already shown in the app (`projects/planner/src/assets/i18n/en.json`), copied verbatim in English.
 - Existing planner and library specs must pass unchanged, except for import paths of moved code. OC results stay identical.
 - New UI text goes through `ngx-translate` with keys in all locale files (en, cs, de, es, fr, ru, zh; English as fallback).
 - Lint: `npm run lint` (4-space indent, single quotes, semicolons, 140 chars).
@@ -297,7 +297,7 @@ it('rejects unknown field', () => expectError({ ...air, levels: [] }, ''));
 - Produces (`planDiveResult.ts`):
 
 ```ts
-export const disclaimer = 'For planning and education only. Not a substitute for dive training, a dive computer or your own judgement. Verify every plan before diving.';
+export const disclaimer = 'None of the authors, contributors, administrators, or anyone else connected with this project can be responsible for your use of the information provided by this application or linked from these web pages. Use the results at your own risk.';
 export interface PlanDiveResult {
     noDecoDive: boolean;          // bottomTime <= noDecoLimit
     noDecoLimit: number;          // min

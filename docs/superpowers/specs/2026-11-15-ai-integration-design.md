@@ -179,6 +179,65 @@ build/
 - README section with the same information in short and links.
 - E2E happy path: help page opens from the entry point and both download links are present.
 
+## Manual testing with Claude (Release 1)
+
+The automated tests check the calculation, the protocol and that the downloads are zip files. Only a manual check
+shows that a real Claude finds the tool or Skill, calls it with sensible input and presents the result correctly.
+Run it in three rounds: the MCP server and the Skill from a local build (end of Stage 4 packaging), then the
+downloads from the deployed site (after the first release of Stage 4/5). Record the outcome (client, version, pass or
+the problem) in the commit body or the pull request.
+
+Prerequisites: Node 20+ on `PATH` (both the `.mcpb` server and the Skill CLI run with Node), a local build from
+`npm run build-mcp` (outputs in `dist/dugong-mcp/`), and the app open in a private browser window with the same inputs
+to compare numbers (a private window avoids saved options differing from the defaults).
+
+### Test prompts and expected answers
+
+Use the same prompts in every round. Every answer must show the disclaimer, and no answer may present the plan as
+authoritative.
+
+| Prompt | Expected |
+| --- | --- |
+| "Plan a 30 m dive for 20 minutes on air with a 15 l tank filled to 200 bar." | The tool/Skill is called once; runtime, deco or no-deco, end pressure and reserve equal the app's simple view for the same inputs. |
+| "Plan a 45 m dive for 25 minutes on trimix 21/35 in a 24 l tank at 200 bar, with an 11 l tank of EAN50 for deco." | Deco stops with the gas switch to EAN50; stops, runtime and end pressures equal the app's complex view. |
+| "Plan a 30 m dive for 60 minutes on air with a 10 l tank at 200 bar." | Not enough gas / reserve not kept is reported as a warning, not hidden. |
+| "Plan a 400 m dive on air." | Readable validation error; Claude explains the limit or asks for corrected input instead of inventing a plan. |
+| "Plan a dive to 30 m for 20 minutes and then 15 m for 20 minutes." | Claude says multilevel dives aren't supported in this version (it may offer a single level alternative). |
+
+### Round 1 — MCP server from a local build
+
+- **Claude Code**: register the bundled server
+  `claude mcp add dugong -- node <repo>/dist/dugong-mcp/bundle/server/dugong-mcp.mjs`, start a new session, run `/mcp`:
+  `dugong` is connected and lists `plan_dive`. Run the prompts. Remove it afterwards with `claude mcp remove dugong`.
+- **Claude Desktop**: install `dist/dugong-mcp/dugong.mcpb` (Settings → Extensions → Advanced settings →
+  Install Extension, or double-click the file). The extension page shows the name, the version from `manifest.json`
+  and no errors; enable it and run the prompts in a new chat. Uninstall it afterwards so the downloaded package in
+  round 3 is tested from a clean state.
+- Optional, without Claude: `npx @modelcontextprotocol/inspector node dist/dugong-mcp/bundle/server/dugong-mcp.mjs`
+  shows the tool, its input schema and a raw result, useful to tell a server bug from a model behavior issue.
+
+### Round 2 — Skill from a local build
+
+- **Claude Code**: copy `dist/dugong-mcp/skill/` to `~/.claude/skills/dugong-dive-planner/` (user level, so nothing
+  lands in the repository), start a new session, run the prompts. Claude must pick the Skill by itself (the prompts
+  don't name it) and run `node scripts/dugong.mjs plan_dive`. Remove the folder afterwards.
+- **claude.ai** (code execution enabled): upload `dist/dugong-mcp/dugong-skill.zip` in Settings → Capabilities →
+  Skills, enable it, run the prompts in a new chat. Check Claude runs the bundled CLI and doesn't calculate the plan
+  itself. Delete the Skill afterwards.
+
+### Round 3 — Downloads from the deployed site
+
+- Open <https://dugong.online/help/ai> from the "Use with AI" entry point, download both files with the links on the
+  page (not from the build folder).
+- The downloads are zip archives, not the HTML of the app (the `.mcpb` opens in Claude Desktop; the Skill zip lists
+  `dugong-dive-planner/SKILL.md`).
+- Install the downloaded `dugong.mcpb` in Claude Desktop and upload the downloaded `dugong-skill.zip` to claude.ai as in
+  rounds 1 and 2: the version shown equals the released version (`manifest.json` of the extension, `Version:` line in
+  `SKILL.md`). Run the first prompt in each.
+- Follow the help page's instructions for Claude Code word by word (unzip the `.mcpb`, `claude mcp add …`) and run the
+  first prompt: the instructions must be enough without knowledge of the repository.
+- After a later release, install the newer `.mcpb` over the old one: Claude Desktop shows the new version.
+
 ## Release 2 design by stage (deferred, own plan)
 
 Release 2 also extends `plan_dive` and the Skill to multilevel dives, repetitive dives and rebreather gas supplies,

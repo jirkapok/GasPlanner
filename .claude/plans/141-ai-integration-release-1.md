@@ -442,7 +442,7 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
   5. Copy skill files, `Compress-Archive` into `dugong-skill.zip`.
   6. Smoke: `Get-Content projects/dugong-mcp/skill/examples/air-30m.json | node dist/dugong-mcp/skill/scripts/dugong.mjs plan_dive` must exit 0 and its output must contain `"runtime"`; fail the script otherwise.
 - [ ] **Step 2: Run** `npm run build-mcp` → all files exist, smoke passes, `npx mcpb info dist/dugong-mcp/dugong.mcpb` shows name `dugong` and version.
-- [ ] **Step 3: Manual install check** — install `dugong.mcpb` in Claude Desktop, ask "Plan a 30 m dive for 20 minutes on air with a 15 l tank"; the tool is called and the answer shows the disclaimer. Note the result in the commit body.
+- [ ] **Step 3: Manual check with Claude** — run rounds 1 (MCP server) and 2 (Skill) of the spec section "Manual testing with Claude (Release 1)" with its test prompts. Note the result in the commit body. Round 3 (downloads from the deployed site) runs after the first release from `master`, outside this plan.
 - [ ] **Step 4: Commit** — `build: #141 bundle MCP server and Skill`
 
 ### Task 12: Workflow integration

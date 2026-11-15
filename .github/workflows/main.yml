@@ -42,7 +42,7 @@ jobs:
         if: always()
         uses: irongut/CodeCoverageSummary@v1.3.0
         with:
-          filename: coverage/scuba-physics/cobertura.xml,coverage/planner/cobertura.xml
+          filename: coverage/scuba-physics/cobertura.xml,coverage/planner/cobertura.xml,coverage/dugong-mcp/cobertura.xml
           format: markdown
           output: both
 
@@ -156,6 +156,9 @@ jobs:
 
       - name: Wait for deployment to go live
         run: pwsh ./build/wait-for-deploy.ps1 -ExpectedVersion ${{ steps.version.outputs.value }} -SiteUrl ${{ env.SITE_URL }}
+
+      - name: Verify AI downloads
+        run: pwsh ./build/verify-ai-downloads.ps1 -SiteUrl ${{ env.SITE_URL }} -ExpectedVersion ${{ steps.version.outputs.value }}
 
       - name: Install Playwright browsers
         run: npx playwright install chromium

@@ -34,7 +34,9 @@
                     "package-lock.json",
                     "doc/CHANGELOG.md",
                     "projects/scuba-physics/package.json",
-                    "projects/planner/src/manifest*.webmanifest"
+                    "projects/planner/src/manifest*.webmanifest",
+                    "projects/dugong-mcp/manifest.json",
+                    "projects/dugong-mcp/skill/SKILL.md"
                 ],
                 "message": "chore(release): ${nextRelease.version}\n\n${nextRelease.notes}"
             }

@@ -446,18 +446,18 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
 - [x] **Step 4: Commit** — `build: #141 bundle MCP server and Skill`
 
 ### Task 12: Workflow integration
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `build/verify-ai-downloads.ps1`
 - Modify: `build/test.ps1`, `build/bump-version.ps1`, `build/deploy.ps1`, `.releaserc.json`, `.github/workflows/main.yml`
 
-- [ ] **Step 1: Tests in CI** — `build/test.ps1`: after `install-lib.ps1`, run `npm run test-mcp-ci`. Workflow: add `coverage/dugong-mcp/cobertura.xml` to the coverage summary file list (JUnit already matched by `test-results/**/*.xml`).
-- [ ] **Step 2: Versioning** — `build/bump-version.ps1` sets `version` in `projects/dugong-mcp/manifest.json` and the `Version: x.y.z` line in `projects/dugong-mcp/skill/SKILL.md`, failing when either isn't found; add both files to `@semantic-release/git` `assets` in `.releaserc.json`. Run `pwsh ./build/bump-version.ps1 -Version 9.9.9` locally → both files changed; revert with `git checkout -- .`.
-- [ ] **Step 3: Deploy** — `build/deploy.ps1`: after `npm run build`, run `build/build-mcp.ps1` and copy `dugong.mcpb` and `dugong-skill.zip` to `dist/planner/ai/`; in the gh-pages worktree also remove the old `ai` folder before copying. `ngsw-config.json` stays unchanged (no asset group matches `/ai/*`, and navigation requests with a file extension aren't served `index.html`); verify `dist/planner/ngsw.json` doesn't list `/ai/`.
-- [ ] **Step 4: Post-deploy check** — `build/verify-ai-downloads.ps1 -SiteUrl <url> -ExpectedVersion <version>`: downloads `<url>/ai/dugong.mcpb` and `<url>/ai/dugong-skill.zip` (cache-busted), fails unless both start with the zip signature `PK` and `manifest.json` inside the `.mcpb` has `version` = expected. Workflow: run it after "Wait for deployment to go live", before the Playwright smoke test (the rollback step covers its failure). Run it locally against `npx http-server -p 9090 dist/planner` after copying the files there.
-- [ ] **Step 5: Verify** — `pwsh ./build/test.ps1` PASS locally; `npm run lint` clean.
-- [ ] **Step 6: Commit** — `ci: #141 test, version and deploy MCP server and Skill`
+- [x] **Step 1: Tests in CI** — `build/test.ps1`: after `install-lib.ps1`, run `npm run test-mcp-ci`. Workflow: add `coverage/dugong-mcp/cobertura.xml` to the coverage summary file list (JUnit already matched by `test-results/**/*.xml`).
+- [x] **Step 2: Versioning** — `build/bump-version.ps1` sets `version` in `projects/dugong-mcp/manifest.json` and the `Version: x.y.z` line in `projects/dugong-mcp/skill/SKILL.md`, failing when either isn't found; add both files to `@semantic-release/git` `assets` in `.releaserc.json`. Run `pwsh ./build/bump-version.ps1 -Version 9.9.9` locally → both files changed; revert with `git checkout -- .`.
+- [x] **Step 3: Deploy** — `build/deploy.ps1`: after `npm run build`, run `build/build-mcp.ps1` and copy `dugong.mcpb` and `dugong-skill.zip` to `dist/planner/ai/`; in the gh-pages worktree also remove the old `ai` folder before copying. `ngsw-config.json` stays unchanged (no asset group matches `/ai/*`, and navigation requests with a file extension aren't served `index.html`); verify `dist/planner/ngsw.json` doesn't list `/ai/`.
+- [x] **Step 4: Post-deploy check** — `build/verify-ai-downloads.ps1 -SiteUrl <url> -ExpectedVersion <version>`: downloads `<url>/ai/dugong.mcpb` and `<url>/ai/dugong-skill.zip` (cache-busted), fails unless both start with the zip signature `PK` and `manifest.json` inside the `.mcpb` has `version` = expected. Workflow: run it after "Wait for deployment to go live", before the Playwright smoke test (the rollback step covers its failure). Run it locally against `npx http-server -p 9090 dist/planner` after copying the files there.
+- [x] **Step 5: Verify** — `pwsh ./build/test.ps1` PASS locally; `npm run lint` clean.
+- [x] **Step 6: Commit** — `ci: #141 test, version and deploy MCP server and Skill`
 
 ---
 

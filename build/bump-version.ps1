@@ -16,6 +16,26 @@ param(
 # Bump scuba-physics package.json
 npm pkg set version=$Version --prefix projects/scuba-physics
 
+# Bump the MCP server bundle manifest and the Skill instructions, the text is replaced to keep their formatting
+$mcpVersions = @(
+    @{ path = 'projects/dugong-mcp/manifest.json'; pattern = '"version":\s*"[^"]*"'; replacement = "`"version`": `"$Version`"" },
+    @{ path = 'projects/dugong-mcp/skill/SKILL.md'; pattern = '(?m)^Version: .*$'; replacement = "Version: $Version" }
+)
+
+foreach ($mcpVersion in $mcpVersions) {
+    $content = Get-Content $mcpVersion.path -Raw
+    $regex = [regex]$mcpVersion.pattern
+
+    if (-not $regex.IsMatch($content)) {
+        Write-Error "No version found in $($mcpVersion.path)!"
+        exit 1
+    }
+
+    $updated = $regex.Replace($content, $mcpVersion.replacement, 1)
+    Set-Content $mcpVersion.path $updated -NoNewline -Encoding UTF8
+    Write-Host "✓ Updated $($mcpVersion.path) to '$Version'"
+}
+
 # Bump id field in the default manifest and every localized variant
 $manifestFiles = Get-ChildItem "projects/planner/src" -Filter "manifest*.webmanifest"
 

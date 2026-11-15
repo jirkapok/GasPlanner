@@ -7,6 +7,14 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 npm run build
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+# MCP server bundle and Skill downloads, published with the application at /ai/
+& "$PSScriptRoot/build-mcp.ps1" -SkipLibrary
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
+$aiDownloads = "dist/planner/ai"
+New-Item -ItemType Directory -Force $aiDownloads | Out-Null
+Copy-Item "dist/dugong-mcp/dugong.mcpb", "dist/dugong-mcp/dugong-skill.zip" $aiDownloads -Force
+
 # Configure git for CI
 git config user.name "github-actions[bot]"
 git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -24,6 +32,7 @@ Push-Location $ghPagesDir
 $filesToReplace = @("*.js", "*.txt", "*.html", "*.css", "favicon.ico", "manifest.webmanifest", "ngsw.json")
 Remove-Item $filesToReplace -Force -ErrorAction SilentlyContinue
 if (Test-Path "assets") { Remove-Item "assets" -Recurse -Force }
+if (Test-Path "ai") { Remove-Item "ai" -Recurse -Force }
 
 # Copy new build output
 Copy-Item "../dist/planner/*" . -Recurse -Force

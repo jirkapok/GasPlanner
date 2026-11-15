@@ -9,11 +9,19 @@ Divers should be able to use Dugong's dive planning from their AI assistant ("us
 An AI asks for a plan in structured form, gets the same numbers the app would show, explains them, and hands the user
 a link that opens the same plan in <https://dugong.online>.
 
-This first release covers **planning of a single open circuit dive at one depth level** (the app's simple plan,
-bottom gas plus optional deco gases). The second release adds multilevel dives, repetitive dives and the calculators
-(SAC, Nitrox, NDL, altitude, weight, gas properties, blender, redundancies) using the same pattern.
+## Releases
 
-## Goals
+The work is split into two releases (decided by the owner). **This design and its plan cover Release 1 only.**
+
+| | Release 1 (this design) | Release 2 (deferred) |
+|---|---|---|
+| Dive planning | single open circuit dive at one depth level (the app's simple plan, bottom gas plus optional deco gases) | multilevel dives, repetitive dives |
+| Calculators | none | SAC, Nitrox, NDL, altitude, weight, gas properties, blender, redundancies |
+| Delivery | MCP server (`.mcpb`), Skill, library refactoring, build pipeline, promotion in the app | new tools added to the same MCP server and Skill using the Release 1 pattern |
+
+Release 1 must keep the input schema extensible, so Release 2 adds to it without breaking Release 1 callers.
+
+## Goals (Release 1)
 
 - An MCP server exposing a `plan_dive` tool, runnable locally (stdio) and distributed as a `.mcpb` bundle
   (one-click install in Claude Desktop) hosted on GitHub Pages next to the app.
@@ -22,10 +30,9 @@ bottom gas plus optional deco gases). The second release adds multilevel dives, 
 - The existing GitHub workflow tests, builds, versions and deploys both artifacts with every release.
 - The app tells users that and how they can use Dugong from their AI.
 
-## Non-goals (this plan)
+## Non-goals (Release 1)
 
-- Deferred to the second release (decided by the owner): multilevel dives, repetitive dives, all calculators.
-  The input schema should be extensible to them without breaking first-release callers.
+- Release 2 scope: multilevel dives, repetitive dives, all calculators (see [Releases](#releases)).
 - Rebreather (CCR/pSCR) dives.
 - Remote hosting (Cloudflare Worker). Not confirmed yet; the design keeps it possible without refactoring.
 - Publishing to npm or the MCP registry, signing the `.mcpb`, Anthropic extension directory listing, auto-update.
@@ -63,7 +70,7 @@ bottom gas plus optional deco gases). The second release adds multilevel dives, 
 - **C. Separate repository** — every library change needs release + bump in the other repo, versions drift,
   works against one shared implementation. Rejected.
 
-## Design by stage (stages decided by the owner)
+## Release 1 design by stage (stages decided by the owner)
 
 ### Stage 1 — Skeleton
 
@@ -105,8 +112,8 @@ projects/dugong-mcp/
 
 ### Stage 3 — Dive planning as MCP tool and Skill
 
-- Scope (decided by the owner): **one open circuit dive at one depth level**, no multilevel, no repetitive dives,
-  no calculators, no rebreathers.
+- Release 1 scope (decided by the owner): **one open circuit dive at one depth level**, no rebreathers.
+  Multilevel dives, repetitive dives and calculators belong to Release 2.
 - One shared core function `planDive(input) → result` in `src/core`, used by the MCP tool and the CLI,
   so both return identical JSON. It builds the plan the way the app builds a simple plan (descent to the depth, bottom
   time, calculated ascent and deco — reuse `PlanFactory`/the app's simple plan logic), maps it to `PlanRequestDto`

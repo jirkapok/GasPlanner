@@ -146,6 +146,22 @@
         }
       }
     },
+    "dugong-mcp": {
+      "projectType": "library",
+      "root": "projects/dugong-mcp",
+      "sourceRoot": "projects/dugong-mcp/src",
+      "architect": {
+        "lint": {
+          "builder": "@angular-eslint/builder:lint",
+          "options": {
+            "eslintConfig": "projects/dugong-mcp/eslint.config.mjs",
+            "lintFilePatterns": [
+              "projects/dugong-mcp/**/*.ts"
+            ]
+          }
+        }
+      }
+    },
     "scuba-physics": {
       "projectType": "library",
       "root": "projects/scuba-physics",

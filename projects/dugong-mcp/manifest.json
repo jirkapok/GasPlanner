@@ -1,0 +1,25 @@
+{
+  "$schema": "../../node_modules/@anthropic-ai/mcpb/dist/mcpb-manifest-v0.4.schema.json",
+  "manifest_version": "0.4",
+  "name": "dugong",
+  "display_name": "Dugong Gas Planner",
+  "version": "0.0.0",
+  "description": "Plans scuba dives with the Dugong Gas Planner: decompression stops, gas consumption and oxygen toxicity.",
+  "author": {
+    "name": "Dugong",
+    "url": "https://dugong.online"
+  },
+  "homepage": "https://dugong.online",
+  "license": "MIT",
+  "server": {
+    "type": "node",
+    "entry_point": "server/dugong-mcp.mjs",
+    "mcp_config": {
+      "command": "node",
+      "args": [
+        "${__dirname}/server/dugong-mcp.mjs"
+      ]
+    }
+  },
+  "tools": []
+}

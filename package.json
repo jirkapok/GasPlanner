@@ -12,6 +12,8 @@
     "test-performance": "ng run scuba-physics:test-performance",
     "test-lib": "ng test scuba-physics --no-headless",
     "test-lib-ci": "ng test scuba-physics --no-watch --coverage",
+    "test-mcp": "vitest --config projects/dugong-mcp/vitest.config.mts",
+    "test-mcp-ci": "vitest run --config projects/dugong-mcp/vitest.config.mts --coverage",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -61,8 +63,10 @@
     "@angular/build": "^22.2.4",
     "@angular/cli": "^22.2.4",
     "@angular/compiler-cli": "^22.2.3",
+    "@anthropic-ai/mcpb": "^2.1.2",
     "@eslint/eslintrc": "^3.3.7",
     "@eslint/js": "^10.0.1",
+    "@modelcontextprotocol/sdk": "^1.32.2",
     "@playwright/test": "^1.64.1",
     "@semantic-release/changelog": "^7.0.0",
     "@semantic-release/exec": "^7.1.0",
@@ -76,6 +80,7 @@
     "@vitest/coverage-istanbul": "4.1.11",
     "@vitest/eslint-plugin": "^1.6.27",
     "angular-eslint": "^22.6.0",
+    "esbuild": "^0.28.2",
     "eslint": "^10.13.0",
     "eslint-plugin-html": "^8.2.1",
     "eslint-plugin-import-x": "^4.17.1",
@@ -86,6 +91,7 @@
     "semantic-release": "^25.0.9",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.72.0",
-    "vitest": "4.1.11"
+    "vitest": "4.1.11",
+    "zod": "^4.6.7"
   }
 }

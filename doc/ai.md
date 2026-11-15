@@ -30,8 +30,10 @@ To update, download the new file and install it again.
 
 Requires [Node.js](https://nodejs.org) 20 or newer.
 
-1. Download [dugong.mcpb](/ai/dugong.mcpb), it is a zip archive. Unzip it to a folder, e.g. `~/dugong`.
-2. In Claude Code run `claude mcp add dugong -- node ~/dugong/server/dugong-mcp.mjs` and check the server is connected using `/mcp`.
+1. Download [dugong.mcpb](/ai/dugong.mcpb), it is a zip archive with a different extension. Extract it to a new folder `dugong`:
+   * Windows (PowerShell or Command Prompt) and macOS: `mkdir dugong` and `tar -xf dugong.mcpb -C dugong`
+   * Linux: `unzip dugong.mcpb -d dugong`
+2. In Claude Code run `claude mcp add dugong -- node <full path>/dugong/server/dugong-mcp.mjs` with the full path to the folder, e.g. `C:\Users\diver\dugong\server\dugong-mcp.mjs` on Windows or `/home/diver/dugong/server/dugong-mcp.mjs` on Linux (don't use `~`, the path is passed as it is). Check the server is connected using `/mcp`.
 
 Other MCP clients use the same command in their configuration, usually:
 

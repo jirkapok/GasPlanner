@@ -53,7 +53,7 @@ describe('Main menu component', () => {
     it('sets LayoutService\'s mainMenuHeight correctly', () => {
         const layout = TestBed.inject(LayoutService);
 
-        const componentHeight = fixture.nativeElement.getBoundingClientRect().height;
+        const componentHeight = (fixture.nativeElement as HTMLElement).getBoundingClientRect().height;
 
         expect(layout.mainMenuHeight).toBe(componentHeight);
     });
@@ -61,17 +61,17 @@ describe('Main menu component', () => {
     describe('Dive menu', () => {
         it('+5 m clones deeper dive', () => {
             clickItem('#menuCloneDeeper');
-            expect(schedules.cloneSelectedDeeper).toHaveBeenCalledTimes(1);
+            expect(schedules.cloneSelectedDeeper.mock.calls).toHaveLength(1);
         });
 
         it('+5 min clones longer dive', () => {
             clickItem('#menuCloneLonger');
-            expect(schedules.cloneSelectedLonger).toHaveBeenCalledTimes(1);
+            expect(schedules.cloneSelectedLonger.mock.calls).toHaveLength(1);
         });
 
         it('+5 min, +5 m clones deeper and longer dive', () => {
             clickItem('#menuCloneDeeperAndLonger');
-            expect(schedules.cloneSelectedDeeperAndLonger).toHaveBeenCalledTimes(1);
+            expect(schedules.cloneSelectedDeeperAndLonger.mock.calls).toHaveLength(1);
         });
     });
 });

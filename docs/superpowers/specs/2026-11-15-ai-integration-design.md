@@ -63,7 +63,7 @@ Release 1 must keep the input and output schema extensible, so Release 2 adds to
 - Tools are stateless; each call carries the complete dive.
 - Units on the wire are metric/SI (meters, bars, liters, minutes); the share URL is always metric (as today).
 - Project conventions apply: TDD (unit tests for library, Vitest), `npm run lint` clean, Conventional Commits with `#141`,
-  TypeScript or PowerShell for scripts, docs/help in `doc/`, i18n for any UI text.
+  build scripts in PowerShell under `build/` (see Stage 4), docs/help in `doc/`, i18n for any UI text.
 
 ## Approaches considered
 
@@ -86,8 +86,9 @@ projects/dugong-mcp/
   src/cli.ts         command-line entry used by the Skill
   skill/SKILL.md     Skill instructions
   manifest.json      .mcpb manifest
-  build.ts           bundling + packaging script (run directly by Node, type stripping)
   tsconfig*.json, vitest config (Node environment), eslint config
+build/
+  build-mcp.ps1      bundling + packaging script (see Stage 4)
 ```
 
 - Dependencies (`@modelcontextprotocol/sdk`, `zod`, `esbuild`, `@anthropic-ai/mcpb`) are added to the root `package.json`
@@ -152,11 +153,15 @@ projects/dugong-mcp/
 
 ### Stage 4 — Build pipeline in the existing workflow
 
+- All build, packaging, versioning and deploy scripts are PowerShell scripts in the `build/` directory (decided by the
+  owner), like the existing `build/*.ps1`: new ones (e.g. `build/build-mcp.ps1`) and extensions of the existing ones.
+  npm scripts and the GitHub workflow only call them; no TypeScript or inline build scripts.
+
 - Unit test tier (`build/test.ps1`): run `test-mcp-ci` after the library build (the MCP consumes the built library
   the same way as the planner).
 - Versioning: `build/bump-version.ps1` also stamps the version into `manifest.json` and `SKILL.md`
   (and the server's reported version).
-- Packaging: `npm run build-mcp` bundles `stdio`/`cli`, runs `mcpb pack` → `dugong.mcpb`, zips the Skill →
+- Packaging: `npm run build-mcp` runs `build/build-mcp.ps1`, which bundles `stdio`/`cli`, runs `mcpb pack` → `dugong.mcpb`, zips the Skill →
   `dugong-skill.zip`, output into the app build so it is deployed with it at `https://dugong.online/ai/`.
   *(path is builder's call)*
 - Deploy (`build/deploy.ps1`): artifacts are part of `dist/planner`, so the existing wipe/copy and rollback cover them.

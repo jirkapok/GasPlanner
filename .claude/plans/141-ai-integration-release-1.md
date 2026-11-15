@@ -287,7 +287,7 @@ it('rejects unknown field', () => expectError({ ...air, levels: [] }, ''));
 - [x] **Step 5: Commit** — `feat: #141 plan_dive input schema`
 
 ### Task 8: `planDive` core function
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/dugong-mcp/src/core/planDiveResult.ts`, `projects/dugong-mcp/src/core/planDive.ts`, `planDive.spec.ts`
@@ -317,7 +317,7 @@ export function summaryText(result: PlanDiveResult): string; // English, few lin
 ```
   `planDive(input: PlanDiveInput): PlanDiveResult` (`planDive.ts`). Rounding: minutes and pressures to 1 decimal place, CNS/OTU to whole numbers (`Precision.round`).
 
-- [ ] **Step 1: Write the failing tests** — reference values are computed in the test by running `PlanningTasks` exactly as the planner does (helper `appReference(input)` in `planDive.testing.ts` building `PlanRequestFactory`-equivalent DTOs, `previousCns: 0`, `previousCnsExposures: []`, `surfaceInterval: Number.POSITIVE_INFINITY` as a first dive in the app — check `DiveSchedules` for the exact first-dive value):
+- [x] **Step 1: Write the failing tests** — reference values are computed in the test by running `PlanningTasks` exactly as the planner does (helper `appReference(input)` in `planDive.testing.ts` building `PlanRequestFactory`-equivalent DTOs, `previousCns: 0`, `previousCnsExposures: []`, `surfaceInterval: Number.POSITIVE_INFINITY` as a first dive in the app — check `DiveSchedules` for the exact first-dive value):
 
 ```ts
 it('no deco air dive matches the app', () => {
@@ -338,8 +338,8 @@ it('carries the disclaimer', ...);                                   // result.d
 it('summary text ends with the disclaimer', ...);
 ```
 
-- [ ] **Step 2: Run to verify they fail** → FAIL, module not found.
-- [ ] **Step 3: Implement `planDive`**
+- [x] **Step 2: Run to verify they fail** → FAIL, module not found.
+- [x] **Step 3: Implement `planDive`**
 
 Mapping decisions:
   - Options: `new Options()`, then `salinity = Salinity.fresh`, `safetyStop = SafetyStop.auto` (as `OptionsService` constructor), then input overrides; gradient percent → fraction.
@@ -351,8 +351,8 @@ Mapping decisions:
   - Event messages: English texts of the app's event messages from `projects/planner/src/assets/i18n/en.json`, kept as a map `EventType → text` in `planDiveResult.ts`.
   - When `ProfileResultDto.profile.errors` is non-empty, skip dive info/consumption and return `errors` with the remaining fields zeroed/empty.
 
-- [ ] **Step 4: Verify** — tests PASS; `npm run lint` clean.
-- [ ] **Step 5: Commit** — `feat: #141 plan single level dive in dugong-mcp core`
+- [x] **Step 4: Verify** — tests PASS; `npm run lint` clean.
+- [x] **Step 5: Commit** — `feat: #141 plan single level dive in dugong-mcp core`
 
 ### Task 9: MCP tool `plan_dive`
 - [ ] Status

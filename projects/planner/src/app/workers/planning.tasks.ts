@@ -3,9 +3,8 @@ import {
     CnsCalculator, DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm, RestingParameters, Segment,
     PlanFactory, ConsumptionOptions, Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas, BreathingModel,
     BreathingModelFactory, DepthConverter, Options, ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto, PlanRequestDto, SegmentDto
+    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto, PlanRequestDto, SegmentDto, DtoSerialization
 } from 'scuba-physics';
-import { DtoSerialization } from '../shared/dtoSerialization';
 
 export class PlanningTasks {
     /** 1. Calculate profile */

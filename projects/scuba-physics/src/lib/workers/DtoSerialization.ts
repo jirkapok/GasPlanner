@@ -1,10 +1,18 @@
-import _ from 'lodash';
+import { CalculatedProfile, CalculatedProfileStatistics, Event, Events } from '../algorithm/CalculatedProfile';
+import { Compartments } from '../algorithm/Compartments';
+import { AirBreakOptions, Options } from '../algorithm/Options';
+import { LoadedTissue, LoadedTissues } from '../algorithm/Tissues.api';
+import { RebreatherOptions } from '../ccr/RebreatherOptions';
+import { ConsumedGas } from '../consumption/consumptionByGas';
+import { Diver } from '../consumption/Diver';
+import { Tank, Tanks } from '../consumption/Tanks';
+import { Segment } from '../depths/Segments';
+import { HighestDensity } from '../gases/GasDensity';
+import { Gas } from '../gases/Gases';
 import {
-    CalculatedProfile, Diver, Events, Event, Gas, HighestDensity, Options, Segment, Tank, Tanks, AirBreakOptions,
-    LoadedTissues, CalculatedProfileStatistics, ConsumedGas, RebreatherOptions, Compartments, LoadedTissue,
     AirBreaksDto, CalculatedProfileDto, ConsumedDto, ConsumedGasDto, DensityDto, DiverDto, EventDto, GasDto,
     ITankBound, LoadedTissueDto, OptionsDto, RebreatherDto, SegmentDto, TankDto
-} from 'scuba-physics';
+} from './serialization.model';
 
 /** Serialization used to store preferences and for communication with background workers */
 export class DtoSerialization {
@@ -133,10 +141,10 @@ export class DtoSerialization {
     }
 
     public static toTissues(tissues: LoadedTissueDto[]): LoadedTissues {
-        return _(tissues).map(t => ({
+        return tissues.map(t => ({
             pN2: t.pN2,
             pHe: t.pHe
-        })).value() as LoadedTissues;
+        })) as LoadedTissues;
     }
 
     /**
@@ -183,10 +191,10 @@ export class DtoSerialization {
     }
 
     public static fromTissues(tissues: LoadedTissues): LoadedTissueDto[] {
-        return _(tissues).map(t => ({
+        return tissues.map(t => ({
             pN2: t.pN2,
             pHe: t.pHe
-        })).value();
+        }));
     }
 
     public static toEvents(dto: EventDto[]): Events {

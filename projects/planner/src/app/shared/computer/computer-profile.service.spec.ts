@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
 import { Observable, Subject } from 'rxjs';
 import {
-    Ceiling, ComputerData, ComputerEventType, EventsFactory, HighestDensity,
-    ProfileTissues, Segment, StandardGases, StopEvent
+    Ceiling, ComputerData, ComputerEventType, EventsFactory, HighestDensity, ProfileTissues, Segment,
+    StandardGases, StopEvent, DtoSerialization
 } from 'scuba-physics';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { ReloadDispatcher } from '../reloadDispatcher';
@@ -12,7 +12,6 @@ import { WorkersFactoryCommon } from '../serial.workers.factory';
 import { IRestartableTask } from '../../workers/background-task';
 import { ComputerRequestDto, ComputerResultDto, RunTimePointDto } from '../serialization.model';
 import { ComputerProfileService } from './computer-profile.service';
-import { DtoSerialization } from '../dtoSerialization';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 
 /** Replaces the worker, the test decides what the worker reports */

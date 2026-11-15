@@ -1,8 +1,7 @@
-import { ITankBound, TankDto } from 'scuba-physics';
+import { ITankBound, TankDto, DtoSerialization } from 'scuba-physics';
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import { AppOptionsDto, AppPreferences, AppPreferencesDto, AppStates, DiveDto } from './serialization.model';
-import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { ViewSwitchService } from './viewSwitchService';
 import { KnownViews, ViewStates } from './viewStates';

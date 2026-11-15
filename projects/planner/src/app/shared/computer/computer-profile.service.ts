@@ -10,8 +10,7 @@ import {
     ComputerPointDto, ComputerRequestDto,
     ComputerResultDto, ComputerStartedDto
 } from '../serialization.model';
-import { ComputerData, ComputerProfile, RunTimePoint, StopEvent } from 'scuba-physics';
-import { DtoSerialization } from '../dtoSerialization';
+import { ComputerData, ComputerProfile, RunTimePoint, StopEvent, DtoSerialization } from 'scuba-physics';
 
 /**
  * Source data for the dive computer simulator.

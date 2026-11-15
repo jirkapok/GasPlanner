@@ -4,9 +4,9 @@ import { WayPointsService } from './waypoints.service';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import {
     CalculatedProfile, Precision, ConsumptionResultDto, ConsumptionRequestDto, EventOptionsDto, ProfileRequestDto,
-    ProfileResultDto, DiveInfoResultDto, DiveInfoRequestDto, CalculatedProfileDto, PlanRequestDto
+    ProfileResultDto, DiveInfoResultDto, DiveInfoRequestDto, CalculatedProfileDto, PlanRequestDto,
+    DtoSerialization
 } from 'scuba-physics';
-import { DtoSerialization } from './dtoSerialization';
 import { PlanRequestFactory } from './planRequestFactory';
 import { IBackgroundTask } from '../workers/background-task';
 import { Streamed } from './streamed';

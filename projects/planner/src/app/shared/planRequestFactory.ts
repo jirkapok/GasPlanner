@@ -1,6 +1,5 @@
-import { LoadedTissues, ITankBound, PlanRequestDto } from 'scuba-physics';
+import { LoadedTissues, ITankBound, PlanRequestDto, DtoSerialization } from 'scuba-physics';
 import { DiveSchedule } from './dive.schedules';
-import { DtoSerialization } from './dtoSerialization';
 
 /** Creates algorithm request of the dive, shared by planner and dive computer */
 export class PlanRequestFactory {

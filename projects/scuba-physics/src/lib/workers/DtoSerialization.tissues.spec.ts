@@ -1,5 +1,6 @@
-import { LoadedTissue, LoadedTissues, ProfileTissues } from 'scuba-physics';
-import { DtoSerialization } from './dtoSerialization';
+import { LoadedTissue, LoadedTissues } from '../algorithm/Tissues.api';
+import { ProfileTissues } from '../algorithm/ProfileTissues';
+import { DtoSerialization } from './DtoSerialization';
 
 describe('DtoSerialization tissues history', () => {
     /** Every compartment of every sample has different values */

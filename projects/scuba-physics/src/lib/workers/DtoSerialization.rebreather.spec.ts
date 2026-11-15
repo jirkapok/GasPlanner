@@ -1,5 +1,6 @@
-import { CircuitType, Options, RebreatherDefaults } from 'scuba-physics';
-import { DtoSerialization } from './dtoSerialization';
+import { CircuitType, RebreatherDefaults } from '../ccr/RebreatherOptions';
+import { Options } from '../algorithm/Options';
+import { DtoSerialization } from './DtoSerialization';
 
 describe('DtoSerialization - Rebreather', () => {
     it('round trips rebreather options', () => {

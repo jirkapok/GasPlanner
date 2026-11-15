@@ -1,7 +1,7 @@
 import { MockInstance } from 'vitest';
 import {
     CalculatedProfile, CalculatedProfileStatistics, Event, EventType, StandardGases, Time, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoRequestDto, DiveInfoResultDto, ProfileResultDto
+    ConsumptionResultDto, DiveInfoRequestDto, DiveInfoResultDto, ProfileResultDto, DtoSerialization
 } from 'scuba-physics';
 import _ from 'lodash';
 import { PlannerService } from './planner.service';
@@ -9,7 +9,6 @@ import { OptionExtensions } from './Options.testing';
 import { inject, TestBed } from '@angular/core/testing';
 import { WorkersFactoryCommon } from './serial.workers.factory';
 import { PlanningTasks } from '../workers/planning.tasks';
-import { DtoSerialization } from './dtoSerialization';
 import { UnitConversion } from './UnitConversion';
 import { TanksService } from './tanks.service';
 import { OptionsService } from './options.service';

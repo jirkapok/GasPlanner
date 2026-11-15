@@ -1,5 +1,4 @@
-import { Ceiling, ComputerEvent, DiveComputer, RunTimePoint } from 'scuba-physics';
-import { DtoSerialization } from '../shared/dtoSerialization';
+import { Ceiling, ComputerEvent, DiveComputer, RunTimePoint, DtoSerialization } from 'scuba-physics';
 import { ComputerPointDto, ComputerRequestDto, ComputerResultDto } from '../shared/serialization.model';
 import { PlanningTasks } from './planning.tasks';
 

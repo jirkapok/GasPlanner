@@ -180,7 +180,7 @@ describe('MetricRanges', () => {
 - [x] **Step 3: Commit** — `refactor: #141 move plan DTOs to scuba-physics`
 
 ### Task 5: `DtoSerialization` in the library
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/scuba-physics/src/lib/workers/DtoSerialization.ts`
@@ -191,10 +191,10 @@ describe('MetricRanges', () => {
 **Interfaces:**
 - Produces: `class DtoSerialization` exported from `scuba-physics`, public static API unchanged (`toTanks`, `fromTanks`, `toConsumed`, `fromConsumedGases`, `toConsumedGases`, `toSegments`, `fromSegments`, `toProfile`, `fromProfile`, `toTissues`, `packTissuesHistory`, `unpackTissuesHistory`, `tissuesHistorySamples`, `fromTissues`, `toEvents`, `fromEvents`, `fromDiver`, `toDiver`, `fromOptions`, `toOptions`, `fromDensity`, `toDensity`, `toGas`, `fromGas`).
 
-- [ ] **Step 1: Move the two specs** to the library and run them → FAIL, `DtoSerialization` not in the library. Specs keep their assertions; only imports and planner-only test helpers change (replace a planner helper by building the objects directly).
-- [ ] **Step 2: Move `DtoSerialization`**, replacing `_(tissues).map(...)` by native `tissues.map(...)` (no `lodash`).
-- [ ] **Step 3: Verify** — moved specs PASS in `npm run test-lib-ci`; `npm run build-lib`; `npm run test-ci` PASS; `npm run lint` clean.
-- [ ] **Step 4: Commit** — `refactor: #141 move DtoSerialization to scuba-physics`
+- [x] **Step 1: Move the two specs** to the library and run them → FAIL, `DtoSerialization` not in the library. Specs keep their assertions; only imports and planner-only test helpers change (replace a planner helper by building the objects directly).
+- [x] **Step 2: Move `DtoSerialization`**, replacing `_(tissues).map(...)` by native `tissues.map(...)` (no `lodash`).
+- [x] **Step 3: Verify** — moved specs PASS in `npm run test-lib-ci`; `npm run build-lib`; `npm run test-ci` PASS; `npm run lint` clean.
+- [x] **Step 4: Commit** — `refactor: #141 move DtoSerialization to scuba-physics`
 
 ### Task 6: `PlanningTasks` in the library
 - [ ] Status

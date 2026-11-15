@@ -7,6 +7,7 @@
     "start-pwa": "ng build --configuration production planner && npx http-server -p 9090 -c-1 dist/planner",
     "build": "ng build --configuration production planner",
     "build-lib": "ng build --configuration production scuba-physics",
+    "build-mcp": "pwsh ./build/build-mcp.ps1",
     "test": "ng test planner --no-headless",
     "test-ci": "ng test planner --no-watch --coverage",
     "test-performance": "ng run scuba-physics:test-performance",

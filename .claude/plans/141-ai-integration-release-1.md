@@ -425,7 +425,7 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
 ## Stage 4 — Build pipeline
 
 ### Task 11: Bundle and package script
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `build/build-mcp.ps1`
@@ -434,16 +434,16 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
 **Interfaces:**
 - Produces in `dist/dugong-mcp/`: `bundle/manifest.json`, `bundle/server/dugong-mcp.mjs`, `dugong.mcpb`, `skill/SKILL.md`, `skill/scripts/dugong.mjs`, `skill/examples/air-30m.json`, `dugong-skill.zip` (zip root folder `dugong-dive-planner/`).
 
-- [ ] **Step 1: Write `build/build-mcp.ps1`** (`$ErrorActionPreference = 'Stop'`, exit on non-zero `$LASTEXITCODE` like the other scripts):
+- [x] **Step 1: Write `build/build-mcp.ps1`** (`$ErrorActionPreference = 'Stop'`, exit on non-zero `$LASTEXITCODE` like the other scripts):
   1. `npm run build-lib`.
   2. Read `version` from `projects/dugong-mcp/manifest.json`.
   3. `npx esbuild projects/dugong-mcp/src/stdio.ts` and `.../cli.ts` with `--bundle --platform=node --format=esm --target=node20 --define:__DUGONG_VERSION__='"<version>"'`, `scuba-physics` resolved to `dist/scuba-physics` (`--alias:scuba-physics=./dist/scuba-physics`), outputs as above.
   4. Copy manifest, `npx mcpb pack dist/dugong-mcp/bundle dist/dugong-mcp/dugong.mcpb`.
   5. Copy skill files, `Compress-Archive` into `dugong-skill.zip`.
   6. Smoke: `Get-Content projects/dugong-mcp/skill/examples/air-30m.json | node dist/dugong-mcp/skill/scripts/dugong.mjs plan_dive` must exit 0 and its output must contain `"runtime"`; fail the script otherwise.
-- [ ] **Step 2: Run** `npm run build-mcp` → all files exist, smoke passes, `npx mcpb info dist/dugong-mcp/dugong.mcpb` shows name `dugong` and version.
+- [x] **Step 2: Run** `npm run build-mcp` → all files exist, smoke passes, `npx mcpb info dist/dugong-mcp/dugong.mcpb` shows name `dugong` and version.
 - [ ] **Step 3: Manual check with Claude** — run rounds 1 (MCP server) and 2 (Skill) of the spec section "Manual testing with Claude (Release 1)" with its test prompts. Note the result in the commit body. Round 3 (downloads from the deployed site) runs after the first release from `master`, outside this plan.
-- [ ] **Step 4: Commit** — `build: #141 bundle MCP server and Skill`
+- [x] **Step 4: Commit** — `build: #141 bundle MCP server and Skill`
 
 ### Task 12: Workflow integration
 - [ ] Status

@@ -62,7 +62,7 @@
 ## Stage 1 — Skeleton
 
 ### Task 1: `dugong-mcp` project skeleton
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/dugong-mcp/tsconfig.json`, `projects/dugong-mcp/vitest.config.mts`, `projects/dugong-mcp/eslint.config.mjs`, `projects/dugong-mcp/manifest.json`, `projects/dugong-mcp/skill/SKILL.md`, `projects/dugong-mcp/src/core/version.ts`, `projects/dugong-mcp/src/core/server.ts`, `projects/dugong-mcp/src/core/commands.ts`, `projects/dugong-mcp/src/stdio.ts`, `projects/dugong-mcp/src/cli.ts`
@@ -76,16 +76,16 @@
   - `interface CommandResult { exitCode: number; output: string }`, `executeCommand(command: string | undefined, input: string): CommandResult` (`commands.ts`); unknown or missing command → `exitCode: 2`, `output` = usage text starting with `Usage: dugong <command>`.
   - npm scripts `test-mcp` (`vitest --config projects/dugong-mcp/vitest.config.mts`), `test-mcp-ci` (`vitest run --config projects/dugong-mcp/vitest.config.mts --coverage`, JUnit to `test-results/dugong-mcp`, Cobertura to `coverage/dugong-mcp`).
 
-- [ ] **Step 1: Install dev dependencies**
+- [x] **Step 1: Install dev dependencies**
 
 Run: `npm install --save-dev --legacy-peer-deps @modelcontextprotocol/sdk zod esbuild @anthropic-ai/mcpb`
 Expected: all four in `devDependencies`; use the zod major the installed SDK version supports.
 
-- [ ] **Step 2: Add config files**
+- [x] **Step 2: Add config files**
 
 `tsconfig.json`: extends root `tsconfig.json`, `module`/`moduleResolution` `NodeNext`-compatible for the SDK subpath imports, `types: ["node"]`, includes `src/**/*.ts`. `vitest.config.mts`: `environment: 'node'`, `include: ['src/**/*.spec.ts']`, `resolve.alias` `scuba-physics` → `<root>/dist/scuba-physics` (like the root `tsconfig.json` paths; requires `npm run build-lib`), coverage provider `istanbul` like the other projects. `eslint.config.mjs`: extends root config with `parserOptions.project: ['projects/dugong-mcp/tsconfig.json']`, plus for `src/core/**/*.ts`: `no-restricted-imports` patterns `@angular/*`, `node:*`, `fs`, `path`, `os`, `child_process`, `process`; `no-restricted-globals` `process`, `require`, `Buffer`, `__dirname`; `no-console: 'error'`. `angular.json`: add project `dugong-mcp` (`projectType: library`, `root: projects/dugong-mcp`, `sourceRoot: projects/dugong-mcp/src`) with only a `lint` target (`eslintConfig: projects/dugong-mcp/eslint.config.mjs`, `lintFilePatterns: ['projects/dugong-mcp/**/*.ts']`).
 
-- [ ] **Step 3: Write the failing tests**
+- [x] **Step 3: Write the failing tests**
 
 ```ts
 // server.spec.ts
@@ -102,24 +102,24 @@ it('prints usage for missing command', () => {
 });
 ```
 
-- [ ] **Step 4: Run tests to verify they fail**
+- [x] **Step 4: Run tests to verify they fail**
 
 Run: `npm run build-lib; npx vitest run --config projects/dugong-mcp/vitest.config.mts`
 Expected: FAIL, modules `server`/`commands` not found.
 
-- [ ] **Step 5: Implement `version.ts`, `createServer()`, `executeCommand()`, `stdio.ts`, `cli.ts`**
+- [x] **Step 5: Implement `version.ts`, `createServer()`, `executeCommand()`, `stdio.ts`, `cli.ts`**
 
 `stdio.ts`: `await createServer().connect(new StdioServerTransport())`. `cli.ts`: read `process.argv[2]` as command, input from `--input <file>` or stdin, `process.stdout.write(result.output)`, `process.exitCode = result.exitCode`.
 
-- [ ] **Step 6: Add skeleton `manifest.json` and `SKILL.md`**
+- [x] **Step 6: Add skeleton `manifest.json` and `SKILL.md`**
 
 `manifest.json`: `manifest_version` of the installed `@anthropic-ai/mcpb`, `name: dugong`, `display_name: Dugong Gas Planner`, `version: 0.0.0` (stamped at release), `description`, `author: { name: 'Dugong', url: 'https://dugong.online' }`, `server: { type: 'node', entry_point: 'server/dugong-mcp.mjs', mcp_config: { command: 'node', args: ['${__dirname}/server/dugong-mcp.mjs'] } }`, `tools: []`. `SKILL.md`: frontmatter `name: dugong-dive-planner`, `description: Plans recreational and technical open circuit scuba dives ...`, a line `Version: 0.0.0`, body placeholder.
 
-- [ ] **Step 7: Verify**
+- [x] **Step 7: Verify**
 
 Run: `npx vitest run --config projects/dugong-mcp/vitest.config.mts` → PASS; `npm run lint` → no errors (includes `dugong-mcp`); `npx mcpb validate projects/dugong-mcp/manifest.json` → valid.
 
-- [ ] **Step 8: Commit** — `chore: #141 dugong-mcp project skeleton`
+- [x] **Step 8: Commit** — `chore: #141 dugong-mcp project skeleton`
 
 ---
 

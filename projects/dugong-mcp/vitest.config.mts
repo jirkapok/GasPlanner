@@ -6,6 +6,8 @@ const repositoryRoot = fileURLToPath(new URL('../../', import.meta.url));
 // Plain Node project, not run by the Angular unit-test builder
 export default defineConfig({
     root: fileURLToPath(new URL('.', import.meta.url)),
+    // keeps the cache in the ignored root node_modules instead of the project folder
+    cacheDir: `${repositoryRoot}node_modules/.vite/dugong-mcp`,
     resolve: {
         // consumes the built library like the planner does (see tsconfig.json paths), requires "npm run build-lib"
         alias: {

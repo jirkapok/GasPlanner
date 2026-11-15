@@ -388,7 +388,7 @@ it('explains a plan which can\'t be calculated', ...); // 300 m air → text con
 - [x] **Step 5: Commit** — `feat: #141 plan_dive MCP tool`
 
 ### Task 10: Skill command `plan_dive`
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/dugong-mcp/src/core/commands.ts`, `commands.spec.ts`, `projects/dugong-mcp/skill/SKILL.md`
@@ -398,7 +398,7 @@ it('explains a plan which can\'t be calculated', ...); // 300 m air → text con
 - Consumes: `planDiveInputSchema`, `planDive`.
 - Produces: `executeCommand('plan_dive', json)` → `exitCode 0`, `output = JSON.stringify(planDive(input), null, 2)`; invalid JSON or schema → `exitCode 1`, `output = JSON.stringify({ errors: string[] }, null, 2)` with one `path: message` entry per issue.
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```ts
 it('plans dive from json input', () => {
@@ -415,10 +415,10 @@ it('prints error for invalid json', () => expect(executeCommand('plan_dive', '{'
 it('example input is valid', ...); // skill/examples/air-30m.json imported as JSON passes planDiveInputSchema
 ```
 
-- [ ] **Step 2: Run to verify they fail** → FAIL.
-- [ ] **Step 3: Implement the command and write `SKILL.md`**: when to use (planning an open circuit single level dive, gas consumption, deco stops), how to run (`node scripts/dugong.mjs plan_dive --input <file>` or JSON on stdin), the input fields with units and defaults (same texts as the schema descriptions), the example file, the output fields, the rule to always show `disclaimer`, and what it can't do in this version (multilevel, repetitive, rebreathers, calculators).
-- [ ] **Step 4: Verify** — tests PASS; `npm run lint` clean.
-- [ ] **Step 5: Commit** — `feat: #141 plan_dive Skill command`
+- [x] **Step 2: Run to verify they fail** → FAIL.
+- [x] **Step 3: Implement the command and write `SKILL.md`**: when to use (planning an open circuit single level dive, gas consumption, deco stops), how to run (`node scripts/dugong.mjs plan_dive --input <file>` or JSON on stdin), the input fields with units and defaults (same texts as the schema descriptions), the example file, the output fields, the rule to always show `disclaimer`, and what it can't do in this version (multilevel, repetitive, rebreathers, calculators).
+- [x] **Step 4: Verify** — tests PASS; `npm run lint` clean.
+- [x] **Step 5: Commit** — `feat: #141 plan_dive Skill command`
 
 ---
 

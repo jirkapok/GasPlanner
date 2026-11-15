@@ -1,0 +1,15 @@
+{
+  "depth": 30,
+  "bottomTime": 20,
+  "tanks": [
+    { "size": 15, "startPressure": 200, "o2": 21 }
+  ],
+  "options": {
+    "gfLow": 40,
+    "gfHigh": 85,
+    "salinity": "salt"
+  },
+  "diver": {
+    "rmv": 20
+  }
+}

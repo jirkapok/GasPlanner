@@ -168,7 +168,6 @@ build/
 - Deploy (`build/deploy.ps1`): artifacts are part of `dist/planner`, so the existing wipe/copy and rollback cover them.
   Service worker must not cache `/ai/**`.
 - Post-deploy smoke test: both files download and are zip archives (not the SPA `404.html` fallback) with the released version.
-- Local verification of the deployment scripts: `build/deploy.ps1 -DryRun` builds and fills the gh-pages worktree without changing the git identity, committing or pushing; the post-deploy check then runs against that folder served locally, including negative cases (wrong version, missing files). *(decided by the owner)*
 
 ### Stage 5 — Promotion
 

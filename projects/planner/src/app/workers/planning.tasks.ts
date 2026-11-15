@@ -1,16 +1,10 @@
 import {
-    AverageDepth, Segments, Tanks, ProfileEvents, DepthConverterFactory,
-    Consumption, Time, Diver, OtuCalculator, CnsCalculator,
-    DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
-    RestingParameters, Segment, PlanFactory, ConsumptionOptions,
-    Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas,
-    BreathingModel, BreathingModelFactory, DepthConverter, Options
+    AverageDepth, Segments, Tanks, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver, OtuCalculator,
+    CnsCalculator, DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm, RestingParameters, Segment,
+    PlanFactory, ConsumptionOptions, Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas, BreathingModel,
+    BreathingModelFactory, DepthConverter, Options, ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
+    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto, PlanRequestDto, SegmentDto
 } from 'scuba-physics';
-import {
-    ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto,
-    PlanRequestDto, SegmentDto
-} from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
 export class PlanningTasks {

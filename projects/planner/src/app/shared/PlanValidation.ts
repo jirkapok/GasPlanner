@@ -1,9 +1,9 @@
-import {
-    AppPreferencesDto, DiverDto, GasDto,
-    OptionsDto, RebreatherDto, SegmentDto, TankDto, DiveDto
-} from './serialization.model';
+import { AppPreferencesDto, DiveDto } from './serialization.model';
 import _ from 'lodash';
-import { CircuitType, Precision, RebreatherDefaults, RebreatherTanks, SafetyStop, Salinity, Time, Units } from 'scuba-physics';
+import {
+    CircuitType, Precision, RebreatherDefaults, RebreatherTanks, SafetyStop, Salinity, Time, Units, DiverDto,
+    GasDto, OptionsDto, RebreatherDto, SegmentDto, TankDto
+} from 'scuba-physics';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 
 export class PlanValidation {

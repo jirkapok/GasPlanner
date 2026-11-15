@@ -1,17 +1,12 @@
 import { Injectable } from '@angular/core';
 import _ from 'lodash';
 import {
-    AirBreakOptions, OptionDefaults,
-    Diver, Options, SafetyStop, Salinity, Segment,
-    CircuitType, RebreatherDefaults, RebreatherOptions
+    AirBreakOptions, OptionDefaults, Diver, Options, SafetyStop, Salinity, Segment, CircuitType,
+    RebreatherDefaults, RebreatherOptions, AirBreaksDto, DiverDto, OptionsDto, RebreatherDto, SegmentDto, TankDto
 } from 'scuba-physics';
 import { PlanValidation } from './PlanValidation';
 import { Preferences } from './preferences';
-import {
-    AirBreaksDto,
-    AppOptionsDto, AppPreferencesDto, DiverDto,
-    OptionsDto, RebreatherDto, SegmentDto, TankDto
-} from './serialization.model';
+import { AppOptionsDto, AppPreferencesDto } from './serialization.model';
 import { ViewSwitchService } from './viewSwitchService';
 import { TankBound } from './models';
 import { UnitConversion } from './UnitConversion';

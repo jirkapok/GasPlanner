@@ -1,9 +1,6 @@
 import { Injectable, signal } from '@angular/core';
-import {
-    CircuitType, DefaultValues, Precision, GasNames, RebreatherTanks, StandardGases, Tank, Tanks
-} from 'scuba-physics';
+import { CircuitType, DefaultValues, Precision, GasNames, RebreatherTanks, StandardGases, Tank, Tanks, ConsumedDto } from 'scuba-physics';
 import { TankBound } from './models';
-import { ConsumedDto } from './serialization.model';
 import { UnitConversion } from './UnitConversion';
 import _ from 'lodash';
 import { ReloadDispatcher } from './reloadDispatcher';

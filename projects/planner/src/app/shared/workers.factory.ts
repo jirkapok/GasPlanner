@@ -1,13 +1,8 @@
 import {
-    ComputerRequestDto,
-    ComputerResultDto,
-    ConsumptionRequestDto,
-    ConsumptionResultDto,
-    DiveInfoRequestDto,
-    DiveInfoResultDto,
-    ProfileRequestDto,
+    ConsumptionRequestDto, ConsumptionResultDto, DiveInfoRequestDto, DiveInfoResultDto, ProfileRequestDto,
     ProfileResultDto
-} from './serialization.model';
+} from 'scuba-physics';
+import { ComputerRequestDto, ComputerResultDto } from './serialization.model';
 import {
     BackgroundTask, IBackgroundTask,
     IRestartableTask, RestartableBackgroundTask

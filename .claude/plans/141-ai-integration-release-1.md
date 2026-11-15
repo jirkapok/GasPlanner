@@ -166,7 +166,7 @@ describe('MetricRanges', () => {
 - [x] **Step 5: Commit** — `refactor: #141 move metric ranges to scuba-physics`
 
 ### Task 4: Plan DTOs in the library
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/scuba-physics/src/lib/workers/serialization.model.ts`
@@ -175,9 +175,9 @@ describe('MetricRanges', () => {
 **Interfaces:**
 - Produces (exported from `scuba-physics`, definitions moved unchanged): `ITankBound`, `PlanRequestDto`, `ProfileRequestDto`, `DiveInfoRequestDto`, `CnsExposureDto`, `EventOptionsDto`, `DiveInfoResultDto`, `DensityDto`, `ProfileResultDto`, `EventDto`, `CalculatedProfileDto`, `LoadedTissueDto`, `ConsumptionRequestDto`, `ConsumptionOptionsDto`, `ConsumedDto`, `ConsumedGasDto`, `ConsumptionResultDto`, `TankDto`, `SegmentDto`, `GasDto`, `DiverDto`, `AirBreaksDto`, `OptionsDto`, `RebreatherDto`.
 
-- [ ] **Step 1: Move the interfaces**; planner files import them from `scuba-physics` directly (no re-export from the planner model).
-- [ ] **Step 2: Verify** — `npm run build-lib`; `npm run test-ci` PASS unchanged; `npm run lint` clean.
-- [ ] **Step 3: Commit** — `refactor: #141 move plan DTOs to scuba-physics`
+- [x] **Step 1: Move the interfaces**; planner files import them from `scuba-physics` directly (no re-export from the planner model).
+- [x] **Step 2: Verify** — `npm run build-lib`; `npm run test-ci` PASS unchanged; `npm run lint` clean.
+- [x] **Step 3: Commit** — `refactor: #141 move plan DTOs to scuba-physics`
 
 ### Task 5: `DtoSerialization` in the library
 - [ ] Status

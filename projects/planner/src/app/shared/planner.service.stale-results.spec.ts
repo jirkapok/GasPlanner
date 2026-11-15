@@ -1,3 +1,4 @@
+import { ConsumptionRequestDto, ConsumptionResultDto } from 'scuba-physics';
 import { TestBed } from '@angular/core/testing';
 import { Subject } from 'rxjs';
 import { PlannerService } from './planner.service';
@@ -9,7 +10,6 @@ import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedule, DiveSchedules } from './dive.schedules';
 import { ViewSwitchService } from './viewSwitchService';
 import { ApplicationSettingsService } from './ApplicationSettings';
-import { ConsumptionRequestDto, ConsumptionResultDto } from './serialization.model';
 import { IBackgroundTask } from '../workers/background-task';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 

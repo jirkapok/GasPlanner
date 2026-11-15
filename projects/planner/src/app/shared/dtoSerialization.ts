@@ -1,16 +1,10 @@
 import _ from 'lodash';
 import {
-    CalculatedProfile, Diver, Events, Event, Gas,
-    HighestDensity, Options, Segment, Tank, Tanks,
-    AirBreakOptions, LoadedTissues, CalculatedProfileStatistics, ConsumedGas,
-    RebreatherOptions, Compartments, LoadedTissue
+    CalculatedProfile, Diver, Events, Event, Gas, HighestDensity, Options, Segment, Tank, Tanks, AirBreakOptions,
+    LoadedTissues, CalculatedProfileStatistics, ConsumedGas, RebreatherOptions, Compartments, LoadedTissue,
+    AirBreaksDto, CalculatedProfileDto, ConsumedDto, ConsumedGasDto, DensityDto, DiverDto, EventDto, GasDto,
+    ITankBound, LoadedTissueDto, OptionsDto, RebreatherDto, SegmentDto, TankDto
 } from 'scuba-physics';
-import {
-    AirBreaksDto,
-    CalculatedProfileDto, ConsumedDto, ConsumedGasDto, DensityDto,
-    DiverDto, EventDto, GasDto, ITankBound, LoadedTissueDto,
-    OptionsDto, RebreatherDto, SegmentDto, TankDto
-} from './serialization.model';
 
 /** Serialization used to store preferences and for communication with background workers */
 export class DtoSerialization {

@@ -99,7 +99,7 @@ build/
 
 ### Stage 2 — Library refactoring (behavior preserving)
 
-- Move into `scuba-physics` (new folder, e.g. `lib/serialization/`, exported from `public-api.ts`):
+- Move into `scuba-physics` (new folder `lib/workers/` for everything moved from the planner, including the metric ranges of Stage 3 (decided by the owner), exported from `public-api.ts`):
   - plan-related DTOs from `serialization.model.ts` (`PlanRequestDto`, `ProfileRequestDto/ResultDto`,
     `DiveInfoRequestDto/ResultDto`, `ConsumptionRequestDto/ResultDto`, `TankDto`, `SegmentDto`, `GasDto`, `DiverDto`,
     `OptionsDto`, `RebreatherDto`, `AirBreaksDto`, tissue/CNS/event DTOs, computer DTOs as needed by `ComputerTasks`),

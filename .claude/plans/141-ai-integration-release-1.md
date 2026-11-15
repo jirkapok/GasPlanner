@@ -50,8 +50,8 @@
 | Create `projects/dugong-mcp/src/core/planDiveResult.ts` | Result types, event texts, disclaimer, text summary. |
 | Create `projects/dugong-mcp/src/core/planDiveTool.ts` | MCP tool `plan_dive` registration. |
 | Create `projects/dugong-mcp/src/stdio.ts`, `src/cli.ts` | Host entry points. |
-| Create `projects/scuba-physics/src/lib/physics/MetricRanges.ts` | `RangeConstants`, `MetricRanges` (moved). |
-| Create `projects/scuba-physics/src/lib/serialization/serialization.model.ts`, `DtoSerialization.ts`, `PlanningTasks.ts` | Moved plan DTOs, serialization, planning pipeline. |
+| Create `projects/scuba-physics/src/lib/workers/MetricRanges.ts` | `RangeConstants`, `MetricRanges` (moved). |
+| Create `projects/scuba-physics/src/lib/workers/serialization.model.ts`, `DtoSerialization.ts`, `PlanningTasks.ts` | Moved plan DTOs, serialization, planning pipeline. |
 | Modify `projects/planner/src/app/shared/serialization.model.ts` | Keeps only app DTOs (`AppPreferences`, `AppStates`, `AppPreferencesDto`, `DiveDto`, `AppOptionsDto`, `QuizSessionDto`) and computer worker DTOs (`ComputerRequestDto`, `CeilingDto`, `ComputerStartedDto`, `RunTimePointDto`, `ComputerPointDto`, `ComputerFinishedDto`, `ComputerResultDto`). |
 | Create `build/build-mcp.ps1`, `build/verify-ai-downloads.ps1` | Bundle/pack, post-deploy check. |
 | Modify `build/test.ps1`, `build/deploy.ps1`, `build/bump-version.ps1`, `.releaserc.json`, `.github/workflows/main.yml`, `package.json`, `angular.json` | Pipeline integration. |
@@ -142,7 +142,7 @@ Run: `npx vitest run --config projects/dugong-mcp/vitest.config.mts` → PASS; `
 - [ ] Status
 
 **Files:**
-- Create: `projects/scuba-physics/src/lib/physics/MetricRanges.ts`, `projects/scuba-physics/src/lib/physics/MetricRanges.spec.ts`
+- Create: `projects/scuba-physics/src/lib/workers/MetricRanges.ts`, `projects/scuba-physics/src/lib/workers/MetricRanges.spec.ts`
 - Modify: `projects/scuba-physics/src/public-api.ts`, `projects/planner/src/app/shared/UnitConversion.ts`, planner files importing `RangeConstants`
 
 **Interfaces:**
@@ -169,7 +169,7 @@ describe('MetricRanges', () => {
 - [ ] Status
 
 **Files:**
-- Create: `projects/scuba-physics/src/lib/serialization/serialization.model.ts`
+- Create: `projects/scuba-physics/src/lib/workers/serialization.model.ts`
 - Modify: `projects/planner/src/app/shared/serialization.model.ts`, `projects/scuba-physics/src/public-api.ts`, planner files importing moved DTOs
 
 **Interfaces:**
@@ -183,8 +183,8 @@ describe('MetricRanges', () => {
 - [ ] Status
 
 **Files:**
-- Create: `projects/scuba-physics/src/lib/serialization/DtoSerialization.ts`
-- Move: `projects/planner/src/app/shared/dtoSerialization.rebreather.spec.ts`, `dtoSerialization.tissues.spec.ts` → `projects/scuba-physics/src/lib/serialization/`
+- Create: `projects/scuba-physics/src/lib/workers/DtoSerialization.ts`
+- Move: `projects/planner/src/app/shared/dtoSerialization.rebreather.spec.ts`, `dtoSerialization.tissues.spec.ts` → `projects/scuba-physics/src/lib/workers/`
 - Delete: `projects/planner/src/app/shared/dtoSerialization.ts`
 - Modify: `public-api.ts`, planner importers
 
@@ -200,7 +200,7 @@ describe('MetricRanges', () => {
 - [ ] Status
 
 **Files:**
-- Create: `projects/scuba-physics/src/lib/serialization/PlanningTasks.ts`, `PlanningTasks.spec.ts`
+- Create: `projects/scuba-physics/src/lib/workers/PlanningTasks.ts`, `PlanningTasks.spec.ts`
 - Delete: `projects/planner/src/app/workers/planning.tasks.ts`
 - Modify: `public-api.ts`, `profile.worker.ts`, `diveInfo.worker.ts`, `consumption.worker.ts`, `computer.tasks.ts`, `computer.tasks.spec.ts`
 

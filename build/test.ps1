@@ -14,5 +14,9 @@ if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 npm run test-mcp-ci
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
+# bundles, packs and smoke tests the MCP server and the Skill before any release is created
+& "$PSScriptRoot/build-mcp.ps1" -SkipLibrary
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+
 npm run test-ci
 if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

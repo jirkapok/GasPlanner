@@ -125,8 +125,9 @@ build/
   and maps the DTOs to the output below.
 - **Input** (zod schema, metric):
   - `depth` (m) and `bottomTime` (min, as the app's simple plan duration),
-  - `tanks[]`: size (l), working pressure (bar), start pressure (bar), O2 %, He %; first tank is the bottom gas,
+  - `tanks[]`: size (l), start pressure (bar), O2 %, He %; first tank is the bottom gas,
     the others are deco gases (switched to as the app does),
+    no working pressure: the input is metric only and the app uses it only for imperial units (can be added later),
   - optional `options`: gradient factors low/high, salinity (fresh/salt), altitude (m), max ppO2 bottom/deco,
     ascent/descent speeds, last stop depth, safety stop, gas switch duration, problem solving / stress RMV factor —
     defaults from the library (same as a new dive in the app),

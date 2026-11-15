@@ -343,7 +343,7 @@ it('summary text ends with the disclaimer', ...);
 
 Mapping decisions:
   - Options: `new Options()`, then `salinity = Salinity.fresh`, `safetyStop = SafetyStop.auto` (as `OptionsService` constructor), then input overrides; gradient percent → fraction.
-  - Tanks: `TankDto` ids 1..n, `workPressure: 0` (metric), gas from o2/he percent.
+  - Tanks: `TankDto` ids 1..n, `workPressure: 0` (metric input has no working pressure; it matters only for imperial units, can be added later), gas from o2/he percent.
   - Plan: `PlanFactory.createPlan(depth, bottomTime, firstTank, options)` → `DtoSerialization.fromSegments`.
   - `isComplex = tanks.length > 1 || tanks.some(t => (t.he ?? 0) > 0)` (the app needs the complex view for these).
   - Event options `maxDensity: GasDensity.recommendedMaximum`; consumption options reserves `Consumption.defaultPrimaryReserve`/`defaultStageReserve`.

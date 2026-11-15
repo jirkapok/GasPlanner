@@ -126,17 +126,17 @@ Run: `npx vitest run --config projects/dugong-mcp/vitest.config.mts` → PASS; `
 ## Stage 2 — Library refactoring (behavior preserving)
 
 ### Task 2: `scuba-physics` without Angular
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/scuba-physics/src/lib/calculators/altitudeCalculator.spec.ts`, `projects/scuba-physics/package.json`, `projects/scuba-physics/eslint.config.mjs`
 
-- [ ] **Step 1: Add the lint guard** — in `projects/scuba-physics/eslint.config.mjs` add `no-restricted-imports` patterns `@angular/*`, `lodash`, `node:*`, `fs`, `path`, `os`, `child_process`, `process` and `no-restricted-globals` `process`, `require`, `Buffer`, `__dirname`.
-- [ ] **Step 2: Run lint to verify it fails** — `npx ng lint scuba-physics` → error in `altitudeCalculator.spec.ts` (`@angular/core/testing`).
-- [ ] **Step 3: Rewrite `altitudeCalculator.spec.ts`** creating `new AltitudeCalculator()` directly instead of `TestBed.inject`; all expectations unchanged.
-- [ ] **Step 4: Remove `peerDependencies`** (`@angular/common`, `@angular/core`) from `projects/scuba-physics/package.json`.
-- [ ] **Step 5: Verify** — `npx ng lint scuba-physics` clean; `npm run test-lib-ci` PASS; `npm run build-lib` PASS; `npm run test-ci` PASS.
-- [ ] **Step 6: Commit** — `refactor: #141 scuba-physics without Angular dependency`
+- [x] **Step 1: Add the lint guard** — in `projects/scuba-physics/eslint.config.mjs` add `no-restricted-imports` patterns `@angular/*`, `lodash`, `node:*`, `fs`, `path`, `os`, `child_process`, `process` and `no-restricted-globals` `process`, `require`, `Buffer`, `__dirname`.
+- [x] **Step 2: Run lint to verify it fails** — `npx ng lint scuba-physics` → error in `altitudeCalculator.spec.ts` (`@angular/core/testing`).
+- [x] **Step 3: Rewrite `altitudeCalculator.spec.ts`** creating `new AltitudeCalculator()` directly instead of `TestBed.inject`; all expectations unchanged.
+- [x] **Step 4: Remove `peerDependencies`** (`@angular/common`, `@angular/core`) from `projects/scuba-physics/package.json`.
+- [x] **Step 5: Verify** — `npx ng lint scuba-physics` clean; `npm run test-lib-ci` PASS; `npm run build-lib` PASS; `npm run test-ci` PASS.
+- [x] **Step 6: Commit** — `refactor: #141 scuba-physics without Angular dependency`
 
 ### Task 3: Metric ranges in the library
 - [ ] Status

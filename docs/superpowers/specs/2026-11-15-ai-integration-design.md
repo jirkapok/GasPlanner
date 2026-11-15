@@ -9,9 +9,9 @@ Divers should be able to use Dugong's dive planning from their AI assistant ("us
 An AI asks for a plan in structured form, gets the same numbers the app would show, explains them, and hands the user
 a link that opens the same plan in <https://dugong.online>.
 
-This first delivery covers **open circuit dive planning only, including multilevel and repetitive dives**.
-The other calculators (SAC, Nitrox, NDL, altitude, weight,
-gas properties, blender, redundancies) follow later using the same pattern.
+This first release covers **planning of a single open circuit dive at one depth level** (the app's simple plan,
+bottom gas plus optional deco gases). The second release adds multilevel dives, repetitive dives and the calculators
+(SAC, Nitrox, NDL, altitude, weight, gas properties, blender, redundancies) using the same pattern.
 
 ## Goals
 
@@ -24,9 +24,9 @@ gas properties, blender, redundancies) follow later using the same pattern.
 
 ## Non-goals (this plan)
 
-- Calculators other than dive planning.
+- Deferred to the second release (decided by the owner): multilevel dives, repetitive dives, all calculators.
+  The input schema should be extensible to them without breaking first-release callers.
 - Rebreather (CCR/pSCR) dives.
-- Share URL holding a whole series of repetitive dives.
 - Remote hosting (Cloudflare Worker). Not confirmed yet; the design keeps it possible without refactoring.
 - Publishing to npm or the MCP registry, signing the `.mcpb`, Anthropic extension directory listing, auto-update.
 - WebMCP (`navigator.modelContext`) in the PWA.
@@ -105,37 +105,32 @@ projects/dugong-mcp/
 
 ### Stage 3 — Dive planning as MCP tool and Skill
 
-- Scope (decided by the owner): **open circuit only**, **multilevel** dives and **repetitive** dives (series of dives
-  with surface intervals), **no calculators**.
-- One shared core function `planDives(input) → result` in `src/core`, used by the MCP tool and the CLI,
-  so both return identical JSON. For each dive in order it maps the input to `PlanRequestDto`, runs `PlanningTasks`
-  (profile → dive info → consumption) and maps the DTOs to the output below. A repetitive dive gets the previous dive's
-  tissues (`previousTissues`), surface interval, `previousCns` and `previousCnsExposures` exactly as the app's
-  `DiveSchedules`/`PlanRequestFactory` pass them (builder verifies against the app's repetitive dive flow).
-- **Input** (zod schema, metric): `dives[]` (one or more), shared optional `options` and `diver`; each dive has:
-  - `surfaceInterval` (min) before the dive — required for every dive except the first,
+- Scope (decided by the owner): **one open circuit dive at one depth level**, no multilevel, no repetitive dives,
+  no calculators, no rebreathers.
+- One shared core function `planDive(input) → result` in `src/core`, used by the MCP tool and the CLI,
+  so both return identical JSON. It builds the plan the way the app builds a simple plan (descent to the depth, bottom
+  time, calculated ascent and deco — reuse `PlanFactory`/the app's simple plan logic), maps it to `PlanRequestDto`
+  (first dive: no previous tissues, surface interval none), runs `PlanningTasks` (profile → dive info → consumption)
+  and maps the DTOs to the output below.
+- **Input** (zod schema, metric):
+  - `depth` (m) and `bottomTime` (min, as the app's simple plan duration),
   - `tanks[]`: size (l), working pressure (bar), start pressure (bar), O2 %, He %; first tank is the bottom gas,
-  - `levels[]`: depth (m), duration (min) and optional tank index of each planned level (as the app's complex plan
-    segments — a single level is the simple plan, more levels a multilevel dive); descent, ascent and deco are calculated,
-  - optional per dive `options` overriding the shared ones.
-  - Rebreather fields are not part of the schema (open circuit only).
+    the others are deco gases (switched to as the app does),
   - optional `options`: gradient factors low/high, salinity (fresh/salt), altitude (m), max ppO2 bottom/deco,
     ascent/descent speeds, last stop depth, safety stop, gas switch duration, problem solving / stress RMV factor —
-    defaults from the library (same as a new dive in the app).
-  - optional `diver`: RMV (l/min).
+    defaults from the library (same as a new dive in the app),
+  - optional `diver`: RMV (l/min),
+  - rebreather fields are not part of the schema (open circuit only).
   - Validation ranges equal to the app's (`UnitConversion` metric ranges); errors are readable text the AI can act on.
     The ranges live in the planner today; if they are pure data, move the metric ranges into the library and let
     `UnitConversion` reuse them, otherwise reference them from the core schema. *(builder's call)*
-- **Output** (JSON + short text summary as MCP content), one entry per dive, each with:
-  - surface interval, runtime, no-deco or deco dive flag, NDL, time to surface, max/average depth,
+- **Output** (JSON + short text summary as MCP content):
+  - runtime, no-deco or deco dive flag, NDL, time to surface, max/average depth,
   - deco stops `[{depth, duration, gas}]`,
   - per tank: start, end and reserve pressure, consumed volume, whether reserve is kept,
   - CNS %, OTU, max density, events/warnings (as the app's dive info events, English text),
-  - `shareUrl` to <https://dugong.online> with the same dive. The app's URL format holds one dive only, so for a
-    repetitive dive the link opens that dive alone, without the previous dives' saturation; the output says so.
-    Extending the URL format to dive series is out of scope. *(builder's call)*
-  - plus once for the whole result a `disclaimer`: fixed text — for planning/education only, verify with your dive
-    computer and training.
+  - `shareUrl` to <https://dugong.online> opening the same dive in the app's simple view,
+  - `disclaimer`: fixed text — for planning/education only, verify with your dive computer and training.
 - Tool description instructs the AI to always show the disclaimer and the share link and never to present the plan
   as authoritative.
 - **Skill**: `SKILL.md` explains when to use it and how to call `node scripts/dugong.mjs plan_dive` with JSON input on
@@ -143,8 +138,8 @@ projects/dugong-mcp/
   The zip contains `SKILL.md` and the bundled CLI only.
 - Output text (events, summary) is English. *(builder's call)*
 - Tests: core function unit tests compare results with `PlanningTasks` run the app's way for reference dives
-  (no-deco air dive, multilevel dive, deco trimix dive, two repetitive dives where the second one is affected by the
-  first, invalid input); an MCP in-memory client test calls the tool; a CLI test.
+  (no-deco air dive, deco nitrox dive with a deco gas, deco trimix dive, invalid input); a test that the share URL loads
+  in the app as the same dive; an MCP in-memory client test calls the tool; a CLI test.
 
 ### Stage 4 — Build pipeline in the existing workflow
 

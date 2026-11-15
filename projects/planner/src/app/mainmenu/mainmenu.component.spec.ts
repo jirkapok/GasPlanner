@@ -58,6 +58,13 @@ describe('Main menu component', () => {
         expect(layout.mainMenuHeight).toBe(componentHeight);
     });
 
+    it('links the AI integration help page', () => {
+        const links = Array.from((fixture.nativeElement as HTMLElement).querySelectorAll('a'));
+        // the test translations show the keys
+        const aiLink = links.find(link => link.textContent.trim() === 'menu.useWithAi');
+        expect(aiLink?.getAttribute('href')).toMatch(/\/help\/ai$/);
+    });
+
     describe('Dive menu', () => {
         it('+5 m clones deeper dive', () => {
             clickItem('#menuCloneDeeper');

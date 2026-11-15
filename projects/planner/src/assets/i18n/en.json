@@ -26,6 +26,7 @@
     "compareDives": "Compare dives",
     "standardGases": "Standard gases",
     "help": "Help",
+    "useWithAi": "Use with AI",
     "learn": "Learn",
     "about": "About",
     "toggleNavigation": "Toggle navigation"
@@ -77,7 +78,8 @@
       "application": {
         "title": "Application",
         "usage": "Application usage",
-        "settings": "Application settings"
+        "settings": "Application settings",
+        "ai": "Use with AI"
       },
       "plan": {
         "title": "Dive Plan",

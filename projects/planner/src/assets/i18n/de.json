@@ -5,6 +5,7 @@
     "cylinderBalancing": "Flaschenbalance", "gasBlender": "Gasmischer", "dive": "Tauchgang", "clone": "Duplizieren", "deeper": "+5 m/15ft", "deeperTitle": "Den tiefsten Abschnitt um +5 m vertiefen", "longer": "+5 min", "longerTitle": "Die Zeit in der Tiefe um +5 Minuten verlängern", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Dem tiefsten Abschnitt +5 min und +5 m hinzufügen",
     "saveAsDefault": "Als Standard speichern", "loadDefault": "Standard laden", "share": "Teilen", "delete": "Löschen",
     "settings": "Einstellungen", "compareDives": "Tauchgänge vergleichen", "standardGases": "Standardgase", "help": "Hilfe",
+    "useWithAi": "Mit KI verwenden",
     "learn": "Lernen", "about": "Über", "toggleNavigation": "Navigation umschalten"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "Deko", "safetyStop": "Sicherheitsstopp" },
   "help": {
     "menu": {
-      "application": { "title": "Anwendung", "usage": "Verwendung der Anwendung", "settings": "Anwendungseinstellungen" },
+      "application": { "title": "Anwendung", "usage": "Verwendung der Anwendung", "settings": "Anwendungseinstellungen", "ai": "Mit KI verwenden" },
       "plan": { "title": "Tauchplan", "tanks": "Flaschen", "rebreather": "Kreislaufgerät", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "Standardgase", "depths": "Tiefen", "surfaceInterval": "Oberflächenpause" },
       "options": { "title": "Tauchoptionen", "general": "Allgemein", "environment": "Umgebung", "conservatism": "Konservatismus", "gases": "Gase", "airBreaks": "Luftpausen", "stops": "Stopps", "speeds": "Geschwindigkeiten", "diver": "Taucher" },
       "results": { "title": "Tauchergebnisse", "diveInfoTable": "Tauchinfo-Tabelle", "oxygenToxicity": "Sauerstofftoxizität", "events": "Ereignisse, die Fehler und Warnungen verursachen", "consumedGasCharts": "Diagramme des Gasverbrauchs", "wayPointsTable": "Wegpunkttabelle", "profileChart": "Tauchprofildiagramm", "tissuesHeatMap": "Gewebe-Heatmap" },

@@ -5,6 +5,7 @@
     "cylinderBalancing": "Balance de botellas", "gasBlender": "Mezclador de gases", "dive": "Inmersión", "clone": "Duplicar", "deeper": "+5 m/15ft", "deeperTitle": "Añadir +5 m al tramo más profundo", "longer": "+5 min", "longerTitle": "Ampliar el tiempo en profundidad en +5 minutos", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Añadir +5 min y +5 m al tramo más profundo",
     "saveAsDefault": "Guardar como predeterminado", "loadDefault": "Cargar predeterminado", "share": "Compartir", "delete": "Eliminar",
     "settings": "Configuración", "compareDives": "Comparar inmersiones", "standardGases": "Gases estándar", "help": "Ayuda",
+    "useWithAi": "Usar con IA",
     "learn": "Aprender", "about": "Acerca de", "toggleNavigation": "Alternar navegación"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "Descompresión", "safetyStop": "Parada de seguridad" },
   "help": {
     "menu": {
-      "application": { "title": "Aplicación", "usage": "Uso de la aplicación", "settings": "Configuración de la aplicación" },
+      "application": { "title": "Aplicación", "usage": "Uso de la aplicación", "settings": "Configuración de la aplicación", "ai": "Usar con IA" },
       "plan": { "title": "Plan de inmersión", "tanks": "Botellas", "rebreather": "Recirculador", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "Gases estándar", "depths": "Profundidades", "surfaceInterval": "Intervalo de superficie" },
       "options": { "title": "Opciones de inmersión", "general": "General", "environment": "Entorno", "conservatism": "Conservadurismo", "gases": "Gases", "airBreaks": "Pausas de aire", "stops": "Paradas", "speeds": "Velocidades", "diver": "Buceador" },
       "results": { "title": "Resultados de la inmersión", "diveInfoTable": "Tabla de información de la inmersión", "oxygenToxicity": "Toxicidad del oxígeno", "events": "Eventos que causan errores y advertencias", "consumedGasCharts": "Gráficos de consumo de gas", "wayPointsTable": "Tabla de puntos de la inmersión", "profileChart": "Gráfico del perfil de inmersión", "tissuesHeatMap": "Mapa de calor de tejidos" },

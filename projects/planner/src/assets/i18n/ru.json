@@ -5,6 +5,7 @@
     "cylinderBalancing": "Балансировка баллонов", "gasBlender": "Смеситель газов", "dive": "Погружение", "clone": "Дублировать", "deeper": "+5 м/15 фт", "deeperTitle": "Добавить +5 м к самому глубокому участку", "longer": "+5 мин", "longerTitle": "Продлить время на глубине на +5 минут", "deeperAndLonger": "+5 мин, +5 м/15 фт", "deeperAndLongerTitle": "Добавить +5 мин и +5 м к самому глубокому участку",
     "saveAsDefault": "Сохранить по умолчанию", "loadDefault": "Загрузить по умолчанию", "share": "Поделиться", "delete": "Удалить",
     "settings": "Настройки", "compareDives": "Сравнить погружения", "standardGases": "Стандартные смеси", "help": "Справка",
+    "useWithAi": "Использовать с ИИ",
     "learn": "Обучение", "about": "О программе", "toggleNavigation": "Переключить навигацию"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "Декомпрессия", "safetyStop": "Остановка безопасности" },
   "help": {
     "menu": {
-      "application": { "title": "Приложение", "usage": "Использование приложения", "settings": "Настройки приложения" },
+      "application": { "title": "Приложение", "usage": "Использование приложения", "settings": "Настройки приложения", "ai": "Использовать с ИИ" },
       "plan": { "title": "План погружения", "tanks": "Баллоны", "rebreather": "Ребризер", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "Стандартные смеси", "depths": "Глубины", "surfaceInterval": "Поверхностный интервал" },
       "options": { "title": "Параметры погружения", "general": "Общие", "environment": "Окружение", "conservatism": "Консерватизм", "gases": "Газы", "airBreaks": "Воздушные паузы", "stops": "Остановки", "speeds": "Скорости", "diver": "Дайвер" },
       "results": { "title": "Результаты погружения", "diveInfoTable": "Таблица информации о погружении", "oxygenToxicity": "Токсичность кислорода", "events": "События, вызывающие ошибки и предупреждения", "consumedGasCharts": "Графики расхода газа", "wayPointsTable": "Таблица точек погружения", "profileChart": "График профиля погружения", "tissuesHeatMap": "Тепловая карта тканей" },

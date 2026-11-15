@@ -5,6 +5,7 @@
     "cylinderBalancing": "Vyvážení lahví", "gasBlender": "Míchání plynů", "dive": "Ponor", "clone": "Duplikovat", "deeper": "+5 m/15ft", "deeperTitle": "Prohloubit nejhlubší úsek o +5 m", "longer": "+5 min", "longerTitle": "Prodloužit čas v hloubce o +5 minut", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Přidat +5 min a +5 m k nejhlubšímu úseku",
     "saveAsDefault": "Uložit jako výchozí", "loadDefault": "Načíst výchozí", "share": "Sdílet", "delete": "Smazat",
     "settings": "Nastavení", "compareDives": "Porovnat ponory", "standardGases": "Standardní směsi", "help": "Nápověda",
+    "useWithAi": "Použít s AI",
     "learn": "Výuka", "about": "O aplikaci", "toggleNavigation": "Přepnout navigaci"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "Dekomprese", "safetyStop": "Bezpečnostní zastávka" },
   "help": {
     "menu": {
-      "application": { "title": "Aplikace", "usage": "Používání aplikace", "settings": "Nastavení aplikace" },
+      "application": { "title": "Aplikace", "usage": "Používání aplikace", "settings": "Nastavení aplikace", "ai": "Použít s AI" },
       "plan": { "title": "Plán ponoru", "tanks": "Lahve", "rebreather": "Rebreather", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "Standardní směsi", "depths": "Hloubky", "surfaceInterval": "Povrchová pauza" },
       "options": { "title": "Možnosti ponoru", "general": "Obecné", "environment": "Prostředí", "conservatism": "Konzervatismus", "gases": "Plyny", "airBreaks": "Vzduchové přestávky", "stops": "Zastávky", "speeds": "Rychlosti", "diver": "Potápěč" },
       "results": { "title": "Výsledky ponoru", "diveInfoTable": "Tabulka informací o ponoru", "oxygenToxicity": "Toxicita kyslíku", "events": "Události způsobující chyby a varování", "consumedGasCharts": "Grafy spotřeby plynu", "wayPointsTable": "Tabulka bodů ponoru", "profileChart": "Graf profilu ponoru", "tissuesHeatMap": "Tepelná mapa tkání" },

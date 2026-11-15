@@ -23,6 +23,13 @@ None of the authors, contributors, administrators, or anyone else connected with
 * Lot of calculators: RMV/SAC, Nitrox, Trimix properties, Cylinder Balancing, NDL table ...
 * See more in **[Application help](./doc/readme.md)**
 
+## Use Dugong from your AI
+
+Your AI assistant (e.g. Claude) can plan single level open circuit dives with the same calculation as the application.
+Install the MCP server ([dugong.mcpb](https://dugong.online/ai/dugong.mcpb)) in Claude Desktop or another MCP client,
+or the Skill ([dugong-skill.zip](https://dugong.online/ai/dugong-skill.zip)) in Claude.
+See the **[Use with AI](./doc/ai.md)** help page for the installation steps and example prompts.
+
 ## Donate
 
 Keep the project Alive!

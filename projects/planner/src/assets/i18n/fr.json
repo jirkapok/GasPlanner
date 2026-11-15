@@ -5,6 +5,7 @@
     "cylinderBalancing": "Équilibrage des blocs", "gasBlender": "Mélangeur de gaz", "dive": "Plongée", "clone": "Cloner", "deeper": "+5 m/15ft", "deeperTitle": "Ajouter +5 m au segment le plus profond", "longer": "+5 min", "longerTitle": "Prolonger le temps au fond de +5 minutes", "deeperAndLonger": "+5 min, +5 m/15ft", "deeperAndLongerTitle": "Ajouter +5 min et +5 m au segment le plus profond",
     "saveAsDefault": "Enregistrer par défaut", "loadDefault": "Charger par défaut", "share": "Partager", "delete": "Supprimer",
     "settings": "Paramètres", "compareDives": "Comparer les plongées", "standardGases": "Gaz standards", "help": "Aide",
+    "useWithAi": "Utiliser avec l'IA",
     "learn": "Apprendre", "about": "À propos", "toggleNavigation": "Afficher/masquer la navigation"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "Déco", "safetyStop": "Palier de sécurité" },
   "help": {
     "menu": {
-      "application": { "title": "Application", "usage": "Utilisation de l'application", "settings": "Paramètres de l'application" },
+      "application": { "title": "Application", "usage": "Utilisation de l'application", "settings": "Paramètres de l'application", "ai": "Utiliser avec l'IA" },
       "plan": { "title": "Plan de plongée", "tanks": "Blocs", "rebreather": "Recycleur", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "Gaz standards", "depths": "Profondeurs", "surfaceInterval": "Intervalle de surface" },
       "options": { "title": "Options de plongée", "general": "Général", "environment": "Environnement", "conservatism": "Conservatisme", "gases": "Gaz", "airBreaks": "Pauses O2", "stops": "Paliers", "speeds": "Vitesses", "diver": "Plongeur" },
       "results": { "title": "Résultats de plongée", "diveInfoTable": "Tableau des informations de plongée", "oxygenToxicity": "Toxicité de l'oxygène", "events": "Événements causant des erreurs et avertissements", "consumedGasCharts": "Graphiques de gaz consommé", "wayPointsTable": "Tableau des points de passage", "profileChart": "Graphique du profil de plongée", "tissuesHeatMap": "Carte thermique des tissus" },

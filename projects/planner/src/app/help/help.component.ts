@@ -39,7 +39,8 @@ export class HelpComponent implements OnInit {
             title: 'help.menu.application.title',
             items: [
                 { label: 'help.menu.application.usage', path: HelpComponent.defaultDocument },
-                { label: 'help.menu.application.settings', path: 'settings' }
+                { label: 'help.menu.application.settings', path: 'settings' },
+                { label: 'help.menu.application.ai', path: 'ai' }
             ]
         },
         {

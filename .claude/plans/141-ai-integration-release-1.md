@@ -464,7 +464,7 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
 ## Stage 5 — Promotion
 
 ### Task 13: Help page, menu entry, README
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `doc/ai.md`, `e2e/aiIntegration.spec.ts`
@@ -473,14 +473,14 @@ it('example input is valid', ...); // skill/examples/air-30m.json imported as JS
 **Interfaces:**
 - Produces: route `/help/ai`; i18n keys `menu.useWithAi` (en: `Use with AI`) and `help.menu.application.ai` (en: `Use with AI`); download links `ai/dugong.mcpb` and `ai/dugong-skill.zip` in `doc/ai.md` with ids `download-mcpb`/`download-skill` (or link texts the E2E test can locate).
 
-- [ ] **Step 1: Write the failing component test** (`mainmenu.component.spec.ts`): the menu contains a link with text `Use with AI` whose `href` ends with `/help/ai`.
-- [ ] **Step 2: Run to verify it fails** → FAIL.
-- [ ] **Step 3: Add the menu item** `<li><a class="nav-link" [routerLink]="['/help', 'ai']">{{ 'menu.useWithAi' | translate }}</a></li>` after Help, the help sidebar item `{ label: 'help.menu.application.ai', path: 'ai' }` in the application group, and both keys in all locale files (English fallback where no translation is known).
-- [ ] **Step 4: Write `doc/ai.md`**: what it is, the disclaimer, Release 1 limits, install for Claude Desktop (download `.mcpb`, double-click or Settings → Extensions → Install Extension), Claude Code / other MCP clients (unzip the `.mcpb` and run `claude mcp add dugong -- node <folder>/server/dugong-mcp.mjs`, plus the JSON config snippet), Skill (download zip, upload in claude.ai Settings → Capabilities → Skills, or unzip into `~/.claude/skills/`), example prompts.
-- [ ] **Step 5: Write the E2E happy path** (`e2e/aiIntegration.spec.ts`): open `/`, click menu `Use with AI`, the help page shows the AI document heading and both download links point to `ai/dugong.mcpb` and `ai/dugong-skill.zip`.
-- [ ] **Step 6: README** — short "Use Dugong from your AI" section linking to the help page and the downloads.
-- [ ] **Step 7: Verify** — `npm run test-ci` PASS; `npm run e2e` PASS; `npm run lint` clean.
-- [ ] **Step 8: Commit** — `feat: #141 promote AI integration in the app`
+- [x] **Step 1: Write the failing component test** (`mainmenu.component.spec.ts`): the menu contains a link with text `Use with AI` whose `href` ends with `/help/ai`.
+- [x] **Step 2: Run to verify it fails** → FAIL.
+- [x] **Step 3: Add the menu item** `<li><a class="nav-link" [routerLink]="['/help', 'ai']">{{ 'menu.useWithAi' | translate }}</a></li>` after Help, the help sidebar item `{ label: 'help.menu.application.ai', path: 'ai' }` in the application group, and both keys in all locale files (English fallback where no translation is known).
+- [x] **Step 4: Write `doc/ai.md`**: what it is, the disclaimer, Release 1 limits, install for Claude Desktop (download `.mcpb`, double-click or Settings → Extensions → Install Extension), Claude Code / other MCP clients (unzip the `.mcpb` and run `claude mcp add dugong -- node <folder>/server/dugong-mcp.mjs`, plus the JSON config snippet), Skill (download zip, upload in claude.ai Settings → Capabilities → Skills, or unzip into `~/.claude/skills/`), example prompts.
+- [x] **Step 5: Write the E2E happy path** (`e2e/aiIntegration.spec.ts`): open `/`, click menu `Use with AI`, the help page shows the AI document heading and both download links point to `ai/dugong.mcpb` and `ai/dugong-skill.zip`.
+- [x] **Step 6: README** — short "Use Dugong from your AI" section linking to the help page and the downloads.
+- [x] **Step 7: Verify** — `npm run test-ci` PASS; `npm run e2e` PASS; `npm run lint` clean.
+- [x] **Step 8: Commit** — `feat: #141 promote AI integration in the app`
 
 ---
 

@@ -5,6 +5,7 @@
     "cylinderBalancing": "气瓶平衡", "gasBlender": "气体混合", "dive": "潜水", "clone": "克隆", "deeper": "+5 米/15 英尺", "deeperTitle": "将最深段增加 5 米", "longer": "+5 分钟", "longerTitle": "将水底时间延长 5 分钟", "deeperAndLonger": "+5 分钟, +5 米/15 英尺", "deeperAndLongerTitle": "将最深段增加 5 分钟和 5 米",
     "saveAsDefault": "保存为默认", "loadDefault": "加载默认", "share": "分享", "delete": "删除",
     "settings": "设置", "compareDives": "比较潜水", "standardGases": "标准气体", "help": "帮助",
+    "useWithAi": "与 AI 一起使用",
     "learn": "学习", "about": "关于", "toggleNavigation": "切换导航"
   },
   "personalization": {
@@ -27,7 +28,7 @@
   "events": { "deco": "减压", "safetyStop": "安全停留" },
   "help": {
     "menu": {
-      "application": { "title": "应用程序", "usage": "应用程序使用说明", "settings": "应用程序设置" },
+      "application": { "title": "应用程序", "usage": "应用程序使用说明", "settings": "应用程序设置", "ai": "与 AI 一起使用" },
       "plan": { "title": "潜水计划", "tanks": "气瓶", "rebreather": "循环呼吸器", "mccr": "mCCR", "eccr": "eCCR", "standardGases": "标准气体", "depths": "深度", "surfaceInterval": "水面间隔时间" },
       "options": { "title": "潜水选项", "general": "常规", "environment": "环境", "conservatism": "保守度", "gases": "气体", "airBreaks": "纯氧间歇", "stops": "停留点", "speeds": "速度", "diver": "潜水员" },
       "results": { "title": "潜水结果", "diveInfoTable": "潜水信息表", "oxygenToxicity": "氧气毒性", "events": "导致错误和警告的事件", "consumedGasCharts": "气体消耗图表", "wayPointsTable": "潜水航点表", "profileChart": "潜水剖面图", "tissuesHeatMap": "组织热力图" },

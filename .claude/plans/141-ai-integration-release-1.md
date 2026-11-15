@@ -139,7 +139,7 @@ Run: `npx vitest run --config projects/dugong-mcp/vitest.config.mts` → PASS; `
 - [x] **Step 6: Commit** — `refactor: #141 scuba-physics without Angular dependency`
 
 ### Task 3: Metric ranges in the library
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/scuba-physics/src/lib/workers/MetricRanges.ts`, `projects/scuba-physics/src/lib/workers/MetricRanges.spec.ts`
@@ -148,7 +148,7 @@ Run: `npx vitest run --config projects/dugong-mcp/vitest.config.mts` → PASS; `
 **Interfaces:**
 - Produces: `interface RangeConstants` (moved unchanged, uses lib `Units`), `class MetricRanges implements RangeConstants` (moved unchanged, uses lib `MetricUnits`), both exported from `public-api.ts`. `ImperialRanges` stays in `UnitConversion.ts`; `UnitConversion.createMetricRanges()` returns `new MetricRanges()` from `scuba-physics`.
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 ```ts
 describe('MetricRanges', () => {
@@ -160,10 +160,10 @@ describe('MetricRanges', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** — single library spec run → FAIL, `MetricRanges` not found.
-- [ ] **Step 3: Move `RangeConstants`, `toLabel`, `perMinute` and `MetricRanges`** to `MetricRanges.ts`, export them, update planner imports.
-- [ ] **Step 4: Verify** — library spec PASS; `npm run build-lib`; `npm run test-ci` PASS; `npm run lint` clean.
-- [ ] **Step 5: Commit** — `refactor: #141 move metric ranges to scuba-physics`
+- [x] **Step 2: Run to verify it fails** — single library spec run → FAIL, `MetricRanges` not found.
+- [x] **Step 3: Move `RangeConstants`, `toLabel`, `perMinute` and `MetricRanges`** to `MetricRanges.ts`, export them, update planner imports.
+- [x] **Step 4: Verify** — library spec PASS; `npm run build-lib`; `npm run test-ci` PASS; `npm run lint` clean.
+- [x] **Step 5: Commit** — `refactor: #141 move metric ranges to scuba-physics`
 
 ### Task 4: Plan DTOs in the library
 - [ ] Status

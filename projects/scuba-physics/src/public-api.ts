@@ -55,5 +55,6 @@ export * from './lib/consumption/Tanks';
 export * from './lib/physics/Time';
 export * from './lib/algorithm/Tissues.api';
 export * from './lib/physics/units';
+export * from './lib/workers/MetricRanges';
 export * from './lib/calculators/weight';
 export { GasNames } from './lib/gases/GasNames';

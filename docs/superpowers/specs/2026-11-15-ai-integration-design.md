@@ -14,7 +14,7 @@ a link that opens the same plan in <https://dugong.online>.
 The work is split into two releases (decided by the owner). **This design and its plan cover Release 1 only.**
 
 | | Release 1 (this design) | Release 2 (deferred) |
-|---|---|---|
+| --- | --- | --- |
 | Dive planning | single open circuit dive at one depth level (the app's simple plan, bottom gas plus optional deco gases) | multilevel dives, repetitive dives |
 | Calculators | none | SAC, Nitrox, NDL, altitude, weight, gas properties, blender, redundancies |
 | Delivery | MCP server (`.mcpb`), Skill, library refactoring, build pipeline, promotion in the app | new tools added to the same MCP server and Skill using the Release 1 pattern |

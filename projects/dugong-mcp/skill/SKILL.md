@@ -54,7 +54,7 @@ All units are metric. Example: [examples/air-30m.json](examples/air-30m.json).
 
 ## Output
 
-- `noDecoDive`, `noDecoLimit` (min), `runtime` (min), `timeToSurface` (min, emergency ascent), `maxDepth`, `averageDepth` (m).
+- `noDecoDive`, `noDecoLimit` (min, `null` when there is no limit at the depth, e.g. shallow dives), `runtime` (min), `timeToSurface` (min, emergency ascent), `maxDepth`, `averageDepth` (m).
 - `decoStops`: `{ depth, duration, gas }` of the ascent incl. gas switches and the safety stop.
 - `tanks`: per tank `startPressure`, `endPressure`, `reservePressure` (bar), `consumedVolume` (l), `hasReserve`.
 - `cns` (%), `otu`, `maxDensity` (g/l at depth).

@@ -129,7 +129,8 @@ const toResult = (input: PlanDiveInput, request: PlanRequestDto, tanks: Tank[], 
     const density = DtoSerialization.toDensity(info.density);
     return {
         noDecoDive: input.bottomTime <= info.noDeco,
-        noDecoLimit: info.noDeco,
+        // the algorithm returns infinity in shallow depths, where the tissues don't load enough to require decompression
+        noDecoLimit: Number.isFinite(info.noDeco) ? info.noDeco : null,
         runtime: minutes(Segments.duration(DtoSerialization.toSegments(profile, tanks))),
         timeToSurface: Precision.round(consumption.timeToSurface, 1),
         maxDepth: Precision.round(Math.max(...profile.map(s => s.endDepth)), 1),

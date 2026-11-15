@@ -31,7 +31,7 @@ const eventSchema = z.object({ type: z.string(), runtime: z.number(), depth: z.n
 /** Structure of PlanDiveResult, see planDiveResult.ts for the units */
 const planDiveOutputSchema = z.object({
     noDecoDive: z.boolean(),
-    noDecoLimit: z.number().describe('min'),
+    noDecoLimit: z.number().nullable().describe('min, null when there is no limit at the depth (shallow dives)'),
     runtime: z.number().describe('min'),
     timeToSurface: z.number().describe('min, emergency ascent'),
     maxDepth: z.number().describe('m'),

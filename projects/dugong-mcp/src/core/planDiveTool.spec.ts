@@ -30,6 +30,13 @@ describe('plan_dive MCP tool', () => {
         expect(textOf(response)).toContain(disclaimer);
     });
 
+    it('plans a shallow dive without decompression limit', async () => {
+        const shallow = { depth: 5, bottomTime: 60, tanks: [{ size: 15, startPressure: 200, o2: 21 }] };
+        const response = await client.callTool({ name: 'plan_dive', arguments: shallow });
+        expect(response.isError).toBeFalsy();
+        expect((response.structuredContent as { noDecoLimit: number | null }).noDecoLimit).toBeNull();
+    });
+
     it('rejects invalid input with readable message', async () => {
         const response = await client.callTool({ name: 'plan_dive', arguments: { ...air18m20min, depth: 0 } });
         expect(response.isError).toBe(true);

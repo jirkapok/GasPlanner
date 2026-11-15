@@ -43,8 +43,8 @@ export interface DiveEvent {
 export interface PlanDiveResult {
     /** bottom time is not longer than the no decompression limit */
     noDecoDive: boolean;
-    /** min */
-    noDecoLimit: number;
+    /** min, null when there is no limit at the depth (shallow dives) */
+    noDecoLimit: number | null;
     /** min, the whole calculated profile */
     runtime: number;
     /** min, emergency ascent */
@@ -103,7 +103,9 @@ export const summaryText = (result: PlanDiveResult): string => {
         result.errors.forEach(e => lines.push(`- ${e}`));
     } else {
         const decoKind = result.noDecoDive ? 'No decompression dive' : 'Decompression dive';
-        lines.push(`${decoKind}, no decompression limit ${result.noDecoLimit} min.`);
+        const limit = result.noDecoLimit === null ?
+            'no decompression limit at this depth' : `no decompression limit ${result.noDecoLimit} min`;
+        lines.push(`${decoKind}, ${limit}.`);
         lines.push(`Runtime ${result.runtime} min, time to surface ${result.timeToSurface} min.`);
         lines.push(`Max depth ${result.maxDepth} m, average depth ${result.averageDepth} m.`);
 

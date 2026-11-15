@@ -79,7 +79,15 @@ describe('planDive', () => {
     it('salt water changes the plan', () => {
         const fresh = planDive({ ...air18m20min, depth: 40 });
         const salt = planDive({ ...air18m20min, depth: 40, options: { salinity: 'salt' } });
-        expect(salt.noDecoLimit).toBeLessThan(fresh.noDecoLimit);
+        expect(salt.noDecoLimit).toBeLessThan(fresh.noDecoLimit ?? 0);
+    });
+
+    // tissues stop loading in shallow depths, the algorithm returns infinite no decompression limit
+    it('shallow dive has no decompression limit', () => {
+        const result = planDive({ depth: 5, bottomTime: 60, tanks: [{ size: 15, startPressure: 200, o2: 21 }] });
+        expect(result.noDecoLimit).toBeNull();
+        expect(result.noDecoDive).toBe(true);
+        expect(summaryText(result)).toContain('No decompression dive, no decompression limit at this depth.');
     });
 
     it('bottom time shorter than descent still plans the dive', () => {

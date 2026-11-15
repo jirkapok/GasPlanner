@@ -26,6 +26,13 @@ describe('plan_dive command', () => {
         expect(JSON.parse(result.output)).toEqual(planDive(air18m20min));
     });
 
+    it('prints shallow dive without decompression limit as null', () => {
+        const shallow = { depth: 5, bottomTime: 60, tanks: [{ size: 15, startPressure: 200, o2: 21 }] };
+        const result = executeCommand('plan_dive', JSON.stringify(shallow));
+        expect(result.exitCode).toBe(0);
+        expect((JSON.parse(result.output) as { noDecoLimit: number | null }).noDecoLimit).toBeNull();
+    });
+
     it('prints validation errors', () => {
         const result = executeCommand('plan_dive', JSON.stringify({ ...air18m20min, depth: 0 }));
         expect(result.exitCode).toBe(1);

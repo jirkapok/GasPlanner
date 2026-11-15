@@ -355,7 +355,7 @@ Mapping decisions:
 - [x] **Step 5: Commit** — `feat: #141 plan single level dive in dugong-mcp core`
 
 ### Task 9: MCP tool `plan_dive`
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/dugong-mcp/src/core/planDiveTool.ts`, `planDiveTool.spec.ts`
@@ -365,7 +365,7 @@ Mapping decisions:
 - Consumes: `planDiveInputSchema`, `planDive`, `summaryText`.
 - Produces: `registerPlanDive(server: McpServer): void`; tool `plan_dive`, title `Plan a scuba dive`, description: what it plans (single level open circuit, Bühlmann ZHL-16C with gradient factors), units, and the instruction "Always show the disclaimer to the user and never present the plan as authoritative.". Result: `content: [{ type: 'text', text: summaryText(result) }]`, `structuredContent: result` (with matching `outputSchema`).
 
-- [ ] **Step 1: Write the failing tests** (in-memory client from Task 1):
+- [x] **Step 1: Write the failing tests** (in-memory client from Task 1):
 
 ```ts
 it('lists plan_dive tool', async () => expect((await client.listTools()).tools.map(t => t.name)).toEqual(['plan_dive']));
@@ -382,10 +382,10 @@ it('rejects invalid input with readable message', async () => {
 it('explains a plan which can\'t be calculated', ...); // 300 m air → text contains the error message, isError false
 ```
 
-- [ ] **Step 2: Run to verify they fail** → FAIL.
-- [ ] **Step 3: Implement `registerPlanDive`** and call it from `createServer`.
-- [ ] **Step 4: Verify** — tests PASS; `npx mcpb validate projects/dugong-mcp/manifest.json`; `npm run lint` clean.
-- [ ] **Step 5: Commit** — `feat: #141 plan_dive MCP tool`
+- [x] **Step 2: Run to verify they fail** → FAIL.
+- [x] **Step 3: Implement `registerPlanDive`** and call it from `createServer`.
+- [x] **Step 4: Verify** — tests PASS; `npx mcpb validate projects/dugong-mcp/manifest.json`; `npm run lint` clean.
+- [x] **Step 5: Commit** — `feat: #141 plan_dive MCP tool`
 
 ### Task 10: Skill command `plan_dive`
 - [ ] Status

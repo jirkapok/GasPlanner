@@ -21,5 +21,10 @@
       ]
     }
   },
-  "tools": []
+  "tools": [
+    {
+      "name": "plan_dive",
+      "description": "Plans a single level open circuit scuba dive: decompression stops, runtime, gas consumption, oxygen toxicity and warnings."
+    }
+  ]
 }

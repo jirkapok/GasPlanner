@@ -1,4 +1,4 @@
-import { BuhlmannAlgorithm, ComputerEventType } from 'scuba-physics';
+import { BuhlmannAlgorithm, ComputerEventType, PlanningTasks } from 'scuba-physics';
 import { DiveSchedules } from '../shared/dive.schedules';
 import { englishCircuitNames } from '../shared/circuit-names.testing';
 import { ReloadDispatcher } from '../shared/reloadDispatcher';
@@ -9,7 +9,6 @@ import {
     ComputerResultDto, ComputerStartedDto
 } from '../shared/serialization.model';
 import { ComputerTasks } from './computer.tasks';
-import { PlanningTasks } from './planning.tasks';
 
 describe('ComputerTasks', () => {
     /** Default dive of the planner, deepened to 40 m for 30 min to get deco stops, calculated the same way as by the planner */

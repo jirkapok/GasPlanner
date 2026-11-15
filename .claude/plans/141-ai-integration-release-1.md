@@ -197,7 +197,7 @@ describe('MetricRanges', () => {
 - [x] **Step 4: Commit** — `refactor: #141 move DtoSerialization to scuba-physics`
 
 ### Task 6: `PlanningTasks` in the library
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/scuba-physics/src/lib/workers/PlanningTasks.ts`, `PlanningTasks.spec.ts`
@@ -207,7 +207,7 @@ describe('MetricRanges', () => {
 **Interfaces:**
 - Produces: `class PlanningTasks` exported from `scuba-physics`, unchanged static API: `calculateDecompression(task: ProfileRequestDto): ProfileResultDto`, `diveParameters(task: PlanRequestDto): AlgorithmParams`, `diveInfo(task: DiveInfoRequestDto): DiveInfoResultDto`, `calculateConsumption(task: ConsumptionRequestDto): ConsumptionResultDto`.
 
-- [ ] **Step 1: Write the failing spec** (`PlanningTasks.spec.ts`, builds a 30 m / 20 min air plan with `PlanFactory.createPlan` and `new Options()`):
+- [x] **Step 1: Write the failing spec** (`PlanningTasks.spec.ts`, builds a 30 m / 20 min air plan with `PlanFactory.createPlan` and `new Options()`):
 
 ```ts
 it('calculates the profile ending at the surface without errors', () => {
@@ -223,10 +223,10 @@ it('consumption consumes gas from the tank', () => {
 });
 ```
 
-- [ ] **Step 2: Run to verify it fails** → FAIL, `PlanningTasks` not found.
-- [ ] **Step 3: Move `PlanningTasks`**, imports switched to relative library imports.
-- [ ] **Step 4: Verify** — `npm run test-lib-ci` PASS; `npm run build-lib`; `npm run test-ci` PASS; `npm run e2e` PASS (workers still compute); `npm run lint` clean.
-- [ ] **Step 5: Commit** — `refactor: #141 move PlanningTasks to scuba-physics`
+- [x] **Step 2: Run to verify it fails** → FAIL, `PlanningTasks` not found.
+- [x] **Step 3: Move `PlanningTasks`**, imports switched to relative library imports.
+- [x] **Step 4: Verify** — `npm run test-lib-ci` PASS; `npm run build-lib`; `npm run test-ci` PASS; `npm run e2e` PASS (workers still compute); `npm run lint` clean.
+- [x] **Step 5: Commit** — `refactor: #141 move PlanningTasks to scuba-physics`
 
 ---
 

@@ -1,6 +1,5 @@
-import { Ceiling, ComputerEvent, DiveComputer, RunTimePoint, DtoSerialization } from 'scuba-physics';
+import { Ceiling, ComputerEvent, DiveComputer, RunTimePoint, DtoSerialization, PlanningTasks } from 'scuba-physics';
 import { ComputerPointDto, ComputerRequestDto, ComputerResultDto } from '../shared/serialization.model';
-import { PlanningTasks } from './planning.tasks';
 
 /** Streams the dive computer data calculated by the library from the already calculated dive */
 export class ComputerTasks {

@@ -1,11 +1,10 @@
 import {
     ConsumptionRequestDto, ConsumptionResultDto, DiveInfoRequestDto, DiveInfoResultDto, ProfileRequestDto,
-    ProfileResultDto
+    ProfileResultDto, PlanningTasks
 } from 'scuba-physics';
 import { ComputerRequestDto, ComputerResultDto } from './serialization.model';
 import { IBackgroundTask, IRestartableTask } from '../workers/background-task';
 import { Subject } from 'rxjs';
-import { PlanningTasks } from '../workers/planning.tasks';
 import { ComputerTasks } from '../workers/computer.tasks';
 
 /** Used to avoid parallelism in tests */

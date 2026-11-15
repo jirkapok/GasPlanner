@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
-import { ProfileRequestDto } from 'scuba-physics';
-import { PlanningTasks } from './planning.tasks';
+import { ProfileRequestDto, PlanningTasks } from 'scuba-physics';
 
 addEventListener('message', ({ data }: MessageEvent<ProfileRequestDto>) => {
     const result = PlanningTasks.calculateDecompression(data);

@@ -1,11 +1,31 @@
+import { BuhlmannAlgorithm } from '../algorithm/BuhlmannAlgorithm';
+import { AlgorithmParams, RestingParameters } from '../algorithm/BuhlmannAlgorithmParameters';
+import { Options } from '../algorithm/Options';
+import { EventOptions, ProfileEvents } from '../algorithm/ProfileEvents';
+import { ProfileTissues } from '../algorithm/ProfileTissues';
+import { CnsCalculator } from '../calculators/cnsCalculator';
+import { CnsDailyCalculator } from '../calculators/cnsDailyCalculator';
+import { OtuCalculator } from '../calculators/OtuCalculator';
+import { BreathingModel } from '../ccr/BreathingModel';
+import { BreathingModelFactory } from '../ccr/BreathingModelFactory';
+import { Consumption } from '../consumption/consumption';
+import { ConsumptionByGas } from '../consumption/consumptionByGas';
+import { ConsumptionOptions } from '../consumption/consumptionCommon';
+import { Diver } from '../consumption/Diver';
+import { Tank, Tanks } from '../consumption/Tanks';
+import { AverageDepth } from '../depths/AverageDepth';
+import { PlanFactory } from '../depths/PlanFactory';
+import { Segment, Segments } from '../depths/Segments';
+import { DensityAtDepth } from '../gases/GasDensity';
+import { DepthConverter, DepthConverterFactory } from '../physics/depth-converter';
+import { Time } from '../physics/Time';
+import { DtoSerialization } from './DtoSerialization';
 import {
-    AverageDepth, Segments, Tanks, ProfileEvents, DepthConverterFactory, Consumption, Time, Diver, OtuCalculator,
-    CnsCalculator, DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm, RestingParameters, Segment,
-    PlanFactory, ConsumptionOptions, Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas, BreathingModel,
-    BreathingModelFactory, DepthConverter, Options, ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
-    ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto, PlanRequestDto, SegmentDto, DtoSerialization
-} from 'scuba-physics';
+    ConsumptionRequestDto, ConsumptionResultDto, DiveInfoRequestDto, DiveInfoResultDto,
+    PlanRequestDto, ProfileRequestDto, ProfileResultDto, SegmentDto
+} from './serialization.model';
 
+/** Planning pipeline run by the background workers of the application and by the MCP server */
 export class PlanningTasks {
     /** 1. Calculate profile */
     public static calculateDecompression(task: ProfileRequestDto): ProfileResultDto {

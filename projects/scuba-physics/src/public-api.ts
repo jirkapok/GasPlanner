@@ -58,5 +58,6 @@ export * from './lib/physics/units';
 export * from './lib/workers/MetricRanges';
 export * from './lib/workers/serialization.model';
 export * from './lib/workers/DtoSerialization';
+export * from './lib/workers/PlanningTasks';
 export * from './lib/calculators/weight';
 export { GasNames } from './lib/gases/GasNames';

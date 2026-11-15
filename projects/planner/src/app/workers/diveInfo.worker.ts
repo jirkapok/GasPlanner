@@ -1,6 +1,5 @@
 /// <reference lib="webworker" />
-import { DiveInfoRequestDto } from 'scuba-physics';
-import { PlanningTasks } from './planning.tasks';
+import { DiveInfoRequestDto, PlanningTasks } from 'scuba-physics';
 
 addEventListener('message', ({ data }: MessageEvent<DiveInfoRequestDto>) => {
     const response = PlanningTasks.diveInfo(data);

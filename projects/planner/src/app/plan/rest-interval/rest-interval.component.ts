@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Component, effect, signal } from '@angular/core';
+import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { MaskitoDirective } from '@maskito/angular';
 import { maskitoTime } from '@maskito/kit';
@@ -19,92 +19,87 @@ import { DateFormats } from '../../shared/formaters';
     styleUrls: ['./rest-interval.component.scss'],
     imports: [
         MaskitoDirective,
-        ReactiveFormsModule,
+        FormField,
         MdbDropdownModule,
         MdbFormsModule,
         TranslatePipe
     ]
 })
-export class RestIntervalComponent extends Streamed implements OnInit {
-    @Input() public form!: FormGroup;
-    @Input() public controlName = 'restInterval';
+export class RestIntervalComponent extends Streamed {
+    protected restModel = signal({
+        restInterval: '00:00'
+    });
 
-    public readonly maskitoTimeOptions = maskitoTime({
+    protected restForm = form(this.restModel, path => {
+        this.validators.restInterval(path.restInterval)
+    });
+    protected readonly maskitoTimeOptions = maskitoTime({
         mode: 'HH:MM',
-        timeSegmentMaxValues: { hours: 48 }
+        timeSegmentMaxValues: { hours: 24 }
     });
 
     constructor(
         private schedules: DiveSchedules,
-        private fb: NonNullableFormBuilder,
         private dispatcher: ReloadDispatcher,
-        private validators: ValidatorGroups) {
+        private validators: ValidatorGroups
+    ) {
         super();
+
+        this.restModel.set({ restInterval: this.restInterval });
+
+        this.setupRestIntervalSync();
+
+        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(() => this.reload());
     }
 
-    public get restIntervalInvalid(): boolean {
-        const restControl = this.form.get(this.controlName) as AbstractControl;
-        return InputControls.isControlInvalid(restControl);
+    protected get restIntervalInvalid(): boolean {
+        const restField = this.restForm.restInterval();
+        return InputControls.isFieldInvalid(restField);
     }
 
     private get restInterval(): string {
         return DateFormats.formatShortTime(this.schedules.restInterval);
     }
 
-    public ngOnInit(): void {
-        if(!this.form) {
-            this.form = this.fb.group([]);
-            const control = this.fb.control(this.restInterval, [
-                this.validators.restInterval()
-            ]);
-            this.form.addControl(this.controlName, control);
-        }
-
-        this.dispatcher.depthChanged$.pipe(takeUntil(this.unsubscribe$))
-            .subscribe(() => {
-                this.reload();
-            });
-    }
-
-    public apply0Minutes(): void {
+    protected apply0Minutes(): void {
         this.schedules.apply0MinutesRestInterval();
         this.reload();
     }
 
-    public applyOneHour(): void {
+    protected applyOneHour(): void {
         this.schedules.applyOneHourRestInterval();
         this.reload();
     }
 
-    public apply30Minutes(): void {
+    protected apply30Minutes(): void {
         this.schedules.apply30MinutesRestInterval();
         this.reload();
     }
 
-    public apply2Hours(): void {
+    protected apply2Hours(): void {
         this.schedules.apply2HoursRestInterval();
         this.reload();
     }
 
-    public restIntervalChanged(): void {
-        if (this.form.invalid) {
-            return;
-        }
+    private setupRestIntervalSync(): void {
+        effect(() => {
+            const field = this.restForm.restInterval();
 
-        const field = this.form.get(this.controlName) as FormControl<string | null>;
-        this.setRestInterval(field.value);
+            if (field.valid()) {
+                this.setRestInterval(field.value());
+            }
+        });
     }
 
-    private setRestInterval(newValue?: string | null) {
+    private setRestInterval(newValue: string) {
         const parsed = DateFormats.parseToShortTime(newValue);
 
-        if(parsed) {
+        if (parsed !== null && parsed !== undefined) {
             this.schedules.restInterval = parsed;
         }
     }
 
     private reload(): void {
-        this.form.patchValue({
-            [this.controlName]: this.restInterval
-        });
+        this.restModel.set({ restInterval: this.restInterval });
     }}

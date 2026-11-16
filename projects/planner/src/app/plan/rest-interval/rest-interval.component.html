@@ -1,10 +1,10 @@
-<div [formGroup]="form">
+<div>
     <label for="rest-interval" class="form-label" mdbLabel>
         {{ 'restInterval.label' | translate }} [min]:
     </label>
     <div class="input-group dropdown" mdbDropdown>
-        <input id="rest-interval" [formControlName]="controlName" class="form-control" type="text"
-            [class.is-invalid]="restIntervalInvalid" (input)="restIntervalChanged()"
+        <input id="rest-interval" class="form-control" type="text"
+            [class.is-invalid]="restIntervalInvalid" [formField]="restForm.restInterval"
             [maskito]="maskitoTimeOptions" placeholder="HH:MM" />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle>

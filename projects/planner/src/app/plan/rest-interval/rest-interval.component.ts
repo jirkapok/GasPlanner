@@ -17,7 +17,6 @@ import { DateFormats } from '../../shared/formaters';
     selector: 'app-rest-interval',
     templateUrl: './rest-interval.component.html',
     styleUrls: ['./rest-interval.component.scss'],
-    changeDetection: ChangeDetectionStrategy.Eager,
     imports: [
         MaskitoDirective,
         ReactiveFormsModule,

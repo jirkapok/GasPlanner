@@ -140,19 +140,18 @@ export class ProfileComparatorService extends Streamed {
 
     public get overPressures(): SaturationComparison {
         if (this.alignByEnd) {
-            return this.endAlignedOverPressures
+            return this.endAlignedOverPressures;
         }
-        return this.startAlignedOverPressures
-
+        return this.startAlignedOverPressures;
     }
 
     private get startAlignedOverPressures(): SaturationComparison {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const aIsLonger = durationDiff > 0;
         const rest = this.restInterval;
         const diff = Math.abs(durationDiff);
 
-        return aIsLonger
+        // If A is longer
+        return durationDiff > 0
             ? {
                 profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest),
                 profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest + diff)
@@ -160,17 +159,17 @@ export class ProfileComparatorService extends Streamed {
             : {
                 profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest + diff),
                 profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest)
-            }
+            };
     }
 
     private get endAlignedOverPressures(): SaturationComparison {
         const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const aIsLonger = durationDiff > 0;
         const pressuresA = this.profileA.overPressuresWithSurfaceInterval(this.restInterval);
         const pressuresB = this.profileB.overPressuresWithSurfaceInterval(this.restInterval);
         const lenDiff = Math.abs(pressuresA.length - pressuresB.length);
 
-        return aIsLonger
+        // If A is longer
+        return durationDiff > 0
             ? {
                 profileAOverPressures: pressuresA,
                 profileBOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresB]
@@ -178,7 +177,7 @@ export class ProfileComparatorService extends Streamed {
             : {
                 profileAOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresA],
                 profileBOverPressures: pressuresB
-            }
+            };
     }
 
     /** Deep-copied waypoints with offset applied */

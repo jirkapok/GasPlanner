@@ -1,11 +1,17 @@
-<div>
-    <label for="rest-interval" class="form-label" mdbLabel>
+<div class="d-inline-flex flex-column">
+    <label for="rest-interval" class="form-label mb-1" mdbLabel>
         {{ 'restInterval.label' | translate }} [min]:
     </label>
-    <div class="input-group dropdown" mdbDropdown>
-        <input id="rest-interval" class="form-control" type="text"
-            [class.is-invalid]="restIntervalInvalid" [formField]="restForm.restInterval"
-            [maskito]="maskitoTimeOptions" placeholder="HH:MM" />
+    <div class="input-group w-auto dropdown" mdbDropdown>
+        <input id="rest-interval"
+            class="form-control"
+            type="text"
+            size="5"
+            [class.is-invalid]="restIntervalInvalid"
+            [formField]="restForm.restInterval"
+            [maskito]="maskitoTimeOptions"
+            placeholder="HH:MM"
+        />
         <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false"
             type="button" data-mdb-toggle="dropdown" mdbDropdownToggle>
         </button>

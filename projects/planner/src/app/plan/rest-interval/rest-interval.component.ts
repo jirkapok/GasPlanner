@@ -95,7 +95,11 @@ export class RestIntervalComponent extends Streamed {
     private setRestInterval(newValue: string) {
         const parsed = DateFormats.parseToShortTime(newValue);
 
-        if (parsed !== null && parsed !== undefined) {
+        if (
+            parsed !== null &&
+            parsed !== undefined &&
+            parsed !== this.schedules.restInterval
+        ) {
             this.schedules.restInterval = parsed;
         }
     }

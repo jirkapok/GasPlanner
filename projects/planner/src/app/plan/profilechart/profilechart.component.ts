@@ -23,12 +23,13 @@ import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.c
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { RestIntervalComponent } from '../rest-interval/rest-interval.component';
 
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent, RestIntervalComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;

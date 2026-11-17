@@ -19,6 +19,7 @@ import { provideTestTranslate } from '../../../testing/translate-testing.helpers
 import { renderOnPush } from '../../../testing/onPush.testing';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -33,7 +34,8 @@ describe('ProfileChartComponent', () => {
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
                 StopsFilter, ViewSwitchService,
-                DatePipe, provideTestTranslate()
+                DatePipe, ValidatorGroups,
+                provideTestTranslate()
             ]
         });
 
@@ -233,7 +235,7 @@ describe('ProfileChartComponent OnPush', () => {
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
                 StopsFilter, ViewSwitchService,
-                provideTestTranslate()
+                ValidatorGroups, provideTestTranslate()
             ]
         });
 

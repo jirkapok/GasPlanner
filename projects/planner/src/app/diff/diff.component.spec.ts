@@ -19,6 +19,7 @@ import { GasesComparisonService } from '../shared/diff/gases-comparison.service'
 import { ResultsComparison } from '../shared/diff/results-comparison.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { LanguageService } from '../shared/language.service';
+import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 describe('DiffComponent', () => {
     const defaultState = {
@@ -43,7 +44,8 @@ describe('DiffComponent', () => {
                 ApplicationSettingsService, ResamplingService,
                 SelectedDiffWaypoint, GasesComparisonService,
                 ResultsComparison, MdbModalService,
-                provideNoopAnimations(), provideTestTranslate(), LanguageService
+                ValidatorGroups, provideNoopAnimations(),
+                provideTestTranslate(), LanguageService
             ]
         });
         fixture = TestBed.createComponent(DiffComponent);

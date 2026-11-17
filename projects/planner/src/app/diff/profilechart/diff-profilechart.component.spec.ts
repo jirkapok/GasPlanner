@@ -13,6 +13,7 @@ import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.service';
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { ProfileTissues } from 'scuba-physics';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
 
 export class ProfileDifferenceChartPage {
     constructor(private fixture: ComponentFixture<ProfileDifferenceChartComponent>) { }
@@ -43,6 +44,7 @@ describe('ProfileDifferenceChartComponent', () => {
                 ReloadDispatcher,
                 SelectedDiffWaypoint,
                 DatePipe,
+                ValidatorGroups,
                 provideTestTranslate()
             ]
         });

@@ -1,23 +1,26 @@
 <div class="card">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <div class="float-start">
+    <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2">
+        <div class="d-flex align-items-center title-group">
             <fa-icon [icon]="icon" class="me-3" flip="vertical"></fa-icon>
             <span>{{ 'diffProfileChart.cardTitle' | translate }}</span>
         </div>
 
-        <div class="float-end d-flex align-items-center gap-2 me-1">
+        <div class="d-flex flex-wrap align-items-center gap-2 ms-auto">
             <div class="d-flex align-items-center ms-3 me-1">
                 <app-rest-interval />
             </div>
 
             <div class="form-check form-switch">
                 <input type="checkbox" class="form-check-input" id="alignByEnd" [checked]="alignByEnd"
-                 (change)="toggleAlignByEnd()" mdbCheckbox data-testid="align-by-end-button" />
-                <label class="custom-control-label" for="alignByEnd">{{ 'diffProfileChart.alignByEnd' | translate }}</label>
+                    (change)="toggleAlignByEnd()" mdbCheckbox data-testid="align-by-end-button" />
+                <label class="custom-control-label" for="alignByEnd">
+                    {{ 'diffProfileChart.alignByEnd' | translate }}
+                </label>
             </div>
 
-            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button" data-toggle="button"
-                [attr.aria-pressed]="showHeatMap" autocomplete="off" (click)="toggleHeatMap()" data-testid="heat-map-button">
+            <button class="btn btn-sm btn-secondary" [ngClass]="{ 'active': showHeatMap }" type="button"
+                data-toggle="button" [attr.aria-pressed]="showHeatMap" autocomplete="off"
+                (click)="toggleHeatMap()" data-testid="heat-map-button">
                 <fa-icon [icon]="heatmapIcon" class="fa-lg"></fa-icon>
             </button>
         </div>

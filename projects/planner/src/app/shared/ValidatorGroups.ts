@@ -160,6 +160,7 @@ export class ValidatorGroups {
             return null;
         });
     }
+
     /**
      * Form group validator: eCCR descent setpoint can't be higher than the bottom setpoint.
      * Sets the descentAboveBottom error on the group.

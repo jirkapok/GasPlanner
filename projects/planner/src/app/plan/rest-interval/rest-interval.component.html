@@ -1,35 +1,37 @@
 <div class="d-inline-flex flex-column">
-    <label for="rest-interval" class="form-label mb-1" mdbLabel>
-        {{ 'restInterval.label' | translate }} [min]:
-    </label>
-    <div class="input-group w-auto dropdown" mdbDropdown>
-        <input id="rest-interval"
-            class="form-control"
-            type="text"
-            size="5"
-            [class.is-invalid]="restIntervalInvalid"
-            [formField]="restForm.restInterval"
-            [maskito]="maskitoTimeOptions"
-            placeholder="HH:MM"
-            data-testid="interval-input"
-        />
-        <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false"
-            type="button" data-mdb-toggle="dropdown" mdbDropdownToggle data-testid="dropdown-button">
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
-            <li (click)="apply0Minutes()" data-testid="0-minutes">
-                <a class="dropdown-item">{{ 'restInterval.zeroMinutes' | translate }}</a>
-            </li>
-            <li (click)="apply30Minutes()" data-testid="30-minutes">
-                <a class="dropdown-item">{{ 'restInterval.thirtyMinutes' | translate }}</a>
-            </li>
-            <li (click)="applyOneHour()" data-testid="1-hour">
-                <a class="dropdown-item">{{ 'restInterval.oneHour' | translate }}</a>
-            </li>
-            <li (click)="apply2Hours()" data-testid="2-hours">
-                <a class="dropdown-item">{{ 'restInterval.twoHours' | translate }}</a>
-            </li>
-        </ul>
+    <div class="d-flex flex-nowrap align-items-center">
+        <label for="rest-interval" class="form-label text-nowrap mb-0 me-2" mdbLabel>
+            {{ 'restInterval.label' | translate }} [min]:
+        </label>
+        <div class="input-group flex-nowrap w-auto dropdown" mdbDropdown>
+            <input id="rest-interval"
+                class="form-control"
+                type="text"
+                size="5"
+                [class.is-invalid]="restIntervalInvalid"
+                [formField]="restForm.restInterval"
+                [maskito]="maskitoTimeOptions"
+                placeholder="HH:MM"
+                data-testid="interval-input"
+            />
+            <button class="btn btn-default dropdown-toggle dropdown-toggle-split" aria-expanded="false"
+                type="button" data-mdb-toggle="dropdown" mdbDropdownToggle data-testid="dropdown-button">
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end" mdbDropdownMenu>
+                <li (click)="apply0Minutes()" data-testid="0-minutes">
+                    <a class="dropdown-item">{{ 'restInterval.zeroMinutes' | translate }}</a>
+                </li>
+                <li (click)="apply30Minutes()" data-testid="30-minutes">
+                    <a class="dropdown-item">{{ 'restInterval.thirtyMinutes' | translate }}</a>
+                </li>
+                <li (click)="applyOneHour()" data-testid="1-hour">
+                    <a class="dropdown-item">{{ 'restInterval.oneHour' | translate }}</a>
+                </li>
+                <li (click)="apply2Hours()" data-testid="2-hours">
+                    <a class="dropdown-item">{{ 'restInterval.twoHours' | translate }}</a>
+                </li>
+            </ul>
+        </div>
     </div>
     @if (restIntervalInvalid) {
         <div class="text-danger form-text" data-testid="error-message">

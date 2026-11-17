@@ -125,9 +125,24 @@ describe('RestIntervalComponent', () => {
         expect(schedules.restInterval).toBe(DateFormats.parseToShortTime('02:00'));
     });
 
-    it('shows an error message when input is invalid', async () => {
-        await enterInterval('invalid');
+    it('accepts exactly 24 hours', async () => {
+        await enterInterval('24:00');
 
+        expect(page.errorMessage).toBeNull();
+        expect(schedules.restInterval).toBe(DateFormats.parseToShortTime('24:00'));
+    });
+
+    it('shows an error when Maskito clears unparseable input', async () => {
+        await enterInterval('abc');
+
+        expect(page.durationInput.value).toBe('');
+        expect(page.errorMessage).not.toBeNull();
+    });
+
+    it('shows an error for an interval greater than 24 hours', async () => {
+        await enterInterval('24:01');
+
+        expect(page.durationInput.value).toBe('24:01');
         expect(page.errorMessage).not.toBeNull();
     });
 });

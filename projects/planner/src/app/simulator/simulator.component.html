@@ -1,0 +1,248 @@
+<main class="simulator-page container-fluid pt-5 pb-5">
+  <div class="simulator-content">
+    <header class="simulator-heading d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 pb-4">
+      <div>
+        <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+          <span class="eyebrow">Gas Planner · Dive simulator</span>
+          <span class="status-pill"><span class="status-dot"></span>Active simulation</span>
+        </div>
+        <h1>Decompression dive simulation</h1>
+        <p class="text-muted mb-0">Bühlmann ZHL-16C + GF 30/70 · Normoxic trimix TX 21/35 with EAN50 &amp; O₂ deco</p>
+      </div>
+      <div class="d-flex gap-2 flex-wrap">
+        <button type="button" class="btn btn-secondary btn-sm">⇩ Export UDDF</button>
+        <button type="button" class="btn btn-primary btn-sm">⚙ Edit profile</button>
+      </div>
+    </header>
+
+    <section class="card selector-card" aria-label="Simulation selection">
+      <div class="card-body row g-3">
+        <div class="col-12 col-md-6">
+          <label for="select-dive" class="form-label">Dive</label>
+          <select id="select-dive" class="form-select">
+            <option selected>Dive #142 — Blue Hole Dahab (42 m, TX 21/35)</option>
+            <option>Dive #141 — Ras Mohamed (32 m, EAN32)</option>
+            <option>Dive #140 — Svoboda Wreck (28 m, Air)</option>
+          </select>
+        </div>
+        <div class="col-12 col-md-6">
+          <label for="select-computer" class="form-label">Dive computer</label>
+          <select id="select-computer" class="form-select">
+            <option selected>Shearwater Perdix 2 Ti</option>
+            <option>Shearwater Petrel 3</option>
+            <option>Garmin Descent Mk3i</option>
+            <option>Suunto EON Steel</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <div class="row g-4 mt-1 align-items-start">
+      <div class="col-12 col-lg-5 col-xl-4">
+        <section class="card mb-4">
+          <app-card-header [cardTitle]="'Virtual HUD computer'" [headerIcon]="computerIcon"></app-card-header>
+          <div class="card-body">
+            <div class="computer-frame">
+              <div class="computer-brand">
+                <span class="brand-name"><span class="status-dot"></span> SHEARWATER</span>
+                <span class="computer-model">PERDIX 2 Ti</span>
+              </div>
+
+              <div class="computer-screen">
+                <div class="screen-top">
+                  <div class="screen-reading">
+                    <span class="screen-label">DEPTH <small>m</small></span>
+                    <strong class="depth-value">34.9</strong>
+                    <span class="screen-caption">MAX <b>38.4 m</b><span>AVG</span><b>24.2 m</b></span>
+                  </div>
+                  <div class="screen-reading text-end">
+                    <span class="screen-label">TIME <small>min</small></span>
+                    <strong class="time-value">28:45</strong>
+                    <span class="screen-caption justify-content-end"><span class="status-dot green"></span><b class="green-text">DIVING</b><span>·</span><span>TTS: <b class="amber-text">14m</b></span></span>
+                  </div>
+                </div>
+
+                <div class="deco-readings">
+                  <div><span class="screen-label amber-text">↑ STOP</span><strong class="deco-value">6.0 <small>m</small></strong></div>
+                  <div class="text-center"><span class="screen-label amber-text">TIME</span><strong class="deco-value">3 <small>min</small></strong></div>
+                  <div class="text-end"><span class="screen-label">SURF GF</span><strong class="gf-value">72%</strong><span class="screen-caption">GF 50 / 70</span></div>
+                </div>
+
+                <div class="gas-readings">
+                  <div>
+                    <div class="screen-label">GAS <span class="mod-pill">MOD 42m</span></div>
+                    <strong class="gas-value">TX 21/35</strong>
+                    <span class="screen-caption">PO₂: <b class="green-text">1.14</b><span>·</span>END: <b>18m</b></span>
+                  </div>
+                  <div class="text-end">
+                    <span class="screen-label">T1 TANK</span>
+                    <strong class="tank-value">141 <small>BAR</small></strong>
+                    <span class="screen-caption">SAC: <b>14.8</b> L/min</span>
+                  </div>
+                </div>
+
+                <div class="ascent-row">
+                  <span>ASCENT</span>
+                  <div class="ascent-track"><span></span></div>
+                  <b class="green-text">9 m/min (OK)</b>
+                </div>
+              </div>
+              <div class="computer-footer"><span>AIR · NITROX · TRIMIX · CCR</span><span>DEPTH RATED 260m</span></div>
+            </div>
+
+            <div class="computer-summary">
+              <span>SAC: <b>14.8 L/min</b></span>
+              <span>ppO₂: <b>1.14 bar</b></span>
+              <span>MOD: <b>42.0 m</b></span>
+            </div>
+
+            <div class="transport-controls">
+              <button type="button" class="btn btn-secondary btn-sm" aria-label="Previous sample">|◀</button>
+              <button type="button" class="btn btn-secondary btn-sm" aria-label="Jump backward">◀◀</button>
+              <button type="button" class="btn btn-primary play-button" aria-label="Play simulation">▶</button>
+              <button type="button" class="btn btn-secondary btn-sm" aria-label="Jump forward">▶▶</button>
+              <button type="button" class="btn btn-secondary btn-sm" aria-label="Next sample">▶|</button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mt-3">
+              <div class="step-picker"><span>STEP</span><b>1s</b><span>5s</span><span>10s</span><span>30s</span></div>
+              <div class="speed-picker"><span>0.5×</span><b>1×</b><span>2×</span><span>5×</span><span>10×</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <app-card-header [cardTitle]="'Gas & tank status'" [headerIcon]="gasIcon"></app-card-header>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="small text-muted">Remaining pressure / reserve</span>
+              <span class="small font-monospace">Reserve: 50 bar</span>
+            </div>
+            <div class="gas-item">
+              <div class="d-flex justify-content-between"><strong>Back gas · TX 21/35</strong><span class="font-monospace">141 / 200 bar</span></div>
+              <div class="progress gas-progress mt-2"><div class="progress-bar bg-success" style="width:70.5%"></div><span class="reserve-marker" style="left:25%"></span></div>
+              <div class="d-flex justify-content-between small text-muted mt-1"><span>MOD 42 m</span><span>Reserve 50 bar</span></div>
+            </div>
+            <div class="gas-item mt-4">
+              <div class="d-flex justify-content-between"><strong>Deco gas · EAN 50</strong><span class="font-monospace">185 / 200 bar</span></div>
+              <div class="progress gas-progress mt-2"><div class="progress-bar bg-info" style="width:92.5%"></div><span class="reserve-marker" style="left:25%"></span></div>
+              <div class="d-flex justify-content-between small text-muted mt-1"><span>MOD 21 m</span><span>Reserve 50 bar</span></div>
+            </div>
+            <div class="gas-item mt-4">
+              <div class="d-flex justify-content-between"><strong>Oxygen · O₂</strong><span class="font-monospace">190 / 200 bar</span></div>
+              <div class="progress gas-progress mt-2"><div class="progress-bar bg-warning" style="width:95%"></div><span class="reserve-marker" style="left:25%"></span></div>
+              <div class="d-flex justify-content-between small text-muted mt-1"><span>MOD 6 m</span><span>Reserve 50 bar</span></div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-12 col-lg-7 col-xl-8">
+        <section class="card mb-4">
+          <app-card-header [cardTitle]="'Dive profile'" [headerIcon]="profileIcon"></app-card-header>
+          <div class="card-body">
+            <div class="chart-legend">
+              <span><i class="legend-line depth-line"></i>Depth profile</span>
+              <span><i class="legend-line avg-line"></i>Average depth</span>
+              <span><i class="legend-line ceiling-line"></i>Deco ceiling</span>
+            </div>
+            <div class="profile-chart">
+              <svg viewBox="0 0 720 260" role="img" aria-label="Depth versus time dive profile">
+                <line class="chart-grid" x1="58" y1="30" x2="700" y2="30"></line>
+                <line class="chart-grid" x1="58" y1="80" x2="700" y2="80"></line>
+                <line class="chart-grid" x1="58" y1="130" x2="700" y2="130"></line>
+                <line class="chart-grid" x1="58" y1="180" x2="700" y2="180"></line>
+                <line class="chart-grid" x1="58" y1="30" x2="58" y2="205"></line>
+                <line class="chart-grid" x1="218" y1="30" x2="218" y2="205"></line>
+                <line class="chart-grid" x1="379" y1="30" x2="379" y2="205"></line>
+                <line class="chart-grid" x1="539" y1="30" x2="539" y2="205"></line>
+                <line class="chart-grid" x1="700" y1="30" x2="700" y2="205"></line>
+                <text class="chart-label" x="48" y="34" text-anchor="end">0 m</text>
+                <text class="chart-label" x="48" y="84" text-anchor="end">15 m</text>
+                <text class="chart-label" x="48" y="134" text-anchor="end">30 m</text>
+                <text class="chart-label" x="48" y="184" text-anchor="end">45 m</text>
+                <text class="chart-label" x="58" y="226" text-anchor="middle">0</text>
+                <text class="chart-label" x="218" y="226" text-anchor="middle">10</text>
+                <text class="chart-label" x="379" y="226" text-anchor="middle">20</text>
+                <text class="chart-label" x="539" y="226" text-anchor="middle">30</text>
+                <text class="chart-label" x="700" y="226" text-anchor="middle">40 min</text>
+                <path class="ceiling-area" d="M58 30 L115 53 L190 70 L270 88 L350 104 L420 122 L495 140 L570 153 L640 164 L700 170 L700 30 Z"></path>
+                <path class="ceiling-curve" d="M58 30 L115 53 L190 70 L270 88 L350 104 L420 122 L495 140 L570 153 L640 164 L700 170"></path>
+                <path class="depth-area" d="M58 30 L83 89 L125 126 L175 143 L250 146 L330 146 L405 146 L470 144 L520 138 L550 119 L580 99 L610 78 L640 58 L670 39 L700 30 Z"></path>
+                <path class="average-curve" d="M58 30 L87 87 L142 125 L205 139 L285 140 L365 141 L445 140 L520 137 L570 105 L620 70 L670 35"></path>
+                <path class="depth-curve" d="M58 30 L83 89 L125 126 L175 143 L250 146 L330 146 L405 146 L470 144 L520 138 L550 119 L580 99 L610 78 L640 58 L670 39 L700 30"></path>
+                <line class="playhead" x1="450" y1="30" x2="450" y2="205"></line>
+                <circle class="average-point" cx="450" cy="140" r="4"></circle>
+                <circle class="depth-point" cx="450" cy="145" r="5"></circle>
+              </svg>
+            </div>
+          </div>
+        </section>
+
+        <section class="card mb-4">
+          <app-card-header [cardTitle]="'Simulation playback'" [headerIcon]="playbackIcon"></app-card-header>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-2">
+              <div class="playback-time"><strong>00:28:45</strong><span>/</span><span>00:58:20</span></div>
+              <div class="small text-muted"><span class="deco-key"></span> Deco phase (+22:00) <span class="mx-2">·</span> Sampling: 1s</div>
+            </div>
+            <div class="timeline"><span class="deco-range"></span><span class="timeline-progress"></span><span class="timeline-thumb"></span></div>
+            <div class="playback-options">
+              <div class="button-group" aria-label="Playback controls">
+                <button type="button" class="btn btn-light btn-sm" aria-label="Previous sample">|◀</button>
+                <button type="button" class="btn btn-light btn-sm" aria-label="Back 10 seconds">◀◀</button>
+                <button type="button" class="btn btn-primary play-button" aria-label="Play">▶</button>
+                <button type="button" class="btn btn-light btn-sm" aria-label="Forward 10 seconds">▶▶</button>
+                <button type="button" class="btn btn-light btn-sm" aria-label="Next sample">▶|</button>
+              </div>
+              <div class="step-picker"><span>STEP</span><b>1s</b><span>5s</span><span>10s</span><span>30s</span></div>
+              <div class="speed-picker"><span>0.5×</span><b>1×</b><span>2×</span><span>5×</span><span>10×</span></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="card">
+          <app-card-header [cardTitle]="'Key events & planned deco stops'" [headerIcon]="eventsIcon"></app-card-header>
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="text-muted small">Dive timeline</span>
+              <span class="small font-monospace">6 defined milestones</span>
+            </div>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle event-table mb-0">
+                <thead class="table-light">
+                  <tr><th>Time</th><th>Depth</th><th>Event</th><th>Active gas</th><th>Duration</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="font-monospace">00:00</td><td class="font-monospace">0.0 m</td><td>Descent start</td>
+                    <td><span class="gas-label">TX 21/35</span></td><td>2 min</td><td><span class="event-complete">✓ Completed</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-monospace">02:30</td><td class="font-monospace">42.0 m</td><td>Max depth reached</td>
+                    <td><span class="gas-label">TX 21/35</span></td><td>20 min on bottom</td><td><span class="event-complete">✓ Completed</span></td>
+                  </tr>
+                  <tr class="current-event">
+                    <td class="font-monospace fw-bold">24:00</td><td class="font-monospace fw-bold">21.0 m</td><td class="fw-semibold">Gas switch &amp; first deco stop</td>
+                    <td><span class="gas-label deco-gas">EAN 50</span></td><td>3 min</td><td><span class="event-current">● In progress</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-monospace">31:00</td><td class="font-monospace">12.0 m</td><td>Deco stop 12 m</td>
+                    <td><span class="gas-label deco-gas">EAN 50</span></td><td>5 min</td><td><span class="text-muted">Planned</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-monospace">38:00</td><td class="font-monospace">6.0 m</td><td>Last decompression stop</td>
+                    <td><span class="gas-label deco-gas">EAN 50</span></td><td>14 min</td><td><span class="text-muted">Planned</span></td>
+                  </tr>
+                  <tr>
+                    <td class="font-monospace">55:00</td><td class="font-monospace">3.0 m</td><td>Safety stop</td>
+                    <td><span class="gas-label deco-gas">EAN 50</span></td><td>3 min</td><td><span class="text-muted">Planned</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>

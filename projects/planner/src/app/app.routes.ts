@@ -22,6 +22,7 @@ import { RedundanciesComponent } from './calculators/redundancies/redundancies.c
 import { GasBlenderComponent } from './calculators/gas-blender/gas-blender.component';
 import { HelpComponent } from './help/help.component';
 import { LearnComponent } from './learn/learn.component';
+import { SimulatorComponent } from './simulator/simulator.component';
 
 const canActivateDashboard: CanActivateFn = (route: ActivatedRouteSnapshot): boolean | UrlTree => {
     const router = inject(Router);
@@ -53,6 +54,7 @@ export const routes: Routes = [
     { path: KnownViews.redundancies, component: RedundanciesComponent },
     { path: KnownViews.blender, component: GasBlenderComponent },
     { path: KnownViews.learn, component: LearnComponent },
+    { path: KnownViews.simulator, component: SimulatorComponent },
     { path: `${KnownViews.help}/:document/:anchor`, component: HelpComponent },
     { path: `${KnownViews.help}/:document`, component: HelpComponent },
     { path: KnownViews.help, redirectTo: `${KnownViews.help}/application`, pathMatch: 'full' },

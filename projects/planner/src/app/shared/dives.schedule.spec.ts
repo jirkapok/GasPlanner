@@ -275,4 +275,16 @@ describe('Scheduled dives', () => {
             expect(sut.restInterval).toEqual(1800);
         });
     });
+
+    describe('Dive Tissue Over Pressures', () => {
+        it('returns dive tissues', () => {
+            const tissues = sut.selected.diveResult.tissueOverPressures;
+            expect(sut.selected.overPressuresWithSurfaceInterval()).toEqual(tissues);
+        });
+
+        it('appends tissues when surface interval is specified', () => {
+            const originalLength = sut.selected.diveResult.tissueOverPressures.length;
+            expect(sut.selected.overPressuresWithSurfaceInterval(3600).length).toBeGreaterThan(originalLength);
+        });
+    });
 });

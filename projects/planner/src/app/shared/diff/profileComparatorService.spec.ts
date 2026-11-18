@@ -1,4 +1,4 @@
-import { MockInstance } from 'vitest';
+import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { inject, TestBed } from '@angular/core/testing';
 import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
@@ -20,6 +20,19 @@ describe('ProfileComparatorService', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
+
+    const setDiveDurations = (durationA: number, durationB: number): void => {
+        schedules.add();
+        sut.selectProfile(1);
+
+        const units = TestBed.inject(UnitConversion);
+        schedules.dives[0].diveResult.updateProfile([
+            WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationA))
+        ], irrelevantTissues, []);
+        schedules.dives[1].diveResult.updateProfile([
+            WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
+        ], irrelevantTissues, []);
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -191,19 +204,6 @@ describe('ProfileComparatorService', () => {
     });
 
     describe('Offsets', () => {
-        const setDiveDurations = (durationA: number, durationB: number): void => {
-            schedules.add();
-            sut.selectProfile(1);
-
-            const units = TestBed.inject(UnitConversion);
-            schedules.dives[0].diveResult.updateProfile([
-                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationA))
-            ], irrelevantTissues, []);
-            schedules.dives[1].diveResult.updateProfile([
-                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
-            ], irrelevantTissues, []);
-        };
-
         it('Returns correct offsets when alignByEnd is false on differing dives', () => {
             setDiveDurations(500, 700);
 
@@ -239,6 +239,55 @@ describe('ProfileComparatorService', () => {
             sut.alignByEnd = false;
             expect(sut.profileATimeOffset).toEqual(0);
             expect(sut.profileBTimeOffset).toEqual(0);
+        });
+    });
+
+    describe('Tissue Over Pressures', () => {
+        it('Returns just dive result tissues by default', () => {
+            const tissues = sut.overPressures;
+            const tissuesA = sut.profileAResults.tissueOverPressures;
+            const tissuesB = sut.profileBResults.tissueOverPressures;
+
+            expect(tissues).toEqual({
+                profileAOverPressures: tissuesA,
+                profileBOverPressures: tissuesB
+            });
+        });
+
+        it('Pads shorter dive', () => {
+            setDiveDurations(700, 500);
+
+            const originalLength = sut.profileBResults.tissueOverPressures.length;
+            const diffLength = sut.overPressures.profileBOverPressures.length;
+
+            expect(diffLength).toBeGreaterThan(originalLength);
+        });
+
+        it('Pads shorter dive without affecting longer dive', () => {
+            setDiveDurations(700, 500);
+
+            const originalLength = sut.profileAResults.tissueOverPressures.length;
+            const diffLength = sut.overPressures.profileAOverPressures.length;
+
+            expect(diffLength).toBe(originalLength);
+        });
+
+        it('Applies rest interval to dive A', () => {
+            schedules.restInterval = 1800;
+
+            const originalLength = sut.profileAResults.tissueOverPressures.length;
+            const diffLength = sut.overPressures.profileAOverPressures.length;
+
+            expect(diffLength).toBeGreaterThan(originalLength);
+        });
+
+        it('Applies rest interval to dive B', () => {
+            schedules.restInterval = 1800;
+
+            const originalLength = sut.profileBResults.tissueOverPressures.length;
+            const diffLength = sut.overPressures.profileBOverPressures.length;
+
+            expect(diffLength).toBeGreaterThan(originalLength);
         });
     });
 

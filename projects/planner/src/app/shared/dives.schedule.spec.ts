@@ -8,6 +8,7 @@ import { CircuitNames } from './circuit-names.service';
 import { useEnglishCircuitNames } from './circuit-names.testing';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { CircuitType, HighestDensity, ProfileTissues, Tank, Time } from 'scuba-physics';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;
@@ -256,6 +257,22 @@ describe('Scheduled dives', () => {
             await new Promise(resolve => setTimeout(resolve, 500));
             const states = _(sut.dives).map(d => d.diveResult.calculated).value();
             expect(states).toEqual([ true, false, false, true ]);
+        });
+    });
+
+    describe('Rest Inverval', () => {
+        it('is 0 by default', () => {
+            expect(sut.restInterval).toEqual(0);
+        });
+
+        it('gets set', () => {
+            sut.restInterval = 7200;
+            expect(sut.restInterval).toEqual(7200);
+        });
+
+        it('gets set through helper method', () => {
+            sut.apply30MinutesRestInterval();
+            expect(sut.restInterval).toEqual(1800);
         });
     });
 });

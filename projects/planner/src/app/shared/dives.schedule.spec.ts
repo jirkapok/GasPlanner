@@ -266,7 +266,12 @@ describe('Scheduled dives', () => {
             expect(sut.selected.overPressuresWithSurfaceInterval()).toEqual(tissues);
         });
 
+        it('returns no tissues while dive info is not calculated', () => {
+            expect(sut.selected.overPressuresWithSurfaceInterval(3600)).toEqual([]);
+        });
+
         it('appends tissues when surface interval is specified', () => {
+            sut.selected.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
             const originalLength = sut.selected.diveResult.tissueOverPressures.length;
             expect(sut.selected.overPressuresWithSurfaceInterval(3600).length).toBeGreaterThan(originalLength);
         });

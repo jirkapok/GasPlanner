@@ -253,6 +253,13 @@ export class DiveTracesBuilder {
         return this.namePrefixKey ? `${this.namePrefixKey}.` : '';
     }
 
+    /** Time in seconds where this dive ends on the chart, including time offset and the rest interval after the dive */
+    public get chartEnd(): number {
+        const dive = this.dive();
+        const restInterval = dive.endsOnSurface ? this.restInterval() : 0;
+        return this.timeOffset() + dive.totalDuration + restInterval;
+    }
+
     public get legendColors(): ChartLegendColors {
         return {
             depth: this.depthLineColor,

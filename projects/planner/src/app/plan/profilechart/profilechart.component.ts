@@ -69,7 +69,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             .withoutHoverLabels()
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;
-        this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
+        this.plotter = new ChartPlotter(this.elementName, () => this.profileTraces.chartEnd, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
@@ -199,9 +199,13 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotAllCharts(): void {
-        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(this.restInterval());
         this.plotter.plotAllCharts();
-        this.plotHeatMap(tissues);
+
+        // calculating the rest interval tissues is expensive, so only when shown
+        if (this.showHeatMap) {
+            const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(this.restInterval());
+            this.plotHeatMap(tissues);
+        }
     }
 
     private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {

@@ -161,6 +161,11 @@ export class DiveSchedule {
     }
 
     public overPressuresWithSurfaceInterval(surfaceInterval: number = 0): TissueOverPressures[] {
+        // final tissues may already belong to new profile, while the over pressures are still from previous dive info
+        if (!this.diveResult.diveInfoCalculated) {
+            return [];
+        }
+
         const altitude = this.optionsService.altitude;
         const tissues = this.diveResult.finalTissues;
         const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);

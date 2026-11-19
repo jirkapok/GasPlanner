@@ -32,6 +32,13 @@ describe('ProfileComparatorService', () => {
         schedules.dives[1].diveResult.updateProfile([
             WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
         ], irrelevantTissues, []);
+        markDiveInfoCalculated();
+    };
+
+    /** Heatmap tissues are available only after dive info was calculated */
+    const markDiveInfoCalculated = (): void => {
+        schedules.dives.forEach(d => d.diveResult.updateDiveInfo(
+            0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []));
     };
 
     beforeEach(async () => {
@@ -273,6 +280,7 @@ describe('ProfileComparatorService', () => {
         });
 
         it('Applies rest interval to dive A', () => {
+            markDiveInfoCalculated();
             const originalLength = sut.profileAResults.tissueOverPressures.length;
             const diffLength = sut.overPressures(1800).profileAOverPressures.length;
 
@@ -280,6 +288,7 @@ describe('ProfileComparatorService', () => {
         });
 
         it('Applies rest interval to dive B', () => {
+            markDiveInfoCalculated();
             const originalLength = sut.profileBResults.tissueOverPressures.length;
             const diffLength = sut.overPressures(1800).profileBOverPressures.length;
 

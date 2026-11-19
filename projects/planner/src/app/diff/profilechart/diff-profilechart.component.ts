@@ -70,7 +70,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .withRestInterval(() => this.restInterval())
             .create(() => this.profileComparatorService.profileBResults);
 
-        this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
+        this.plotter = new ChartPlotter('diveplotdiff', () => Math.max(this.profileATraces.chartEnd, this.profileBTraces.chartEnd),
             chartPlotterFactory, this.profileBTraces, this.profileATraces);
         this.legendColorsA = this.profileATraces.legendColors;
         this.legendColorsB = this.profileBTraces.legendColors;

@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { TraceKind } from '../../shared/chartPlotter';
-import { CircuitType, HighestDensity, ProfileTissues } from 'scuba-physics';
+import { CircuitType, HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { ProfileChartComponent } from './profilechart.component';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { UnitConversion } from '../../shared/UnitConversion';
@@ -20,6 +20,7 @@ import { renderOnPush } from '../../../testing/onPush.testing';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { WayPoint } from '../../shared/wayPoint';
 import { ViewStates } from '../../shared/viewStates';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { PreferencesStore } from '../../shared/preferencesStore';
@@ -346,5 +347,45 @@ describe('ProfileChartComponent rest interval', () => {
         await new Promise((resolve) => setTimeout(resolve));
 
         expect(overPressures).toHaveBeenLastCalledWith(1800);
+    });
+    it('does not calculate heat map tissues while heat map is hidden', async () => {
+        await createChart();
+        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+        const schedules = TestBed.inject(DiveSchedules);
+
+        TestBed.inject(ReloadDispatcher).sendInfoCalculated(schedules.selected.id);
+
+        expect(overPressures).not.toHaveBeenCalled();
+    });
+
+    it('keeps rest interval when another dive is selected', async () => {
+        TestBed.inject(SubViewStorage).restInterval = 1800;
+        const schedules = TestBed.inject(DiveSchedules);
+        schedules.add();
+        await createChart();
+        const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
+        heatMapButton.click();
+        await fixture.whenStable();
+        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+
+        schedules.setSelectedIndex(1);
+        await fixture.whenStable();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expect(overPressures).toHaveBeenLastCalledWith(1800);
+        expect(intervalInput().value).toBe('00:30');
+    });
+
+    it('shows hours on time axis when rest interval extends the chart past one hour', async () => {
+        const segment = new Segment(30, 0, StandardGases.air, 2400);
+        const wayPoint = WayPoint.fromSegment(TestBed.inject(UnitConversion), segment);
+        TestBed.inject(DiveSchedules).selected.diveResult.updateProfile([wayPoint], ProfileTissues.createAtSurface(0), [segment]);
+        TestBed.inject(SubViewStorage).restInterval = 7200;
+
+        await createChart();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const chart = document.getElementById('diveplot') as Plotly.PlotlyHTMLElement;
+        expect(chart.layout.xaxis?.tickformat).toBe('%H:%M:%S');
     });
 });

@@ -165,6 +165,15 @@ describe('SubView', () => {
             expect(storedRestInterval()).toBe(3600);
         });
 
+        it('setter keeps diff view state rest interval', () => {
+            const diffState = { id: KnownViews.diff, profileA: 0, profileB: 1, alignByEnd: false, restInterval: 600 };
+            sut.saveView(diffState);
+
+            sut.restInterval = 1800;
+
+            expect(viewStates.get(KnownViews.diff)).toEqual(diffState);
+        });
+
         it('reset clears rest interval', () => {
             sut.restInterval = 1800;
 

@@ -109,12 +109,12 @@ describe('ProfileComparatorService', () => {
         });
 
         it('profileACombinedTanks call combined consumption for Profile A', () => {
-            const _ = sut.profileAConsumed;
+            expect(sut.profileAConsumed).toBeDefined();
             expect(combineMethod).toHaveBeenCalledWith(sut.profileA.tanksService.tankData);
         });
 
         it('profileBCombinedTanks call combined consumption for Profile B', () => {
-            const _ = sut.profileBConsumed;
+            expect(sut.profileBConsumed).toBeDefined();
             expect(combineMethod).toHaveBeenCalledWith(sut.profileB.tanksService.tankData);
         });
     });

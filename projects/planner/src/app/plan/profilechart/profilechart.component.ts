@@ -29,7 +29,8 @@ import { RestIntervalComponent } from '../rest-interval/rest-interval.component'
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent, RestIntervalComponent]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent,
+        RestIntervalComponent]
 })
 export class ProfileChartComponent extends Streamed implements OnInit {
     public readonly profileIcon = faChartArea;
@@ -56,7 +57,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         stops: StopsFilter) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .withRestInterval(() => this.schedules.restInterval)
             .withoutHoverLabels()
@@ -190,7 +191,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private hookChartEvents(): void {
-        const chartElement: any = document.getElementById(this.elementName);
+        const chartElement = document.getElementById(this.elementName) as Plotly.PlotlyHTMLElement;
         // Plotly events are outside Angular events, so they have to schedule the change detection
         chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => {
             this.plotlyHover(e);

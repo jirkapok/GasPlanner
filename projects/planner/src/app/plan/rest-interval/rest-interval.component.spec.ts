@@ -1,27 +1,17 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { By } from "@angular/platform-browser";
-import { provideNoopAnimations } from "@angular/platform-browser/animations";
-import { RestIntervalComponent } from "./rest-interval.component";
-import { DiveSchedules } from "../../shared/dive.schedules";
-import { DateFormats } from "../../shared/formaters";
-import { ReloadDispatcher } from "../../shared/reloadDispatcher";
-import { ValidatorGroups } from "../../shared/ValidatorGroups";
-import { provideTestTranslate } from "../../../testing/translate-testing.helpers";
-import { UnitConversion } from "../../shared/UnitConversion";
+import { beforeEach, describe, expect, it } from 'vitest';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { RestIntervalComponent } from './rest-interval.component';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { DateFormats } from '../../shared/formaters';
+import { ReloadDispatcher } from '../../shared/reloadDispatcher';
+import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
+import { UnitConversion } from '../../shared/UnitConversion';
 
 class RestIntervalPage {
     constructor(private fixture: ComponentFixture<RestIntervalComponent>) {}
-
-    public async openDropdown(): Promise<void> {
-        const toggle = this.fixture.debugElement.query(By.css('[data-testid="dropdown-button"]'))
-            .nativeElement as HTMLButtonElement;
-
-        toggle.click();
-        this.fixture.detectChanges();
-        await this.fixture.whenStable();
-        this.fixture.detectChanges();
-    }
 
     public get durationInput(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('[data-testid="interval-input"]'))
@@ -52,6 +42,16 @@ class RestIntervalPage {
     public get errorMessage(): HTMLElement | null {
         return this.fixture.debugElement.query(By.css('[data-testid="error-message"]'))
             ?.nativeElement as HTMLElement | undefined ?? null;
+    }
+
+    public async openDropdown(): Promise<void> {
+        const toggle = this.fixture.debugElement.query(By.css('[data-testid="dropdown-button"]'))
+            .nativeElement as HTMLButtonElement;
+
+        toggle.click();
+        this.fixture.detectChanges();
+        await this.fixture.whenStable();
+        this.fixture.detectChanges();
     }
 }
 

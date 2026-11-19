@@ -60,13 +60,13 @@ describe('SubView', () => {
 
     it('Saves view state', inject([SubViewStorage, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage, viewStates: ViewStates, preferences: PreferencesStore) => {
-            vi.spyOn(viewStates, 'set').mockImplementation(() => {});
-            vi.spyOn(preferences, 'save').mockImplementation(() => {});
+            const setSpy = vi.spyOn(viewStates, 'set').mockImplementation(() => {});
+            const saveSpy = vi.spyOn(preferences, 'save').mockImplementation(() => {});
 
             viewStorage.saveView(changedSate);
 
-            expect(viewStates.set).toHaveBeenCalledExactlyOnceWith(changedSate);
-            expect(preferences.save).toHaveBeenCalledWith();
+            expect(setSpy).toHaveBeenCalledExactlyOnceWith(changedSate);
+            expect(saveSpy).toHaveBeenCalledWith();
         }));
 
     it('Loads view state', inject([SubViewStorage, ViewStates, PreferencesStore],

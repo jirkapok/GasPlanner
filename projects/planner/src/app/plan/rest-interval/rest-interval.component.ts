@@ -31,7 +31,7 @@ export class RestIntervalComponent extends Streamed {
     });
 
     protected restForm = form(this.restModel, path => {
-        this.validators.restInterval(path.restInterval)
+        this.validators.restInterval(path.restInterval);
     });
     protected readonly maskitoTimeOptions = maskitoTime({
         mode: 'HH:MM',
@@ -106,4 +106,5 @@ export class RestIntervalComponent extends Streamed {
 
     private reload(): void {
         this.restModel.set({ restInterval: this.restInterval });
-    }}
+    }
+}

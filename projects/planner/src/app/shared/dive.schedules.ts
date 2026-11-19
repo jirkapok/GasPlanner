@@ -341,6 +341,22 @@ export class DiveSchedules {
         this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
     }
 
+    public apply0MinutesRestInterval(): void {
+        this.restInterval = 0;
+    }
+
+    public applyOneHourRestInterval(): void {
+        this.restInterval = Time.oneHour;
+    }
+
+    public apply30MinutesRestInterval(): void {
+        this.restInterval = Time.oneMinute * 30;
+    }
+
+    public apply2HoursRestInterval(): void {
+        this.restInterval = Time.oneHour * 2;
+    }
+
     private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {
         const dive = this.byId(diveId);
 
@@ -375,21 +391,5 @@ export class DiveSchedules {
         const currentIndex = dive.id - 1;
         const newIndex = currentIndex > 0 ? currentIndex - 1 : 0;
         this._selected.set(this._dives()[newIndex]);
-    }
-
-    public apply0MinutesRestInterval(): void {
-        this.restInterval = 0;
-    }
-
-    public applyOneHourRestInterval(): void {
-        this.restInterval = Time.oneHour;
-    }
-
-    public apply30MinutesRestInterval(): void {
-        this.restInterval = Time.oneMinute * 30;
-    }
-
-    public apply2HoursRestInterval(): void {
-        this.restInterval = Time.oneHour * 2;
     }
 }

@@ -5,13 +5,14 @@ import { firstValueFrom } from 'rxjs';
 import { DatePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { TraceKind } from '../../shared/chartPlotter';
-import { CircuitType, HighestDensity, ProfileTissues, Segment, StandardGases } from 'scuba-physics';
+import { CircuitType, HighestDensity, ProfileTissues, Segment, StandardGases, TissueOverPressures } from 'scuba-physics';
 import { ProfileChartComponent } from './profilechart.component';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { WayPointsService } from '../../shared/waypoints.service';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
-import { DiveSchedule, DiveSchedules } from '../../shared/dive.schedules';
+import { DiveSchedules } from '../../shared/dive.schedules';
+import { RestIntervalTissues } from '../../shared/restIntervalTissues';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
@@ -340,17 +341,17 @@ describe('ProfileChartComponent rest interval', () => {
         const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
         heatMapButton.click();
         await fixture.whenStable();
-        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+        const overPressures = vi.spyOn(RestIntervalTissues.prototype, 'calculate');
 
         await enterInterval('00:30');
         // lets Plotly promises settle, so an unhandled rejection fails this spec
         await new Promise((resolve) => setTimeout(resolve));
 
-        expect(overPressures).toHaveBeenLastCalledWith(1800);
+        expect(overPressures).toHaveBeenLastCalledWith(expect.anything(), expect.any(Number), 1800);
     });
     it('does not calculate heat map tissues while heat map is hidden', async () => {
         await createChart();
-        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+        const overPressures = vi.spyOn(RestIntervalTissues.prototype, 'calculate');
         const schedules = TestBed.inject(DiveSchedules);
 
         TestBed.inject(ReloadDispatcher).sendInfoCalculated(schedules.selected.id);
@@ -366,13 +367,13 @@ describe('ProfileChartComponent rest interval', () => {
         const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
         heatMapButton.click();
         await fixture.whenStable();
-        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+        const overPressures = vi.spyOn(RestIntervalTissues.prototype, 'calculate');
 
         schedules.setSelectedIndex(1);
         await fixture.whenStable();
         await new Promise((resolve) => setTimeout(resolve));
 
-        expect(overPressures).toHaveBeenLastCalledWith(1800);
+        expect(overPressures).toHaveBeenLastCalledWith(expect.anything(), expect.any(Number), 1800);
         expect(intervalInput().value).toBe('00:30');
     });
 
@@ -387,5 +388,24 @@ describe('ProfileChartComponent rest interval', () => {
 
         const chart = document.getElementById('diveplot') as Plotly.PlotlyHTMLElement;
         expect(chart.layout.xaxis?.tickformat).toBe('%H:%M:%S');
+    });
+    it('plots heat map with rest interval tissues', async () => {
+        const segment = new Segment(30, 0, StandardGases.air, 600);
+        const wayPoint = WayPoint.fromSegment(TestBed.inject(UnitConversion), segment);
+        const dive = TestBed.inject(DiveSchedules).selected.diveResult;
+        dive.updateProfile([wayPoint], ProfileTissues.createAtSurface(0), [segment]);
+        const diveRow = new Array<number>(16).fill(0) as TissueOverPressures;
+        dive.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [diveRow], [], 0, [], []);
+        TestBed.inject(SubViewStorage).restInterval = 600;
+        await createChart();
+
+        const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
+        heatMapButton.click();
+        await fixture.whenStable();
+        await new Promise((resolve) => setTimeout(resolve));
+
+        const heatMap = document.getElementById('heatmapplot') as Plotly.PlotlyHTMLElement;
+        const z = (heatMap.data[0] as Partial<Plotly.HeatmapData>).z as number[][];
+        expect(z[0].length).toBe(601);
     });
 });

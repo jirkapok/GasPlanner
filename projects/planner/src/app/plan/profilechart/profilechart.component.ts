@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, WritableSignal, effect, signal, untracked } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, WritableSignal, effect, signal, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -17,6 +17,8 @@ import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { SubViewStorage } from '../../shared/subViewStorage';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { RestIntervalTissues } from '../../shared/restIntervalTissues';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { ChartLegendValues } from '../../shared/chartLegendValues';
@@ -33,7 +35,7 @@ import { RestIntervalComponent } from '../rest-interval/rest-interval.component'
     imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent,
         RestIntervalComponent]
 })
-export class ProfileChartComponent extends Streamed implements OnInit {
+export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy {
     public readonly profileIcon = faChartArea;
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
@@ -48,6 +50,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     private heatmapPlotter: HeatMapPlotter;
     private profileTraces: DiveTracesBuilder;
     private initialized = false;
+    private heatMapTissues: RestIntervalTissues;
 
     constructor(
         units: UnitConversion,
@@ -58,7 +61,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private translate: TranslateService,
         private cd: ChangeDetectorRef,
         stops: StopsFilter,
-        private viewStore: SubViewStorage) {
+        private viewStore: SubViewStorage,
+        workers: WorkersFactoryCommon) {
         super();
 
         this.restInterval = signal(this.viewStore.restInterval);
@@ -71,6 +75,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.legendColors = this.profileTraces.legendColors;
         this.plotter = new ChartPlotter(this.elementName, () => this.profileTraces.chartEnd, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
+        this.heatMapTissues = new RestIntervalTissues(workers.createRestIntervalWorker());
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
@@ -112,6 +117,12 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             const restInterval = this.restInterval();
             untracked(() => this.restIntervalChanged(restInterval));
         });
+
+        // the rest interval tissues are appended later by background task
+        effect(() => {
+            const tissues = this.heatMapTissues.overPressures();
+            untracked(() => this.plotHeatMap(tissues));
+        });
     }
 
     public get profileCalculated(): boolean {
@@ -135,6 +146,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.initialized = true;
         this.plotAllCharts();
         this.hookChartEvents();
+    }
+
+    public override ngOnDestroy(): void {
+        this.heatMapTissues.dispose();
+        super.ngOnDestroy();
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {
@@ -203,13 +219,14 @@ export class ProfileChartComponent extends Streamed implements OnInit {
 
         // calculating the rest interval tissues is expensive, so only when shown
         if (this.showHeatMap) {
-            const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(this.restInterval());
-            this.plotHeatMap(tissues);
+            const altitude = this.schedules.selected.optionsService.altitude;
+            this.heatMapTissues.calculate(this.dive, altitude, this.restInterval());
         }
     }
 
     private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {
-        if (this.showHeatMap) {
+        // the heat map element exists only after the component was initialized
+        if (this.initialized && this.showHeatMap) {
             void this.heatmapPlotter.plotHeatMap(tissueOverPressures);
         }
     }

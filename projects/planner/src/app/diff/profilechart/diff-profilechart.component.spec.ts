@@ -25,6 +25,10 @@ export class ProfileDifferenceChartPage {
     public get alignByEndButton(): HTMLInputElement {
         return this.fixture.debugElement.query(By.css('[data-testid="align-by-end-button"]')).nativeElement as HTMLInputElement;
     }
+
+    public get intervalInput(): HTMLInputElement {
+        return this.fixture.debugElement.query(By.css('[data-testid="interval-input"]')).nativeElement as HTMLInputElement;
+    }
 }
 
 describe('ProfileDifferenceChartComponent', () => {
@@ -106,6 +110,29 @@ describe('ProfileDifferenceChartComponent', () => {
         const heatMap = fixture.debugElement.query(By.css('#heatmapPlotB')).nativeElement as HTMLElement;
         expect(component.showHeatMap).toBe(true);
         expect(heatMap.querySelector('svg.main-svg')).not.toBeNull();
+    });
+
+    it('passes rest interval to heat map', async () => {
+        const diff = TestBed.inject(ProfileComparatorService);
+        diff.profileAResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        diff.profileBResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        const overPressures = vi.spyOn(diff, 'overPressures');
+
+        fixture.componentRef.setInput('restInterval', 1800);
+        await fixture.whenStable();
+        // lets Plotly promises settle, so an unhandled rejection fails this spec
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expect(overPressures).toHaveBeenLastCalledWith(1800);
+    });
+
+    it('typing rest interval updates the model', async () => {
+        page.intervalInput.value = '00:30';
+        page.intervalInput.dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        await fixture.whenStable();
+
+        expect(component.restInterval()).toBe(1800);
     });
 
     describe('Chart legend', () => {

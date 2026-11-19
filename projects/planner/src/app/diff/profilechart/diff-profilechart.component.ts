@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, effect, model, untracked } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -28,6 +28,8 @@ import { RestIntervalComponent } from '../../plan/rest-interval/rest-interval.co
 })
 export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
     public icon = faChartArea;
+    /** Rest interval after the dive in seconds, used only for the heatmaps and depth lines */
+    public readonly restInterval = model<number>(0);
     public showHeatMap = true;
     public legendValuesA: ChartLegendValues | undefined;
     public legendValuesB: ChartLegendValues | undefined;
@@ -39,6 +41,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private heatMapPlotterB: HeatMapPlotter;
     private profileATraces: DiveTracesBuilder;
     private profileBTraces: DiveTracesBuilder;
+    private initialized = false;
 
     constructor(
         units: UnitConversion,
@@ -54,7 +57,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.profileATraces = chartPlotterFactory.withNamePrefix('diffResultsTable.profileA')
             .withoutHoverLabels()
             .withTimeOffset(() => this.profileComparatorService.profileATimeOffset)
-            .withRestInterval(() => this.profileComparatorService.restInterval)
+            .withRestInterval(() => this.restInterval())
             .create(() => this.profileComparatorService.profileAResults);
         this.profileBTraces = chartPlotterFactory
             .withNamePrefix('diffResultsTable.profileB')
@@ -64,7 +67,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
             .wthEventFillColor(ChartPlotterFactory.depthLineColorB)
             .wthEventLineColor(ChartPlotterFactory.eventFillColorB)
             .withTimeOffset(() => this.profileComparatorService.profileBTimeOffset)
-            .withRestInterval(() => this.profileComparatorService.restInterval)
+            .withRestInterval(() => this.restInterval())
             .create(() => this.profileComparatorService.profileBResults);
 
         this.plotter = new ChartPlotter('diveplotdiff', () => this.profileComparatorService.totalDuration,
@@ -75,6 +78,11 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
 
         this.subscribeToObservables();
+
+        effect(() => {
+            this.restInterval();
+            untracked(() => this.restIntervalChanged());
+        });
     }
 
     protected get profilesCalculated(): boolean {
@@ -90,6 +98,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     }
 
     public ngOnInit(): void {
+        this.initialized = true;
         this.plotCharts();
         this.hookChartEvents();
     }
@@ -122,6 +131,14 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.alignByEnd = !this.alignByEnd;
     }
 
+    private restIntervalChanged(): void {
+        // the chart elements exist only after the component was initialized
+        if (this.initialized && this.profilesCalculated) {
+            this.redrawCharts();
+            this.plotlyHoverLeave();
+        }
+    }
+
     private clearLegendValues(): void {
         this.legendValuesA = undefined;
         this.legendValuesB = undefined;
@@ -142,7 +159,7 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.plotter.plotAllCharts();
 
         if(this.showHeatMap) {
-            const overPressures = this.profileComparatorService.overPressures;
+            const overPressures = this.profileComparatorService.overPressures(this.restInterval());
             void this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
             void this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
         }

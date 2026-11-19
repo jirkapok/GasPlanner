@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, effect, signal, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import { faExclamationCircle } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
@@ -26,6 +26,9 @@ import { TranslatePipe } from '@ngx-translate/core';
 })
 export class DiffComponent extends Streamed implements OnInit {
     public readonly exclamation = faExclamationCircle;
+    /** Rest interval of the diff chart heatmaps in seconds, kept only in the diff view state */
+    protected readonly restInterval = signal(0);
+    private loaded = false;
 
     constructor(
         public diff: ProfileComparatorService,
@@ -34,11 +37,17 @@ export class DiffComponent extends Streamed implements OnInit {
         private router: Router
     ) {
         super();
+
+        effect(() => {
+            this.restInterval();
+            untracked(() => this.restIntervalChanged());
+        });
     }
 
     ngOnInit(): void {
         this.loadState();
         this.saveState();
+        this.loaded = true;
 
         this.diff.selectionChanged$.pipe(takeUntil(this.unsubscribe$))
             .subscribe(() => this.saveState());
@@ -56,7 +65,8 @@ export class DiffComponent extends Streamed implements OnInit {
                 id: KnownViews.diff,
                 profileA: 0,
                 profileB: 0,
-                alignByEnd: false
+                alignByEnd: false,
+                restInterval: 0
             };
         }
 
@@ -66,6 +76,13 @@ export class DiffComponent extends Streamed implements OnInit {
         this.diff.selectProfile(profileA);
         this.diff.selectProfile(profileB);
         this.diff.alignByEnd = state.alignByEnd;
+        this.restInterval.set(state.restInterval ?? 0);
+    }
+
+    private restIntervalChanged(): void {
+        if (this.loaded) {
+            this.saveState();
+        }
     }
 
     private resolveValidProfile(current: number): number {
@@ -77,7 +94,8 @@ export class DiffComponent extends Streamed implements OnInit {
             id: KnownViews.diff,
             profileA: this.diff.profileAIndex,
             profileB: this.diff.profileBIndex,
-            alignByEnd: this.diff.alignByEnd
+            alignByEnd: this.diff.alignByEnd,
+            restInterval: this.restInterval()
         };
 
         this.viewStates.saveView(state);

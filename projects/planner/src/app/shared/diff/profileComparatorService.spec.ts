@@ -197,7 +197,7 @@ describe('ProfileComparatorService', () => {
         planner.calculate(1);
         planner.calculate(2);
 
-        const overPressures = sut.overPressures;
+        const overPressures = sut.overPressures(0);
         const lengthB = overPressures.profileAOverPressures.length;
         const lengthA = overPressures.profileBOverPressures.length;
         expect(lengthA).toEqual(lengthB);
@@ -244,7 +244,7 @@ describe('ProfileComparatorService', () => {
 
     describe('Tissue Over Pressures', () => {
         it('Returns just dive result tissues by default', () => {
-            const tissues = sut.overPressures;
+            const tissues = sut.overPressures(0);
             const tissuesA = sut.profileAResults.tissueOverPressures;
             const tissuesB = sut.profileBResults.tissueOverPressures;
 
@@ -258,7 +258,7 @@ describe('ProfileComparatorService', () => {
             setDiveDurations(700, 500);
 
             const originalLength = sut.profileBResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures.profileBOverPressures.length;
+            const diffLength = sut.overPressures(0).profileBOverPressures.length;
 
             expect(diffLength).toBeGreaterThan(originalLength);
         });
@@ -267,25 +267,21 @@ describe('ProfileComparatorService', () => {
             setDiveDurations(700, 500);
 
             const originalLength = sut.profileAResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures.profileAOverPressures.length;
+            const diffLength = sut.overPressures(0).profileAOverPressures.length;
 
             expect(diffLength).toBe(originalLength);
         });
 
         it('Applies rest interval to dive A', () => {
-            schedules.restInterval = 1800;
-
             const originalLength = sut.profileAResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures.profileAOverPressures.length;
+            const diffLength = sut.overPressures(1800).profileAOverPressures.length;
 
             expect(diffLength).toBeGreaterThan(originalLength);
         });
 
         it('Applies rest interval to dive B', () => {
-            schedules.restInterval = 1800;
-
             const originalLength = sut.profileBResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures.profileBOverPressures.length;
+            const diffLength = sut.overPressures(1800).profileBOverPressures.length;
 
             expect(diffLength).toBeGreaterThan(originalLength);
         });

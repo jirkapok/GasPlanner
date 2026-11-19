@@ -260,22 +260,6 @@ describe('Scheduled dives', () => {
         });
     });
 
-    describe('Rest Inverval', () => {
-        it('is 0 by default', () => {
-            expect(sut.restInterval).toEqual(0);
-        });
-
-        it('gets set', () => {
-            sut.restInterval = 7200;
-            expect(sut.restInterval).toEqual(7200);
-        });
-
-        it('gets set through helper method', () => {
-            sut.apply30MinutesRestInterval();
-            expect(sut.restInterval).toEqual(1800);
-        });
-    });
-
     describe('Dive Tissue Over Pressures', () => {
         it('returns dive tissues', () => {
             const tissues = sut.selected.diveResult.tissueOverPressures;

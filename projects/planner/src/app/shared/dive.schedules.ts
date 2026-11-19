@@ -194,7 +194,6 @@ export class DiveSchedules {
     // dives are added, removed and selected by other components than the ones showing them
     private readonly _dives: WritableSignal<DiveSchedule[]>;
     private readonly _selected: WritableSignal<DiveSchedule>;
-    private _restInterval = 0;
 
     constructor(private units: UnitConversion, private dispatcher: ReloadDispatcher, private circuitNames: CircuitNames) {
         const first = new DiveSchedule(0, this.units, this.dispatcher, this.circuitNames);
@@ -238,20 +237,11 @@ export class DiveSchedules {
         return this.selected.optionsService.toxicity;
     }
 
-    public get restInterval(): number {
-        return this._restInterval;
-    }
-
     public set selected(newValue: DiveSchedule) {
         if (this._dives().includes(newValue)) {
             this._selected.set(newValue);
             this.dispatcher.sendSelectedChanged(newValue.id);
         }
-    }
-
-    public set restInterval(newValue: number) {
-        this._restInterval = newValue;
-        this.dispatcher.sendInfoCalculated(this.selected.id);
     }
 
     // consider unify usage by id or by diveId
@@ -339,22 +329,6 @@ export class DiveSchedules {
     /** Marks all following repetitive dives as started */
     public markStart(diveId: number): void {
         this.processOnFollowingRepetitiveDives(diveId, (dive) => dive.diveResult.start());
-    }
-
-    public apply0MinutesRestInterval(): void {
-        this.restInterval = 0;
-    }
-
-    public applyOneHourRestInterval(): void {
-        this.restInterval = Time.oneHour;
-    }
-
-    public apply30MinutesRestInterval(): void {
-        this.restInterval = Time.oneMinute * 30;
-    }
-
-    public apply2HoursRestInterval(): void {
-        this.restInterval = Time.oneHour * 2;
     }
 
     private processOnFollowingRepetitiveDives(diveId: number, action: (dive: DiveSchedule) => void): void {

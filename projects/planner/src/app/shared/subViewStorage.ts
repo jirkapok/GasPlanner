@@ -29,13 +29,23 @@ export class SubViewStorage {
         private preferences: PreferencesStore) {
     }
 
+    /** Rest interval of the dashboard profile chart in seconds, kept only in the dashboard view state */
+    public get restInterval(): number {
+        return this.views.get<DashBoardViewState>(KnownViews.dashboard)?.restInterval ?? 0;
+    }
+
+    public set restInterval(newValue: number) {
+        this.saveView({ ...this._mainViewState, restInterval: newValue });
+    }
+
     public reset() {
         this.views.reset();
         this.saveMainView();
     }
 
     public saveMainView() {
-        this.saveView(this._mainViewState);
+        // the rest interval is only stored, so the main view state can't override it
+        this.saveView({ ...this._mainViewState, restInterval: this.restInterval });
     }
 
     public saveView<TView extends ViewState>(viewState: TView): void {

@@ -14,6 +14,8 @@ import { SelectedDiffWaypoint } from '../../shared/diff/selected-diff-waypoint.s
 import { provideTestTranslate } from '../../../testing/translate-testing.helpers';
 import { ProfileTissues } from 'scuba-physics';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { RestIntervalTissues } from '../../shared/restIntervalTissues';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 
 export class ProfileDifferenceChartPage {
     constructor(private fixture: ComponentFixture<ProfileDifferenceChartComponent>) { }
@@ -49,6 +51,7 @@ describe('ProfileDifferenceChartComponent', () => {
                 SelectedDiffWaypoint,
                 DatePipe,
                 ValidatorGroups,
+                WorkersFactoryCommon,
                 provideTestTranslate()
             ]
         });
@@ -116,14 +119,14 @@ describe('ProfileDifferenceChartComponent', () => {
         const diff = TestBed.inject(ProfileComparatorService);
         diff.profileAResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
         diff.profileBResults.updateProfile([], ProfileTissues.createAtSurface(0), []);
-        const overPressures = vi.spyOn(diff, 'overPressures');
+        const calculate = vi.spyOn(RestIntervalTissues.prototype, 'calculate');
 
         fixture.componentRef.setInput('restInterval', 1800);
         await fixture.whenStable();
         // lets Plotly promises settle, so an unhandled rejection fails this spec
         await new Promise((resolve) => setTimeout(resolve));
 
-        expect(overPressures).toHaveBeenLastCalledWith(1800);
+        expect(calculate).toHaveBeenLastCalledWith(expect.anything(), expect.any(Number), 1800);
     });
 
     it('typing rest interval updates the model', async () => {

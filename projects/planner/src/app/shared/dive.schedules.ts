@@ -6,8 +6,8 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
-    BuhlmannAlgorithm, CircuitType, GasToxicity, LoadedTissues, Precision,
-    ProfileTissues, RebreatherTanks, SurfaceIntervalParameters, Time, TissueOverPressures
+    CircuitType, GasToxicity, LoadedTissues, Precision,
+    ProfileTissues, RebreatherTanks, Time
 } from 'scuba-physics';
 import { TankBound } from './models';
 import { CircuitNames } from './circuit-names.service';
@@ -158,23 +158,6 @@ export class DiveSchedule {
         this.optionsService.resetToSimple();
         this.tanksService.resetToSimple();
         this.depths.setSimple();
-    }
-
-    public overPressuresWithSurfaceInterval(surfaceInterval: number = 0): TissueOverPressures[] {
-        // final tissues may already belong to new profile, while the over pressures are still from previous dive info
-        if (!this.diveResult.diveInfoCalculated) {
-            return [];
-        }
-
-        const altitude = this.optionsService.altitude;
-        const tissues = this.diveResult.finalTissues;
-        const parameters = new SurfaceIntervalParameters(tissues, altitude, surfaceInterval);
-        const algorithm = new BuhlmannAlgorithm();
-        const changes = algorithm.applySurfaceIntervalStatistics(parameters);
-        return [
-            ...this.diveResult.tissueOverPressures,
-            ...changes.tissueOverPressures,
-        ];
     }
 
     public applyPrimarySurfaceInterval(): void {

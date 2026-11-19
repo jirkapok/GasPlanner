@@ -7,7 +7,7 @@ import { UnitConversion } from '../UnitConversion';
 import {
     ConsumptionByMix, HighestDensity,
     IConsumedMix, ProfileTissues, Segment,
-    StandardGases, Tank
+    StandardGases, Tank, TissueOverPressures
 } from 'scuba-physics';
 import { WayPoint } from '../wayPoint';
 import { PlannerService } from '../planner.service';
@@ -32,13 +32,6 @@ describe('ProfileComparatorService', () => {
         schedules.dives[1].diveResult.updateProfile([
             WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
         ], irrelevantTissues, []);
-        markDiveInfoCalculated();
-    };
-
-    /** Heatmap tissues are available only after dive info was calculated */
-    const markDiveInfoCalculated = (): void => {
-        schedules.dives.forEach(d => d.diveResult.updateDiveInfo(
-            0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []));
     };
 
     beforeEach(async () => {
@@ -204,10 +197,10 @@ describe('ProfileComparatorService', () => {
         planner.calculate(1);
         planner.calculate(2);
 
-        const overPressures = sut.overPressures(0);
-        const lengthB = overPressures.profileAOverPressures.length;
-        const lengthA = overPressures.profileBOverPressures.length;
-        expect(lengthA).toEqual(lengthB);
+        const rests = sut.restIntervals(0);
+        const endA = sut.profileAResults.totalDuration + rests.profileA;
+        const endB = sut.profileBResults.totalDuration + rests.profileB;
+        expect(endA).toEqual(endB);
     });
 
     describe('Offsets', () => {
@@ -249,50 +242,59 @@ describe('ProfileComparatorService', () => {
         });
     });
 
-    describe('Tissue Over Pressures', () => {
-        it('Returns just dive result tissues by default', () => {
-            const tissues = sut.overPressures(0);
-            const tissuesA = sut.profileAResults.tissueOverPressures;
-            const tissuesB = sut.profileBResults.tissueOverPressures;
-
-            expect(tissues).toEqual({
-                profileAOverPressures: tissuesA,
-                profileBOverPressures: tissuesB
-            });
-        });
-
-        it('Pads shorter dive', () => {
+    describe('Rest intervals', () => {
+        it('Start aligned adds duration difference to shorter dive B', () => {
             setDiveDurations(700, 500);
 
-            const originalLength = sut.profileBResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures(0).profileBOverPressures.length;
-
-            expect(diffLength).toBeGreaterThan(originalLength);
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 800 });
         });
 
-        it('Pads shorter dive without affecting longer dive', () => {
+        it('Start aligned adds duration difference to shorter dive A', () => {
+            setDiveDurations(500, 700);
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 800, profileB: 600 });
+        });
+
+        it('Start aligned keeps rest interval for dives of equal duration', () => {
+            setDiveDurations(500, 500);
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 600 });
+        });
+
+        it('End aligned uses rest interval for both dives', () => {
             setDiveDurations(700, 500);
+            sut.alignByEnd = true;
 
-            const originalLength = sut.profileAResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures(0).profileAOverPressures.length;
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 600 });
+        });
+    });
 
-            expect(diffLength).toBe(originalLength);
+    describe('Align over pressures', () => {
+        const row = (value: number): TissueOverPressures => new Array<number>(16).fill(value) as TissueOverPressures;
+        const emptyRow = new Array<null>(16).fill(null);
+
+        it('Start aligned returns both profiles unchanged', () => {
+            const aligned = sut.alignOverPressures([row(1), row(2)], [row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [row(1), row(2)], profileBOverPressures: [row(3)] });
         });
 
-        it('Applies rest interval to dive A', () => {
-            markDiveInfoCalculated();
-            const originalLength = sut.profileAResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures(1800).profileAOverPressures.length;
+        it('End aligned pads shorter profile B at start', () => {
+            setDiveDurations(700, 500);
+            sut.alignByEnd = true;
 
-            expect(diffLength).toBeGreaterThan(originalLength);
+            const aligned = sut.alignOverPressures([row(1), row(2)], [row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [row(1), row(2)], profileBOverPressures: [emptyRow, row(3)] });
         });
 
-        it('Applies rest interval to dive B', () => {
-            markDiveInfoCalculated();
-            const originalLength = sut.profileBResults.tissueOverPressures.length;
-            const diffLength = sut.overPressures(1800).profileBOverPressures.length;
+        it('End aligned pads shorter profile A at start', () => {
+            setDiveDurations(500, 700);
+            sut.alignByEnd = true;
 
-            expect(diffLength).toBeGreaterThan(originalLength);
+            const aligned = sut.alignOverPressures([row(1)], [row(2), row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [emptyRow, row(1)], profileBOverPressures: [row(2), row(3)] });
         });
     });
 

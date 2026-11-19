@@ -2,7 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { DiveSchedule, DiveSchedules } from '../dive.schedules';
 import { DiveResults } from '../diveresults';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { ConsumptionByMix, IConsumedMix, } from 'scuba-physics';
+import { ConsumptionByMix, IConsumedMix, TissueOverPressures } from 'scuba-physics';
 import { ComparedWaypoint } from './ComparedWaypoint';
 import { ReloadDispatcher } from '../reloadDispatcher';
 import { Streamed } from '../streamed';
@@ -12,6 +12,12 @@ import { type HeatMapOverPressures } from '../heatMapPlotter';
 export interface SaturationComparison {
     profileAOverPressures: HeatMapOverPressures;
     profileBOverPressures: HeatMapOverPressures;
+}
+
+/** in seconds */
+export interface RestIntervals {
+    profileA: number;
+    profileB: number;
 }
 
 @Injectable()
@@ -155,12 +161,41 @@ export class ProfileComparatorService extends Streamed {
         this._onSelectionChanged.next();
     }
 
-    /** Heatmap tissues of both profiles with the rest interval (in seconds) after the dive */
-    public overPressures(restInterval: number): SaturationComparison {
+    /**
+     * Rest interval in seconds after each dive, so both heatmaps end at the same time.
+     * Aligned by start, the shorter dive rests also for the duration difference.
+     */
+    public restIntervals(restInterval: number): RestIntervals {
         if (this.alignByEnd) {
-            return this.endAlignedOverPressures(restInterval);
+            return { profileA: restInterval, profileB: restInterval };
         }
-        return this.startAlignedOverPressures(restInterval);
+
+        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
+        const diff = Math.abs(durationDiff);
+
+        // If A is longer
+        return durationDiff > 0
+            ? { profileA: restInterval, profileB: restInterval + diff }
+            : { profileA: restInterval + diff, profileB: restInterval };
+    }
+
+    /** Aligned by end, the profile with less samples is padded by empty samples at its start */
+    public alignOverPressures(profileA: TissueOverPressures[], profileB: TissueOverPressures[]): SaturationComparison {
+        if (!this.alignByEnd) {
+            return { profileAOverPressures: profileA, profileBOverPressures: profileB };
+        }
+
+        const lengthDiff = Math.abs(profileA.length - profileB.length);
+
+        return profileA.length > profileB.length
+            ? {
+                profileAOverPressures: profileA,
+                profileBOverPressures: [...this.createEmptyPressures(lengthDiff), ...profileB]
+            }
+            : {
+                profileAOverPressures: [...this.createEmptyPressures(lengthDiff), ...profileA],
+                profileBOverPressures: profileB
+            };
     }
 
     public selectProfile(index: number): void {
@@ -205,40 +240,6 @@ export class ProfileComparatorService extends Streamed {
 
         const builder = new WaypointsDiffBuilder([...this.wayPointsA], [...this.wayPointsB]);
         this._wayPoints.set(builder.createDiveComparison());
-    }
-
-    private startAlignedOverPressures(rest: number): SaturationComparison {
-        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const diff = Math.abs(durationDiff);
-
-        // If A is longer
-        return durationDiff > 0
-            ? {
-                profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest),
-                profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest + diff)
-            }
-            : {
-                profileAOverPressures: this.profileA.overPressuresWithSurfaceInterval(rest + diff),
-                profileBOverPressures: this.profileB.overPressuresWithSurfaceInterval(rest)
-            };
-    }
-
-    private endAlignedOverPressures(restInterval: number): SaturationComparison {
-        const durationDiff = this.profileAResults.totalDuration - this.profileBResults.totalDuration;
-        const pressuresA = this.profileA.overPressuresWithSurfaceInterval(restInterval);
-        const pressuresB = this.profileB.overPressuresWithSurfaceInterval(restInterval);
-        const lenDiff = Math.abs(pressuresA.length - pressuresB.length);
-
-        // If A is longer
-        return durationDiff > 0
-            ? {
-                profileAOverPressures: pressuresA,
-                profileBOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresB]
-            }
-            : {
-                profileAOverPressures: [...this.createEmptyPressures(lenDiff), ...pressuresA],
-                profileBOverPressures: pressuresB
-            };
     }
 
     private createEmptyPressures(length: number): HeatMapOverPressures {

@@ -1,5 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef, effect, model, untracked } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, effect, model, untracked } from '@angular/core';
 import { NgClass } from '@angular/common';
+import { TissueOverPressures } from 'scuba-physics';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faChartArea, faFire } from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +20,8 @@ import { CalculatingComponent } from '../../controls/calculating/calculating.com
 import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.component';
 import { DurationPipe } from '../../pipes/duration.pipe';
 import { RestIntervalComponent } from '../../plan/rest-interval/rest-interval.component';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { RestIntervalTissues } from '../../shared/restIntervalTissues';
 
 @Component({
     selector: 'app-diff-profilechart',
@@ -26,7 +29,7 @@ import { RestIntervalComponent } from '../../plan/rest-interval/rest-interval.co
     styleUrls: ['./diff-profilechart.component.scss'],
     imports: [FaIconComponent, NgClass, CalculatingComponent, TranslatePipe, ChartLegendComponent, DurationPipe, RestIntervalComponent]
 })
-export class ProfileDifferenceChartComponent extends Streamed implements OnInit {
+export class ProfileDifferenceChartComponent extends Streamed implements OnInit, OnDestroy {
     public icon = faChartArea;
     /** Rest interval after the dive in seconds, used only for the heatmaps and depth lines */
     public readonly restInterval = model<number>(0);
@@ -42,6 +45,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private profileATraces: DiveTracesBuilder;
     private profileBTraces: DiveTracesBuilder;
     private initialized = false;
+    private tissuesA: RestIntervalTissues;
+    private tissuesB: RestIntervalTissues;
 
     constructor(
         units: UnitConversion,
@@ -50,7 +55,8 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         private profileComparatorService: ProfileComparatorService,
         private reloadDispatcher: ReloadDispatcher,
         private translate: TranslateService,
-        private cd: ChangeDetectorRef) {
+        private cd: ChangeDetectorRef,
+        workers: WorkersFactoryCommon) {
         super();
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
@@ -76,12 +82,21 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.legendColorsB = this.profileBTraces.legendColors;
         this.heatMapPlotterA = new HeatMapPlotter('heatmapPlotA');
         this.heatMapPlotterB = new HeatMapPlotter('heatmapPlotB');
+        this.tissuesA = new RestIntervalTissues(workers.createRestIntervalWorker());
+        this.tissuesB = new RestIntervalTissues(workers.createRestIntervalWorker());
 
         this.subscribeToObservables();
 
         effect(() => {
             this.restInterval();
             untracked(() => this.restIntervalChanged());
+        });
+
+        // the rest interval tissues are appended later by background tasks
+        effect(() => {
+            const tissuesA = this.tissuesA.overPressures();
+            const tissuesB = this.tissuesB.overPressures();
+            untracked(() => this.plotHeatMaps(tissuesA, tissuesB));
         });
     }
 
@@ -101,6 +116,12 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
         this.initialized = true;
         this.plotCharts();
         this.hookChartEvents();
+    }
+
+    public override ngOnDestroy(): void {
+        this.tissuesA.dispose();
+        this.tissuesB.dispose();
+        super.ngOnDestroy();
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {
@@ -158,11 +179,24 @@ export class ProfileDifferenceChartComponent extends Streamed implements OnInit 
     private plotCharts(): void {
         this.plotter.plotAllCharts();
 
+        // calculating the rest interval tissues is expensive, so only when shown
         if(this.showHeatMap) {
-            const overPressures = this.profileComparatorService.overPressures(this.restInterval());
-            void this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
-            void this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
+            const comparator = this.profileComparatorService;
+            const rests = comparator.restIntervals(this.restInterval());
+            this.tissuesA.calculate(comparator.profileAResults, comparator.profileA.optionsService.altitude, rests.profileA);
+            this.tissuesB.calculate(comparator.profileBResults, comparator.profileB.optionsService.altitude, rests.profileB);
         }
+    }
+
+    private plotHeatMaps(tissuesA: TissueOverPressures[], tissuesB: TissueOverPressures[]): void {
+        // the heat map elements exist only after the component was initialized
+        if (!this.initialized || !this.showHeatMap) {
+            return;
+        }
+
+        const overPressures = this.profileComparatorService.alignOverPressures(tissuesA, tissuesB);
+        void this.heatMapPlotterA.plotHeatMap(overPressures.profileAOverPressures);
+        void this.heatMapPlotterB.plotHeatMap(overPressures.profileBOverPressures);
     }
 
     private hookChartEvents(): void {

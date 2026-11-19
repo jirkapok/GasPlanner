@@ -21,6 +21,7 @@ import { ResultsComparison } from '../shared/diff/results-comparison.service';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { LanguageService } from '../shared/language.service';
 import { DiffViewState } from '../shared/views.model';
+import { WorkersFactoryCommon } from '../shared/serial.workers.factory';
 import { ValidatorGroups } from '../shared/ValidatorGroups';
 
 describe('DiffComponent', () => {
@@ -47,7 +48,7 @@ describe('DiffComponent', () => {
                 ApplicationSettingsService, ResamplingService,
                 SelectedDiffWaypoint, GasesComparisonService,
                 ResultsComparison, MdbModalService,
-                ValidatorGroups, provideNoopAnimations(),
+                ValidatorGroups, provideNoopAnimations(), WorkersFactoryCommon,
                 provideTestTranslate(), LanguageService
             ]
         });

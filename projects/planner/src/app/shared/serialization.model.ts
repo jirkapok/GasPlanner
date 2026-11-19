@@ -117,6 +117,21 @@ export interface DiveInfoResultDto {
     tissueOverPressures: TissueOverPressures[];
 }
 
+/** Tissues after the dive, while the diver rests on the surface */
+export interface RestIntervalRequestDto {
+    /** tissues at end of the dive */
+    tissues: LoadedTissueDto[];
+    /** m.a.s.l. */
+    altitude: number;
+    /** seconds */
+    restInterval: number;
+}
+
+export interface RestIntervalResultDto {
+    /** one sample per second of the rest interval */
+    tissueOverPressures: TissueOverPressures[];
+}
+
 export interface DensityDto {
     gas: GasDto;
     depth: number;

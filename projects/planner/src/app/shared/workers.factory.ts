@@ -6,7 +6,9 @@ import {
     DiveInfoRequestDto,
     DiveInfoResultDto,
     ProfileRequestDto,
-    ProfileResultDto
+    ProfileResultDto,
+    RestIntervalRequestDto,
+    RestIntervalResultDto
 } from './serialization.model';
 import {
     BackgroundTask, IBackgroundTask,
@@ -33,5 +35,10 @@ export class WorkersFactory extends WorkersFactoryCommon {
     public createComputerWorker(): IRestartableTask<ComputerRequestDto, ComputerResultDto> {
         return new RestartableBackgroundTask<ComputerRequestDto, ComputerResultDto>(
             () => new Worker(new URL('../workers/computer.worker', import.meta.url)));
+    }
+
+    public createRestIntervalWorker(): IRestartableTask<RestIntervalRequestDto, RestIntervalResultDto> {
+        return new RestartableBackgroundTask<RestIntervalRequestDto, RestIntervalResultDto>(
+            () => new Worker(new URL('../workers/restInterval.worker', import.meta.url)));
     }
 }

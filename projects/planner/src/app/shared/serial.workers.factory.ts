@@ -6,7 +6,9 @@ import {
     DiveInfoRequestDto,
     DiveInfoResultDto,
     ProfileRequestDto,
-    ProfileResultDto
+    ProfileResultDto,
+    RestIntervalRequestDto,
+    RestIntervalResultDto
 } from './serialization.model';
 import { IBackgroundTask, IRestartableTask } from '../workers/background-task';
 import { Subject } from 'rxjs';
@@ -62,6 +64,21 @@ export class WorkersFactoryCommon {
                 } catch {
                     failedSubject.next();
                 }
+            },
+            failed$: failedSubject,
+            cancel: (): void => {
+                // synchronous calculation is always finished, nothing to interrupt
+            }
+        };
+    }
+
+    public createRestIntervalWorker(): IRestartableTask<RestIntervalRequestDto, RestIntervalResultDto> {
+        const subject = new Subject<RestIntervalResultDto>();
+        const failedSubject = new Subject<void>();
+        return {
+            calculated$: subject,
+            calculate: (request: RestIntervalRequestDto): void => {
+                this.tryAction((r) => PlanningTasks.restIntervalTissues(r), request, subject, failedSubject);
             },
             failed$: failedSubject,
             cancel: (): void => {

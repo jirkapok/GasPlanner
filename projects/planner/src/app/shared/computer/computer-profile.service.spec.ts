@@ -35,6 +35,10 @@ class FakeComputerTask implements IRestartableTask<ComputerRequestDto, ComputerR
     public cancel(): void {
         this.cancelled++;
     }
+
+    public terminate(): void {
+        // nothing to stop in tests
+    }
 }
 
 class FakeWorkersFactory extends WorkersFactoryCommon {

@@ -68,6 +68,9 @@ export class WorkersFactoryCommon {
             failed$: failedSubject,
             cancel: (): void => {
                 // synchronous calculation is always finished, nothing to interrupt
+            },
+            terminate: (): void => {
+                // no background thread to stop
             }
         };
     }
@@ -83,6 +86,9 @@ export class WorkersFactoryCommon {
             failed$: failedSubject,
             cancel: (): void => {
                 // synchronous calculation is always finished, nothing to interrupt
+            },
+            terminate: (): void => {
+                // no background thread to stop
             }
         };
     }

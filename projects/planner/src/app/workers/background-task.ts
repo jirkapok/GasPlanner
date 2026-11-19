@@ -36,6 +36,8 @@ export class BackgroundTask<TRequest, TResponse> implements IBackgroundTask<TReq
 export interface IRestartableTask<TRequest, TResponse> extends IBackgroundTask<TRequest, TResponse> {
     /** Stops running calculation, its remaining results are not reported */
     cancel(): void;
+    /** Stops the background task for good, when its owner is destroyed */
+    terminate(): void;
 }
 
 /** Background task streaming all messages of the worker, which can interrupt running calculation by replacing the worker */
@@ -59,6 +61,10 @@ export class RestartableBackgroundTask<TRequest, TResponse> implements IRestarta
     public cancel(): void {
         this.worker.terminate();
         this.worker = this.startWorker();
+    }
+
+    public terminate(): void {
+        this.worker.terminate();
     }
 
     private startWorker(): Worker {

@@ -29,7 +29,7 @@
 
 ### Task 1: Worker task, DTOs and factory
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `projects/planner/src/app/shared/serialization.model.ts`, `workers/planning.tasks.ts`, `shared/serial.workers.factory.ts`, `shared/workers.factory.ts`
@@ -39,15 +39,15 @@
 **Interfaces:**
 - Produces: `RestIntervalRequestDto { tissues: LoadedTissueDto[]; altitude: number; restInterval: number }`, `RestIntervalResultDto { tissueOverPressures: TissueOverPressures[] }`, `PlanningTasks.restIntervalTissues(task: RestIntervalRequestDto): RestIntervalResultDto`, `WorkersFactoryCommon.createRestIntervalWorker(): IRestartableTask<RestIntervalRequestDto, RestIntervalResultDto>`.
 
-- [ ] **Step 1: Failing tests** in `planning.tasks.spec.ts`: `restIntervalTissues` with `DtoSerialization.fromTissues(ProfileTissues.createAtSurface(0))`-like loaded tissues (use `Tissues.createLoadedAt(0)` loaded after a dive is not needed: surface tissues are enough for length): `returns one sample per second of rest interval` (restInterval 600 → length 600); `returns no samples for zero rest interval` → `[]`. In the same file `WorkersFactoryCommon rest interval worker emits calculated result` (subscribe `calculated$`, `calculate(request)` → result length 60).
-- [ ] **Step 2:** Run → FAIL (missing members).
-- [ ] **Step 3:** Implement DTOs, `restIntervalTissues` (`new SurfaceIntervalParameters(DtoSerialization.toTissues(task.tissues), task.altitude, task.restInterval)` + `applySurfaceIntervalStatistics`), worker file (pattern of `diveInfo.worker.ts`), factory methods (`RestartableBackgroundTask` with `new Worker(new URL('../workers/restInterval.worker', import.meta.url))`; fallback like `createComputerWorker` with `tryAction`-style error reporting and no-op `cancel`).
-- [ ] **Step 4:** Run → PASS; lint.
-- [ ] **Step 5:** Commit `feat: rest interval tissues background task`.
+- [x] **Step 1: Failing tests** in `planning.tasks.spec.ts`: `restIntervalTissues` with `DtoSerialization.fromTissues(ProfileTissues.createAtSurface(0))`-like loaded tissues (use `Tissues.createLoadedAt(0)` loaded after a dive is not needed: surface tissues are enough for length): `returns one sample per second of rest interval` (restInterval 600 → length 600); `returns no samples for zero rest interval` → `[]`. In the same file `WorkersFactoryCommon rest interval worker emits calculated result` (subscribe `calculated$`, `calculate(request)` → result length 60).
+- [x] **Step 2:** Run → FAIL (missing members).
+- [x] **Step 3:** Implement DTOs, `restIntervalTissues` (`new SurfaceIntervalParameters(DtoSerialization.toTissues(task.tissues), task.altitude, task.restInterval)` + `applySurfaceIntervalStatistics`), worker file (pattern of `diveInfo.worker.ts`), factory methods (`RestartableBackgroundTask` with `new Worker(new URL('../workers/restInterval.worker', import.meta.url))`; fallback like `createComputerWorker` with `tryAction`-style error reporting and no-op `cancel`).
+- [x] **Step 4:** Run → PASS; lint.
+- [x] **Step 5:** Commit `feat: rest interval tissues background task`.
 
 ### Task 2: `RestIntervalTissues` helper
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Create: `projects/planner/src/app/shared/restIntervalTissues.ts`
@@ -57,7 +57,7 @@
 - Consumes: Task 1 task interface.
 - Produces: `class RestIntervalTissues { constructor(task: IRestartableTask<RestIntervalRequestDto, RestIntervalResultDto>); readonly overPressures: Signal<TissueOverPressures[]>; calculate(dive: DiveResults, altitude: number, restInterval: number): void }`.
 
-- [ ] **Step 1: Failing tests** with a fake task (`Subject`s, records `calculate`/`cancel` calls) and `DiveResults` given dive info (`updateDiveInfo(..., tissueOverPressures = [row], ...)`) and a surfaced profile:
+- [x] **Step 1: Failing tests** with a fake task (`Subject`s, records `calculate`/`cancel` calls) and `DiveResults` given dive info (`updateDiveInfo(..., tissueOverPressures = [row], ...)`) and a surfaced profile:
   - `is empty while dive info is not calculated` → `[]`, no request.
   - `shows dive tissues immediately` → `[row]` before result.
   - `appends rest interval tissues when calculated` → after fake emits `[r1, r2]` → `[row, r1, r2]`.
@@ -65,14 +65,14 @@
   - `cancels running calculation on new request` → `cancel` called before each `calculate`.
   - `ignores result of outdated request` — calculate(1800), calculate(0), fake emits → stays `[row]`.
   - `keeps dive tissues when calculation fails` — `failed$` emits → `[row]`.
-- [ ] **Step 2:** Run → FAIL.
-- [ ] **Step 3:** Implement: `signal<TissueOverPressures[]>([])`; `pending` request counter (incremented per calculate; result applied only when it matches the latest requested one, and only if a request is pending); `cancel()` then `calculate` on the task; on result `set([...diveTissues, ...result.tissueOverPressures])`.
-- [ ] **Step 4:** Run → PASS; lint.
-- [ ] **Step 5:** Commit `feat: rest interval tissues published in two steps`.
+- [x] **Step 2:** Run → FAIL.
+- [x] **Step 3:** Implement: `signal<TissueOverPressures[]>([])`; `pending` request counter (incremented per calculate; result applied only when it matches the latest requested one, and only if a request is pending); `cancel()` then `calculate` on the task; on result `set([...diveTissues, ...result.tissueOverPressures])`.
+- [x] **Step 4:** Run → PASS; lint.
+- [x] **Step 5:** Commit `feat: rest interval tissues published in two steps`.
 
 ### Task 3: Planner chart uses the background task
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `plan/profilechart/profilechart.component.ts` (+ spec), `shared/dive.schedules.ts`, `shared/dives.schedule.spec.ts`
@@ -80,15 +80,15 @@
 **Interfaces:**
 - Consumes: Task 2 `RestIntervalTissues`; `WorkersFactoryCommon` injected (already provided in specs).
 
-- [ ] **Step 1: Tests:** in profilechart spec replace `DiveSchedule.prototype.overPressuresWithSurfaceInterval` spies with `vi.spyOn(RestIntervalTissues.prototype, 'calculate')`, expecting last call `(dive, altitude, 1800)` → `toHaveBeenLastCalledWith(expect.anything(), expect.any(Number), 1800)`; hidden heatmap test → `calculate` not called. Add `plots heat map with rest interval tissues` — heat map on, dive with dive info, rest 600 → heatmap plot data `z` length (from `#heatmapplot` element `data[0].z`) greater than dive tissues length. Remove `Dive Tissue Over Pressures` describe from `dives.schedule.spec.ts`.
-- [ ] **Step 2:** Run → FAIL.
-- [ ] **Step 3:** Implement: component creates `new RestIntervalTissues(workers.createRestIntervalWorker())`; `plotAllCharts` (heatmap shown) calls `calculate(this.dive, this.schedules.selected.optionsService.altitude, this.restInterval())`; effect on `overPressures()` → `plotHeatMap` (untracked, only when initialized and shown); `switchHeatMap` keeps calling `plotAllCharts`. Remove `DiveSchedule.overPressuresWithSurfaceInterval` and unused imports.
-- [ ] **Step 4:** Run profilechart + dives.schedule specs → PASS; lint.
-- [ ] **Step 5:** Commit `perf: planner heatmap rest interval calculated in background`.
+- [x] **Step 1: Tests:** in profilechart spec replace `DiveSchedule.prototype.overPressuresWithSurfaceInterval` spies with `vi.spyOn(RestIntervalTissues.prototype, 'calculate')`, expecting last call `(dive, altitude, 1800)` → `toHaveBeenLastCalledWith(expect.anything(), expect.any(Number), 1800)`; hidden heatmap test → `calculate` not called. Add `plots heat map with rest interval tissues` — heat map on, dive with dive info, rest 600 → heatmap plot data `z` length (from `#heatmapplot` element `data[0].z`) greater than dive tissues length. Remove `Dive Tissue Over Pressures` describe from `dives.schedule.spec.ts`.
+- [x] **Step 2:** Run → FAIL.
+- [x] **Step 3:** Implement: component creates `new RestIntervalTissues(workers.createRestIntervalWorker())`; `plotAllCharts` (heatmap shown) calls `calculate(this.dive, this.schedules.selected.optionsService.altitude, this.restInterval())`; effect on `overPressures()` → `plotHeatMap` (untracked, only when initialized and shown); `switchHeatMap` keeps calling `plotAllCharts`. Remove `DiveSchedule.overPressuresWithSurfaceInterval` and unused imports.
+- [x] **Step 4:** Run profilechart + dives.schedule specs → PASS; lint.
+- [x] **Step 5:** Commit `perf: planner heatmap rest interval calculated in background`.
 
 ### Task 4: Diff chart uses the background task
 
-- [ ] Status
+- [x] Status
 
 **Files:**
 - Modify: `shared/diff/profileComparatorService.ts` (+ spec), `diff/profilechart/diff-profilechart.component.ts` (+ spec)
@@ -96,11 +96,11 @@
 **Interfaces:**
 - Produces: `ProfileComparatorService.restIntervals(rest: number): { profileA: number; profileB: number }`, `ProfileComparatorService.alignOverPressures(profileA: TissueOverPressures[], profileB: TissueOverPressures[]): SaturationComparison`; removes `overPressures(rest)`.
 
-- [ ] **Step 1: Tests:** comparator spec replaces `overPressures` tests: `restIntervals` start aligned A longer (700/500, rest 600 → A 600, B 800), B longer, equal; end aligned → both 600. `alignOverPressures` start aligned returns inputs unchanged; end aligned pads shorter at start with `null` rows to equal length (A longer and B longer). Diff chart spec: `passes rest interval to heat map` → spy `RestIntervalTissues.prototype.calculate`, last calls contain `1800`.
-- [ ] **Step 2:** Run → FAIL.
-- [ ] **Step 3:** Implement: service methods (start: shorter gets `rest + |durationDiff|`; end: pad with `createEmptyPressures`); chart owns `tissuesA`, `tissuesB`; `plotCharts` (heatmap shown) calls both `calculate(profileXResults, profileX.optionsService.altitude, rests.profileX)`; effect on both signals plots both heatmaps from `alignOverPressures` (untracked, initialized and shown).
-- [ ] **Step 4:** Run diff specs + `npm run test-ci` → PASS; `npm run lint` (only pre-existing unrelated errors).
-- [ ] **Step 5:** Commit `perf: diff heatmap rest interval calculated in background`.
+- [x] **Step 1: Tests:** comparator spec replaces `overPressures` tests: `restIntervals` start aligned A longer (700/500, rest 600 → A 600, B 800), B longer, equal; end aligned → both 600. `alignOverPressures` start aligned returns inputs unchanged; end aligned pads shorter at start with `null` rows to equal length (A longer and B longer). Diff chart spec: `passes rest interval to heat map` → spy `RestIntervalTissues.prototype.calculate`, last calls contain `1800`.
+- [x] **Step 2:** Run → FAIL.
+- [x] **Step 3:** Implement: service methods (start: shorter gets `rest + |durationDiff|`; end: pad with `createEmptyPressures`); chart owns `tissuesA`, `tissuesB`; `plotCharts` (heatmap shown) calls both `calculate(profileXResults, profileX.optionsService.altitude, rests.profileX)`; effect on both signals plots both heatmaps from `alignOverPressures` (untracked, initialized and shown).
+- [x] **Step 4:** Run diff specs + `npm run test-ci` → PASS; `npm run lint` (only pre-existing unrelated errors).
+- [x] **Step 5:** Commit `perf: diff heatmap rest interval calculated in background`.
 
 ### Task 5: Remove design and plan
 

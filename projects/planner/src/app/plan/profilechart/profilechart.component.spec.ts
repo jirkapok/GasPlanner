@@ -11,7 +11,7 @@ import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { UnitConversion } from '../../shared/UnitConversion';
 import { WayPointsService } from '../../shared/waypoints.service';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
-import { DiveSchedules } from '../../shared/dive.schedules';
+import { DiveSchedule, DiveSchedules } from '../../shared/dive.schedules';
 import { ReloadDispatcher } from '../../shared/reloadDispatcher';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { MdbModalService } from 'mdb-angular-ui-kit/modal';
@@ -20,6 +20,12 @@ import { renderOnPush } from '../../../testing/onPush.testing';
 import { StopsFilter } from '../../shared/stopsFilter.service';
 import { ViewSwitchService } from '../../shared/viewSwitchService';
 import { ValidatorGroups } from '../../shared/ValidatorGroups';
+import { ViewStates } from '../../shared/viewStates';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { PreferencesStore } from '../../shared/preferencesStore';
+import { Preferences } from '../../shared/preferences';
+import { ApplicationSettingsService } from '../../shared/ApplicationSettings';
+import { LanguageService } from '../../shared/language.service';
 
 describe('ProfileChartComponent', () => {
     let component: ProfileChartComponent;
@@ -34,6 +40,8 @@ describe('ProfileChartComponent', () => {
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
                 StopsFilter, ViewSwitchService,
+                ViewStates, SubViewStorage, PreferencesStore, Preferences,
+                ApplicationSettingsService, LanguageService,
                 DatePipe, ValidatorGroups,
                 provideTestTranslate()
             ]
@@ -235,6 +243,8 @@ describe('ProfileChartComponent OnPush', () => {
                 UnitConversion, DiveSchedules,
                 ResamplingService, MdbModalService,
                 StopsFilter, ViewSwitchService,
+                ViewStates, SubViewStorage, PreferencesStore, Preferences,
+                ApplicationSettingsService, LanguageService,
                 ValidatorGroups, provideTestTranslate()
             ]
         });
@@ -265,5 +275,76 @@ describe('ProfileChartComponent OnPush', () => {
         viewSwitch.showBailoutProfile = false;
         await fixture.whenStable();
         expect(fixture.componentInstance.showEmergencyAscent).toBe(false);
+    });
+});
+
+describe('ProfileChartComponent rest interval', () => {
+    let fixture: ComponentFixture<ProfileChartComponent>;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            imports: [ProfileChartComponent],
+            providers: [
+                WorkersFactoryCommon, ReloadDispatcher,
+                WayPointsService, SelectedWaypoint,
+                UnitConversion, DiveSchedules,
+                ResamplingService, MdbModalService,
+                StopsFilter, ViewSwitchService,
+                ViewStates, SubViewStorage, PreferencesStore, Preferences,
+                ApplicationSettingsService, LanguageService,
+                DatePipe, ValidatorGroups,
+                provideTestTranslate()
+            ]
+        });
+        vi.spyOn(TestBed.inject(PreferencesStore), 'save').mockImplementation(() => {});
+    });
+
+    const createChart = async (): Promise<void> => {
+        fixture = TestBed.createComponent(ProfileChartComponent);
+        (fixture.nativeElement as HTMLElement).style.display = 'block';
+        (fixture.nativeElement as HTMLElement).style.width = '300px';
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    const intervalInput = (): HTMLInputElement =>
+        fixture.debugElement.query(By.css('[data-testid="interval-input"]')).nativeElement as HTMLInputElement;
+
+    const enterInterval = async (value: string): Promise<void> => {
+        intervalInput().value = value;
+        intervalInput().dispatchEvent(new Event('input'));
+        fixture.detectChanges();
+        await fixture.whenStable();
+    };
+
+    it('loads rest interval from dashboard view state', async () => {
+        TestBed.inject(SubViewStorage).restInterval = 3600;
+
+        await createChart();
+
+        expect(intervalInput().value).toBe('01:00');
+    });
+
+    it('saves changed rest interval into dashboard view state', async () => {
+        await createChart();
+
+        await enterInterval('00:30');
+
+        expect(TestBed.inject(SubViewStorage).restInterval).toBe(1800);
+    });
+
+    it('heat map uses the rest interval', async () => {
+        TestBed.inject(DiveSchedules).selected.diveResult.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        await createChart();
+        const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
+        heatMapButton.click();
+        await fixture.whenStable();
+        const overPressures = vi.spyOn(DiveSchedule.prototype, 'overPressuresWithSurfaceInterval');
+
+        await enterInterval('00:30');
+        // lets Plotly promises settle, so an unhandled rejection fails this spec
+        await new Promise((resolve) => setTimeout(resolve));
+
+        expect(overPressures).toHaveBeenLastCalledWith(1800);
     });
 });

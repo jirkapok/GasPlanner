@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, effect, untracked } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, WritableSignal, effect, signal, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +16,7 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { StopsFilter } from '../../shared/stopsFilter.service';
+import { SubViewStorage } from '../../shared/subViewStorage';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { ChartLegendValues } from '../../shared/chartLegendValues';
@@ -39,6 +40,8 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     public showHeatMap = false;
     public legendValues: ChartLegendValues | undefined;
     public readonly legendColors: ChartLegendColors;
+    /** in seconds, used only for the heatmap and depth line after the dive */
+    protected readonly restInterval: WritableSignal<number>;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
@@ -54,12 +57,15 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         private translate: TranslateService,
         private cd: ChangeDetectorRef,
-        stops: StopsFilter) {
+        stops: StopsFilter,
+        private viewStore: SubViewStorage) {
         super();
+
+        this.restInterval = signal(this.viewStore.restInterval);
 
         const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
-            .withRestInterval(() => this.schedules.restInterval)
+            .withRestInterval(() => this.restInterval())
             .withoutHoverLabels()
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;
@@ -100,6 +106,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         effect(() => {
             const showBailout = stops.showBailout;
             untracked(() => this.showBailoutAscent(showBailout));
+        });
+
+        effect(() => {
+            const restInterval = this.restInterval();
+            untracked(() => this.restIntervalChanged(restInterval));
         });
     }
 
@@ -168,6 +179,16 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         }
     }
 
+    private restIntervalChanged(restInterval: number): void {
+        // the chart element exists only after the component was initialized
+        if (!this.initialized || restInterval === this.viewStore.restInterval) {
+            return;
+        }
+
+        this.viewStore.restInterval = restInterval;
+        this.plotAllCharts();
+    }
+
     private selectWayPoint(wayPoint: WayPoint | undefined) {
         this.plotter.plotCursors(wayPoint);
     }
@@ -178,8 +199,7 @@ export class ProfileChartComponent extends Streamed implements OnInit {
     }
 
     private plotAllCharts(): void {
-        const restInterval = this.schedules.restInterval;
-        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(restInterval);
+        const tissues = this.schedules.selected.overPressuresWithSurfaceInterval(this.restInterval());
         this.plotter.plotAllCharts();
         this.plotHeatMap(tissues);
     }

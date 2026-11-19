@@ -4,7 +4,7 @@
         helpDocument="profile_chart"
         [headerIcon]="profileIcon">
         <div class="d-flex align-items-center ms-2 me-1">
-            <app-rest-interval />
+            <app-rest-interval [(restInterval)]="restInterval" />
         </div>
         <button class="btn btn-sm btn-secondary ms-2" [ngClass]="{ 'active': showHeatMap }" type="button"
                 data-toggle="button" [attr.aria-pressed]="showHeatMap" title="{{ 'profileChart.heatmapTitle' | translate }}"

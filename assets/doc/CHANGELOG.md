@@ -1,3 +1,17 @@
+## [0.25.1](https://github.com/jirkapok/GasPlanner/compare/v0.25.0...v0.25.1) (2026-11-20)
+
+
+### Bug Fixes
+
+* relaxed css budget error ([5485e16](https://github.com/jirkapok/GasPlanner/commit/5485e16f87eb8fab4d388df47a7421f4c47c96c7))
+
+# [0.25.0](https://github.com/jirkapok/GasPlanner/compare/v0.24.2...v0.25.0) (2026-11-20)
+
+
+### Features
+
+* [#116](https://github.com/jirkapok/GasPlanner/issues/116) Show tissues for rest interval ([#142](https://github.com/jirkapok/GasPlanner/issues/142)) ([c9c5217](https://github.com/jirkapok/GasPlanner/commit/c9c5217b6e595f98467f526e299d81ced5c64c31))
+
 ## [0.24.2](https://github.com/jirkapok/GasPlanner/compare/v0.24.1...v0.24.2) (2026-11-14)
 
 

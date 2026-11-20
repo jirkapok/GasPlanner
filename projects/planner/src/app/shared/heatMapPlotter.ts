@@ -12,6 +12,9 @@ export type HeatMapOverPressures =
     number | null, number | null, number | null, number | null][];
 
 export class HeatMapPlotter {
+    /** Max. columns drawn, more than heat map width in pixels */
+    private static readonly maxSamples = 1000;
+
     private readonly colorScale: Plotly.ColorScale = [
         [0, 'rgb(31, 119, 180)'],
         [0.3, 'white'],
@@ -62,6 +65,23 @@ export class HeatMapPlotter {
     }
 
     /**
+     * Plotly draws one canvas pixel per sample, browser can't draw canvas wider than 65 535 pixels.
+     * Samples evenly distributed in time including the first and last one are kept,
+     * so heat maps of the same length are resampled to the same times.
+     */
+    private static resample(dataValues: HeatMapOverPressures): HeatMapOverPressures {
+        const length = dataValues.length;
+        const maxSamples = HeatMapPlotter.maxSamples;
+
+        if (length <= maxSamples) {
+            return dataValues;
+        }
+
+        const step = (length - 1) / (maxSamples - 1);
+        return Array.from({ length: maxSamples }, (_v, index) => dataValues[Math.round(index * step)]);
+    }
+
+    /**
      * Every data array represents a tissue saturation speed changes in time.
      * Expecting values in range of -1 to 1 where:
      * -1: is 100% speed of offgasing.
@@ -69,7 +89,8 @@ export class HeatMapPlotter {
      * +1: is 100% speed of ongasing.
      */
     public async plotHeatMap(dataValues: HeatMapOverPressures): Promise<void> {
-        let transponed = _.zip(...dataValues) as number[][];
+        const resampled = HeatMapPlotter.resample(dataValues);
+        let transponed = _.zip(...resampled) as number[][];
         transponed = transponed.reverse();
 
         const data: Partial<Plotly.HeatmapData>[] = [

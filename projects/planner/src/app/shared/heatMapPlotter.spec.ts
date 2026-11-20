@@ -39,6 +39,53 @@ describe('HeatMapPlotter', () => {
         }
     });
 
+    describe('Long heat map', () => {
+        // one sample per second, browser can't draw canvas wider than 65 535 pixels
+        const samples = 24 * 3600 + 1;
+        let graphDiv: HTMLDivElement;
+
+        const plotLongHeatMap = async (): Promise<number[][]> => {
+            const input = Array.from({ length: samples }, (_, i) => new Array<number>(16).fill(i)) as HeatMapOverPressures;
+            await new HeatMapPlotter(graphDiv.id).plotHeatMap(input);
+            const plotted = (graphDiv as unknown as Plotly.PlotlyHTMLElement).data[0] as Partial<Plotly.HeatmapData>;
+            return plotted.z as number[][];
+        };
+
+        beforeEach(() => {
+            graphDiv = document.createElement('div');
+            graphDiv.id = 'heatmap-long-test';
+            graphDiv.style.width = '600px';
+            graphDiv.style.height = '50px';
+            document.body.appendChild(graphDiv);
+        });
+
+        afterEach(() => {
+            graphDiv.remove();
+        });
+
+        it('is shortened to 1000 columns', async () => {
+            const z = await plotLongHeatMap();
+
+            expect(z.length).toBe(16);
+            expect(z[0].length).toBe(1000);
+        });
+
+        it('keeps first and last sample', async () => {
+            const z = await plotLongHeatMap();
+
+            expect(z[0][0]).toBe(0);
+            expect(z[0][999]).toBe(samples - 1);
+        });
+
+        it('is drawn', async () => {
+            await plotLongHeatMap();
+
+            // empty canvas is exported as 'data:,'
+            const image = graphDiv.querySelector('image');
+            expect(image?.getAttribute('href')?.length).toBeGreaterThan(100);
+        });
+    });
+
     it('resolves after the heat map is sized to its element', async () => {
         const id = 'heatmap-resolve-test';
         const graphDiv = document.createElement('div');

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, effect, untracked } from '@angular/core';
+import { Component, OnDestroy, OnInit, ChangeDetectorRef, WritableSignal, effect, signal, untracked } from '@angular/core';
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
@@ -16,6 +16,9 @@ import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
 import { StopsFilter } from '../../shared/stopsFilter.service';
+import { SubViewStorage } from '../../shared/subViewStorage';
+import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
+import { RestIntervalTissues } from '../../shared/restIntervalTissues';
 import { CardHeaderComponent } from '../../card-header/card-header.component';
 import { NgClass } from '@angular/common';
 import { ChartLegendValues } from '../../shared/chartLegendValues';
@@ -23,26 +26,31 @@ import { ChartLegendComponent } from '../../controls/chart-legend/chart-legend.c
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { CalculatingComponent } from '../../controls/calculating/calculating.component';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { RestIntervalComponent } from '../rest-interval/rest-interval.component';
 
 @Component({
     selector: 'app-profilechart',
     templateUrl: './profilechart.component.html',
     styleUrls: ['./profilechart.component.scss'],
-    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent]
+    imports: [CardHeaderComponent, NgClass, FaIconComponent, CalculatingComponent, TranslatePipe, ChartLegendComponent,
+        RestIntervalComponent]
 })
-export class ProfileChartComponent extends Streamed implements OnInit {
+export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy {
     public readonly profileIcon = faChartArea;
     public readonly emergencyIcon = faThumbsUp;
     public readonly heatmapIcon = faFire;
     public showHeatMap = false;
     public legendValues: ChartLegendValues | undefined;
     public readonly legendColors: ChartLegendColors;
+    /** in seconds, used only for the heatmap and depth line after the dive */
+    protected readonly restInterval: WritableSignal<number>;
     private readonly elementName = 'diveplot';
     private readonly heatMapElementName = 'heatmapplot';
     private plotter: ChartPlotter;
     private heatmapPlotter: HeatMapPlotter;
     private profileTraces: DiveTracesBuilder;
     private initialized = false;
+    private heatMapTissues: RestIntervalTissues;
 
     constructor(
         units: UnitConversion,
@@ -52,16 +60,22 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         private schedules: DiveSchedules,
         private translate: TranslateService,
         private cd: ChangeDetectorRef,
-        stops: StopsFilter) {
+        stops: StopsFilter,
+        private viewStore: SubViewStorage,
+        workers: WorkersFactoryCommon) {
         super();
 
-        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key));
+        this.restInterval = signal(this.viewStore.restInterval);
+
+        const chartPlotterFactory = new ChartPlotterFactory(resampling, units, key => this.translate.instant(key) as string);
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
+            .withRestInterval(() => this.restInterval())
             .withoutHoverLabels()
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;
-        this.plotter = new ChartPlotter(this.elementName, () => this.dive.totalDuration, chartPlotterFactory, this.profileTraces);
+        this.plotter = new ChartPlotter(this.elementName, () => this.profileTraces.chartEnd, chartPlotterFactory, this.profileTraces);
         this.heatmapPlotter = new HeatMapPlotter(this.heatMapElementName);
+        this.heatMapTissues = new RestIntervalTissues(workers.createRestIntervalWorker());
 
         this.dispatcher.wayPointsCalculated$.pipe(takeUntil(this.unsubscribe$))
             .subscribe((diveId?: number) => {
@@ -98,6 +112,17 @@ export class ProfileChartComponent extends Streamed implements OnInit {
             const showBailout = stops.showBailout;
             untracked(() => this.showBailoutAscent(showBailout));
         });
+
+        effect(() => {
+            const restInterval = this.restInterval();
+            untracked(() => this.restIntervalChanged(restInterval));
+        });
+
+        // the rest interval tissues are appended later by background task
+        effect(() => {
+            const tissues = this.heatMapTissues.overPressures();
+            untracked(() => this.plotHeatMap(tissues));
+        });
     }
 
     public get profileCalculated(): boolean {
@@ -121,6 +146,11 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         this.initialized = true;
         this.plotAllCharts();
         this.hookChartEvents();
+    }
+
+    public override ngOnDestroy(): void {
+        this.heatMapTissues.dispose();
+        super.ngOnDestroy();
     }
 
     public plotlyHover(data: Plotly.PlotMouseEvent): void {
@@ -165,28 +195,45 @@ export class ProfileChartComponent extends Streamed implements OnInit {
         }
     }
 
+    private restIntervalChanged(restInterval: number): void {
+        // the chart element exists only after the component was initialized
+        if (!this.initialized || restInterval === this.viewStore.restInterval) {
+            return;
+        }
+
+        this.viewStore.restInterval = restInterval;
+        this.plotAllCharts();
+    }
+
     private selectWayPoint(wayPoint: WayPoint | undefined) {
         this.plotter.plotCursors(wayPoint);
     }
 
     private plotProfile(): void {
         this.plotter.plotProfileChartsOnly();
-        this.plotHeatMap([]);
+        // also drops running calculation of the previous profile
+        this.heatMapTissues.clear();
     }
 
     private plotAllCharts(): void {
         this.plotter.plotAllCharts();
-        this.plotHeatMap(this.dive.tissueOverPressures);
+
+        // calculating the rest interval tissues is expensive, so only when shown
+        if (this.showHeatMap) {
+            const altitude = this.schedules.selected.optionsService.altitude;
+            this.heatMapTissues.calculate(this.dive, altitude, this.restInterval());
+        }
     }
 
     private plotHeatMap(tissueOverPressures: TissueOverPressures[]): void {
-        if (this.showHeatMap) {
+        // the heat map element exists only after the component was initialized
+        if (this.initialized && this.showHeatMap) {
             void this.heatmapPlotter.plotHeatMap(tissueOverPressures);
         }
     }
 
     private hookChartEvents(): void {
-        const chartElement: any = document.getElementById(this.elementName);
+        const chartElement = document.getElementById(this.elementName) as Plotly.PlotlyHTMLElement;
         // Plotly events are outside Angular events, so they have to schedule the change detection
         chartElement.on('plotly_hover', (e: Plotly.PlotMouseEvent) => {
             this.plotlyHover(e);

@@ -34,8 +34,16 @@ interface DepthsForm {
     selector: 'app-depths-complex',
     templateUrl: './depths-complex.component.html',
     styleUrls: ['./depths-complex.component.scss'],
-    imports: [CardHeaderComponent, ReactiveFormsModule, SurfaceIntervalComponent, MdbAccordionModule, FaIconComponent, MdbDropdownModule,
-        LocaleNumberPipe, TranslatePipe]
+    imports: [
+        CardHeaderComponent,
+        ReactiveFormsModule,
+        SurfaceIntervalComponent,
+        MdbAccordionModule,
+        FaIconComponent,
+        MdbDropdownModule,
+        LocaleNumberPipe,
+        TranslatePipe
+    ]
 })
 export class DepthsComplexComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;
@@ -186,7 +194,7 @@ export class DepthsComplexComponent extends Streamed implements OnInit {
 
     private reload(): void {
         this.complexForm.patchValue({
-            surfaceInterval: this.surfaceInterval
+            surfaceInterval: this.surfaceInterval,
         });
         this.levelControls.clear();
         this.createLevelControls().forEach(c => this.levelControls.push(c));

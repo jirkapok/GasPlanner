@@ -486,6 +486,14 @@
     "twoHours": "2 Hours",
     "invalidFormat": "Needs to be a text in form hh:mm"
   },
+  "restInterval": {
+    "label": "Rest interval",
+    "zeroMinutes": "0 minutes",
+    "thirtyMinutes": "30 minutes",
+    "oneHour": "1 Hour",
+    "twoHours": "2 Hours",
+    "invalidFormat": "Needs to be a text in form hh:mm"
+  },
   "tankChart": {
     "gasRemaining": "Gas remaining:",
     "rockBottom": "Rock bottom:"

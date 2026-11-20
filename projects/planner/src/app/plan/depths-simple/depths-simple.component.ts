@@ -29,8 +29,15 @@ interface SimpleDepthsForm {
     selector: 'app-depths-simple',
     templateUrl: './depths-simple.component.html',
     styleUrls: ['./depths-simple.component.scss'],
-    imports: [ReactiveFormsModule, CardHeaderComponent, MdbFormsModule, DepthComponent, SurfaceIntervalComponent, LocaleNumberPipe,
-        TranslatePipe]
+    imports: [
+        ReactiveFormsModule,
+        CardHeaderComponent,
+        MdbFormsModule,
+        DepthComponent,
+        SurfaceIntervalComponent,
+        LocaleNumberPipe,
+        TranslatePipe
+    ]
 })
 export class DepthsSimpleComponent extends Streamed implements OnInit {
     @Input() public rootForm!: FormGroup;
@@ -75,6 +82,7 @@ export class DepthsSimpleComponent extends Streamed implements OnInit {
     private get surfaceInterval(): string | null {
         return this.schedules.selected.surfaceIntervalText;
     }
+
 
     public ngOnInit(): void {
         this.simpleForm = this.fb.group({

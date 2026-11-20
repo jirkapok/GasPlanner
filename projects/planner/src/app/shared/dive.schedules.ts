@@ -6,7 +6,8 @@ import { DiveResults } from './diveresults';
 import { DepthsService } from './depths.service';
 import { ReloadDispatcher } from './reloadDispatcher';
 import {
-    CircuitType, GasToxicity, LoadedTissues, Precision, ProfileTissues, RebreatherTanks, Time
+    CircuitType, GasToxicity, LoadedTissues, Precision,
+    ProfileTissues, RebreatherTanks, Time
 } from 'scuba-physics';
 import { TankBound } from './models';
 import { CircuitNames } from './circuit-names.service';

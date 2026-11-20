@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Validators, ValidatorFn, AbstractControl, ValidationErrors, FormControl } from '@angular/forms';
 import { RangeConstants, UnitConversion } from './UnitConversion';
 import { DateFormats } from './formaters';
+import { SchemaPath, validate } from '@angular/forms/signals';
 
 /** Arrow function wrapper, because passing the static method reference breaks the unbound-method lint rule */
 const required: ValidatorFn = (control: AbstractControl): ValidationErrors | null => Validators.required(control);
@@ -144,6 +145,20 @@ export class ValidatorGroups {
 
             return null;
         };
+    }
+
+    /** Has to be 0-24 hours */
+    public restInterval(path: SchemaPath<string>): void {
+        validate(path, ({ value }) => {
+            const parsed = DateFormats.parseToShortTime(value());
+            const twentyFourHours = 60 * 60 * 24;
+
+            if (typeof parsed !== 'number' || parsed < 0 || parsed > twentyFourHours) {
+                return { kind: 'restInterval' };
+            }
+
+            return null;
+        });
     }
 
     /**

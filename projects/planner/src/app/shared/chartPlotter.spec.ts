@@ -3,6 +3,8 @@ import { ChartPlotterFactory } from './chartPlotter';
 import { ResamplingService } from './ResamplingService';
 import { UnitConversion } from './UnitConversion';
 import { DiveResults } from './diveresults';
+import { WayPoint } from './wayPoint';
+import { ProfileTissues, Segment, StandardGases } from 'scuba-physics';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 
 describe('ChartPlotterFactory', () => {
@@ -109,5 +111,39 @@ describe('DiveTracesBuilder', () => {
         const traces = factory.create(() => dive).allTraces();
 
         traces.forEach(t => expect(t.hoverinfo).toBeUndefined());
+    });
+
+    describe('Chart end', () => {
+        const fortyMinutes = 2400;
+        const twoHours = 7200;
+
+        const diveTo = (endDepth: number): DiveResults => {
+            const result = new DiveResults();
+            const segment = new Segment(30, endDepth, StandardGases.air, fortyMinutes);
+            result.updateProfile([WayPoint.fromSegment(TestBed.inject(UnitConversion), segment)],
+                ProfileTissues.createAtSurface(0), [segment]);
+            return result;
+        };
+
+        it('adds rest interval to dive ending on surface', () => {
+            const surfaced = diveTo(0);
+            const builder = factory.withRestInterval(() => twoHours).create(() => surfaced);
+
+            expect(builder.chartEnd).toBe(fortyMinutes + twoHours);
+        });
+
+        it('ignores rest interval when dive does not end on surface', () => {
+            const submerged = diveTo(10);
+            const builder = factory.withRestInterval(() => twoHours).create(() => submerged);
+
+            expect(builder.chartEnd).toBe(fortyMinutes);
+        });
+
+        it('includes time offset', () => {
+            const surfaced = diveTo(0);
+            const builder = factory.withTimeOffset(() => 600).create(() => surfaced);
+
+            expect(builder.chartEnd).toBe(fortyMinutes + 600);
+        });
     });
 });

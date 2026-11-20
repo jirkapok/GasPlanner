@@ -93,6 +93,12 @@ describe('RestartableBackgroundTask', () => {
         expect(created[1].posted).toEqual([2]);
     });
 
+    it('Terminate stops the worker without starting new one', () => {
+        sut.terminate();
+        expect(created[0].terminated).toBe(true);
+        expect(created.length).toBe(1);
+    });
+
     it('Reports messages of the new worker after cancel', () => {
         const received: string[] = [];
         sut.calculated$.subscribe(m => received.push(m));

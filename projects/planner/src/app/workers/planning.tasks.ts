@@ -4,12 +4,13 @@ import {
     DensityAtDepth, EventOptions, AlgorithmParams, BuhlmannAlgorithm,
     RestingParameters, Segment, PlanFactory, ConsumptionOptions,
     Tank, ProfileTissues, CnsDailyCalculator, ConsumptionByGas,
-    BreathingModel, BreathingModelFactory, DepthConverter, Options
+    BreathingModel, BreathingModelFactory, DepthConverter, Options,
+    SurfaceIntervalParameters
 } from 'scuba-physics';
 import {
     ProfileRequestDto, ProfileResultDto, ConsumptionRequestDto,
     ConsumptionResultDto, DiveInfoResultDto, DiveInfoRequestDto,
-    PlanRequestDto, SegmentDto
+    PlanRequestDto, SegmentDto, RestIntervalRequestDto, RestIntervalResultDto
 } from '../shared/serialization.model';
 import { DtoSerialization } from '../shared/dtoSerialization';
 
@@ -32,6 +33,16 @@ export class PlanningTasks {
     public static diveParameters(task: PlanRequestDto): AlgorithmParams {
         const tanks = DtoSerialization.toTanks(task.tanks);
         return this.profileParametersFromTask(task, tanks, task.plan);
+    }
+
+    /** Tissues over pressures while resting on the surface after the dive, used only by the heatmap */
+    public static restIntervalTissues(task: RestIntervalRequestDto): RestIntervalResultDto {
+        const tissues = DtoSerialization.toTissues(task.tissues);
+        const parameters = new SurfaceIntervalParameters(tissues, task.altitude, task.restInterval);
+        const statistics = new BuhlmannAlgorithm().applySurfaceIntervalStatistics(parameters);
+        return {
+            tissueOverPressures: statistics.tissueOverPressures
+        };
     }
 
     /** 2.A calculate dive results */

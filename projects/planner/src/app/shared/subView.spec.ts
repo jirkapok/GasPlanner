@@ -7,7 +7,7 @@ import { UnitConversion } from './UnitConversion';
 import { WayPointsService } from './waypoints.service';
 import { Preferences } from './preferences';
 import { ViewSwitchService } from './viewSwitchService';
-import { ViewState } from './views.model';
+import { DashBoardViewState, ViewState } from './views.model';
 import { SubViewStorage } from './subViewStorage';
 import { ReloadDispatcher } from './reloadDispatcher';
 import { DiveSchedules } from './dive.schedules';
@@ -60,13 +60,13 @@ describe('SubView', () => {
 
     it('Saves view state', inject([SubViewStorage, ViewStates, PreferencesStore],
         (viewStorage: SubViewStorage, viewStates: ViewStates, preferences: PreferencesStore) => {
-            vi.spyOn(viewStates, 'set').mockImplementation(() => {});
-            vi.spyOn(preferences, 'save').mockImplementation(() => {});
+            const setSpy = vi.spyOn(viewStates, 'set').mockImplementation(() => {});
+            const saveSpy = vi.spyOn(preferences, 'save').mockImplementation(() => {});
 
             viewStorage.saveView(changedSate);
 
-            expect(viewStates.set).toHaveBeenCalledExactlyOnceWith(changedSate);
-            expect(preferences.save).toHaveBeenCalledWith();
+            expect(setSpy).toHaveBeenCalledExactlyOnceWith(changedSate);
+            expect(saveSpy).toHaveBeenCalledWith();
         }));
 
     it('Loads view state', inject([SubViewStorage, ViewStates, PreferencesStore],
@@ -111,5 +111,75 @@ describe('SubView', () => {
 
                 expect(viewStates.redirectToView).toBe(false);
             }));
+    });
+
+    describe('Main view rest interval', () => {
+        let sut: SubViewStorage;
+        let viewStates: ViewStates;
+
+        const loadDashboard = (state: DashBoardViewState) => {
+            viewStates.loadFrom({
+                lastScreen: KnownViews.dashboard,
+                states: [state]
+            });
+        };
+
+        const storedRestInterval = (): number | undefined =>
+            viewStates.get<DashBoardViewState>(KnownViews.dashboard)?.restInterval;
+
+        beforeEach(() => {
+            sut = TestBed.inject(SubViewStorage);
+            viewStates = TestBed.inject(ViewStates);
+            vi.spyOn(TestBed.inject(PreferencesStore), 'save').mockImplementation(() => {});
+        });
+
+        it('is 0 when there is no dashboard state', () => {
+            viewStates.reset();
+
+            expect(sut.restInterval).toBe(0);
+        });
+
+        it('is 0 for dashboard state without rest interval', () => {
+            loadDashboard({ id: KnownViews.dashboard, selectedDiveIndex: 0 });
+
+            expect(sut.restInterval).toBe(0);
+        });
+
+        it('loads stored value', () => {
+            loadDashboard({ id: KnownViews.dashboard, selectedDiveIndex: 0, restInterval: 3600 });
+
+            expect(sut.restInterval).toBe(3600);
+        });
+
+        it('setter stores into dashboard view state', () => {
+            sut.restInterval = 1800;
+
+            expect(storedRestInterval()).toBe(1800);
+        });
+
+        it('saveMainView keeps stored rest interval', () => {
+            loadDashboard({ id: KnownViews.dashboard, selectedDiveIndex: 0, restInterval: 3600 });
+
+            sut.saveMainView();
+
+            expect(storedRestInterval()).toBe(3600);
+        });
+
+        it('setter keeps diff view state rest interval', () => {
+            const diffState = { id: KnownViews.diff, profileA: 0, profileB: 1, alignByEnd: false, restInterval: 600 };
+            sut.saveView(diffState);
+
+            sut.restInterval = 1800;
+
+            expect(viewStates.get(KnownViews.diff)).toEqual(diffState);
+        });
+
+        it('reset clears rest interval', () => {
+            sut.restInterval = 1800;
+
+            sut.reset();
+
+            expect(sut.restInterval).toBe(0);
+        });
     });
 });

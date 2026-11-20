@@ -8,6 +8,7 @@ import { CircuitNames } from './circuit-names.service';
 import { useEnglishCircuitNames } from './circuit-names.testing';
 import { provideTestTranslate } from '../../testing/translate-testing.helpers';
 import { CircuitType, HighestDensity, ProfileTissues, Tank, Time } from 'scuba-physics';
+import { beforeEach, describe, expect, it } from 'vitest';
 
 describe('Scheduled dives', () => {
     let sut: DiveSchedules;

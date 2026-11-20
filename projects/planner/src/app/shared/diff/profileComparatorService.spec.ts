@@ -1,4 +1,4 @@
-import { MockInstance } from 'vitest';
+import { beforeEach, describe, expect, it, MockInstance, vi } from 'vitest';
 import { inject, TestBed } from '@angular/core/testing';
 import { DiveSchedules } from '../dive.schedules';
 import { ProfileComparatorService } from './profileComparatorService';
@@ -7,7 +7,7 @@ import { UnitConversion } from '../UnitConversion';
 import {
     ConsumptionByMix, HighestDensity,
     IConsumedMix, ProfileTissues, Segment,
-    StandardGases, Tank
+    StandardGases, Tank, TissueOverPressures
 } from 'scuba-physics';
 import { WayPoint } from '../wayPoint';
 import { PlannerService } from '../planner.service';
@@ -20,6 +20,19 @@ describe('ProfileComparatorService', () => {
     const irrelevantTissues = ProfileTissues.createAtSurface(0);
     let sut: ProfileComparatorService;
     let schedules: DiveSchedules;
+
+    const setDiveDurations = (durationA: number, durationB: number): void => {
+        schedules.add();
+        sut.selectProfile(1);
+
+        const units = TestBed.inject(UnitConversion);
+        schedules.dives[0].diveResult.updateProfile([
+            WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationA))
+        ], irrelevantTissues, []);
+        schedules.dives[1].diveResult.updateProfile([
+            WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
+        ], irrelevantTissues, []);
+    };
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
@@ -96,12 +109,12 @@ describe('ProfileComparatorService', () => {
         });
 
         it('profileACombinedTanks call combined consumption for Profile A', () => {
-            const _ = sut.profileAConsumed;
+            expect(sut.profileAConsumed).toBeDefined();
             expect(combineMethod).toHaveBeenCalledWith(sut.profileA.tanksService.tankData);
         });
 
         it('profileBCombinedTanks call combined consumption for Profile B', () => {
-            const _ = sut.profileBConsumed;
+            expect(sut.profileBConsumed).toBeDefined();
             expect(combineMethod).toHaveBeenCalledWith(sut.profileB.tanksService.tankData);
         });
     });
@@ -184,26 +197,13 @@ describe('ProfileComparatorService', () => {
         planner.calculate(1);
         planner.calculate(2);
 
-        const overPressures = sut.overPressures;
-        const lengthB = overPressures.profileAOverPressures.length;
-        const lengthA = overPressures.profileBOverPressures.length;
-        expect(lengthA).toEqual(lengthB);
+        const rests = sut.restIntervals(0);
+        const endA = sut.profileAResults.totalDuration + rests.profileA;
+        const endB = sut.profileBResults.totalDuration + rests.profileB;
+        expect(endA).toEqual(endB);
     });
 
     describe('Offsets', () => {
-        const setDiveDurations = (durationA: number, durationB: number): void => {
-            schedules.add();
-            sut.selectProfile(1);
-
-            const units = TestBed.inject(UnitConversion);
-            schedules.dives[0].diveResult.updateProfile([
-                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationA))
-            ], irrelevantTissues, []);
-            schedules.dives[1].diveResult.updateProfile([
-                WayPoint.fromSegment(units, new Segment(0, 0, StandardGases.air, durationB))
-            ], irrelevantTissues, []);
-        };
-
         it('Returns correct offsets when alignByEnd is false on differing dives', () => {
             setDiveDurations(500, 700);
 
@@ -239,6 +239,62 @@ describe('ProfileComparatorService', () => {
             sut.alignByEnd = false;
             expect(sut.profileATimeOffset).toEqual(0);
             expect(sut.profileBTimeOffset).toEqual(0);
+        });
+    });
+
+    describe('Rest intervals', () => {
+        it('Start aligned adds duration difference to shorter dive B', () => {
+            setDiveDurations(700, 500);
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 800 });
+        });
+
+        it('Start aligned adds duration difference to shorter dive A', () => {
+            setDiveDurations(500, 700);
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 800, profileB: 600 });
+        });
+
+        it('Start aligned keeps rest interval for dives of equal duration', () => {
+            setDiveDurations(500, 500);
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 600 });
+        });
+
+        it('End aligned uses rest interval for both dives', () => {
+            setDiveDurations(700, 500);
+            sut.alignByEnd = true;
+
+            expect(sut.restIntervals(600)).toEqual({ profileA: 600, profileB: 600 });
+        });
+    });
+
+    describe('Align over pressures', () => {
+        const row = (value: number): TissueOverPressures => new Array<number>(16).fill(value) as TissueOverPressures;
+        const emptyRow = new Array<null>(16).fill(null);
+
+        it('Start aligned returns both profiles unchanged', () => {
+            const aligned = sut.alignOverPressures([row(1), row(2)], [row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [row(1), row(2)], profileBOverPressures: [row(3)] });
+        });
+
+        it('End aligned pads shorter profile B at start', () => {
+            setDiveDurations(700, 500);
+            sut.alignByEnd = true;
+
+            const aligned = sut.alignOverPressures([row(1), row(2)], [row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [row(1), row(2)], profileBOverPressures: [emptyRow, row(3)] });
+        });
+
+        it('End aligned pads shorter profile A at start', () => {
+            setDiveDurations(500, 700);
+            sut.alignByEnd = true;
+
+            const aligned = sut.alignOverPressures([row(1)], [row(2), row(3)]);
+
+            expect(aligned).toEqual({ profileAOverPressures: [emptyRow, row(1)], profileBOverPressures: [row(2), row(3)] });
         });
     });
 

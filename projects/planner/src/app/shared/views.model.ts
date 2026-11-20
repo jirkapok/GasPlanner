@@ -2,6 +2,9 @@ import { Salinity } from 'scuba-physics';
 
 export interface DashBoardViewState extends ViewState {
     selectedDiveIndex: number;
+    /** Rest interval after the dive shown by the profile chart heatmap, in seconds.
+     * Added with the heatmap rest interval, does not have to be present, defaults to 0 */
+    restInterval?: number;
 }
 
 export interface GasViewState extends ViewState {
@@ -94,6 +97,9 @@ export interface DiffViewState extends ViewState {
     // index
     profileB: number;
     alignByEnd: boolean;
+    /** Rest interval after the dive shown by the diff heatmaps, in seconds.
+     * Added with the heatmap rest interval, does not have to be present, defaults to 0 */
+    restInterval?: number;
 }
 
 

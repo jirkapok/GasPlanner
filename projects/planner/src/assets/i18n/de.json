@@ -163,6 +163,7 @@
   },
   "profileChart": { "cardTitle": "Tauchprofil", "heatmapTitle": "Gewebe-Heatmap anzeigen", "emergencyAscentTitle": "Notaufstieg anzeigen", "timeAxisLabel": "Zeit", "depthAxisLabel": "Tiefe", "avgDepthTraceName": "Ø Tiefe", "depthTraceName": "Tiefe", "emergencyTraceName": "Notfall", "ceilingTraceName": "Ceiling", "eventTraceName": "Ereignis" },
   "surfaceInterval": { "label": "Oberflächenpause", "firstDive": "Erster Tauchgang", "thirtyMinutes": "30 Minuten", "oneHour": "1 Stunde", "twoHours": "2 Stunden", "invalidFormat": "Muss im Format hh:mm angegeben werden" },
+  "restInterval": { "label": "Ruhezeit", "zeroMinutes": "0 Minuten", "thirtyMinutes": "30 Minuten", "oneHour": "1 Stunde", "twoHours": "2 Stunden", "invalidFormat": "Muss im Format hh:mm angegeben werden" },
   "tankChart": { "gasRemaining": "Verbleibendes Gas:", "rockBottom": "Rock Bottom:" },
   "gasChart": { "reserve": "Reserve:", "consumed": "Verbraucht:", "available": "Verfügbar:" },
   "tanksComplex": { "cardTitle": "Flaschen", "size": "Größe", "workPressure": "Betriebsdr.", "pressure": "Druck", "he": "He", "o2": "O2", "sac": "SAC:", "workingPressureLabel": "Betriebsdruck", "startPressureLabel": "Startdruck", "openCircuit": "Offenes System", "pscr": "pSCR", "tanksTab": "Flaschen", "rebreatherTab": "Kreislaufgerät", "mccr": "mCCR", "eccr": "eCCR", "diluent": "Diluent", "oxygen": "Sauerstoff" },

@@ -1,3 +1,10 @@
+## [0.25.1](https://github.com/jirkapok/GasPlanner/compare/v0.25.0...v0.25.1) (2026-11-20)
+
+
+### Bug Fixes
+
+* relaxed css budget error ([5485e16](https://github.com/jirkapok/GasPlanner/commit/5485e16f87eb8fab4d388df47a7421f4c47c96c7))
+
 # [0.25.0](https://github.com/jirkapok/GasPlanner/compare/v0.24.2...v0.25.0) (2026-11-20)
 
 

@@ -408,4 +408,13 @@ describe('ProfileChartComponent rest interval', () => {
         const z = (heatMap.data[0] as Partial<Plotly.HeatmapData>).z as number[][];
         expect(z[0].length).toBe(601);
     });
+    it('clears heat map tissues when new profile is calculated', async () => {
+        await createChart();
+        const clear = vi.spyOn(RestIntervalTissues.prototype, 'clear');
+        const schedules = TestBed.inject(DiveSchedules);
+
+        TestBed.inject(ReloadDispatcher).sendWayPointsCalculated(schedules.selected.id);
+
+        expect(clear).toHaveBeenCalled();
+    });
 });

@@ -36,7 +36,8 @@ export class RestIntervalTissues {
         this.awaitingResult = false;
         // final tissues may already belong to new profile, while the over pressures are still from previous dive info
         this.diveTissues = dive.diveInfoCalculated ? dive.tissueOverPressures : [];
-        this._overPressures.set(this.diveTissues);
+        // new array, so every calculation redraws the heat map
+        this._overPressures.set([...this.diveTissues]);
 
         if (!dive.diveInfoCalculated || restInterval <= 0 || !dive.endsOnSurface) {
             return;
@@ -48,6 +49,14 @@ export class RestIntervalTissues {
             altitude: altitude,
             restInterval: restInterval
         });
+    }
+
+    /** No tissues shown, e.g. while new profile is calculated, running calculation result is dropped */
+    public clear(): void {
+        this.task.cancel();
+        this.awaitingResult = false;
+        this.diveTissues = [];
+        this._overPressures.set([]);
     }
 
     /** Stops the background task, call when the owner is destroyed */

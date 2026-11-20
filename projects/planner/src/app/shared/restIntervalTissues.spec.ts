@@ -130,4 +130,23 @@ describe('RestIntervalTissues', () => {
 
         expect(sut.overPressures()).toEqual([diveRow]);
     });
+    it('clear drops running calculation and empties tissues', () => {
+        sut.calculate(createDive(0, true), 0, 1800);
+
+        sut.clear();
+        task.respond(row(2));
+
+        expect(sut.overPressures()).toEqual([]);
+        expect(task.calls).toEqual(['cancel', 'calculate', 'cancel']);
+    });
+
+    it('publishes new value for each calculation', () => {
+        const dive = createDive(0, true);
+        sut.calculate(dive, 0, 0);
+        const first = sut.overPressures();
+
+        sut.calculate(dive, 0, 0);
+
+        expect(sut.overPressures()).not.toBe(first);
+    });
 });

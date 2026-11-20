@@ -7,7 +7,7 @@ import { DtoSerialization } from './dtoSerialization';
 
 /**
  * Heatmap tissues of one dive including the rest interval after the dive.
- * The dive part is published immediately, the rest interval part is calculated in background and appended later.
+ * The rest interval part is calculated in background, previous tissues are kept until the new ones are calculated.
  * Results are not stored in the dive results, since they are used only by the heatmap.
  */
 export class RestIntervalTissues {
@@ -18,10 +18,10 @@ export class RestIntervalTissues {
 
     constructor(private task: IRestartableTask<RestIntervalRequestDto, RestIntervalResultDto>) {
         this.task.calculated$.subscribe((result) => this.applyResult(result));
-        this.task.failed$.subscribe(() => this.awaitingResult = false);
+        this.task.failed$.subscribe(() => this.applyFailure());
     }
 
-    /** dive tissues, later extended by the rest interval tissues */
+    /** dive tissues followed by the rest interval tissues */
     public get overPressures(): Signal<TissueOverPressures[]> {
         return this._overPressures.asReadonly();
     }
@@ -32,14 +32,17 @@ export class RestIntervalTissues {
      * @param restInterval in seconds
      */
     public calculate(dive: DiveResults, altitude: number, restInterval: number): void {
-        this.task.cancel();
-        this.awaitingResult = false;
-        // final tissues may already belong to new profile, while the over pressures are still from previous dive info
-        this.diveTissues = dive.diveInfoCalculated ? dive.tissueOverPressures : [];
-        // new array, so every calculation redraws the heat map
-        this._overPressures.set([...this.diveTissues]);
+        this.cancel();
 
-        if (!dive.diveInfoCalculated || restInterval <= 0 || !dive.endsOnSurface) {
+        // final tissues may already belong to new profile, while the over pressures are still from previous dive info
+        if (!dive.diveInfoCalculated) {
+            return;
+        }
+
+        this.diveTissues = dive.tissueOverPressures;
+
+        if (restInterval <= 0 || !dive.endsOnSurface) {
+            this.publish([]);
             return;
         }
 
@@ -51,12 +54,10 @@ export class RestIntervalTissues {
         });
     }
 
-    /** No tissues shown, e.g. while new profile is calculated, running calculation result is dropped */
-    public clear(): void {
+    /** Drops running calculation, e.g. while new profile is calculated, previous tissues are kept */
+    public cancel(): void {
         this.task.cancel();
         this.awaitingResult = false;
-        this.diveTissues = [];
-        this._overPressures.set([]);
     }
 
     /** Stops the background task, call when the owner is destroyed */
@@ -70,6 +71,21 @@ export class RestIntervalTissues {
         }
 
         this.awaitingResult = false;
-        this._overPressures.set([...this.diveTissues, ...result.tissueOverPressures]);
+        this.publish(result.tissueOverPressures);
+    }
+
+    /** at least the dive part is shown */
+    private applyFailure(): void {
+        if (!this.awaitingResult) {
+            return;
+        }
+
+        this.awaitingResult = false;
+        this.publish([]);
+    }
+
+    /** new array, so every calculation redraws the heat map */
+    private publish(restTissues: TissueOverPressures[]): void {
+        this._overPressures.set([...this.diveTissues, ...restTissues]);
     }
 }

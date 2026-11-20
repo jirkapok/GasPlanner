@@ -64,6 +64,7 @@ describe('ProfileChartComponent', () => {
         (fixture.nativeElement as HTMLElement).style.width = '300px';
         const schedules = TestBed.inject(DiveSchedules);
         schedules.selected.diveResult.updateProfile([], ProfileTissues.createAtSurface(0), []);
+        schedules.selected.diveResult.updateDiveInfo(0, false, 0, 0, 0, 0, 0, 0, 0, HighestDensity.createDefault(), [], [], [], 0, [], []);
 
         const heatMapButton = fixture.debugElement.query(By.css('[data-testid="heat-map-button"]')).nativeElement as HTMLButtonElement;
         heatMapButton.click();
@@ -408,13 +409,13 @@ describe('ProfileChartComponent rest interval', () => {
         const z = (heatMap.data[0] as Partial<Plotly.HeatmapData>).z as number[][];
         expect(z[0].length).toBe(601);
     });
-    it('clears heat map tissues when new profile is calculated', async () => {
+    it('cancels heat map tissues calculation when new profile is calculated', async () => {
         await createChart();
-        const clear = vi.spyOn(RestIntervalTissues.prototype, 'clear');
+        const cancel = vi.spyOn(RestIntervalTissues.prototype, 'cancel');
         const schedules = TestBed.inject(DiveSchedules);
 
         TestBed.inject(ReloadDispatcher).sendWayPointsCalculated(schedules.selected.id);
 
-        expect(clear).toHaveBeenCalled();
+        expect(cancel).toHaveBeenCalled();
     });
 });

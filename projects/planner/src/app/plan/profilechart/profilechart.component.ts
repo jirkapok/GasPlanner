@@ -211,8 +211,8 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
 
     private plotProfile(): void {
         this.plotter.plotProfileChartsOnly();
-        // also drops running calculation of the previous profile
-        this.heatMapTissues.clear();
+        // drops running calculation of the previous profile, its heat map is shown until the new one is calculated
+        this.heatMapTissues.cancel();
     }
 
     private plotAllCharts(): void {

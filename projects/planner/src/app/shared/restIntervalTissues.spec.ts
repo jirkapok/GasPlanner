@@ -63,10 +63,31 @@ describe('RestIntervalTissues', () => {
         expect(task.requests).toEqual([]);
     });
 
-    it('shows dive tissues immediately', () => {
+    it('keeps previous tissues while dive info is not calculated', () => {
+        sut.calculate(createDive(0, true), 0, 1800);
+        task.respond(row(2));
+
+        sut.calculate(createDive(0, false), 0, 1800);
+
+        expect(sut.overPressures()).toEqual([diveRow, row(2)]);
+    });
+
+    it('shows dive tissues only after the rest interval is calculated', () => {
         sut.calculate(createDive(0, true), 0, 1800);
 
-        expect(sut.overPressures()).toEqual([diveRow]);
+        expect(sut.overPressures()).toEqual([]);
+    });
+
+    it('keeps previous tissues until new rest interval is calculated', () => {
+        sut.calculate(createDive(0, true), 0, 1800);
+        task.respond(row(2));
+
+        sut.calculate(createDive(0, true), 0, 3600);
+        const whileCalculating = sut.overPressures();
+        task.respond(row(3));
+
+        expect(whileCalculating).toEqual([diveRow, row(2)]);
+        expect(sut.overPressures()).toEqual([diveRow, row(3)]);
     });
 
     it('requests the rest interval with tissues at end of the dive', () => {
@@ -122,7 +143,7 @@ describe('RestIntervalTissues', () => {
         expect(task.calls).toEqual(['terminate']);
     });
 
-    it('keeps dive tissues when calculation fails', () => {
+    it('shows dive tissues when calculation fails', () => {
         sut.calculate(createDive(0, true), 0, 1800);
 
         task.failed$.next();
@@ -130,14 +151,17 @@ describe('RestIntervalTissues', () => {
 
         expect(sut.overPressures()).toEqual([diveRow]);
     });
-    it('clear drops running calculation and empties tissues', () => {
+
+    it('cancel drops running calculation and keeps previous tissues', () => {
         sut.calculate(createDive(0, true), 0, 1800);
-
-        sut.clear();
         task.respond(row(2));
+        sut.calculate(createDive(0, true), 0, 3600);
 
-        expect(sut.overPressures()).toEqual([]);
-        expect(task.calls).toEqual(['cancel', 'calculate', 'cancel']);
+        sut.cancel();
+        task.respond(row(3));
+
+        expect(sut.overPressures()).toEqual([diveRow, row(2)]);
+        expect(task.calls).toEqual(['cancel', 'calculate', 'cancel', 'calculate', 'cancel']);
     });
 
     it('publishes new value for each calculation', () => {

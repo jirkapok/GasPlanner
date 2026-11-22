@@ -150,3 +150,41 @@ describe('PlanTabsComponent OnPush titles reset', () => {
         expect(text()).not.toContain(complexTitle);
     });
 });
+
+describe('PlanTabsComponent selected tab', () => {
+    let fixture: ComponentFixture<PlanTabsComponent>;
+
+    const activeTabText = (): string | null | undefined => (fixture.nativeElement as HTMLElement)
+        .querySelector('.nav-link.active')?.textContent;
+
+    beforeEach(async () => {
+        localStorage.clear(); // dives added by other tests are persisted in preferences
+        TestBed.configureTestingModule({
+            imports: [MdbTabsModule, PlanTabsComponent],
+            providers: planTestProviders
+        });
+        fixture = await renderOnPush(PlanTabsComponent);
+    });
+
+    afterEach(() => localStorage.clear());
+
+    it('activates tab of dive added by the add button', async () => {
+        const addButton = (fixture.nativeElement as HTMLElement).querySelector('#add-dive') as HTMLElement;
+        addButton.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+        await fixture.whenStable();
+
+        const schedules = TestBed.inject(DiveSchedules);
+        expect(schedules.length).toBe(2);
+        expect(schedules.selected.index).toBe(1);
+        expect(activeTabText()).toContain(schedules.selected.title);
+    });
+
+    it('activates tab of dive added outside the component', async () => {
+        TestBed.inject(ManagedDiveSchedules).cloneSelected();
+        await fixture.whenStable();
+
+        const schedules = TestBed.inject(DiveSchedules);
+        expect(schedules.selected.index).toBe(1);
+        expect(activeTabText()).toContain(schedules.selected.title);
+    });
+});

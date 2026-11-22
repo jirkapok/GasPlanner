@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild, afterRenderEffect } from '@angular/core';
 import { faPlus, faRotate } from '@fortawesome/free-solid-svg-icons';
 import { MdbTabChange, MdbTabsComponent } from 'mdb-angular-ui-kit/tabs';
 import { takeUntil } from 'rxjs';
@@ -24,6 +24,8 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
 
     constructor(public schedules: ManagedDiveSchedules, private cd: ChangeDetectorRef) {
         super();
+        // the selected dive can be changed outside the tabs (e.g. added dive), the tabs need to be already rendered
+        afterRenderEffect(() => this.activateSelectedTab(this.schedules.selectedIndex));
     }
 
     public ngAfterViewInit(): void {
@@ -51,6 +53,14 @@ export class PlanTabsComponent extends Streamed implements AfterViewInit {
 
     public addTab(): void {
         this.schedules.add();
+    }
+
+    private activateSelectedTab(selectedIndex: number): void {
+        const selectedTab = this.tabs?.tabs.get(selectedIndex);
+
+        if (selectedTab && !selectedTab.active) {
+            this.tabs?.setActiveTab(selectedIndex);
+        }
     }
 
     private selectedChanged(e: MdbTabChange): void {

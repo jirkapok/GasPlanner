@@ -16,6 +16,10 @@ export default defineConfig({
         reporters: ['default', ['junit', { suiteName: 'planner' }]],
         outputFile: { junit: 'test-results/planner/junit.xml' },
         // the same as jasmine, spies created by vi.spyOn are removed after each test
-        restoreMocks: true
+        restoreMocks: true,
+        browser: {
+            // Vitest default 63315 is in the Windows dynamic port range, which Hyper-V/WSL/Docker reserve
+            api: { port: 41315 }
+        }
     }
 });

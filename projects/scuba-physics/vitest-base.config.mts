@@ -8,7 +8,9 @@ export default defineConfig({
         outputFile: { junit: 'test-results/scuba-physics/junit.xml' },
         browser: {
             // the library has no UI, the screenshot of an empty page doesn't help
-            screenshotFailures: false
+            screenshotFailures: false,
+            // Vitest default 63315 is in the Windows dynamic port range, which Hyper-V/WSL/Docker reserve
+            api: { port: 41315 }
         }
     }
 });

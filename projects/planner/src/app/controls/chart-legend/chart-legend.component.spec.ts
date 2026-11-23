@@ -74,6 +74,15 @@ describe('ChartLegendComponent', () => {
         expect(text()).not.toContain('29:00');
     });
 
+    it('names emergency line by the emergency label', async () => {
+        const values = hovered();
+        values.emergencyDepth = 18;
+        await show(values, { emergencyLabelKey: 'profileChart.bailoutTraceName' });
+
+        expect(text()).toContain('profileChart.bailoutTraceName');
+        expect(text()).not.toContain('profileChart.emergencyTraceName');
+    });
+
     it('shows profile name in front of values', async () => {
         await show(hovered(), { showTime: false, labelKey: 'diffResultsTable.profileA' });
 

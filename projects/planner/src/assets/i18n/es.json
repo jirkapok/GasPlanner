@@ -161,7 +161,7 @@
     "descent": "Descenso", "ascentTo50": "Ascenso al 50%", "ascentToX": "Ascenso a", "ascentPrefix": "Ascenso", "toSurface": "a superficie",
     "diverTab": "Buceador", "recreational": "Recreativo", "recommended": "Recomendado", "addSafetyStop": "Añadir parada de seguridad de 3 min:"
   },
-  "profileChart": { "cardTitle": "Perfil de la inmersión", "heatmapTitle": "Mostrar mapa de calor de tejidos", "emergencyAscentTitle": "Mostrar ascenso de emergencia", "timeAxisLabel": "Tiempo", "depthAxisLabel": "Profundidad", "avgDepthTraceName": "Prof. media", "depthTraceName": "Profundidad", "emergencyTraceName": "Emergencia", "ceilingTraceName": "Techo", "eventTraceName": "Evento" },
+  "profileChart": { "cardTitle": "Perfil de la inmersión", "heatmapTitle": "Mostrar mapa de calor de tejidos", "emergencyAscentTitle": "Mostrar ascenso de emergencia", "timeAxisLabel": "Tiempo", "depthAxisLabel": "Profundidad", "avgDepthTraceName": "Prof. media", "depthTraceName": "Profundidad", "emergencyTraceName": "Emergencia", "bailoutTraceName": "Bailout", "ceilingTraceName": "Techo", "eventTraceName": "Evento" },
   "surfaceInterval": { "label": "Intervalo de superficie", "firstDive": "Primera inmersión", "thirtyMinutes": "30 minutos", "oneHour": "1 hora", "twoHours": "2 horas", "invalidFormat": "Debe ser un texto con el formato hh:mm" },
   "restInterval": { "label": "Intervalo de descanso", "zeroMinutes": "0 minutos", "thirtyMinutes": "30 minutos", "oneHour": "1 hora", "twoHours": "2 horas", "invalidFormat": "Debe ser un texto con el formato hh:mm" },
   "tankChart": { "gasRemaining": "Gas restante:", "rockBottom": "Reserva de emergencia:" },

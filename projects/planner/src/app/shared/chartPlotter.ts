@@ -47,6 +47,7 @@ export class ChartPlotterFactory {
     private timeOffset: () => number;
     /** in seconds */
     private restInterval: () => number;
+    private isRebreather: () => boolean;
 
     constructor(
         private resampling: ResamplingService,
@@ -54,6 +55,7 @@ export class ChartPlotterFactory {
         private translate: (key: string) => string = key => key) {
         this.timeOffset = () => 0;
         this.restInterval = () => 0;
+        this.isRebreather = () => false;
     }
 
     public createOptions(): Partial<Plotly.Config> {
@@ -194,6 +196,12 @@ export class ChartPlotterFactory {
         return this;
     }
 
+    /** Rebreather dives name the emergency ascent bailout */
+    public withRebreather(isRebreatherFn: () => boolean): ChartPlotterFactory {
+        this.isRebreather = isRebreatherFn;
+        return this;
+    }
+
     public create(dive: () => DiveResults): DiveTracesBuilder {
         return new DiveTracesBuilder(
             dive,
@@ -209,6 +217,7 @@ export class ChartPlotterFactory {
             this.eventLineColor,
             this.eventFillColor,
             this.hideHoverLabels,
+            this.isRebreather,
         );
     }
 }
@@ -239,6 +248,7 @@ export class DiveTracesBuilder {
         eventLineColor: string,
         eventFillColor: string,
         private hideHoverLabels: boolean,
+        private isRebreather: () => boolean,
     ) {
         this.namePrefixKey = namePrefixKey;
         this.averageDepthLineColor = averageDepthLineColor;
@@ -258,6 +268,11 @@ export class DiveTracesBuilder {
         const dive = this.dive();
         const restInterval = dive.endsOnSurface ? this.restInterval() : 0;
         return this.timeOffset() + dive.totalDuration + restInterval;
+    }
+
+    /** Translation key of the emergency ascent line, bailout for rebreather dives */
+    public get emergencyTraceNameKey(): string {
+        return this.isRebreather() ? 'profileChart.bailoutTraceName' : 'profileChart.emergencyTraceName';
     }
 
     public get legendColors(): ChartLegendColors {
@@ -337,7 +352,7 @@ export class DiveTracesBuilder {
             x: this.applyTimeOffset(resampled.xValues),
             y: resampled.yValues,
             type: 'scatter',
-            name: this.namePrefix + this.translate('profileChart.emergencyTraceName'),
+            name: this.namePrefix + this.translate(this.emergencyTraceNameKey),
             line: {
                 dash: <Plotly.Dash>'dash'
             },

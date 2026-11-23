@@ -20,6 +20,8 @@ export class ChartLegendComponent {
     /** Translation key of the profile name shown in front of the values */
     @Input() public labelKey: string | undefined;
     @Input() public showTime = true;
+    /** Translation key of the emergency ascent line name */
+    @Input() public emergencyLabelKey = 'profileChart.emergencyTraceName';
 
     constructor(private units: UnitConversion) {
     }

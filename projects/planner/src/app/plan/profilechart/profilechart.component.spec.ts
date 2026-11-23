@@ -167,6 +167,21 @@ describe('ProfileChartComponent', () => {
             expect(getComputedStyle(separator).marginRight).toBe('8px');
         });
 
+        it('names emergency line emergency for open circuit', () => {
+            hover(point(TraceKind.emergency, 18));
+
+            expect(legendText()).toContain('profileChart.emergencyTraceName');
+        });
+
+        it('names emergency line bailout for rebreather', () => {
+            TestBed.inject(DiveSchedules).selectedOptions.circuit = CircuitType.mccr;
+            hover(point(TraceKind.emergency, 18));
+
+            const text = legendText();
+            expect(text).toContain('profileChart.bailoutTraceName');
+            expect(text).not.toContain('profileChart.emergencyTraceName');
+        });
+
         it('hides emergency and events when absent', () => {
             hover(point(TraceKind.depth, 21));
 

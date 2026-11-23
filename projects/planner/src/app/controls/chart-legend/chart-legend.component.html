@@ -33,7 +33,7 @@
         <span class="legend-separator text-muted mx-2">|</span>
         <span class="text-nowrap">
             <span class="legend-marker legend-line legend-line-dashed d-inline-block me-1" [style.color]="colors.emergency"></span>
-            {{ 'profileChart.emergencyTraceName' | translate }}
+            {{ emergencyLabelKey | translate }}
             <span class="legend-value fw-bold" [style.color]="colors.emergency">
                 {{ values.emergencyDepth | number:'1.0-1' }} {{ lengthUnit }}</span>
         </span>

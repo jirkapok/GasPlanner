@@ -476,6 +476,7 @@
     "avgDepthTraceName": "Avg. depth",
     "depthTraceName": "Depth",
     "emergencyTraceName": "Emergency",
+    "bailoutTraceName": "Bailout",
     "ceilingTraceName": "Ceiling",
     "eventTraceName": "Event"
   },

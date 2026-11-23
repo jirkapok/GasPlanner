@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { ChartPlotterFactory } from './chartPlotter';
+import { ChartPlotterFactory, DiveTracesBuilder } from './chartPlotter';
 import { ResamplingService } from './ResamplingService';
 import { UnitConversion } from './UnitConversion';
 import { DiveResults } from './diveresults';
@@ -111,6 +111,25 @@ describe('DiveTracesBuilder', () => {
         const traces = factory.create(() => dive).allTraces();
 
         traces.forEach(t => expect(t.hoverinfo).toBeUndefined());
+    });
+
+    describe('Emergency trace name', () => {
+        const emergencyName = (builder: DiveTracesBuilder): string | undefined => {
+            builder.showEmergencyAscent = true;
+            return builder.allTraces().find(t => t.uid === 'emergency')?.name;
+        };
+
+        it('is emergency for open circuit', () => {
+            const builder = factory.create(() => dive);
+            expect(builder.emergencyTraceNameKey).toBe('profileChart.emergencyTraceName');
+            expect(emergencyName(builder)).toBe('profileChart.emergencyTraceName');
+        });
+
+        it('is bailout for rebreather', () => {
+            const builder = factory.withRebreather(() => true).create(() => dive);
+            expect(builder.emergencyTraceNameKey).toBe('profileChart.bailoutTraceName');
+            expect(emergencyName(builder)).toBe('profileChart.bailoutTraceName');
+        });
     });
 
     describe('Chart end', () => {

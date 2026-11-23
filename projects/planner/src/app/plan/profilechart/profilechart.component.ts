@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ChangeDetectorRef, WritableSignal, effect
 import { takeUntil } from 'rxjs';
 import * as Plotly from 'plotly.js-dist';
 import { faChartArea, faFire, faThumbsUp } from '@fortawesome/free-solid-svg-icons';
-import { TissueOverPressures } from 'scuba-physics';
+import { CircuitType, TissueOverPressures } from 'scuba-physics';
 import { DiveResults } from '../../shared/diveresults';
 import { SelectedWaypoint } from '../../shared/selectedwaypointService';
 import { Streamed } from '../../shared/streamed';
@@ -69,6 +69,7 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
         this.profileTraces = chartPlotterFactory.withNamePrefix(null)
             .withRestInterval(() => this.restInterval())
             .withoutHoverLabels()
+            .withRebreather(() => this.schedules.selected.circuit !== CircuitType.oc)
             .create(() => this.dive);
         this.legendColors = this.profileTraces.legendColors;
         this.plotter = new ChartPlotter(this.elementName, () => this.profileTraces.chartEnd, chartPlotterFactory, this.profileTraces);
@@ -128,6 +129,10 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
 
     public get showEmergencyAscent(): boolean {
         return this.profileTraces.showEmergencyAscent;
+    }
+
+    public get emergencyTraceNameKey(): string {
+        return this.profileTraces.emergencyTraceNameKey;
     }
 
     private get dive(): DiveResults {

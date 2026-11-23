@@ -132,4 +132,29 @@ describe('Buhlmann Algorithm - eCCR', () => {
             expect(algorithm.noDecoLimit(createParams(breathing, invalidTanks))).toBe(0);
         });
     });
+
+    describe('Loop gas', () => {
+        it('loads tissues with dry gas pressure without the setpoint (100 m, 20 min, 10/70, setpoint 1.3)', () => {
+            const deepOptions = OptionExtensions.createOptions(0.3, 0.7, 1.4, 1.6, Salinity.fresh);
+            deepOptions.lastStopDepth = 6;
+            deepOptions.roundStopsToMinutes = true;
+            const deepConverter = new DepthConverterFactory(deepOptions).create();
+            const diluent = new Tank(24, 200, 10);
+            diluent.gas.fHe = 0.7;
+            const tanks = [diluent, new Tank(3, 200, 100)];
+            const rebreather = new RebreatherOptions(CircuitType.eccr);
+            rebreather.descentSetpoint = 1.3;
+            rebreather.bottomSetpoint = 1.3;
+            rebreather.decoSetpoint = 1.3;
+            const breathing = new EccrBreathing(rebreather, tanks, deepConverter);
+            const segments = new Segments();
+            segments.add(100, diluent.gas, Time.oneMinute * 5);
+            segments.addFlat(diluent.gas, Time.oneMinute * 20);
+            const params = AlgorithmParams.forMultilevelDive(segments, Tanks.toGases(tanks), deepOptions, breathing);
+
+            const profile = algorithm.decompression(params).segments;
+
+            expect(Time.toMinutes(Segments.duration(profile))).toBeCloseTo(233.6, 1);
+        });
+    });
 });

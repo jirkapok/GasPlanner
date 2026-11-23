@@ -55,9 +55,9 @@ describe('PlannerService - eCCR reference dive', () => {
         planner.calculate(dive.id);
     });
 
-    it('calculates runtime 31:57', () => {
+    it('calculates runtime 31:42', () => {
         expect(dive.diveResult.hasErrors).toBe(false);
-        expect(dive.diveResult.totalDuration).toBe(31 * 60 + 57);
+        expect(dive.diveResult.totalDuration).toBe(31 * 60 + 42);
     });
 
     it('consumes oxygen from the CCR oxygen tank only from the plan', () => {

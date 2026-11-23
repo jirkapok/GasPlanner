@@ -39,9 +39,11 @@ export abstract class ClosedCircuitBreathing implements BreathingModel {
         return LoopGas.constantPpO2(ambientPressure, sourceGas, setpoint);
     }
 
+    /** Held setpoint, limited by the diluent and ambient pressure the same way as open circuit ppO2 */
     public ppO2(sourceGas: Gas, depth: number, isAscent = false): number {
-        const loop = this.inspiredGas(sourceGas, depth, isAscent);
-        return loop.fO2 * this.depthConverter.toBar(depth);
+        const ambientPressure = this.depthConverter.toBar(depth);
+        const setpoint = this.setpoint(depth, isAscent);
+        return LoopGas.ppO2(ambientPressure, sourceGas, setpoint);
     }
 
     /** Diluent added to the loop to keep its volume during descent */

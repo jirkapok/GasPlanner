@@ -115,7 +115,7 @@ test.describe('eCCR rebreather', () => {
         // intermediate plans during the setup may switch dive info to issues tab after the results tab is opened
         await expect(async () => {
             await planner.openResultsTab();
-            await expect(planner.totalTime()).toHaveText('31:57', { timeout: 1000 });
+            await expect(planner.totalTime()).toHaveText('31:42', { timeout: 1000 });
         }).toPass({ timeout: 10000 });
         await planner.openConsumedTab();
         await expect(planner.tankRemaining(2)).toHaveText('188/200');

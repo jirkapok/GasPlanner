@@ -1,21 +1,35 @@
 import { LoopGas } from './LoopGas';
 import { Gas } from '../gases/Gases';
 import { StandardGases } from '../gases/StandardGases';
+import { LungPressure } from '../physics/pressure-converter';
 
 describe('Loop gas', () => {
     describe('Constant ppO2', () => {
         it('air diluent at 30 m with setpoint 1.3', () => {
             const loop = LoopGas.constantPpO2(4, StandardGases.air, 1.3);
-            expect(loop.fO2).toBeCloseTo(0.325, 6);
+            expect(loop.fO2).toBeCloseTo(0.330176, 6);
             expect(loop.fHe).toBeCloseTo(0, 6);
         });
 
         it('preserves diluent helium ratio', () => {
             const diluent = new Gas(0.18, 0.45);
             const loop = LoopGas.constantPpO2(7, diluent, 1.3);
-            expect(loop.fO2).toBeCloseTo(0.185714, 5);
-            expect(loop.fHe).toBeCloseTo(0.446864, 5);
+            expect(loop.fO2).toBeCloseTo(0.187393, 5);
+            expect(loop.fHe).toBeCloseTo(0.445945, 5);
             expect(loop.fHe / loop.fN2).toBeCloseTo(0.45 / 0.37, 5);
+        });
+
+        it('holds the setpoint in the dry gas, the rest of the dry gas pressure is inert gas', () => {
+            const ambientPressure = 1.6;
+            const loop = LoopGas.constantPpO2(ambientPressure, new Gas(0.1, 0.7), 1.3);
+            const dryGas = LungPressure.dryGas(ambientPressure);
+            expect(loop.fO2 * dryGas).toBeCloseTo(1.3, 6);
+            expect((loop.fN2 + loop.fHe) * dryGas).toBeCloseTo(dryGas - 1.3, 6);
+        });
+
+        it('breathes pure oxygen when setpoint is higher than the dry gas pressure', () => {
+            const loop = LoopGas.constantPpO2(1.3, StandardGases.air, 1.3);
+            expect(loop.fO2).toBeCloseTo(1, 6);
         });
 
         it('uses diluent, when diluent ppO2 is higher than setpoint', () => {

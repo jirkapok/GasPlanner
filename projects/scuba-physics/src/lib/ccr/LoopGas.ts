@@ -1,23 +1,36 @@
 import { Gas } from '../gases/Gases';
 import { Rebreathers } from './Rebreathers';
+import { LungPressure } from '../physics/pressure-converter';
 
 /**
  * Calculates content of the rebreather breathing loop.
- * Fractions are relative to ambient pressure, inert gases keep the diluent (supply) helium/nitrogen ratio.
+ * Inert gases keep the diluent (supply) helium/nitrogen ratio.
  */
 export class LoopGas {
     /**
      * Loop held at constant oxygen partial pressure (eCCR, mCCR).
-     * The ppO2 can't be lower than diluent ppO2 (diluent flush) and higher than ambient pressure (pure oxygen).
+     * The setpoint is held in the breathed dry gas (without water vapour), the rest of the dry gas is inert gas,
+     * the same way as in Subsurface. So the returned fractions are relative to the dry gas pressure.
      * @param ambientPressure absolute pressure in bars
      * @param diluent diluent gas
      * @param setPoint required oxygen partial pressure in bars
      */
     public static constantPpO2(ambientPressure: number, diluent: Gas, setPoint: number): Gas {
-        const diluentPpO2 = diluent.fO2 * ambientPressure;
-        const ppO2 = Math.min(Math.max(setPoint, diluentPpO2), ambientPressure);
-        const fO2 = ppO2 / ambientPressure;
+        const dryGasPressure = LungPressure.dryGas(ambientPressure);
+        const fO2 = LoopGas.ppO2(dryGasPressure, diluent, setPoint) / dryGasPressure;
         return LoopGas.withInertRatio(fO2, diluent);
+    }
+
+    /**
+     * Oxygen partial pressure held in the loop.
+     * The ppO2 can't be lower than diluent ppO2 (diluent flush) and higher than the pressure (pure oxygen).
+     * @param pressure absolute pressure in bars
+     * @param diluent diluent gas
+     * @param setPoint required oxygen partial pressure in bars
+     */
+    public static ppO2(pressure: number, diluent: Gas, setPoint: number): number {
+        const diluentPpO2 = diluent.fO2 * pressure;
+        return Math.min(Math.max(setPoint, diluentPpO2), pressure);
     }
 
     /**

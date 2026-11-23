@@ -266,18 +266,28 @@ describe('ProfileChartComponent OnPush', () => {
         expect(calculating()).toBeNull();
     });
 
-    it('bailout profile tab switches on the emergency ascent overlay', async () => {
+    it('bailout profile tab doesn\'t switch on the emergency ascent overlay', async () => {
+        TestBed.inject(DiveSchedules).selectedOptions.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+
+        TestBed.inject(ViewSwitchService).showBailoutProfile = true;
+        await fixture.whenStable();
+
+        expect(fixture.componentInstance.showEmergencyAscent).toBe(false);
+    });
+
+    it('dive profile tab doesn\'t switch off the emergency ascent overlay', async () => {
         TestBed.inject(DiveSchedules).selectedOptions.circuit = CircuitType.mccr;
         TestBed.inject(ReloadDispatcher).sendOptionsChanged();
         const viewSwitch = TestBed.inject(ViewSwitchService);
-
+        fixture.componentInstance.switchEmergencyAscent();
         viewSwitch.showBailoutProfile = true;
         await fixture.whenStable();
-        expect(fixture.componentInstance.showEmergencyAscent).toBe(true);
 
         viewSwitch.showBailoutProfile = false;
         await fixture.whenStable();
-        expect(fixture.componentInstance.showEmergencyAscent).toBe(false);
+
+        expect(fixture.componentInstance.showEmergencyAscent).toBe(true);
     });
 });
 

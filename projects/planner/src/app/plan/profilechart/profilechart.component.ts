@@ -15,7 +15,6 @@ import { UnitConversion } from '../../shared/UnitConversion';
 import { ResamplingService } from '../../shared/ResamplingService';
 import { WayPoint } from '../../shared/wayPoint';
 import { HeatMapPlotter } from '../../shared/heatMapPlotter';
-import { StopsFilter } from '../../shared/stopsFilter.service';
 import { SubViewStorage } from '../../shared/subViewStorage';
 import { WorkersFactoryCommon } from '../../shared/serial.workers.factory';
 import { RestIntervalTissues } from '../../shared/restIntervalTissues';
@@ -60,7 +59,6 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
         private schedules: DiveSchedules,
         private translate: TranslateService,
         private cd: ChangeDetectorRef,
-        stops: StopsFilter,
         private viewStore: SubViewStorage,
         workers: WorkersFactoryCommon) {
         super();
@@ -106,12 +104,6 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
                 this.plotAllCharts();
                 this.plotlyHoverLeave();
             });
-
-        // the waypoints bailout tab shows the emergency ascent also in the chart
-        effect(() => {
-            const showBailout = stops.showBailout;
-            untracked(() => this.showBailoutAscent(showBailout));
-        });
 
         effect(() => {
             const restInterval = this.restInterval();
@@ -179,20 +171,6 @@ export class ProfileChartComponent extends Streamed implements OnInit, OnDestroy
         this.selectWayPoint(undefined);
         this.legendValues = undefined;
         this.cd.markForCheck();
-    }
-
-    private showBailoutAscent(show: boolean): void {
-        if (this.profileTraces.showEmergencyAscent === show) {
-            return;
-        }
-
-        this.profileTraces.showEmergencyAscent = show;
-        this.cd.markForCheck();
-
-        // the chart element exists only after the component was initialized
-        if (this.initialized) {
-            this.plotAllCharts();
-        }
     }
 
     private restIntervalChanged(restInterval: number): void {

@@ -25,7 +25,7 @@
                     <strong id="total-dive-time-value">{{ dive.totalDuration | duration:dive.totalDuration
                     }} </strong>
                     @if (isRebreather && dive.emergencyAscentEnd > 0) {
-                      (<strong id="bailout-dive-time-value">{{ dive.emergencyAscentEnd | duration:dive.emergencyAscentEnd }}</strong>)
+                      (<span id="bailout-dive-time-label">{{ 'diveInfo.bailoutRuntime' | translate }}</span>&ngsp;<strong id="bailout-dive-time-value">{{ dive.emergencyAscentEnd | duration:dive.emergencyAscentEnd }}</strong>)
                     }
                   }
                 </td>

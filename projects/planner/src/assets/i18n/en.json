@@ -430,6 +430,7 @@
     "consumedTab": "Consumed",
     "rebreatherTanks": "Rebreather",
     "bailoutTanks": "Bailout",
+    "bailoutRuntime": "bailout",
     "supply": "Supply",
     "issuesTab": "Issues",
     "inLiters": "In liters"

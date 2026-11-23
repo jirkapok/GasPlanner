@@ -1,7 +1,7 @@
 # Dive info table
 
 * `Total dive time` [minutes]: Total duration of the dive from the descent to the surfacing.
-* `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings.
+* `Time to surface (TTS)` [minutes]: Total duration of ascent from critical point of dive in case of emergency. Problem solving duration minutes are added to ascent duration to be able respond to situation at depth as recommended during scuba trainings. For rebreather dives it is the bailout ascent breathed as open circuit (see [Rebreather](./rebreather.md)).
 * `Average depth` [meters]: Average depth of whole profile at end of the dive.
 * `Rock bottom at` [minutes]: The moment at which the emergency ascent is calculated used to calculate the rock bottom. It is the last moment at highest depth.
 * `No decompression time` [minutes]: The longest time diver can stay at required depth where direct ascent to the surface is considered to be safe. There may be small deco, which disappears during the ascent.

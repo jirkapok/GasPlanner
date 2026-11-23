@@ -32,8 +32,6 @@ export class AlgorithmContext {
     public runTime = 0;
     /** True for segments after the deepest point of the dive, including the generated ascent */
     public isAscent = false;
-    /** True after user defined segments were swum, i.e. the algorithm generates the ascent */
-    public isCalculatedAscent = false;
 
     private tissues: Tissues;
     private _oxygenStarted = 0;
@@ -204,7 +202,7 @@ export class AlgorithmContext {
 
     /** Gas loaded into tissues for the segment */
     public inspiredGas(segment: Segment): Gas {
-        return this.breathing.inspiredGas(segment.gas, segment.startDepth, this.isAscent, this.isCalculatedAscent);
+        return this.breathing.inspiredGas(segment.gas, segment.startDepth, this.isAscent);
     }
 
     public loadTissues(segment: LoadSegment, gas: Gas): number {

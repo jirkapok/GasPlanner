@@ -44,8 +44,8 @@ export class PlanFactory {
 
     /**
      * Calculates ascent from the deepest part of the dive, in case of problem.
-     * @param breathing Breathing model of the dive, used for the user defined part of the dive.
-     * The calculated ascent is always breathed as open circuit from the tanks (bailout).
+     * @param breathing Breathing model of the dive, used till the end of the deepest point.
+     * Everything after it (problem solving, user defined and calculated ascent) is breathed as open circuit from the tanks (bailout).
      */
     public static emergencyAscent(originalPlan: Segment[], options: Options, tanks: Tank[],
         breathing: BreathingModel, surfaceInterval?: RestingParameters): Segment[] {
@@ -65,7 +65,8 @@ export class PlanFactory {
         const gases = Tanks.toGases(tanks);
         const algorithm = new BuhlmannAlgorithm();
         const bailout = PlanFactory.bailoutBreathing(options, breathing);
-        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, bailout, surfaceInterval);
+        // the diver bails out at the end of the deepest point
+        const parameters = AlgorithmParams.forMultilevelDive(emergencyPlan, gases, options, bailout, surfaceInterval, issueSegmentIndex);
         const calculatedProfile = algorithm.decompression(parameters);
         const emergencyProfile = calculatedProfile.segments;
         const ascent = emergencyProfile.slice(issueSegmentIndex, emergencyProfile.length);

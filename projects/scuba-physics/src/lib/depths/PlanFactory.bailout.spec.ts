@@ -20,7 +20,9 @@ class RecordingLoop extends OpenCircuitBreathing {
 
     public override inspiredGas(sourceGas: Gas, depth = 0, isAscent = false): Gas {
         this.depths.push(depth);
-        (isAscent ? this.ascentDepths : this.bottomDepths).push(depth);
+        if (isAscent) {
+            this.ascentDepths.push(depth);
+        }
         return super.inspiredGas(sourceGas);
     }
 }
@@ -59,27 +61,48 @@ describe('Plan factory - Bailout emergency ascent', () => {
         expect(breathesOxygen).toBe(true);
     });
 
-    it('user defined ascent after the deepest point is breathed from the loop', () => {
-        const recordingLoop = new RecordingLoop(depthConverter);
-        const segments = PlanFactory.createPlan(30, 20, tank, options);
-        segments.add(15, tank, Time.oneMinute);
-        segments.addFlat(tank, Time.oneMinute * 3);
+    describe('bails out at the end of the deepest point', () => {
+        const createOptions = (problemSolvingDuration: number) => {
+            const result = OptionExtensions.createOptions(0.4, 0.85, 1.4, 1.6, Salinity.fresh);
+            result.problemSolvingDuration = problemSolvingDuration;
+            return result;
+        };
 
-        PlanFactory.emergencyAscent(segments.items, options, [tank], recordingLoop);
+        const loopSeconds = (segments: Segment[]): number => Segments.duration(Segments.fromCollection(segments).deepestPart());
 
-        expect(recordingLoop.depths).toContain(15);
-    });
+        it('problem solving time is breathed from the tank gas', () => {
+            const recordingLoop = new RecordingLoop(depthConverter);
+            const solvingOptions = createOptions(2);
+            const segments = PlanFactory.createPlan(30, 20, tank, solvingOptions).items;
 
-    it('user defined ascent after the deepest point is breathed from the loop as ascent (e.g. eCCR deco setpoint)', () => {
-        const recordingLoop = new RecordingLoop(depthConverter);
-        const segments = PlanFactory.createPlan(30, 20, tank, options);
-        segments.add(15, tank, Time.oneMinute);
-        segments.addFlat(tank, Time.oneMinute * 3);
+            PlanFactory.emergencyAscent(segments, solvingOptions, [tank], recordingLoop);
 
-        PlanFactory.emergencyAscent(segments.items, options, [tank], recordingLoop);
+            expect(recordingLoop.depths.length).toBe(loopSeconds(segments));
+            expect(recordingLoop.ascentDepths).toEqual([]);
+        });
 
-        expect(recordingLoop.ascentDepths).toContain(15);
-        expect(recordingLoop.bottomDepths).toContain(30);
-        expect(recordingLoop.bottomDepths).not.toContain(15);
+        it('user defined ascent after the deepest point is breathed from the tank gas', () => {
+            const recordingLoop = new RecordingLoop(depthConverter);
+            const solvingOptions = createOptions(1);
+            const segments = PlanFactory.createPlan(30, 20, tank, solvingOptions);
+            segments.add(15, tank, Time.oneMinute);
+            segments.addFlat(tank, Time.oneMinute * 3);
+
+            PlanFactory.emergencyAscent(segments.items, solvingOptions, [tank], recordingLoop);
+
+            expect(recordingLoop.depths).not.toContain(15);
+            expect(recordingLoop.ascentDepths).toEqual([]);
+        });
+
+        it('without problem solving time the ascent starts at the deepest point on tank gas', () => {
+            const recordingLoop = new RecordingLoop(depthConverter);
+            const solvingOptions = createOptions(0);
+            const segments = PlanFactory.createPlan(30, 20, tank, solvingOptions).items;
+
+            PlanFactory.emergencyAscent(segments, solvingOptions, [tank], recordingLoop);
+
+            expect(recordingLoop.depths.length).toBe(loopSeconds(segments));
+            expect(recordingLoop.ascentDepths).toEqual([]);
+        });
     });
 });

@@ -114,6 +114,16 @@ describe('DiveInfoComponent OnPush', () => {
         expect(bailoutRuntime?.textContent?.trim()).not.toEqual('');
     });
 
+    it('failed rebreather calculation has no bailout runtime', async () => {
+        const dive = TestBed.inject(DiveSchedules).selected;
+        dive.optionsService.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        dive.diveResult.endFailed();
+        await fixture.whenStable();
+
+        expect(element.querySelector('#bailout-dive-time-value')).toBeNull();
+    });
+
     it('open circuit total dive time has no bailout runtime', async () => {
         TestBed.inject(PlannerService).calculate(1);
         await fixture.whenStable();

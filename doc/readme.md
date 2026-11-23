@@ -2,6 +2,7 @@
 
 * [Supported platforms](./application.md#supported-platforms)
 * [Theoretical model](./application.md#theoretical-model)
+* [Algorithm verification](./planner_comparison.md)
 * [Limitations](./application.md#limitations)
 * [Screen structure](./application.md#screen-structure)
 * Plan

@@ -1,3 +1,20 @@
+# [0.26.0](https://github.com/jirkapok/GasPlanner/compare/v0.25.3...v0.26.0) (2026-11-23)
+
+
+### Bug Fixes
+
+* bailout profile tab doesn't change the profile chart ([661b70d](https://github.com/jirkapok/GasPlanner/commit/661b70d57a2b429768c8d3382a803288219017b0))
+* no empty bailout runtime after failed calculation ([651e037](https://github.com/jirkapok/GasPlanner/commit/651e037a544e25bcfb1b646ac4c2bf9d999ca165))
+* rebreather loop holds setpoint in dry gas ([513ad5c](https://github.com/jirkapok/GasPlanner/commit/513ad5cecc6d513313d81162a5baaf4ec3d52cdc))
+* **scuba-physics:** bailout ascent breathed as open circuit from the deepest point ([6dcd292](https://github.com/jirkapok/GasPlanner/commit/6dcd292720138e31cf982e3ed01ece3e1948f898))
+
+
+### Features
+
+* bailout runtime labeled in dive results ([25405d0](https://github.com/jirkapok/GasPlanner/commit/25405d01e95a49c252fcdeab92242848c62005c2))
+* bailout runtime shown in dive results ([3b410b6](https://github.com/jirkapok/GasPlanner/commit/3b410b68c6438d25d8ec44195b7c0a83d0de05d6))
+* chart names emergency ascent bailout for rebreather dives ([2e96b92](https://github.com/jirkapok/GasPlanner/commit/2e96b92ee8623e701b9b20c952dc68fe5a7fff52))
+
 ## [0.25.3](https://github.com/jirkapok/GasPlanner/compare/v0.25.2...v0.25.3) (2026-11-23)
 
 

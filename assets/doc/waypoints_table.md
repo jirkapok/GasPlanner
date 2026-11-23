@@ -17,6 +17,6 @@ Table showing details about profile changes during the dive. Each row represents
 For rebreather dives (see [Rebreather](./rebreather.md)) the table shows two tabs:
 
 * `Rebreather profile`: The planned dive breathed from the loop.
-* `Bailout profile`: The planned dive till the deepest point followed by the emergency ascent breathed as open circuit from the bailout tanks. This is the ascent used to calculate the bailout reserve. Selecting this tab also shows the emergency ascent in the dive profile chart.
+* `Bailout profile`: The planned dive till the deepest point followed by the emergency ascent breathed as open circuit from the bailout tanks. This is the ascent used to calculate the bailout reserve. Selecting this tab doesn't change the dive profile chart, the chart shows the emergency ascent using its own emergency ascent button.
 
 The selected tab is remembered. The `Filter to show stops only` button applies to both tabs.

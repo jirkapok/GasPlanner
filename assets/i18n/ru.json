@@ -149,7 +149,7 @@
     "use": "Использовать", "maxBottomTime": "Максимальное время на глубине", "maxBottomTimeTitle": "Установить максимальное время погружения по расходу газа",
     "surfaceGradient": "Градиент на поверхности", "offgasingStart": "Начало выведения газа", "highestCeiling": "Наибольший потолок",
     "highestGasDensity": "Наибольшая плотность газа", "turnTime": "Время разворота", "turnPressure": "Давление разворота",
-    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "rebreatherTanks": "Ребризер", "bailoutTanks": "Бейлаут", "supply": "Подача", "issuesTab": "Проблемы", "inLiters": "В литрах"
+    "otuToxicity": "Токсичность OTU", "cnsToxicity": "Токсичность CNS", "consumedTab": "Расход", "rebreatherTanks": "Ребризер", "bailoutTanks": "Бейлаут", "bailoutRuntime": "бейлаут", "supply": "Подача", "issuesTab": "Проблемы", "inLiters": "В литрах"
   },
   "diveOptions": {
     "allUsable": "Полностью используемый", "halfUsable": "Наполовину используемый", "thirdUsable": "На треть используемый", "cardTitle": "Параметры",
@@ -161,7 +161,7 @@
     "descent": "Спуск", "ascentTo50": "Всплытие до 50%", "ascentToX": "Всплытие до", "ascentPrefix": "Всплытие", "toSurface": "до поверхности",
     "diverTab": "Дайвер", "recreational": "Любительское", "recommended": "Рекомендуемое", "addSafetyStop": "Добавить 3-минутную остановку безопасности:"
   },
-  "profileChart": { "cardTitle": "Профиль погружения", "heatmapTitle": "Показать тепловую карту тканей", "emergencyAscentTitle": "Показать аварийное всплытие", "timeAxisLabel": "Время", "depthAxisLabel": "Глубина", "avgDepthTraceName": "Ср. глубина", "depthTraceName": "Глубина", "emergencyTraceName": "Авария", "ceilingTraceName": "Потолок", "eventTraceName": "Событие" },
+  "profileChart": { "cardTitle": "Профиль погружения", "heatmapTitle": "Показать тепловую карту тканей", "emergencyAscentTitle": "Показать аварийное всплытие", "timeAxisLabel": "Время", "depthAxisLabel": "Глубина", "avgDepthTraceName": "Ср. глубина", "depthTraceName": "Глубина", "emergencyTraceName": "Авария", "bailoutTraceName": "Бейлаут", "ceilingTraceName": "Потолок", "eventTraceName": "Событие" },
   "surfaceInterval": { "label": "Поверхностный интервал", "firstDive": "Первое погружение", "thirtyMinutes": "30 минут", "oneHour": "1 час", "twoHours": "2 часа", "invalidFormat": "Должно быть в формате чч:мм" },
   "restInterval": { "label": "Время отдыха", "zeroMinutes": "0 минут", "thirtyMinutes": "30 минут", "oneHour": "1 час", "twoHours": "2 часа", "invalidFormat": "Должно быть в формате чч:мм" },
   "tankChart": { "gasRemaining": "Остаток газа:", "rockBottom": "Резерв:" },

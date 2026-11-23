@@ -1,3 +1,18 @@
+## [0.25.3](https://github.com/jirkapok/GasPlanner/compare/v0.25.2...v0.25.3) (2026-11-23)
+
+
+### Bug Fixes
+
+* new dive not selected in dive tabs ([3646d04](https://github.com/jirkapok/GasPlanner/commit/3646d043e9fbde27f0e88e11fa08667d277c5e68))
+
+## [0.25.2](https://github.com/jirkapok/GasPlanner/compare/v0.25.1...v0.25.2) (2026-11-22)
+
+
+### Bug Fixes
+
+* heat map kept until new rest interval tissues are calculated ([41d9c7c](https://github.com/jirkapok/GasPlanner/commit/41d9c7c9a1b67ce54ea5f64bba782a2048b9c531))
+* heat map of rest interval longer than 17 hours not shown ([1242b75](https://github.com/jirkapok/GasPlanner/commit/1242b7585eff64cb6f5500dd7df5a5f307cb9a4e))
+
 ## [0.25.1](https://github.com/jirkapok/GasPlanner/compare/v0.25.0...v0.25.1) (2026-11-20)
 
 

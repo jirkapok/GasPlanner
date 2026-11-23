@@ -138,7 +138,7 @@ describe('DiveInfoComponent', () => {
         };
 
         const toggle = (): void => {
-            const input = fixture.nativeElement.querySelector('#consumptionInLiters') as HTMLInputElement;
+            const input = (fixture.nativeElement as HTMLElement).querySelector('#consumptionInLiters') as HTMLInputElement;
             input.click();
             fixture.detectChanges();
         };

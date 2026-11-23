@@ -188,7 +188,7 @@ export class DiveInfoComponent extends Streamed implements AfterViewInit {
     }
 
     public sharePlan(): void {
-        this.shareDive.sharePlan();
+        void this.shareDive.sharePlan();
     }
 
     public sharePlanQrCode(): void {

@@ -100,6 +100,27 @@ describe('DiveInfoComponent OnPush', () => {
         expect(element.querySelectorAll('app-tankchart').length).toEqual(3);
     });
 
+    it('rebreather total dive time shows bailout runtime', async () => {
+        const dive = TestBed.inject(DiveSchedules).selected;
+        TestBed.inject(ViewSwitchService).isComplex = true;
+        dive.tanksService.loadFrom([new Tank(12, 200, 21), new Tank(3, 200, 100), new Tank(11, 200, 50)]);
+        dive.optionsService.circuit = CircuitType.mccr;
+        TestBed.inject(ReloadDispatcher).sendOptionsChanged();
+        TestBed.inject(PlannerService).calculate(dive.id);
+        await fixture.whenStable();
+
+        const bailoutRuntime = element.querySelector('#bailout-dive-time-value');
+        expect(bailoutRuntime).not.toBeNull();
+        expect(bailoutRuntime?.textContent?.trim()).not.toEqual('');
+    });
+
+    it('open circuit total dive time has no bailout runtime', async () => {
+        TestBed.inject(PlannerService).calculate(1);
+        await fixture.whenStable();
+
+        expect(element.querySelector('#bailout-dive-time-value')).toBeNull();
+    });
+
     it('renders gas chart after consumption finished outside Angular events', async () => {
         TestBed.inject(ViewSwitchService).switchConsumption();
         await showConsumedTab();

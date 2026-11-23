@@ -51,6 +51,20 @@ describe('DiveResults', () => {
         });
     });
 
+    describe('Emergency ascent end', () => {
+        it('is end time of last emergency ascent waypoint', () => {
+            const units = new UnitConversion();
+            const stop = WayPoint.fromSegment(units, new Segment(30, 30, StandardGases.air, 300), 1200);
+            const ascent = WayPoint.fromSegment(units, new Segment(30, 0, StandardGases.air, 300), 1500);
+            sut.updateConsumption(0, 0, 1200, 0, 0, false, false, [stop, ascent]);
+            expect(sut.emergencyAscentEnd).toBe(1800);
+        });
+
+        it('is 0 when not calculated', () => {
+            expect(sut.emergencyAscentEnd).toBe(0);
+        });
+    });
+
     describe('Rendering', () => {
         let fixture: ComponentFixture<ResultsHostComponent>;
 

@@ -24,6 +24,9 @@
                   @if (dive.calculated) {
                     <strong id="total-dive-time-value">{{ dive.totalDuration | duration:dive.totalDuration
                     }} </strong>
+                    @if (isRebreather) {
+                      (<strong id="bailout-dive-time-value">{{ dive.emergencyAscentEnd | duration:dive.emergencyAscentEnd }}</strong>)
+                    }
                   }
                 </td>
               </tr>

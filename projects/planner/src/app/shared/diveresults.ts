@@ -237,6 +237,12 @@ export class DiveResults {
         return this._consumptionState().timeToSurface;
     }
 
+    /** Runtime in seconds at end of the emergency ascent, i.e. the bailout runtime. 0, if not calculated. */
+    public get emergencyAscentEnd(): number {
+        const ascent = this.emergencyAscent;
+        return ascent.length > 0 ? ascent[ascent.length - 1].endTime : 0;
+    }
+
     public get emergencyAscentStart(): number {
         return this._consumptionState().emergencyAscentStart;
     }

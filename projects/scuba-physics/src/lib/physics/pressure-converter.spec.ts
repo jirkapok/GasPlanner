@@ -1,4 +1,4 @@
-import { PressureConverter, AltitudePressure } from './pressure-converter';
+import { PressureConverter, AltitudePressure, LungPressure } from './pressure-converter';
 
 describe('Pressure Converter', () => {
     it('315700 pascals converts to 3.157 bar', () => {
@@ -75,5 +75,11 @@ describe('AltitudePressure', () => {
             const altitude = AltitudePressure.altitude(70109);
             expect(altitude).toBeCloseTo(3000, 0);
         });
+    });
+});
+
+describe('LungPressure', () => {
+    it('dry gas pressure at surface excludes water vapour', () => {
+        expect(LungPressure.dryGas(1)).toBeCloseTo(0.9373, 6);
     });
 });

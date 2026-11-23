@@ -63,6 +63,20 @@ export class PressureConverter {
     }
 }
 
+/** Pressure of the gas breathed in the lungs */
+export class LungPressure {
+    /** Water vapour pressure in bars at body temperature 37°C, Bühlmann value (respiratory quotient 1.0) */
+    public static readonly waterVapour = 0.0627;
+
+    /**
+     * Pressure of the breathed dry gas in bars, the gas partial pressures are its fractions.
+     * @param ambientPressure absolute pressure in bars
+     */
+    public static dryGas(ambientPressure: number): number {
+        return ambientPressure - LungPressure.waterVapour;
+    }
+}
+
 /**
  * https://en.wikipedia.org/wiki/Barometric_formula#Derivation
  */

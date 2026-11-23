@@ -1,7 +1,7 @@
 import { Compartments, Compartment } from './Compartments';
 import { Gas } from '../gases/Gases';
 import _ from 'lodash';
-import { AltitudePressure, PressureConverter } from '../physics/pressure-converter';
+import { AltitudePressure, LungPressure, PressureConverter } from '../physics/pressure-converter';
 import { GasMixtures } from '../gases/GasMixtures';
 import { LoadedTissue, LoadedTissues, TissueOverPressures } from './Tissues.api';
 
@@ -94,15 +94,9 @@ export class Tissue extends Compartment implements LoadedTissue {
      * @param surfacePressure in bars.
      */
     public static inspiredN2Pressure(surfacePressure: number): number {
-        const pressure = Tissue.pressureInLungs(surfacePressure);
+        const pressure = LungPressure.dryGas(surfacePressure);
         const pN2 = GasMixtures.partialPressure(pressure, GasMixtures.nitroxInAir);
         return pN2;
-    }
-
-    private static pressureInLungs(ambientPressure: number): number {
-        /** as constant for body temperature 37°C */
-        const waterVapourPressure = 0.0627;
-        return ambientPressure - waterVapourPressure;
     }
 
     public restoreFrom(source: LoadedTissue): void {
@@ -176,7 +170,7 @@ export class Tissue extends Compartment implements LoadedTissue {
     private loadGas(segment: LoadSegment, fGas: number, pBegin: number, halfTime: number): number {
         const gasRateInBarsPerSecond = segment.speed * fGas;
         // initial ambient pressure
-        const gasPressureBreathingInBars = Tissue.pressureInLungs(segment.startPressure) * fGas;
+        const gasPressureBreathingInBars = LungPressure.dryGas(segment.startPressure) * fGas;
         const newGasPressure = this.schreinerEquation(pBegin, gasPressureBreathingInBars,
             segment.duration, halfTime, gasRateInBarsPerSecond);
         return newGasPressure;

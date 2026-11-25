@@ -1,3 +1,5 @@
+## [0.26.1](https://github.com/jirkapok/GasPlanner/compare/v0.26.0...v0.26.1) (2026-11-25)
+
 # [0.26.0](https://github.com/jirkapok/GasPlanner/compare/v0.25.3...v0.26.0) (2026-11-23)
 
 

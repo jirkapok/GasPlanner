@@ -38,8 +38,8 @@ Total dive time in minutes.
 | CCR TMX 18/45 70 m / 30 min | 128 | 127 | 129 | 128 | 124 |
 | CCR TMX 10/70 100 m / 25 min | 224 | 230 | 233 | 224 | 231 |
 | CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 146 | 147 | 145 | 147 | 148 |
-| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 52 | 52 | 53 | 54 | 52 |
-| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 47 | 47 | 47 | 48 | 47 |
+| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 52 | 51 | 53 | 54 | 52 |
+| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 47 | 46 | 47 | 48 | 47 |
 | GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 47 | 46 | 46 | 47 | 46 |
 
 ## First stop
@@ -50,7 +50,7 @@ Depth of the first decompression stop in metres.
 |---|---:|---:|---:|---:|---:|
 | GF 100/100 · Air 18 m / 30 min (NDL) | none | none | none | none | none |
 | Air 30 m / 25 min | 12 | 12 | 12 | 12 | 12 |
-| Air 40 m / 30 min · deco EAN50@21m | 18 | 21 | 21 | 21 | 21 |
+| Air 40 m / 30 min · deco EAN50@21m | 18 | 18 | 21 | 21 | 21 |
 | TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 21 | 21 | 24 | 21 | 21 |
 | TMX 18/45 60 m / 25 min · deco EAN50@21m, O₂@6m | 33 | 30 | 33 | 30 | 30 |
 | TMX 10/70 90 m / 20 min · deco TMX 21/35@42m, EAN50@21m, O₂@6m | 54 | 54 | 60 | 51 | 54 |
@@ -62,8 +62,8 @@ Depth of the first decompression stop in metres.
 | CCR TMX 10/70 100 m / 25 min | 60 | 60 | 66 | 60 | 60 |
 | CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 42 | 39 | 42 | 39 | 39 |
 | GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 21 | 21 | 24 | 21 | 21 |
-| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 18 | 21 | 21 | 18 | 21 |
-| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 15 | 21 | 18 | - | 21 |
+| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 18 | 18 | 21 | 18 | 21 |
+| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 15 | 15 | 18 | 15 | 21 |
 
 ## CNS
 
@@ -73,20 +73,20 @@ Central nervous system oxygen toxicity in %.
 |---|---:|---:|---:|---:|---:|
 | GF 100/100 · Air 18 m / 30 min (NDL) | 4 | 4 | 4 | - | 4 |
 | Air 30 m / 25 min | 6 | 6 | 6 | 6 | 6 |
-| Air 40 m / 30 min · deco EAN50@21m | 19 | 20 | 21 | 21 | 21 |
-| TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 30 | 43 | 38 | 29 | 46 |
-| TMX 18/45 60 m / 25 min · deco EAN50@21m, O₂@6m | 51 | 77 | 62 | 47 | 80 |
-| TMX 10/70 90 m / 20 min · deco TMX 21/35@42m, EAN50@21m, O₂@6m | 86 | 149 | 111 | 74 | 135 |
-| Multi-level Air 30→18 m / 18 min, 25 min | 7 | 8 | 8 | - | 8 |
+| Air 40 m / 30 min · deco EAN50@21m | 20 | 20 | 21 | 21 | 21 |
+| TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 47 | 43 | 38 | 29 | 46 |
+| TMX 18/45 60 m / 25 min · deco EAN50@21m, O₂@6m | 82 | 77 | 62 | 47 | 80 |
+| TMX 10/70 90 m / 20 min · deco TMX 21/35@42m, EAN50@21m, O₂@6m | 148 | 149 | 111 | 74 | 135 |
+| Multi-level Air 30→18 m / 18 min, 25 min | 8 | 8 | 8 | - | 8 |
 | GF 50/85 · Air 30 m / 20 min · last stop 6 m | 5 | 5 | - | - | 5 |
 | CCR EAN32 30 m / 60 min | 45 | 45 | 45 | 46 | 46 |
 | CCR TMX 21/35 45 m / 45 min | 55 | 55 | 56 | 56 | 56 |
 | CCR TMX 18/45 70 m / 30 min | 71 | 71 | 71 | 71 | 74 |
 | CCR TMX 10/70 100 m / 25 min | 124 | 129 | 129 | 124 | 131 |
-| CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 92 | 145 | 112 | 83 | - |
-| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 30 | 49 | 38 | 29 | 46 |
-| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 26 | 41 | 33 | 25 | 39 |
-| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 26 | 41 | 31 | 24 | 38 |
+| CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 152 | 145 | 112 | 83 | - |
+| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 47 | 43 | 38 | 29 | 46 |
+| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 39 | 35 | 33 | 25 | 39 |
+| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 39 | 36 | 31 | 24 | 38 |
 
 ## OTU
 
@@ -94,22 +94,22 @@ Pulmonary oxygen toxicity in oxygen tolerance units.
 
 | Profile | DT | SS | MD | SW | Dugong |
 |---|---:|---:|---:|---:|---:|
-| GF 100/100 · Air 18 m / 30 min (NDL) | 6 | 7 | 6 | - | 6 |
+| GF 100/100 · Air 18 m / 30 min (NDL) | 7 | 7 | 6 | - | 6 |
 | Air 30 m / 25 min | 17 | 18 | 17 | - | 17 |
-| Air 40 m / 30 min · deco EAN50@21m | 56 | 60 | 60 | - | 61 |
-| TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 68 | 68 | 72 | - | 71 |
-| TMX 18/45 60 m / 25 min · deco EAN50@21m, O₂@6m | 108 | 110 | 112 | - | 113 |
-| TMX 10/70 90 m / 20 min · deco TMX 21/35@42m, EAN50@21m, O₂@6m | 174 | 189 | 187 | - | 176 |
-| Multi-level Air 30→18 m / 18 min, 25 min | 17 | 18 | 17 | - | 18 |
-| GF 50/85 · Air 30 m / 20 min · last stop 6 m | 13 | 15 | - | - | 14 |
+| Air 40 m / 30 min · deco EAN50@21m | 59 | 60 | 60 | - | 61 |
+| TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 70 | 68 | 72 | - | 71 |
+| TMX 18/45 60 m / 25 min · deco EAN50@21m, O₂@6m | 112 | 110 | 112 | - | 113 |
+| TMX 10/70 90 m / 20 min · deco TMX 21/35@42m, EAN50@21m, O₂@6m | 182 | 189 | 187 | - | 176 |
+| Multi-level Air 30→18 m / 18 min, 25 min | 18 | 18 | 17 | - | 18 |
+| GF 50/85 · Air 30 m / 20 min · last stop 6 m | 14 | 15 | - | - | 14 |
 | CCR EAN32 30 m / 60 min | 119 | 119 | 119 | - | 119 |
 | CCR TMX 21/35 45 m / 45 min | 147 | 145 | 147 | - | 145 |
 | CCR TMX 18/45 70 m / 30 min | 188 | 186 | 188 | - | 187 |
 | CCR TMX 10/70 100 m / 25 min | 330 | 338 | 340 | - | 340 |
-| CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 188 | 193 | 191 | - | - |
-| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 68 | 71 | 72 | - | 71 |
-| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 59 | 63 | 64 | - | 63 |
-| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 59 | 62 | - | - | 62 |
+| CCR bailout 70 m / 30 min · bailout TMX 15/55@70m, EAN50@21m, O₂@6m | 195 | 193 | 191 | - | - |
+| GF 30/70 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 70 | 68 | 72 | - | 71 |
+| GF 40/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 61 | 59 | 64 | - | 63 |
+| GF 50/85 · TMX 21/35 45 m / 25 min · deco EAN50@21m, O₂@6m | 61 | 60 | 61 | - | 62 |
 
 ## Dugong reference dives
 

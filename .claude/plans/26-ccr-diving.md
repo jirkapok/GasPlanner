@@ -1422,17 +1422,17 @@ git commit -m "feat(scuba-physics): #26 density and events by inspired gas, expo
 ---
 
 ## Roadmap: stages 2–5 (detailed plans are written when each stage starts)
-- [ ] Status
+- [x] Status
 
 ### Decisions (confirmed)
-- [ ] Status
+- [x] Status
 
 - One tank list as in OC: tanks are assigned to depth levels as today, and the same list defines the bailout gases. The rebreather type dropdown sits in the tanks card header (complex view). Rebreather options go in a second tab of the tanks card.
 - Bailout = rock-bottom **reserve from an emergency ascent**: the user-defined part (including the deepest point) is breathed from the loop, only the generated ascent from open-circuit bailout gases (`BailoutBreathing`, Task 2.7). No separate bailout schedule UI in stages 2–4; the bailout profile is shown in Stage 5.
 - mCCR deco/toxicity = manually held **setpoint**. O2 use = needle-valve flow.
 
 ### Shared rule for stages 2–5
-- [ ] Status
+- [x] Status
 
 Each stage starts from the latest master and is a full vertical slice:
 1. **Lib**: `XxxBreathing implements BreathingModel` (from Stage 1), a `BreathingModelFactory` case (the factory is created in Stage 2), specs (`BuhlmannAlgorithm.<type>.spec.ts`, `consumption.<type>.spec.ts`).
@@ -2112,7 +2112,7 @@ Runs with `superpowers:finishing-a-development-branch`, after the final review i
 - [x] Mark `### Stage 4: eCCR` `- [x] Status` in this plan.
 
 ### Stage 5: CCR results UI
-- [ ] Status
+- [x] Status
 
 Applies only when the circuit is not OC; OC views stay unchanged. Follows the shared rules.
 
@@ -2197,7 +2197,7 @@ Unlike the rest of Stage 5, this applies to **every** circuit, open circuit incl
   - The 12 specs that provide `DiveSchedules` without translations get `provideTestTranslate()`. Its no-op loader returns the key, so titles in those specs read e.g. `1. circuit.oc 30 m, 12 min`, which is acceptable where titles aren't asserted. The 2 `new DiveSchedule(...)` calls in `dives.schedule.spec.ts` get the `CircuitNames` argument.
 
 #### 5e. Manual validation of all rebreather types against other software (user)
-- [ ] Status
+- [x] Status
 
 The user does this step. The agent prepares the inputs and records the results, then stops and waits for the user's values.
 
@@ -2240,7 +2240,7 @@ Notes for the comparison:
 - Consumed liters are rounded to whole bars of the tank (e.g. diluent 30 l = 2 bar of 15 l).
 
 #### 5f. Absolute runtimes instead of relative OC comparisons
-- [ ] Status
+- [x] Status
 
 Depends on 5e: only values the user confirmed in 5e (or Dugong values the user accepts as equal within the 5e tolerances) are hardcoded.
 
@@ -2321,7 +2321,7 @@ Found during Stage 4 (eCCR), deferred to this stage. Each fix follows TDD (faili
   - the planner dive title is `1. eCCR 60 m, ...` (circuit between the dive number and the depth).
 
 ## Verification
-- [ ] Status
+- [x] Status
 
 - Stage 1: Task 8 Step 7 (`test-lib-ci`, `lint`, `build-lib`, `test-ci`); no existing spec modified.
 - Stages 2–5: lib specs plus a reference-planner sanity check (e.g. Subsurface/MultiDeco: 40 m/25 min, dil air, SP 1.3, GF 30/85, within a stop minute for eCCR/mCCR). Then `npm start` → complex view → tanks-card header dropdown → "Rebreather" tab. Check that the profile, CNS/OTU and loop/bailout consumption update immediately, the layout works at mobile width, a shared URL round-trips, and an old URL or stored preferences load as OC. Then `npm run e2e`.

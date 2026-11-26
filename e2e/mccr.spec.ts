@@ -43,14 +43,13 @@ test.describe('mCCR rebreather', () => {
         await page.goto('/');
     });
 
-    test('should calculate mCCR dive with oxygen tank and different runtime than open circuit', async () => {
+    test('should calculate mCCR dive with oxygen tank and setpoint 1.2 in 50:35', async () => {
         const planner = new MccrPlannerPage(page);
         const totalTime = planner.totalTime();
         await expect(totalTime).toHaveText('21:00');
         // long enough dive, so the loop gas changes the decompression
         await planner.setBottomTime('40');
-        await expect(totalTime).not.toHaveText('21:00');
-        const openCircuitTime = await totalTime.innerText();
+        await expect(totalTime).toHaveText('1:14:41');
 
         await planner.switchToComplexView();
         await planner.selectMccr();
@@ -59,6 +58,6 @@ test.describe('mCCR rebreather', () => {
         await planner.openRebreatherTab();
         await planner.setTargetPpO2('1.2');
 
-        await expect(totalTime).not.toHaveText(openCircuitTime);
+        await expect(totalTime).toHaveText('50:35');
     });
 });

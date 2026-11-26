@@ -45,13 +45,12 @@ describe('PlannerService - Rebreathers', () => {
         };
     };
 
-    it('calculates different profile and lower consumption than open circuit', () => {
-        const openCircuit = calculate();
+    it('calculates pSCR runtime 1:20:51 and consumes 41 bar', () => {
         dive.optionsService.circuit = CircuitType.pscr;
         const pscr = calculate();
 
-        expect(pscr.duration).toBeGreaterThan(openCircuit.duration);
-        expect(pscr.consumed).toBeLessThan(openCircuit.consumed);
+        expect(pscr.duration).toBe(4851); // OC 3237
+        expect(pscr.consumed).toBe(41); // OC 200
         expect(dive.diveResult.calculated).toBe(true);
     });
 
@@ -61,14 +60,13 @@ describe('PlannerService - Rebreathers', () => {
             dive.optionsService.circuit = CircuitType.mccr;
         };
 
-        it('calculates different profile than open circuit and consumes the oxygen tank', () => {
+        it('calculates mCCR runtime 48:31 and consumes 17 bar from the oxygen tank', () => {
             dive.tanksService.firstTank.o2 = 21;
-            const openCircuit = calculate();
             prepareMccr(100);
             const mccr = calculate();
 
-            expect(mccr.duration).not.toBe(openCircuit.duration);
-            expect(dive.tanksService.tanks[1].tank.consumed).toBeGreaterThan(0);
+            expect(mccr.duration).toBe(2911); // OC 4508
+            expect(dive.tanksService.tanks[1].tank.consumed).toBe(17);
             expect(dive.diveResult.hasErrors).toBe(false);
         });
 
@@ -87,14 +85,13 @@ describe('PlannerService - Rebreathers', () => {
             dive.optionsService.circuit = CircuitType.eccr;
         };
 
-        it('calculates eCCR profile different from open circuit and consumes the oxygen tank', () => {
+        it('calculates eCCR runtime 51:14 and consumes 19 bar from the oxygen tank', () => {
             dive.tanksService.firstTank.o2 = 21;
-            const openCircuit = calculate();
             prepareEccr(100);
             const eccr = calculate();
 
-            expect(eccr.duration).not.toBe(openCircuit.duration);
-            expect(dive.tanksService.tanks[1].tank.consumed).toBeGreaterThan(0);
+            expect(eccr.duration).toBe(3074); // OC 4508
+            expect(dive.tanksService.tanks[1].tank.consumed).toBe(19);
             expect(dive.diveResult.hasErrors).toBe(false);
         });
 

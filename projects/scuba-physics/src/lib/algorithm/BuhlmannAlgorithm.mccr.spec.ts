@@ -50,13 +50,12 @@ describe('Buhlmann Algorithm - mCCR', () => {
         expect(profile[profile.length - 1].endDepth).toBe(0);
     });
 
-    it('needs different decompression than open circuit with the same gases', () => {
-        const openCircuit = OptionExtensions.openCircuit(options);
-        expect(runtime(diluent.gas, createMccr(1.3, tanks))).not.toBe(runtime(diluent.gas, openCircuit));
+    it('setpoint 1.3 runtime is 2492 s', () => {
+        expect(runtime(diluent.gas, createMccr(1.3, tanks))).toBe(2492); // OC 2681
     });
 
-    it('higher setpoint shortens the decompression', () => {
-        expect(runtime(diluent.gas, createMccr(1.3, tanks))).toBeLessThan(runtime(diluent.gas, createMccr(0.7, tanks)));
+    it('setpoint 1.4 runtime is 2397 s', () => {
+        expect(runtime(diluent.gas, createMccr(1.4, tanks))).toBe(2397);
     });
 
     describe('Second tank is not oxygen', () => {

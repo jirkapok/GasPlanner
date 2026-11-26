@@ -27,9 +27,9 @@ describe('Buhlmann Algorithm - pSCR', () => {
         return Segments.duration(algorithm.decompression(params).segments);
     };
 
-    it('needs longer decompression than open circuit on the same supply gas', () => {
-        const openCircuit = OptionExtensions.openCircuit(options);
-        expect(planDuration(StandardGases.ean32, pscr)).toBeGreaterThan(planDuration(StandardGases.ean32, openCircuit));
+    it('EAN32 supply gas runtime is 2900 s', () => {
+        const pscrDuration = planDuration(StandardGases.ean32, pscr);
+        expect(pscrDuration).toBeCloseTo(2900, 1); // OC only 2265
     });
 
     it('loop gets leaner during ascent, so the profile ends on the supply gas tank', () => {

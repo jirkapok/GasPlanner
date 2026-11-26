@@ -39,20 +39,19 @@ test.describe('pSCR rebreather', () => {
         await page.goto('/');
     });
 
-    test('should calculate pSCR dive with different runtime than open circuit', async () => {
+    test('should calculate pSCR dive with injection ratio 8 in 2:36:38', async () => {
         const planner = new RebreatherPlannerPage(page);
         const totalTime = planner.totalTime();
         await expect(totalTime).toHaveText('21:00');
         // long enough dive, so the leaner loop gas needs longer decompression
         await planner.setBottomTime('40');
-        await expect(totalTime).not.toHaveText('21:00');
-        const openCircuitTime = await totalTime.innerText();
+        await expect(totalTime).toHaveText('1:14:41');
 
         await planner.switchToComplexView();
         await planner.selectPscr();
         await planner.openRebreatherTab();
 
         await expect(planner.injectionRatio()).toHaveValue('8');
-        await expect(totalTime).not.toHaveText(openCircuitTime);
+        await expect(totalTime).toHaveText('2:36:38');
     });
 });

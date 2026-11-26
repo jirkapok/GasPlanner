@@ -115,12 +115,13 @@ describe('Buhlmann Algorithm - eCCR', () => {
             expect(profile[profile.length - 1].endDepth).toBe(0);
         });
 
-        it('higher deco setpoint shortens the decompression', () => {
-            expect(runtime(createEccr(1.1, 1.3, tanks))).toBeLessThan(runtime(createEccr(1.1, 1.1, tanks)));
+        it('bottom setpoint 1.1 runtime is 2756 s with deco setpoint 1.1 and 2629 s with deco setpoint 1.3', () => {
+            expect(runtime(createEccr(1.1, 1.1, tanks))).toBe(2756);
+            expect(runtime(createEccr(1.1, 1.3, tanks))).toBe(2629);
         });
 
-        it('higher bottom setpoint shortens the decompression', () => {
-            expect(runtime(createEccr(1.3, 1.3, tanks))).toBeLessThan(runtime(createEccr(1.1, 1.3, tanks)));
+        it('bottom and deco setpoint 1.3 runtime is 2503 s', () => {
+            expect(runtime(createEccr(1.3, 1.3, tanks))).toBe(2503);
         });
 
         it('requires oxygen in the second tank', () => {
